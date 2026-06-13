@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Crosshair } from 'lucide-react';
+import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
+import { commitLibroEntryAndTreasury } from '@/lib/sheets-service';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
@@ -23,11 +24,11 @@ import type { FireTarget } from '@/lib/combat-types';
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
 export function SimuladorPage() {
-  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setFinanzasPendingModal, setTallerAutoLoadSlot } = useAppStore();
+  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, campaign } = useAppStore();
   const sim = useSimulador();
-  const navigate = useNavigate();
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
+  const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const prevSubTabRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -209,11 +210,7 @@ export function SimuladorPage() {
               onSetMoveMode={sim.setMoveMode}
               onSetJumpUsed={sim.setJumpUsed}
               onLoadPilot={p => sim.setPilotFull(p.name, p.gunnery, p.piloting)}
-              onOpenTaller={() => {
-                setTallerAutoLoadSlot(sim.currentMechIdx);
-                setFinanzasPendingModal('taller');
-                navigate('/finanzas');
-              }}
+              onOpenTaller={() => setTallerSlotIdx(sim.currentMechIdx)}
             />
 
             <button
@@ -320,6 +317,27 @@ export function SimuladorPage() {
           onAdjustPendingCrit={sim.vehicleAdjustPendingCrit}
         />
       ) : null}
+
+      {tallerSlotIdx !== null && (
+        <TallerModal
+          campaignDate={getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth)}
+          initialSimSlotIdx={tallerSlotIdx}
+          onClose={() => setTallerSlotIdx(null)}
+          onCommit={async (total, concepto, mechName) => {
+            await commitLibroEntryAndTreasury({
+              id: genId('lm'),
+              fecha: getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
+              concepto,
+              cantidad: Math.round(total),
+              tipo: 'gasto',
+              categoria: 'repuestos',
+              nota: `Reparación ${mechName} · Taller`,
+              jugador: '',
+            });
+            setTallerSlotIdx(null);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -405,6 +423,7 @@ function InfantryView({ sim }: { sim: SimHandle }) {
           />
         </div>
       )}
+
     </div>
   );
 }

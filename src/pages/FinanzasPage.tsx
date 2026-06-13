@@ -105,11 +105,11 @@ const fmtDate = (iso: string) => {
   } catch { return iso.slice(0, 10); }
 };
 
-const genId = (prefix: string) =>
+export const genId = (prefix: string) =>
   `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
 
 /** Fecha de campaña como YYYY-MM-DD (día 1 por defecto, sin tener campaignDay). */
-function getCampaignDateISO(year: number | undefined, month: number | undefined): string {
+export function getCampaignDateISO(year: number | undefined, month: number | undefined): string {
   const y = year ?? new Date().getFullYear();
   const m = month ?? 1;
   return `${y}-${String(m).padStart(2, '0')}-01`;
@@ -1797,7 +1797,7 @@ function BreakdownRow({ label, detail, value, color, bold }: {
 //  TALLER MODAL (A1) — factura reparación post-combate
 // ══════════════════════════════════════════════════════════
 
-function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
+export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
   campaignDate: string;
   onClose: () => void;
   onCommit: (total: number, concepto: string, mechName: string) => Promise<void>;
