@@ -297,7 +297,7 @@ function MechAsset({ pilot, call, chassis, weight, weightClass, bv, price, statu
           fontFamily: '"Share Tech Mono", monospace', fontSize: 8, letterSpacing: 1,
         }}>
           <span style={{ color: statusColor }}>{warn ? '⚠ ' : ''}{status}</span>
-          <span style={{ color: statusColor }}>{weightClass}</span>
+          {weight > 0 && <span style={{ color: statusColor }}>{weightClass}</span>}
         </div>
 
         {/* BV + Estado en misma linea */}
