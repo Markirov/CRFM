@@ -57,6 +57,7 @@ export function FuerzaSyncBar({
   };
 
   const handleSaveSlot = async (slot: FuerzaSlot) => {
+    console.log('[FuerzaSync] save slot', slot, 'START');
     setPushState('pushing');
     setPushError(null);
     const snap: SimuladorSnapshot = {
@@ -64,8 +65,11 @@ export function FuerzaSyncBar({
       updatedAt: new Date().toISOString(),
       ...getSnapshot(),
     };
+    const snapSize = JSON.stringify(snap).length;
+    console.log('[FuerzaSync] snapshot size', snapSize, 'bytes');
     const nombre = slotNombre.trim() || `Fuerza ${slot}`;
     const res = await saveFuerzaConfigSlot(slot, { nombre, bv: bvTotal, snapshot: snap });
+    console.log('[FuerzaSync] save result', res);
     if (res?.success) {
       setPushState('ok');
       setLastSyncIso(new Date().toISOString());
