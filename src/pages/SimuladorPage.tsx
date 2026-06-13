@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury } from '@/lib/sheets-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit } from '@/lib/sheets-service';
+import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
@@ -24,11 +25,13 @@ import type { FireTarget } from '@/lib/combat-types';
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
 export function SimuladorPage() {
-  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, campaign } = useAppStore();
+  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
   const sim = useSimulador();
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
+  const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
+  const [destroyedBusy, setDestroyedBusy] = useState(false);
   const prevSubTabRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -211,6 +214,7 @@ export function SimuladorPage() {
               onSetJumpUsed={sim.setJumpUsed}
               onLoadPilot={p => sim.setPilotFull(p.name, p.gunnery, p.piloting)}
               onOpenTaller={() => setTallerSlotIdx(sim.currentMechIdx)}
+              onHandleDestruction={() => setDestroyedModalOpen(true)}
             />
 
             <button
@@ -338,6 +342,80 @@ export function SimuladorPage() {
           }}
         />
       )}
+
+      {destroyedModalOpen && ms && (() => {
+        const fullName = `${ms.chassis} ${ms.model}`.toLowerCase().trim();
+        // Owner: roster entry cuyo mech matchea (substring) con el nombre destruido.
+        const owner = roster.find(r => {
+          const rm = (r.mech || '').toLowerCase().trim();
+          if (!rm) return false;
+          return rm === fullName || fullName.includes(rm) || rm.includes(ms.chassis.toLowerCase());
+        });
+        const closeModal = () => { setDestroyedModalOpen(false); setDestroyedBusy(false); };
+        const handleClearSim = () => {
+          sim.clearCurrentUnit();
+          closeModal();
+        };
+        const handleDeleteFromUnit = async () => {
+          if (!owner) return;
+          if (!confirm(`Borrar el mech ${ms.chassis} ${ms.model} de ${owner.nombre || owner.jugador} (sheet Personajes)?\n\nNo se puede deshacer.`)) return;
+          setDestroyedBusy(true);
+          const res = await removeMechFromUnit(owner.jugador || owner.nombre);
+          if (!res?.success) {
+            alert('Error: ' + ((res as any)?.error || 'no_response'));
+            setDestroyedBusy(false);
+            return;
+          }
+          // Refresca roster + limpia sim
+          try { const fresh = await loadRoster(); setRoster(fresh); } catch {/* ignore */}
+          sim.clearCurrentUnit();
+          closeModal();
+        };
+        return (
+          <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={closeModal}>
+            <div className="bg-surface-container border border-error/60 clip-chamfer p-5 max-w-md w-full" onClick={e => e.stopPropagation()}>
+              <h3 className="font-headline text-base text-error font-bold uppercase tracking-widest mb-3">
+                Mech destruido
+              </h3>
+              <div className="font-mono text-[11px] text-secondary mb-4">
+                <div className="text-primary-container font-bold">{ms.chassis} {ms.model}</div>
+                <div className="text-[10px] text-secondary/60 mt-1">{ss?.destroyedReason}</div>
+                {owner ? (
+                  <div className="mt-3 px-2 py-1 bg-amber-400/10 border border-amber-400/40 text-amber-400 text-[10px] uppercase">
+                    Pertenece a la unidad — Piloto: {owner.nombre || owner.jugador}
+                  </div>
+                ) : (
+                  <div className="mt-3 px-2 py-1 bg-secondary/10 border border-outline-variant/40 text-secondary/70 text-[10px] uppercase">
+                    No vinculado a piloto en roster
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  onClick={handleClearSim}
+                  disabled={destroyedBusy}
+                  className="w-full px-3 py-2 border border-secondary/40 hover:border-secondary hover:bg-secondary/10 text-secondary font-mono text-[10px] uppercase tracking-widest transition-colors disabled:opacity-40"
+                >Borrar solo del simulador</button>
+
+                {owner && (
+                  <button
+                    onClick={handleDeleteFromUnit}
+                    disabled={destroyedBusy}
+                    className="w-full px-3 py-2 border border-error/60 hover:border-error hover:bg-error/20 text-error font-mono text-[10px] uppercase tracking-widest font-bold transition-colors disabled:opacity-40"
+                  >{destroyedBusy ? 'Borrando…' : 'Borrar de la unidad (roster + sheet)'}</button>
+                )}
+
+                <button
+                  onClick={closeModal}
+                  disabled={destroyedBusy}
+                  className="w-full px-3 py-2 border border-outline-variant/40 hover:border-outline-variant text-secondary/60 hover:text-secondary font-mono text-[10px] uppercase tracking-widest transition-colors disabled:opacity-40"
+                >Cancelar</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

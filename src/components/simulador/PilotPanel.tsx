@@ -23,9 +23,10 @@ interface Props {
   onSetJumpUsed: (h: number) => void;
   onLoadPilot: (p: AvailablePilot) => void;
   onOpenTaller?: () => void;
+  onHandleDestruction?: () => void;
 }
 
-export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller }: Props) {
+export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller, onHandleDestruction }: Props) {
   return (
     <section className="bg-surface-container-low p-4 relative clip-chamfer border-l-2 border-primary-container/30">
       {/* Identity */}
@@ -48,8 +49,14 @@ export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHit
           <span>BV:{state.bv || '?'}</span>
         </div>
         {session.destroyed && (
-          <div className="mt-2 px-2 py-1 bg-error/20 border border-error text-error text-[10px] font-mono uppercase">
-            {session.destroyedReason}
+          <div className="mt-2 px-2 py-1 bg-error/20 border border-error text-error text-[10px] font-mono uppercase flex items-center justify-between gap-2">
+            <span className="truncate">{session.destroyedReason}</span>
+            {onHandleDestruction && (
+              <button
+                onClick={onHandleDestruction}
+                className="shrink-0 px-2 py-0.5 border border-error/60 hover:bg-error hover:text-error-container font-bold text-[9px] uppercase tracking-widest transition-colors"
+              >Gestionar</button>
+            )}
           </div>
         )}
       </div>
