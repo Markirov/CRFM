@@ -211,6 +211,14 @@ export function FuerzaSyncBar({
             </button>
           )}
 
+          {/* Modo campaña: oculta lista FUERZA1-5 (FUERZA5 se gestiona auto) */}
+          {campaignMode ? (
+            <div className="font-mono text-[10px] text-amber-400/80 bg-amber-400/5 border border-amber-400/30 px-3 py-2">
+              Modo campaña activo · FUERZA5 sincroniza auto cada 5 min.<br />
+              Sal del modo para editar slots manuales.
+            </div>
+          ) : (<>
+
           {/* Nombre opcional al guardar */}
           <input
             type="text"
@@ -276,6 +284,7 @@ export function FuerzaSyncBar({
               })}
             </ul>
           )}
+          </>)}
         </div>
       )}
     </div>
