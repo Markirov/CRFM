@@ -487,32 +487,27 @@ export async function commitLibroEntryAndTreasury(
   entry: LibroMayorEntry,
   prevEntry?: LibroMayorEntry | null,
 ): Promise<void> {
-  console.log('[Treasury] commit START entry:', entry.cantidad, entry.tipo, entry.concepto);
   // Import dinámico para evitar ciclo
   const { useAppStore } = await import('./store');
   const { parseCurrencyValue, formatCzar } = await import('./currency-utils');
   const state = useAppStore.getState();
 
-  const lmRes = await saveLibroMayorEntry(entry);
-  console.log('[Treasury] libro mayor result:', lmRes);
+  await saveLibroMayorEntry(entry);
 
-  // Delta neto: si reemplaza una entry previa, restaurar primero
+  // Actualizacion optimista del store para feedback UI inmediato.
+  // El sheet NO se sobreescribe — CONTRATO_VALOR es formula que suma
+  // LibroMayor / Unidad. Al recargar loadConfig se sincroniza con el real.
   const cur = parseCurrencyValue(state.campaign.contratoValor) ?? 0;
   let delta = entry.tipo === 'ingreso' ? entry.cantidad : -entry.cantidad;
   if (prevEntry) {
     delta -= prevEntry.tipo === 'ingreso' ? prevEntry.cantidad : -prevEntry.cantidad;
   }
   const newVal = cur + delta;
-  console.log('[Treasury] cur=', cur, 'delta=', delta, 'newVal=', newVal);
-
-  // String formato sin "₡" final para Sheets (sólo número con separador)
   const formatted = formatCzar(newVal).replace(' ₡', '');
   state.setCampaign({ contratoValor: formatted });
-  const cfgRes = await saveConfigBatch({ CONTRATO_VALOR: formatted });
-  console.log('[Treasury] saveConfigBatch result:', cfgRes);
 }
 
-/** Wrapper delete: revierte delta sobre tesorería. */
+/** Wrapper delete: solo borra entry. Tesoreria recalcula via formula. */
 export async function deleteLibroEntryAndTreasury(entry: LibroMayorEntry): Promise<void> {
   const { useAppStore } = await import('./store');
   const { parseCurrencyValue, formatCzar } = await import('./currency-utils');
@@ -520,13 +515,12 @@ export async function deleteLibroEntryAndTreasury(entry: LibroMayorEntry): Promi
 
   await deleteLibroMayorEntry(entry.id);
 
+  // Update optimista del store. No sobreescribimos CONTRATO_VALOR (formula).
   const cur = parseCurrencyValue(state.campaign.contratoValor) ?? 0;
-  // Revertir: si era ingreso ahora resta; si era gasto suma
   const delta = entry.tipo === 'ingreso' ? -entry.cantidad : entry.cantidad;
   const newVal = cur + delta;
   const formatted = formatCzar(newVal).replace(' ₡', '');
   state.setCampaign({ contratoValor: formatted });
-  saveConfigBatch({ CONTRATO_VALOR: formatted }).catch(() => {});
 }
 
 // ── Personal (sheet dedicado v2.7) ─────────────────────────────
