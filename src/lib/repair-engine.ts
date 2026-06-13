@@ -366,10 +366,10 @@ export const PRECIO_MUNICION_PER_TON: { match: RegExp; price: number }[] = [
   { match: /Light\s*Gauss/i,         price: 20_000 },
   { match: /Gauss/i,                 price: 20_000 },
   // LB-X (solid; cluster en LB5=15k, LB10=20k si usuario edita)
-  { match: /LB[- ]?2[- ]?X|LB.*\b2\b/i,  price:  3_300 },
+  { match: /LB[- ]?2[- ]?X|LB.*\b2\b/i,  price:  2_000 },
   { match: /LB[- ]?5[- ]?X|LB.*\b5\b/i,  price:  9_000 },
   { match: /LB[- ]?10[- ]?X|LB.*\b10\b/i, price: 12_000 },
-  { match: /LB[- ]?20[- ]?X|LB.*\b20\b/i, price: 20_000 },
+  { match: /LB[- ]?20[- ]?X|LB.*\b20\b/i, price: 24_000 },
   // Ultra AC
   { match: /Ultra\s*AC[- ]?2|UAC[- ]?2/i,  price:  1_000 },
   { match: /Ultra\s*AC[- ]?5|UAC[- ]?5/i,  price:  9_000 },

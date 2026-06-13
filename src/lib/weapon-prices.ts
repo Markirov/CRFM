@@ -49,10 +49,10 @@ export const WEAPON_PRICE_TABLE: Record<string, WeaponPrice> = {
   AC10:      { cost: 200_000, ammoCost:  6_000 },
   AC20:      { cost: 300_000, ammoCost: 10_000 },
   // LB-X (precios ammo = solido; cluster = 15k/20k para LB5/LB10)
-  LBX2:      { cost: 150_000, ammoCost:  3_300 },
+  LBX2:      { cost: 150_000, ammoCost:  2_000 },
   LBX5:      { cost: 250_000, ammoCost:  9_000 },
   LBX10:     { cost: 400_000, ammoCost: 12_000 },
-  LBX20:     { cost: 600_000, ammoCost: 20_000 },
+  LBX20:     { cost: 600_000, ammoCost: 24_000 },
   // Ultra AC
   UAC2:      { cost: 120_000, ammoCost:  1_000 },
   UAC5:      { cost: 200_000, ammoCost:  9_000 },
@@ -164,10 +164,10 @@ export function weaponAmmoPriceFromName(name: string): number {
 // ammoCost en WEAPON_PRICE_TABLE = slug (default). Cluster mas caro.
 
 export const LBX_CLUSTER_AMMO_COST: Record<string, number> = {
-  // Solo LB-5 y LB-10 tienen precio cluster confirmado por DM.
-  // LB-2 y LB-20 sin dato: omitir toggle hasta confirmar.
+  LBX2:   3_000,
   LBX5:  15_000,
   LBX10: 20_000,
+  LBX20: 34_000,
 };
 
 /** True si el codigo arma es LB-X. */
