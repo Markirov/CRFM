@@ -318,11 +318,6 @@ function MechAsset({ pilot, call, chassis, weight, weightClass, bv, price, statu
           color: T.outline, letterSpacing: 1,
         }}>
           <span style={{ color: infoColor }}>BV {bv.toLocaleString('es-ES', { useGrouping: 'always' })}</span>
-          {typeof simDamagePct === 'number' && (
-            <span style={{ color: simDamagePct > 0 ? T.bloodLight : T.outline }}>
-              {simDamagePct}% DAÑO
-            </span>
-          )}
         </div>
       </div>
     </article>
