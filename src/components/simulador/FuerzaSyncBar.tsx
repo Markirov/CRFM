@@ -90,7 +90,10 @@ export function FuerzaSyncBar({
             const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
             const total = armorMax + isMax;
             if (total <= 0) continue;
-            const pct = Math.round(((armorCur + isCur) / total) * 100);
+            // Mech destruido -> estado 0% (override aunque queden pts en otras locs).
+            const pct = se.destroyed
+              ? 0
+              : Math.round(((armorCur + isCur) / total) * 100);
             const key = `${st.chassis || ''} ${st.model || ''}`.trim();
             if (key) map[key] = pct;
           }

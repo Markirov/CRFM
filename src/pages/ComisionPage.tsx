@@ -168,6 +168,8 @@ function getMechSimDamage(chassisName: string, snapshot: any): number | null {
 
   const st = slot.state;
   const se = slot.session;
+  // Mech destruido -> 100% daño (estado 0%) aunque queden pts en otras locs.
+  if (se.destroyed) return 100;
   const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
   const armorMax  = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
   const armorCur  = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
