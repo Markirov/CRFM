@@ -1129,18 +1129,34 @@ export function ComisionPage() {
           <div style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: T.bone, lineHeight: 1.8, letterSpacing: 0.5 }}>
             <ParteDiario />
           </div>
-          <div style={{
-            marginTop: 12, padding: '10px 12px', background: T.void,
-            borderLeft: `2px solid ${T.gold}`,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-          }}>
-            <span style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 9, color: T.outline, letterSpacing: 2 }}>
-              MORAL DE LA UNIDAD
-            </span>
-            <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: 18, fontWeight: 800, color: T.ice, letterSpacing: -0.3 }}>
-              88<span style={{ fontSize: 11, color: T.outline }}> /100</span>
-            </span>
-          </div>
+          {(() => {
+            // Estado global = media de estado% por mech (100 - damage%).
+            // Lee de ESTADOMECHS si esta, fallback a calculo desde mechCards.
+            const estados: number[] = mechCards
+              .map(c => (c && typeof c.simDamagePct === 'number') ? Math.max(0, 100 - c.simDamagePct) : null)
+              .filter((x): x is number => x !== null);
+            const avg = estados.length > 0
+              ? Math.round(estados.reduce((a, b) => a + b, 0) / estados.length)
+              : null;
+            const color = avg === null ? T.outline
+              : avg >= 80 ? T.gold
+              : avg >= 50 ? T.cream
+              : T.bloodLight;
+            return (
+              <div style={{
+                marginTop: 12, padding: '10px 12px', background: T.void,
+                borderLeft: `2px solid ${T.gold}`,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
+              }}>
+                <span style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 9, color: T.outline, letterSpacing: 2 }}>
+                  ESTADO DE LA UNIDAD
+                </span>
+                <span style={{ fontFamily: '"Space Grotesk", sans-serif', fontSize: 18, fontWeight: 800, color, letterSpacing: -0.3 }}>
+                  {avg ?? '—'}<span style={{ fontSize: 11, color: T.outline }}> /100</span>
+                </span>
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>
