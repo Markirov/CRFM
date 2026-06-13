@@ -154,15 +154,47 @@ export function SimuladorPage() {
 
   const handleToggleCampaign = async () => {
     if (campaignMode) {
-      // Salir: pide clave (proteccion guardado en curso si dirty)
-      if (sim.dirty) {
-        if (!confirm('Hay cambios locales sin sync a FUERZA5. ¿Salir igualmente?')) return;
+      // Salir: pregunta si guardar a FUERZACAMPAÑA
+      const choice = confirm('¿Guardar estado actual a FUERZACAMPAÑA antes de salir?\n\nOK = Guardar y salir\nCancelar = Solo salir (sin guardar)');
+      if (choice) {
+        try {
+          const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
+          const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+                   + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+          const res = await saveFuerzaCampana({ nombre: 'Campaña', bv, snapshot: snap });
+          if (!res?.success) {
+            alert('Error guardando FUERZACAMPAÑA: ' + ((res as any)?.error || 'no_response'));
+            return;
+          }
+          // ESTADOMECHS map
+          const map: Record<string, number> = {};
+          for (const ms2 of (snap.mechSlots ?? [])) {
+            const st: any = ms2?.state; const se: any = ms2?.session;
+            if (!st || !se) continue;
+            const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+            const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+            const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
+            const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
+            const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
+            const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
+            const total = armorMax + isMax;
+            if (total <= 0) continue;
+            const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
+            const key = `${st.chassis || ''} ${st.model || ''}`.trim();
+            if (key) map[key] = pct;
+          }
+          await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
+          sim.markSynced?.();
+        } catch (err) {
+          alert('Fallo guardando: ' + err);
+          return;
+        }
       }
       setCampaignMode(false);
       return;
     }
-    // Entrar: pide clave + carga FUERZA5
-    if (!gateCampaignWrite('cargar FUERZA5')) return;
+    // Entrar: pide clave + carga FUERZACAMPAÑA
+    if (!gateCampaignWrite('cargar FUERZACAMPAÑA')) return;
     try {
       const entry = await loadFuerzaCampana();
       if (entry?.snapshot?.schemaVersion) {
@@ -171,7 +203,7 @@ export function SimuladorPage() {
       }
       setCampaignMode(true);
     } catch (err) {
-      alert('Fallo al cargar FUERZA5: ' + err);
+      alert('Fallo al cargar FUERZACAMPAÑA: ' + err);
     }
   };
 
