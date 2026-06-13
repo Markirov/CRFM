@@ -1816,7 +1816,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
   const [damage, setDamage] = useState<MechRepairDamage>(emptyDamage);
   const [estadoPct, setEstadoPct] = useState(100);
   const [pctDañoTotal, setPctDañoTotal] = useState(0);
-  const [system, setSystem] = useState<RepairSystem>('propio');
+  const [system, setSystem] = useState<RepairSystem>('canon');
 
   // Simulador import
   const [showSimPicker, setShowSimPicker] = useState(false);
@@ -2143,7 +2143,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
               }}>
                 {system === 'propio'
                   ? 'Tu Taller: precio × peso × pts/2 × estado%. Cubre daño parcial.'
-                  : 'CamOps: sólo reemplazo total. Engine/Gyro parcial = 0 ₡ (sólo labor). Sin estado factura.'}
+                  : 'Tech Manual: precios canon. Reactor/Gyro parcial = 0 ₡ (sólo labor). Estado factura % también se aplica.'}
               </div>
 
               <SmallLabel>Estado factura · Datos sim</SmallLabel>

@@ -175,7 +175,7 @@ export function SimuladorPage() {
           lastLocalSave={sim.lastLocalSave}
           getSnapshot={sim.getSnapshot}
           hydrateFromSnapshot={sim.hydrateFromSnapshot}
-          resetSession={sim.resetSession}
+          clearCurrentUnit={sim.clearCurrentUnit}
           markSynced={sim.markSynced}
           bvTotal={
             sim.mechSlots.reduce((acc, s) => acc + (s.state?.bv ?? 0), 0) +

@@ -513,7 +513,7 @@ export function deriveDamageFromSession(
     if (hits <= 0) continue;
     const total = (w.slotIndices?.length ?? w.slotsUsed ?? 1);
     const status: 'parcial' | 'destruida' = hits >= total ? 'destruida' : 'parcial';
-    const base = weaponPriceFromName(w.name || w.rawName || '');
+    const base = weaponPriceFromName(w.name || w.rawName || '', state.tonnage);
     // Parcial = repair ~50% del precio. Destruida = reemplazo completo.
     const cost = status === 'destruida' ? base : Math.round(base * 0.5);
     armasOut.push({
@@ -594,11 +594,6 @@ function canonGyroTons(engineRating: number, gyroType: string): number {
   }
 }
 
-/** Internal structure tons: ceil(tons × 0.10). EndoAcero pesa la mitad. */
-function canonStructureTons(tons: number, structType: string): number {
-  const base = Math.ceil(tons / 10);
-  return structType === 'EndoAcero' ? Math.ceil(base / 2) : base;
-}
 
 /**
  * Factura canon (CamOps): sólo se carga el precio total de la pieza
@@ -608,6 +603,7 @@ function canonStructureTons(tons: number, structType: string): number {
 export function calcRepairCostCanon(
   config: MechRepairConfig,
   damage: MechRepairDamage,
+  estadoFactPct = 100,
   pctDañoTotal = 0,
 ): RepairBreakdown {
   const peso   = config.tons;
@@ -633,15 +629,12 @@ export function calcRepairCostCanon(
   // === Sensores === 2000 × tons (sólo 1 conjunto por mech)
   const sensores = damage.sensores > 0 ? PRECIO_SENSORES_BASE * peso : 0;
 
-  // === Estructura === IS_tons × precio_base. Canon no escala por pts dañados;
-  // carga reemplazo completo de la localización afectada.
-  // Aproximación: si hay pts perdidos → cobrar fracción IS_tons proporcional.
+  // === Estructura === TM p.557: PRECIO_ESTRUCTURA × Unit Tonnage para
+  // reemplazo total. Pts perdidos / IS_total × cost para parcial.
   const estructuraBase = PRECIO_ESTRUCTURA[config.estructuraType] ?? PRECIO_ESTRUCTURA['Estandar'];
-  const isTons = canonStructureTons(peso, config.estructuraType);
-  // Canon TM: ~400 × IS_tons para reemplazo total. Pts perdidos / IS_total × cost
-  const isTotalPts = peso * 2.5; // aprox: IS total ~ 2.5 pts/ton mech (Atlas 100t = 250 pts ≈)
+  const isTotalPts = peso * 2.5; // aprox IS total ~ 2.5 pts/ton
   const estructura = damage.estructura > 0
-    ? Math.round((estructuraBase * isTons * damage.estructura) / isTotalPts)
+    ? Math.round((estructuraBase * peso * damage.estructura) / isTotalPts)
     : 0;
 
   // === Blindaje === ceil(pts/16) × precio_ton (idéntico a propio)
@@ -654,11 +647,11 @@ export function calcRepairCostCanon(
     ? (PRECIO_MIOMERO[config.miomeroType] ?? 0) * peso
     : 0;
 
-  // === Actuadores === Canon: actuadores son parte de la estructura; sólo se
-  // reemplazan junto con limb destroyed. Aproximación: precio flat × uds (sin peso)
+  // === Actuadores === TM p.557: precio_base × Unit Tonnage × qty.
+  // Hombro 100 / Codo 50 / Mano 80 / Cadera 150 / Rodilla 80 / Tobillo 120 (per ton).
   const actuadores = Object.entries(damage.actuadores ?? {}).reduce((sum, [name, qty]) => {
-    const price = PRECIO_ACTUADOR[name as keyof typeof PRECIO_ACTUADOR] ?? 0;
-    return sum + price * (qty ?? 0);
+    const pricePerTon = PRECIO_ACTUADOR[name as keyof typeof PRECIO_ACTUADOR] ?? 0;
+    return sum + pricePerTon * peso * (qty ?? 0);
   }, 0);
 
   // === Retros === Canon: precio × uds (sin peso)
@@ -678,8 +671,8 @@ export function calcRepairCostCanon(
     actuadores + retros + radiadores +
     armas + municion;
 
-  // Canon NO tiene estado factura %. Total = subtotal directo.
-  const total = subtotal;
+  // Estado factura: % modificador (default 100). Permite cargos/descuentos.
+  const total = Math.round(subtotal * (estadoFactPct / 100));
 
   const estadoMech: EstadoMech = destruido ? 'DESTRUIDO' : clasificarEstadoMech(pctDañoTotal);
 
@@ -688,7 +681,7 @@ export function calcRepairCostCanon(
     estructura, blindaje, miomero,
     actuadores, retros, radiadores,
     armas, municion,
-    subtotal, estadoFacturaPct: 100, total,
+    subtotal, estadoFacturaPct: estadoFactPct, total,
     estadoMech, destruido,
   };
 }
@@ -702,7 +695,7 @@ export function calcRepairCostBySystem(
   pctDañoTotal = 0,
 ): RepairBreakdown {
   return system === 'canon'
-    ? calcRepairCostCanon(config, damage, pctDañoTotal)
+    ? calcRepairCostCanon(config, damage, estadoFactPct, pctDañoTotal)
     : calcRepairCost(config, damage, estadoFactPct, pctDañoTotal);
 }
 

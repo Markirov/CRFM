@@ -148,10 +148,14 @@ export function weaponKeyFromName(name: string): string | null {
   return null;
 }
 
-/** Devuelve precio arma (cost por unidad) o 0 si desconocido. */
-export function weaponPriceFromName(name: string): number {
+/** Devuelve precio arma (cost por unidad) o 0 si desconocido.
+ *  Hatchet TM: 5.000 x ceil(mechTons/15). Sword TM: 10.000 x ceil(mechTons/20). */
+export function weaponPriceFromName(name: string, mechTons?: number): number {
   const key = weaponKeyFromName(name);
-  return key ? (WEAPON_PRICE_TABLE[key]?.cost ?? 0) : 0;
+  if (!key) return 0;
+  if (key === 'HATCHET' && mechTons) return 5_000 * Math.ceil(mechTons / 15);
+  if (key === 'SWORD'   && mechTons) return 10_000 * Math.ceil(mechTons / 20);
+  return WEAPON_PRICE_TABLE[key]?.cost ?? 0;
 }
 
 /** Devuelve precio municion ₡/ton o 0 si desconocido. */
