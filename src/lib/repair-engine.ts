@@ -359,11 +359,23 @@ export function configFromCatalog(catalog: {
 // Si no encuentra match, devuelve 5000 (fallback genérico).
 
 export const PRECIO_MUNICION_PER_TON: { match: RegExp; price: number }[] = [
+  // Arrow IV
+  { match: /Arrow\s*IV|Arrow\s*4/i,  price: 15_000 },
   // Gauss family
   { match: /Heavy\s*Gauss/i,         price: 20_000 },
   { match: /Light\s*Gauss/i,         price: 20_000 },
   { match: /Gauss/i,                 price: 20_000 },
-  // AC variants
+  // LB-X (solid; cluster en LB5=15k, LB10=20k si usuario edita)
+  { match: /LB[- ]?2[- ]?X|LB.*\b2\b/i,  price:  3_300 },
+  { match: /LB[- ]?5[- ]?X|LB.*\b5\b/i,  price:  9_000 },
+  { match: /LB[- ]?10[- ]?X|LB.*\b10\b/i, price: 12_000 },
+  { match: /LB[- ]?20[- ]?X|LB.*\b20\b/i, price: 20_000 },
+  // Ultra AC
+  { match: /Ultra\s*AC[- ]?2|UAC[- ]?2/i,  price:  1_000 },
+  { match: /Ultra\s*AC[- ]?5|UAC[- ]?5/i,  price:  9_000 },
+  { match: /Ultra\s*AC[- ]?10|UAC[- ]?10/i, price: 12_000 },
+  { match: /Ultra\s*AC[- ]?20|UAC[- ]?20/i, price: 20_000 },
+  // AC variants (estandar)
   { match: /AC\s*\/?\s*2\b/i,        price:  1_000 },
   { match: /AC\s*\/?\s*5\b/i,        price:  4_500 },
   { match: /AC\s*\/?\s*10\b/i,       price:  6_000 },
@@ -395,6 +407,7 @@ export function ammoPricePerTon(family: string): number {
 // ── Derivar daños desde sesión simulador ──────────────────────
 
 import type { MechState, MechSession, CritSlot, AmmoBin } from './combat-types';
+import { weaponPriceFromName } from './weapon-prices';
 
 /** Mapea slot.name del simulador → componente de reparación.
  *  Nombres literales de parsers.ts (SSW/MTF output). */
@@ -484,10 +497,14 @@ export function deriveDamageFromSession(
     }
     if (hits <= 0) continue;
     const total = (w.slotIndices?.length ?? w.slotsUsed ?? 1);
+    const status: 'parcial' | 'destruida' = hits >= total ? 'destruida' : 'parcial';
+    const base = weaponPriceFromName(w.name || w.rawName || '');
+    // Parcial = repair ~50% del precio. Destruida = reemplazo completo.
+    const cost = status === 'destruida' ? base : Math.round(base * 0.5);
     armasOut.push({
       name:       w.name || w.rawName || 'Arma',
-      cost:       0,
-      status:     hits >= total ? 'destruida' : 'parcial',
+      cost,
+      status,
       loc:        w.loc,
       slotsHit:   hits,
       slotsTotal: total,
