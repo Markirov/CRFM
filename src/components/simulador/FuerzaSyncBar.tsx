@@ -1,6 +1,6 @@
 // FuerzaSyncBar — indicador estado + Slots/Reset fuerza
 import { useEffect, useRef, useState } from 'react';
-import { CloudUpload, AlertCircle, Trash2, Archive } from 'lucide-react';
+import { CloudUpload, AlertCircle, Trash2, Archive, Lock, LockOpen } from 'lucide-react';
 import {
   loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, clearFuerzaConfigSlot, saveConfigBatch,
   type FuerzaSlot, type FuerzaConfigEntry,
@@ -17,12 +17,17 @@ interface Props {
   markSynced: () => void;
   /** BV total para guardar como metadato (calcula caller). */
   bvTotal: number;
+  /** Modo campaña activo (FUERZA5 lock + pilot order fijo). */
+  campaignMode?: boolean;
+  /** Toggle handler (pide clave si activa). */
+  onToggleCampaignMode?: () => void | Promise<void>;
 }
 
 type PushState = 'idle' | 'pushing' | 'ok' | 'error';
 
 export function FuerzaSyncBar({
   dirty, lastLocalSave, getSnapshot, hydrateFromSnapshot, clearCurrentUnit, markSynced, bvTotal,
+  campaignMode, onToggleCampaignMode,
 }: Props) {
   const [pushState, setPushState] = useState<PushState>('idle');
   const [pushError, setPushError] = useState<string | null>(null);
@@ -47,7 +52,8 @@ export function FuerzaSyncBar({
   }, [pushState]);
 
   // ── Slot 5 protegido — clave "Mark" para sobrescribir/borrar ──
-  const PROTECTED_FUERZA_SLOTS: FuerzaSlot[] = [5];
+  // Slot 5 ya no protegido — el lock vive en modo campaña.
+  const PROTECTED_FUERZA_SLOTS: FuerzaSlot[] = [];
   const PROTECTED_PASSWORD = 'Mark';
   const UNLOCK_KEY = 'kk_fuerza_slot_unlock';
 
@@ -188,6 +194,22 @@ export function FuerzaSyncBar({
           <div className="font-mono text-[9px] text-secondary/50 mb-3">
             5 espacios en celdas FUERZA1..5 de Configuracion. Guardar sobrescribe.
           </div>
+
+          {/* Toggle Modo Campaña */}
+          {onToggleCampaignMode && (
+            <button
+              onClick={onToggleCampaignMode}
+              className={`w-full flex items-center justify-center gap-2 px-3 py-2 mb-3 clip-chamfer font-mono text-[10px] uppercase tracking-widest transition-colors border ${
+                campaignMode
+                  ? 'bg-amber-400/20 border-amber-400 text-amber-400'
+                  : 'bg-surface-container border-outline-variant/40 text-secondary/70 hover:border-amber-400/60 hover:text-amber-400'
+              }`}
+              title={campaignMode ? 'Modo campaña activo — pulsa para salir' : 'Activar modo campaña (carga FUERZA5 + lock)'}
+            >
+              {campaignMode ? <Lock size={12} /> : <LockOpen size={12} />}
+              {campaignMode ? 'Modo Campaña ON' : 'Modo Campaña'}
+            </button>
+          )}
 
           {/* Nombre opcional al guardar */}
           <input

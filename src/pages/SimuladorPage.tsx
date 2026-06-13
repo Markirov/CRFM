@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Crosshair, Lock, LockOpen } from 'lucide-react';
+import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaConfigSlot, loadFuerzaConfigSlot, saveConfigBatch } from '@/lib/sheets-service';
 import { loadLocalSnapshot } from '@/lib/simulador-persistence';
@@ -25,6 +25,27 @@ import type { FireTarget } from '@/lib/combat-types';
 
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
+// Orden fijo PJs (8 slots simulador en modo campaña). Match contra roster.jugador.
+const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
+
+const CAMPAIGN_UNLOCK_KEY = 'kk_campaign_unlock';
+const CAMPAIGN_PASSWORD = 'Mark';
+
+function isCampaignUnlocked(): boolean {
+  return sessionStorage.getItem(CAMPAIGN_UNLOCK_KEY) === '1';
+}
+function gateCampaignWrite(actionLabel: string): boolean {
+  if (isCampaignUnlocked()) return true;
+  const pwd = prompt(`Modo Campaña (${actionLabel}): introduce la clave`);
+  if (pwd === null) return false;
+  if (pwd === CAMPAIGN_PASSWORD) {
+    sessionStorage.setItem(CAMPAIGN_UNLOCK_KEY, '1');
+    return true;
+  }
+  alert('Clave incorrecta');
+  return false;
+}
+
 export function SimuladorPage() {
   const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
   const sim = useSimulador();
@@ -47,9 +68,7 @@ export function SimuladorPage() {
     const id = setInterval(async () => {
       if (!sim.dirty) return;
       try {
-        const raw = sessionStorage.getItem('kk_fuerza_slot_unlock');
-        const arr = raw ? JSON.parse(raw) : [];
-        if (!Array.isArray(arr) || !arr.includes(5)) return; // sin clave -> skip
+        if (!isCampaignUnlocked()) return; // sin clave -> skip
         const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
         const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
                  + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
@@ -122,14 +141,39 @@ export function SimuladorPage() {
     });
   }, [roster]);
 
-  // Modo campaña: muestra apodo/nombre de PJs activos en vez de mech name.
-  // Debe estar antes de cualquier early return para no romper orden de hooks.
+  // Modo campaña: orden FIJO de PJs (CAMPAIGN_PILOT_ORDER). Cada slot
+  // pre-bound al PJ en esa posicion. Si el roster no tiene ese jugador,
+  // se muestra label con el handle igualmente.
   const campaignPilots = useMemo(() => {
     if (!campaignMode) return null;
-    return roster
-      .filter(r => r.estado === 'activo' || r.estado === 'herido')
-      .map(r => r.apodo || r.nombre || r.jugador || '?');
+    return CAMPAIGN_PILOT_ORDER.map(handle => {
+      const entry = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
+      return entry?.apodo || entry?.nombre || handle;
+    });
   }, [campaignMode, roster]);
+
+  const handleToggleCampaign = async () => {
+    if (campaignMode) {
+      // Salir: pide clave (proteccion guardado en curso si dirty)
+      if (sim.dirty) {
+        if (!confirm('Hay cambios locales sin sync a FUERZA5. ¿Salir igualmente?')) return;
+      }
+      setCampaignMode(false);
+      return;
+    }
+    // Entrar: pide clave + carga FUERZA5
+    if (!gateCampaignWrite('cargar FUERZA5')) return;
+    try {
+      const entry = await loadFuerzaConfigSlot(5);
+      if (entry?.snapshot?.schemaVersion) {
+        sim.hydrateFromSnapshot(entry.snapshot);
+        sim.markSynced();
+      }
+      setCampaignMode(true);
+    } catch (err) {
+      alert('Fallo al cargar FUERZA5: ' + err);
+    }
+  };
 
   // Toggles Clan + Año compactos (van pegados a CatalogSearch en el portal)
   const flagToggles = (
@@ -234,42 +278,6 @@ export function SimuladorPage() {
           onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
           onFileUpload={sim.handleFileUpload}
         />
-        <button
-          onClick={async () => {
-            if (campaignMode) { setCampaignMode(false); return; }
-            // Activar: requiere clave + carga snapshot FUERZA5
-            const raw = sessionStorage.getItem('kk_fuerza_slot_unlock');
-            const arr = raw ? JSON.parse(raw) : [];
-            const unlocked = Array.isArray(arr) && arr.includes(5);
-            if (!unlocked) {
-              const pwd = prompt('Modo Campaña: introduce clave FUERZA5');
-              if (pwd === null) return;
-              if (pwd !== 'Mark') { alert('Clave incorrecta'); return; }
-              const next = Array.isArray(arr) ? arr : [];
-              if (!next.includes(5)) next.push(5);
-              sessionStorage.setItem('kk_fuerza_slot_unlock', JSON.stringify(next));
-            }
-            try {
-              const entry = await loadFuerzaConfigSlot(5);
-              if (entry?.snapshot?.schemaVersion) {
-                sim.hydrateFromSnapshot(entry.snapshot);
-                sim.markSynced();
-              }
-              setCampaignMode(true);
-            } catch (err) {
-              alert('Fallo al cargar FUERZA5: ' + err);
-            }
-          }}
-          title={campaignMode ? 'Modo campaña activo — pulsa para salir' : 'Activar modo campaña (carga FUERZA5)'}
-          className={`flex items-center gap-1 border px-2 py-1 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors ${
-            campaignMode
-              ? 'border-amber-400 bg-amber-400/15 text-amber-400'
-              : 'border-outline-variant/40 hover:border-amber-400/60 text-secondary/70 hover:text-amber-400'
-          }`}
-        >
-          {campaignMode ? <Lock size={12} /> : <LockOpen size={12} />}
-          <span className="hidden sm:inline">Campaña</span>
-        </button>
         <FuerzaSyncBar
           dirty={sim.dirty}
           lastLocalSave={sim.lastLocalSave}
@@ -277,6 +285,8 @@ export function SimuladorPage() {
           hydrateFromSnapshot={sim.hydrateFromSnapshot}
           clearCurrentUnit={sim.clearCurrentUnit}
           markSynced={sim.markSynced}
+          campaignMode={campaignMode}
+          onToggleCampaignMode={handleToggleCampaign}
           bvTotal={
             sim.mechSlots.reduce((acc, s) => acc + (s.state?.bv ?? 0), 0) +
             sim.vehicleSlots.reduce((acc, s) => acc + ((s.state as any)?.bv ?? 0), 0)
