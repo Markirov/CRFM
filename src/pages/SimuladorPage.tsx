@@ -14,6 +14,8 @@ import { CombatLog } from '@/components/simulador/CombatLog';
 import { VehiclePanel } from '@/components/simulador/VehiclePanel';
 import { CatalogSearch } from '@/components/simulador/CatalogSearch';
 import { SimuladorPortada } from '@/components/simulador/SimuladorPortada';
+import { FuerzaSyncBar } from '@/components/simulador/FuerzaSyncBar';
+import { SubtabRightPortal } from '@/components/shell/SubtabRightPortal';
 import { useAppStore } from '@/lib/store';
 import { calcAttrAvg, calcTIR } from '@/lib/barracones-data';
 import type { FireTarget } from '@/lib/combat-types';
@@ -21,7 +23,7 @@ import type { FireTarget } from '@/lib/combat-types';
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
 export function SimuladorPage() {
-  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada } = useAppStore();
+  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster } = useAppStore();
   const sim = useSimulador();
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
@@ -40,72 +42,101 @@ export function SimuladorPage() {
     if (tab !== sim.activeTab) sim.setActiveTab(tab as 'mechs' | 'vehicles');
   }, [activeSubTab]);
 
-  // Read loaded Barracones pilots and convert to BT gunnery/piloting
+  // Pilotos disponibles \u2014 fuente: roster (Personajes sheet).
+  // Disparo/Pilotaje vienen directos de columnas O y P (RosterEntry.disparoMech/pilotajeMech).
+  // Si la sheet no los trae, fallback a calculo TIR via habilidades del slot Barracones.
   const availablePilots = useMemo<AvailablePilot[]>(() => {
-    try {
-      const raw = localStorage.getItem('barracones_slots_v1');
-      if (!raw) return [];
-      const slots: any[] = JSON.parse(raw);
-      return slots
-        .filter(p => p && (p.nombre || p.callsign))
-        .map(p => {
-          const habs: { nombre: string; nivel: number }[] = Array.isArray(p.habilidades) ? p.habilidades : [];
-          const norm = (s: string) => s.trim().toLowerCase();
-          const disparoSkill = habs.find(h => norm(h.nombre) === 'disparo mech');
-          const pilotarSkill = habs.find(h => norm(h.nombre) === 'pilotar mech');
-          const attrAvg = calcAttrAvg(p.fue ?? 6, p.des ?? 6, p.int ?? 6, p.car ?? 6);
-          const gunnery  = disparoSkill ? Math.max(0, calcTIR(attrAvg, disparoSkill.nivel)) : 4;
-          const piloting = pilotarSkill ? Math.max(0, calcTIR(attrAvg, pilotarSkill.nivel)) : 5;
-          return { name: p.callsign || p.nombre, gunnery, piloting };
-        });
-    } catch { return []; }
-  }, []);
+    const fromRoster = roster
+      .filter(r => r.estado === 'activo' || r.estado === 'herido')
+      .map(r => {
+        // Prioridad: apodo (callsign) → nombre real → jugador (handler/DM).
+        // NPCs suelen tener jugador="Marcos" (DM) → si va antes que nombre, todos los NPCs salen como Marcos.
+        const name = r.apodo || r.nombre || r.jugador;
+        if (!name) return null;
+        let gunnery  = r.disparoMech;
+        let piloting = r.pilotajeMech;
+        if (gunnery === null || piloting === null) {
+          // Fallback: busca el slot Barracones por jugador/nombre y recalcula TIR
+          try {
+            const raw = localStorage.getItem('barracones_slots_v1');
+            if (raw) {
+              const slots: any[] = JSON.parse(raw);
+              const norm = (s: string) => (s || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+              const target = norm(r.jugador) || norm(r.nombre);
+              const p = slots.find(s => s && (norm(s.callsign) === target || norm(s.nombre) === target));
+              if (p) {
+                const habs: { nombre: string; nivel: number }[] = Array.isArray(p.habilidades) ? p.habilidades : [];
+                const disparoSkill = habs.find(h => norm(h.nombre) === 'disparo mech');
+                const pilotarSkill = habs.find(h => {
+                  const n = norm(h.nombre); return n === 'pilotaje mech' || n === 'pilotar mech';
+                });
+                const attrAvg = calcAttrAvg(p.fue ?? 6, p.des ?? 6, p.int ?? 6, p.car ?? 6);
+                if (gunnery === null && disparoSkill)  gunnery  = Math.max(0, calcTIR(attrAvg, disparoSkill.nivel));
+                if (piloting === null && pilotarSkill) piloting = Math.max(0, calcTIR(attrAvg, pilotarSkill.nivel));
+              }
+            }
+          } catch { /* ignore */ }
+        }
+        return {
+          name,
+          gunnery:  gunnery  ?? 4,
+          piloting: piloting ?? 5,
+        };
+      })
+      .filter((x): x is AvailablePilot => x !== null);
+    // Dedup por nombre (por si roster trae duplicados)
+    const seen = new Set<string>();
+    return fromRoster.filter(p => {
+      const k = p.name.toLowerCase();
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }, [roster]);
 
-  const header = (
-    <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-      <div className="flex items-center gap-3">
-        <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase leading-none">
-          Simulador de Combate
-        </h1>
-        <div className="flex flex-col justify-between self-stretch py-px gap-0.5">
-          <label className="flex items-center gap-1 cursor-pointer group">
-            <div
-              onClick={() => setAllowClan(v => !v)}
-              className={`w-2 h-2 border shrink-0 transition-colors ${allowClan ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
-            />
-            <span className="font-mono text-[7px] tracking-widest uppercase text-secondary/50 group-hover:text-secondary/80 transition-colors select-none">
-              Clan
-            </span>
-          </label>
-          <label className="flex items-center gap-1 cursor-pointer group">
-            <div
-              onClick={() => setLimitToYear(v => !v)}
-              className={`w-2 h-2 border shrink-0 transition-colors ${limitToYear ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
-            />
-            <span className="font-mono text-[7px] tracking-widest uppercase text-secondary/50 group-hover:text-secondary/80 transition-colors select-none">
-              Año
-            </span>
-          </label>
-        </div>
-      </div>
-      <CatalogSearch
-        onLoad={(text, file) => { sim.loadUnitText(text, file); setSimuladorPortada(false); }}
-        allowClan={allowClan}
-        limitToYear={limitToYear}
-        onSwitchTab={tab => {
-          const subTab = TAB_MAP[tab] ?? tab;
-          setActiveSubTab(subTab);
-          sim.setActiveTab(tab as 'mechs' | 'vehicles');
-          setSimuladorPortada(false);
-        }}
-      />
+  // Toggles Clan + Año compactos (van pegados a CatalogSearch en el portal)
+  const flagToggles = (
+    <div className="flex items-center gap-2 mr-1">
+      <label
+        onClick={() => setAllowClan(v => !v)}
+        className="flex items-center gap-1 cursor-pointer group select-none"
+        title="Permitir tech Clan"
+      >
+        <div
+          className={`w-2 h-2 border shrink-0 transition-colors ${allowClan ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
+        />
+        <span className="font-mono text-[8px] tracking-widest uppercase text-secondary/60 group-hover:text-secondary">Clan</span>
+      </label>
+      <label
+        onClick={() => setLimitToYear(v => !v)}
+        className="flex items-center gap-1 cursor-pointer group select-none"
+        title="Limitar al año de campaña"
+      >
+        <div
+          className={`w-2 h-2 border shrink-0 transition-colors ${limitToYear ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
+        />
+        <span className="font-mono text-[8px] tracking-widest uppercase text-secondary/60 group-hover:text-secondary">Año</span>
+      </label>
     </div>
   );
 
   if (simuladorPortada) {
     return (
       <div className="p-6 animate-[fadeInUp_0.3s_ease]">
-        {header}
+        <SubtabRightPortal>
+          {flagToggles}
+          <CatalogSearch
+            onLoad={(text, file) => { sim.loadUnitText(text, file); setSimuladorPortada(false); }}
+            allowClan={allowClan}
+            limitToYear={limitToYear}
+            onSwitchTab={tab => {
+              const subTab = TAB_MAP[tab] ?? tab;
+              setActiveSubTab(subTab);
+              sim.setActiveTab(tab as 'mechs' | 'vehicles');
+              setSimuladorPortada(false);
+            }}
+          />
+        </SubtabRightPortal>
         <SimuladorPortada
           allowClan={allowClan}
           limitToYear={limitToYear}
@@ -144,53 +175,39 @@ export function SimuladorPage() {
 
   return (
     <div className="p-6 animate-[fadeInUp_0.3s_ease]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase leading-none">
-            Simulador de Combate
-          </h1>
-          <div className="flex flex-col justify-between self-stretch py-px gap-0.5">
-            <label className="flex items-center gap-1 cursor-pointer group">
-              <div
-                onClick={() => setAllowClan(v => !v)}
-                className={`w-2 h-2 border shrink-0 transition-colors ${allowClan ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
-              />
-              <span className="font-mono text-[7px] tracking-widest uppercase text-secondary/50 group-hover:text-secondary/80 transition-colors select-none">
-                Clan
-              </span>
-            </label>
-            <label className="flex items-center gap-1 cursor-pointer group">
-              <div
-                onClick={() => setLimitToYear(v => !v)}
-                className={`w-2 h-2 border shrink-0 transition-colors ${limitToYear ? 'bg-primary-container border-primary-container' : 'bg-transparent border-outline-variant/40'}`}
-              />
-              <span className="font-mono text-[7px] tracking-widest uppercase text-secondary/50 group-hover:text-secondary/80 transition-colors select-none">
-                Año
-              </span>
-            </label>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <CatalogSearch
-            onLoad={sim.loadUnitText}
-            allowClan={allowClan}
-            limitToYear={limitToYear}
-            onSwitchTab={tab => {
-              const subTab = TAB_MAP[tab] ?? tab;
-              setActiveSubTab(subTab);
-              sim.setActiveTab(tab as 'mechs' | 'vehicles');
-            }}
-          />
-          <UnitSlots
-            slotNames={slotNames}
-            slotCount={slotCount}
-            activeIndex={activeIdx}
-            onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
-            onFileUpload={sim.handleFileUpload}
-          />
-        </div>
-      </div>
+      {/* Subtab right-slot: flags + search + slot picker + sync */}
+      <SubtabRightPortal>
+        {flagToggles}
+        <CatalogSearch
+          onLoad={sim.loadUnitText}
+          allowClan={allowClan}
+          limitToYear={limitToYear}
+          onSwitchTab={tab => {
+            const subTab = TAB_MAP[tab] ?? tab;
+            setActiveSubTab(subTab);
+            sim.setActiveTab(tab as 'mechs' | 'vehicles');
+          }}
+        />
+        <UnitSlots
+          slotNames={slotNames}
+          slotCount={slotCount}
+          activeIndex={activeIdx}
+          onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
+          onFileUpload={sim.handleFileUpload}
+        />
+        <FuerzaSyncBar
+          dirty={sim.dirty}
+          lastLocalSave={sim.lastLocalSave}
+          getSnapshot={sim.getSnapshot}
+          hydrateFromSnapshot={sim.hydrateFromSnapshot}
+          resetSession={sim.resetSession}
+          markSynced={sim.markSynced}
+          bvTotal={
+            sim.mechSlots.reduce((acc, s) => acc + (s.state?.bv ?? 0), 0) +
+            sim.vehicleSlots.reduce((acc, s) => acc + ((s.state as any)?.bv ?? 0), 0)
+          }
+        />
+      </SubtabRightPortal>
 
       {!sim.isLoaded ? (
         <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 opacity-40">
@@ -201,9 +218,9 @@ export function SimuladorPage() {
         </div>
       ) : isMech && ms && ss ? (
         /* ── MECH LAYOUT ── */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-20 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
           {/* Left: Pilot + Fire + Heat */}
-          <div className="col-span-1 lg:col-span-3 space-y-4">
+          <div className="col-span-1 md:col-span-3 space-y-4">
             <PilotPanel
               state={ms}
               session={ss}
@@ -228,11 +245,11 @@ export function SimuladorPage() {
               <Crosshair size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin de Turno'}
             </button>
 
-            <HeatMonitor state={ms} session={ss} />
+            <HeatMonitor state={ms} session={ss} onAdjustHeat={sim.adjustHeat} />
           </div>
 
           {/* Center: Armor Diagram */}
-          <div className="col-span-1 lg:col-span-6">
+          <div className="col-span-1 md:col-span-6">
             <ArmorDiagram
               state={ms}
               session={ss}
@@ -242,11 +259,13 @@ export function SimuladorPage() {
               onSectionClick={s => sim.setSelectedSection(s === sim.selectedSection ? null : s)}
               onApplyDamage={sim.applyDamageToSelected}
               setSelectedSection={sim.setSelectedSection}
+              onForceRevive={sim.forceReviveMech}
+              onAdjustAmmo={sim.adjustAmmo}
             />
           </div>
 
           {/* Right: Weapons + Log */}
-          <div className="col-span-1 lg:col-span-3 space-y-4">
+          <div className="col-span-1 md:col-span-3 space-y-4">
             {/* Weapons */}
             <section className="bg-surface-container-low p-4 clip-chamfer border-l-2 border-primary-container/30">
               <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">Armas</h2>
@@ -297,7 +316,7 @@ export function SimuladorPage() {
           </div>
 
           {/* Bottom: Critical Matrix */}
-          <div className="col-span-1 lg:col-span-12">
+          <div className="col-span-1 md:col-span-12">
             <CriticalMatrix state={ms} session={ss} onToggleCrit={sim.toggleCrit} sysHits={sim.sysHits} />
           </div>
         </div>
