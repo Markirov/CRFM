@@ -38,10 +38,13 @@
       "Bash(xargs grep *)",
       "Bash(cat)",
       "Read(//tmp/**)",
-      "Bash(powershell.exe -Command ' *)"
+      "Bash(powershell.exe -Command ' *)",
+      "Bash(git fetch *)",
+      "Bash(powershell -Command 'Add-Type -AssemblyName System.Drawing; foreach \\($f in Get-ChildItem '\\\\''public/pilot-*.png'\\\\''\\) { $img = [System.Drawing.Image]::FromFile\\($f.FullName\\); Write-Host \"$\\($f.Name\\): $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) }')",
+      "Bash(cd \"E:/Drive/CBT/MechWarrior RPG\" && npx tsc --noEmit 2>&1 | tail -3)",
+      "Bash(git push*)"
     ],
     "deny": [
-      "Bash(git push*)",
       "Bash(git reset --hard*)",
       "Bash(rm -rf*)",
       "Bash(sudo*)",
