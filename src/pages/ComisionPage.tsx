@@ -298,26 +298,17 @@ function MechAsset({ pilot, call, chassis, weight, weightClass, bv, price, statu
           <span style={{ color: statusColor }}>{weightClass}</span>
         </div>
 
-        {/* Estado del mech (% operativo). Lectura de ESTADOMECHS (cell Configuracion). */}
-        {typeof simDamagePct === 'number' && (() => {
-          const estadoPct = Math.max(0, 100 - simDamagePct);
-          const c = estadoPct >= 90 ? T.gold : estadoPct >= 50 ? T.cream : T.bloodLight;
-          return (
-            <div style={{
-              display: 'flex', justifyContent: 'flex-end', marginTop: 1,
-              fontFamily: '"Share Tech Mono", monospace', fontSize: 8, letterSpacing: 1,
-            }}>
-              <span style={{ color: c }}>ESTADO {estadoPct}%</span>
-            </div>
-          );
-        })()}
-
+        {/* BV + Estado en misma linea */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', marginTop: 1,
-          fontFamily: '"Share Tech Mono", monospace', fontSize: 8,
-          color: T.outline, letterSpacing: 1,
+          fontFamily: '"Share Tech Mono", monospace', fontSize: 8, letterSpacing: 1,
         }}>
           <span style={{ color: infoColor }}>BV {bv.toLocaleString('es-ES', { useGrouping: 'always' })}</span>
+          {typeof simDamagePct === 'number' && (() => {
+            const estadoPct = Math.max(0, 100 - simDamagePct);
+            const c = estadoPct >= 90 ? T.gold : estadoPct >= 50 ? T.cream : T.bloodLight;
+            return <span style={{ color: c }}>ESTADO {estadoPct}%</span>;
+          })()}
         </div>
       </div>
     </article>
