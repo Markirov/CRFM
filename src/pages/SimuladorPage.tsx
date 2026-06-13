@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaConfigSlot, loadFuerzaConfigSlot, saveConfigBatch } from '@/lib/sheets-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch } from '@/lib/sheets-service';
 import { loadLocalSnapshot } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
@@ -72,7 +72,7 @@ export function SimuladorPage() {
         const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
         const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
                  + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-        const res = await saveFuerzaConfigSlot(5, { nombre: 'Campaña', bv, snapshot: snap });
+        const res = await saveFuerzaCampana({ nombre: 'Campaña', bv, snapshot: snap });
         if (res?.success) {
           // ESTADOMECHS map
           const map: Record<string, number> = {};
@@ -164,7 +164,7 @@ export function SimuladorPage() {
     // Entrar: pide clave + carga FUERZA5
     if (!gateCampaignWrite('cargar FUERZA5')) return;
     try {
-      const entry = await loadFuerzaConfigSlot(5);
+      const entry = await loadFuerzaCampana();
       if (entry?.snapshot?.schemaVersion) {
         sim.hydrateFromSnapshot(entry.snapshot);
         sim.markSynced();
@@ -487,7 +487,7 @@ export function SimuladorPage() {
             const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
             const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
                      + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-            await saveFuerzaConfigSlot(5, { nombre: 'Fuerza 5', bv, snapshot: snap });
+            await saveFuerzaCampana({ nombre: 'Campaña auto', bv, snapshot: snap });
             // ESTADOMECHS map
             const map: Record<string, number> = {};
             for (const ms2 of (snap.mechSlots ?? [])) {
