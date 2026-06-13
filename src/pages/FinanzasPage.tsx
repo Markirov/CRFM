@@ -1797,12 +1797,14 @@ function BreakdownRow({ label, detail, value, color, bold }: {
 //  TALLER MODAL (A1) — factura reparación post-combate
 // ══════════════════════════════════════════════════════════
 
-export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
+export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore }: {
   campaignDate: string;
   onClose: () => void;
   onCommit: (total: number, concepto: string, mechName: string) => Promise<void>;
   /** Si se pasa, auto-carga ese slot del simulador al montar. */
   initialSimSlotIdx?: number | null;
+  /** Notifica al caller tras restaurar mech en simulador (para rehydrate). */
+  onRestore?: () => void;
 }) {
   const { isTabletDown, isMobile } = useViewport();
   const { catalog } = useMechCatalog();
@@ -2367,6 +2369,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
                         const ok = restoreMechSlotFull(simSlotIdx);
                         if (ok) {
                           console.log(`[Taller] Slot ${simSlotIdx + 1} restaurado en simulador (armor/IS/crits/ammo).`);
+                          onRestore?.();
                         }
                       }
                       // Telegram notif (drop silencioso, post-commit)

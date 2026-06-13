@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Crosshair } from 'lucide-react';
+import { Crosshair, Lock, LockOpen } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaConfigSlot, saveConfigBatch } from '@/lib/sheets-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaConfigSlot, loadFuerzaConfigSlot, saveConfigBatch } from '@/lib/sheets-service';
+import { loadLocalSnapshot } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
@@ -32,7 +33,56 @@ export function SimuladorPage() {
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
   const [destroyedBusy, setDestroyedBusy] = useState(false);
+  const [campaignMode, setCampaignMode] = useState<boolean>(() => sessionStorage.getItem('kk_campaign_mode') === '1');
   const prevSubTabRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    sessionStorage.setItem('kk_campaign_mode', campaignMode ? '1' : '0');
+  }, [campaignMode]);
+
+  // Auto-save FUERZA5 cada 5 minutos si modo campaña y hay cambios.
+  // Requiere que el slot 5 este previamente desbloqueado (sessionStorage).
+  useEffect(() => {
+    if (!campaignMode) return;
+    const id = setInterval(async () => {
+      if (!sim.dirty) return;
+      try {
+        const raw = sessionStorage.getItem('kk_fuerza_slot_unlock');
+        const arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr) || !arr.includes(5)) return; // sin clave -> skip
+        const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
+        const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+                 + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+        const res = await saveFuerzaConfigSlot(5, { nombre: 'Campaña', bv, snapshot: snap });
+        if (res?.success) {
+          // ESTADOMECHS map
+          const map: Record<string, number> = {};
+          for (const ms2 of (snap.mechSlots ?? [])) {
+            const st: any = ms2?.state; const se: any = ms2?.session;
+            if (!st || !se) continue;
+            const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+            const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+            const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
+            const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
+            const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
+            const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
+            const total = armorMax + isMax;
+            if (total <= 0) continue;
+            const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
+            const key = `${st.chassis || ''} ${st.model || ''}`.trim();
+            if (key) map[key] = pct;
+          }
+          await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
+          sim.markSynced?.();
+          console.log('[Campaign] auto-save FUERZA5 OK', new Date().toLocaleTimeString());
+        }
+      } catch (err) {
+        console.warn('[Campaign] auto-save fallo', err);
+      }
+    }, 5 * 60 * 1000); // 5 min
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignMode]);
 
   useEffect(() => {
     // Hide portada only when activeSubTab changes after initial mount
@@ -144,8 +194,19 @@ export function SimuladorPage() {
   const isMech = sim.activeTab === 'mechs';
 
   // Slot names for UnitSlots
+  // Modo campaña: muestra iniciales/apodo de PJs activos (roster) en vez de mech name.
+  const campaignPilots = useMemo(() => {
+    if (!campaignMode) return null;
+    return roster
+      .filter(r => r.estado === 'activo' || r.estado === 'herido')
+      .map(r => r.apodo || r.nombre || r.jugador || '?');
+  }, [campaignMode, roster]);
+
   const slotNames = isMech
-    ? sim.mechSlots.map((s, i) => s.state ? `${s.state.chassis} ${s.state.model}` : `SLOT ${i + 1}`)
+    ? sim.mechSlots.map((s, i) => {
+        if (campaignPilots && campaignPilots[i]) return campaignPilots[i];
+        return s.state ? `${s.state.chassis} ${s.state.model}` : `SLOT ${i + 1}`;
+      })
     : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`);
 
   const slotCount = isMech ? sim.mechSlots.length : sim.vehicleSlots.length;
@@ -173,6 +234,42 @@ export function SimuladorPage() {
           onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
           onFileUpload={sim.handleFileUpload}
         />
+        <button
+          onClick={async () => {
+            if (campaignMode) { setCampaignMode(false); return; }
+            // Activar: requiere clave + carga snapshot FUERZA5
+            const raw = sessionStorage.getItem('kk_fuerza_slot_unlock');
+            const arr = raw ? JSON.parse(raw) : [];
+            const unlocked = Array.isArray(arr) && arr.includes(5);
+            if (!unlocked) {
+              const pwd = prompt('Modo Campaña: introduce clave FUERZA5');
+              if (pwd === null) return;
+              if (pwd !== 'Mark') { alert('Clave incorrecta'); return; }
+              const next = Array.isArray(arr) ? arr : [];
+              if (!next.includes(5)) next.push(5);
+              sessionStorage.setItem('kk_fuerza_slot_unlock', JSON.stringify(next));
+            }
+            try {
+              const entry = await loadFuerzaConfigSlot(5);
+              if (entry?.snapshot?.schemaVersion) {
+                sim.hydrateFromSnapshot(entry.snapshot);
+                sim.markSynced();
+              }
+              setCampaignMode(true);
+            } catch (err) {
+              alert('Fallo al cargar FUERZA5: ' + err);
+            }
+          }}
+          title={campaignMode ? 'Modo campaña activo — pulsa para salir' : 'Activar modo campaña (carga FUERZA5)'}
+          className={`flex items-center gap-1 border px-2 py-1 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors ${
+            campaignMode
+              ? 'border-amber-400 bg-amber-400/15 text-amber-400'
+              : 'border-outline-variant/40 hover:border-amber-400/60 text-secondary/70 hover:text-amber-400'
+          }`}
+        >
+          {campaignMode ? <Lock size={12} /> : <LockOpen size={12} />}
+          <span className="hidden sm:inline">Campaña</span>
+        </button>
         <FuerzaSyncBar
           dirty={sim.dirty}
           lastLocalSave={sim.lastLocalSave}
@@ -327,6 +424,11 @@ export function SimuladorPage() {
           campaignDate={getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth)}
           initialSimSlotIdx={tallerSlotIdx}
           onClose={() => setTallerSlotIdx(null)}
+          onRestore={() => {
+            // restoreMechSlotFull ya actualizó localStorage; rehidratamos el estado en RAM
+            const snap = loadLocalSnapshot();
+            if (snap) sim.hydrateFromSnapshot(snap);
+          }}
           onCommit={async (total, concepto, mechName) => {
             await commitLibroEntryAndTreasury({
               id: genId('lm'),
