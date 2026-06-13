@@ -2150,14 +2150,13 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
               <div style={{ marginTop: 10, display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 10, alignItems: 'end' }}>
                 {/* Estado factura — IZQ */}
                 <div>
-                  <FieldLabel>Estado factura (%) {system === 'canon' && '⊘'}</FieldLabel>
+                  <FieldLabel>Estado factura (%)</FieldLabel>
                   <select value={estadoPct}
-                    disabled={system === 'canon'}
                     onChange={e => {
                       const v = parseInt(e.target.value, 10);
                       setEstadoPct(Number.isFinite(v) ? v : 100);
                     }}
-                    style={{ ...inputStyle, opacity: system === 'canon' ? 0.4 : 1 }}>
+                    style={inputStyle}>
                     {[...ESTADO_FACTURA_PCT].map(p => (
                       <option key={p} value={p}>{p}% factura</option>
                     ))}
@@ -2170,15 +2169,13 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
                   <div style={{ display: 'flex', gap: 4 }}>
                     {[0, 25, 50, 75, 100].map(p => (
                       <button key={p}
-                        disabled={system === 'canon'}
                         onClick={() => setEstadoPct(p)}
                         style={{
                           width: 36, padding: '6px 0',
                           background: estadoPct === p ? T.gold : T.void,
                           border: `1px solid ${T.gold}`,
                           color: estadoPct === p ? T.void : T.gold,
-                          cursor: system === 'canon' ? 'not-allowed' : 'pointer',
-                          opacity: system === 'canon' ? 0.3 : 1,
+                          cursor: 'pointer',
                           fontFamily: '"Share Tech Mono", monospace', fontSize: 10, fontWeight: 700,
                         }}>{p}</button>
                     ))}
