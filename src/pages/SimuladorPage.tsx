@@ -122,6 +122,15 @@ export function SimuladorPage() {
     });
   }, [roster]);
 
+  // Modo campaña: muestra apodo/nombre de PJs activos en vez de mech name.
+  // Debe estar antes de cualquier early return para no romper orden de hooks.
+  const campaignPilots = useMemo(() => {
+    if (!campaignMode) return null;
+    return roster
+      .filter(r => r.estado === 'activo' || r.estado === 'herido')
+      .map(r => r.apodo || r.nombre || r.jugador || '?');
+  }, [campaignMode, roster]);
+
   // Toggles Clan + Año compactos (van pegados a CatalogSearch en el portal)
   const flagToggles = (
     <div className="flex items-center gap-2 mr-1">
@@ -192,15 +201,6 @@ export function SimuladorPage() {
 
   const { mechState: ms, mechSession: ss, vehicleState: vs, vehicleSession: vss } = sim;
   const isMech = sim.activeTab === 'mechs';
-
-  // Slot names for UnitSlots
-  // Modo campaña: muestra iniciales/apodo de PJs activos (roster) en vez de mech name.
-  const campaignPilots = useMemo(() => {
-    if (!campaignMode) return null;
-    return roster
-      .filter(r => r.estado === 'activo' || r.estado === 'herido')
-      .map(r => r.apodo || r.nombre || r.jugador || '?');
-  }, [campaignMode, roster]);
 
   const slotNames = isMech
     ? sim.mechSlots.map((s, i) => {
