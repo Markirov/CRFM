@@ -1820,7 +1820,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
 
   // Simulador import
   const [showSimPicker, setShowSimPicker] = useState(false);
-  const [municionDetalle, setMunicionDetalle] = useState<{ family: string; spent: number; tons: number; cost: number }[]>([]);
+  const [municionDetalle, setMunicionDetalle] = useState<import('@/lib/repair-engine').MunicionDetalleEntry[]>([]);
   const [simSlotIdx, setSimSlotIdx] = useState<number | null>(null); // null = no cargado desde sim
   const simSlots: { slot: MechSlot; idx: number }[] = useMemo(() => {
     const snap = loadLocalSnapshot();
@@ -2281,12 +2281,45 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
                       borderLeft: `2px solid ${T.outlineV}`,
                       fontFamily: '"Share Tech Mono", monospace', fontSize: 9, color: T.outline,
                     }}>
-                      {municionDetalle.map((d, i) => (
-                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', gap: 6 }}>
-                          <span>{d.family} ({d.spent} disp · {d.tons}t)</span>
-                          <span style={{ color: T.bone }}>{fmtMoney(d.cost)}</span>
-                        </div>
-                      ))}
+                      {municionDetalle.map((d, i) => {
+                        const isLBX = !!d.lbxKey && d.clusterPrice !== undefined;
+                        const toggleAmmoType = (next: 'slug' | 'cluster') => {
+                          if (!isLBX || d.ammoType === next) return;
+                          const price = next === 'cluster' ? (d.clusterPrice ?? 0) : (d.slugPrice ?? 0);
+                          const newCost = d.tons * price;
+                          setMunicionDetalle(prev => prev.map((e, j) => j === i ? { ...e, ammoType: next, cost: newCost } : e));
+                          setDamage(dmg => {
+                            const total = municionDetalle.reduce((sum, e, j) => sum + (j === i ? newCost : e.cost), 0);
+                            return { ...dmg, municion: total };
+                          });
+                        };
+                        return (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ flex: 1 }}>{d.family} ({d.spent} disp · {d.tons}t)</span>
+                            {isLBX && (
+                              <div style={{ display: 'flex', gap: 2 }}>
+                                <button onClick={() => toggleAmmoType('slug')}
+                                  style={{
+                                    padding: '1px 6px', fontSize: 8, fontFamily: '"Share Tech Mono", monospace',
+                                    background: d.ammoType === 'slug' ? T.gold + '30' : 'transparent',
+                                    color: d.ammoType === 'slug' ? T.gold : T.outline,
+                                    border: `1px solid ${d.ammoType === 'slug' ? T.gold : T.outlineV}`,
+                                    cursor: 'pointer', textTransform: 'uppercase',
+                                  }}>Slug</button>
+                                <button onClick={() => toggleAmmoType('cluster')}
+                                  style={{
+                                    padding: '1px 6px', fontSize: 8, fontFamily: '"Share Tech Mono", monospace',
+                                    background: d.ammoType === 'cluster' ? T.gold + '30' : 'transparent',
+                                    color: d.ammoType === 'cluster' ? T.gold : T.outline,
+                                    border: `1px solid ${d.ammoType === 'cluster' ? T.gold : T.outlineV}`,
+                                    cursor: 'pointer', textTransform: 'uppercase',
+                                  }}>Cluster</button>
+                              </div>
+                            )}
+                            <span style={{ color: T.bone, minWidth: 70, textAlign: 'right' }}>{fmtMoney(d.cost)}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   <div style={{ borderTop: `1px solid ${T.outlineV}`, paddingTop: 8, marginTop: 6 }}>

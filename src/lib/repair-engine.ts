@@ -407,7 +407,7 @@ export function ammoPricePerTon(family: string): number {
 // ── Derivar daños desde sesión simulador ──────────────────────
 
 import type { MechState, MechSession, CritSlot, AmmoBin } from './combat-types';
-import { weaponPriceFromName } from './weapon-prices';
+import { weaponPriceFromName, lbxKeyFromAmmoFamily, LBX_CLUSTER_AMMO_COST } from './weapon-prices';
 
 /** Mapea slot.name del simulador → componente de reparación.
  *  Nombres literales de parsers.ts (SSW/MTF output). */
@@ -436,6 +436,21 @@ function mapCritToRepair(
   else if (n === 'Foot Actuator')                                  { out.actuadores['Tobillo'] = (out.actuadores['Tobillo'] ?? 0) + 1; }
 }
 
+export interface MunicionDetalleEntry {
+  family:        string;
+  spent:         number;
+  tons:          number;
+  cost:          number;
+  /** Codigo LB-X (LBX5/LBX10/...) si es LB-X y tiene precio cluster disponible. */
+  lbxKey?:       string;
+  /** 'slug' (solido, default) | 'cluster' (postas, mas caro). Solo aplica a LB-X. */
+  ammoType?:     'slug' | 'cluster';
+  /** Precio/ton solido — para recalcular al togglear. */
+  slugPrice?:    number;
+  /** Precio/ton cluster — solo si LBX_CLUSTER_AMMO_COST tiene entrada. */
+  clusterPrice?: number;
+}
+
 /**
  * Extrae MechRepairDamage desde el delta estado/sesión del simulador.
  *
@@ -450,7 +465,7 @@ export function deriveDamageFromSession(
 ): {
   damage: MechRepairDamage;
   pctDañoTotal: number;
-  municionDetalle: { family: string; spent: number; tons: number; cost: number }[];
+  municionDetalle: MunicionDetalleEntry[];
 } {
   // Armor delta
   const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'] as const;
@@ -514,15 +529,25 @@ export function deriveDamageFromSession(
   // Munición consumida: por cada bin, spent = max - current,
   // coste = ceil(spent / perTon) × precio/ton (compras por tonelada)
   let municionCost = 0;
-  const municionDetalle: { family: string; spent: number; tons: number; cost: number }[] = [];
+  const municionDetalle: MunicionDetalleEntry[] = [];
   for (const bin of (session.ammoBins ?? []) as AmmoBin[]) {
     const spent = Math.max(0, (bin.max ?? 0) - (bin.current ?? 0));
     if (spent <= 0 || !bin.perTon) continue;
-    const tons   = Math.ceil(spent / bin.perTon);
-    const price  = ammoPricePerTon(bin.family || '');
-    const cost   = tons * price;
+    const tons      = Math.ceil(spent / bin.perTon);
+    const slugPrice = ammoPricePerTon(bin.family || '');
+    const lbxKey    = lbxKeyFromAmmoFamily(bin.family || '');
+    const clusterPrice = lbxKey ? LBX_CLUSTER_AMMO_COST[lbxKey] : undefined;
+    // Default = slug (mas barato). Usuario togglea a cluster en UI si gasto postas.
+    const price    = slugPrice;
+    const cost     = tons * price;
     municionCost += cost;
-    municionDetalle.push({ family: bin.family, spent, tons, cost });
+    municionDetalle.push({
+      family: bin.family, spent, tons, cost,
+      lbxKey:       lbxKey ?? undefined,
+      ammoType:     lbxKey && clusterPrice ? 'slug' : undefined,
+      slugPrice:    lbxKey && clusterPrice ? slugPrice : undefined,
+      clusterPrice: clusterPrice,
+    });
   }
 
   return {

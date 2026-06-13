@@ -159,3 +159,29 @@ export function weaponAmmoPriceFromName(name: string): number {
   const key = weaponKeyFromName(name);
   return key ? (WEAPON_PRICE_TABLE[key]?.ammoCost ?? 0) : 0;
 }
+
+// ── LB-X ammo dual price (slug solido vs cluster postas) ──────
+// ammoCost en WEAPON_PRICE_TABLE = slug (default). Cluster mas caro.
+
+export const LBX_CLUSTER_AMMO_COST: Record<string, number> = {
+  // Solo LB-5 y LB-10 tienen precio cluster confirmado por DM.
+  // LB-2 y LB-20 sin dato: omitir toggle hasta confirmar.
+  LBX5:  15_000,
+  LBX10: 20_000,
+};
+
+/** True si el codigo arma es LB-X. */
+export function isLBXCode(key: string): boolean {
+  return /^LBX\d+$/.test(key);
+}
+
+/** Detecta codigo LB-X desde el campo family del AmmoBin. null si no es LB-X. */
+export function lbxKeyFromAmmoFamily(family: string): string | null {
+  const n = (family || '').toLowerCase();
+  if (!/lb[- ]?\d+[- ]?x|lbx\d+/i.test(family || '') && !n.includes('lb-x')) return null;
+  if (/lb[- ]?2|lbx2/i.test(family)) return 'LBX2';
+  if (/lb[- ]?5|lbx5/i.test(family)) return 'LBX5';
+  if (/lb[- ]?10|lbx10/i.test(family)) return 'LBX10';
+  if (/lb[- ]?20|lbx20/i.test(family)) return 'LBX20';
+  return null;
+}
