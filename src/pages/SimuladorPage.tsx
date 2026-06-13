@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit } from '@/lib/sheets-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaConfigSlot, saveConfigBatch } from '@/lib/sheets-service';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
@@ -366,9 +366,38 @@ export function SimuladorPage() {
             setDestroyedBusy(false);
             return;
           }
-          // Refresca roster + limpia sim
-          try { const fresh = await loadRoster(); setRoster(fresh); } catch {/* ignore */}
+          // Limpia el slot del mech destruido en el simulador
           sim.clearCurrentUnit();
+          // Refresca roster (Unidad AE actualizada -> Personajes Q recalcula)
+          try { const fresh = await loadRoster(); setRoster(fresh); } catch {/* ignore */}
+          // Auto-guarda FUERZA5 + ESTADOMECHS con el estado limpio
+          try {
+            const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
+            const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+                     + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+            await saveFuerzaConfigSlot(5, { nombre: 'Fuerza 5', bv, snapshot: snap });
+            // ESTADOMECHS map
+            const map: Record<string, number> = {};
+            for (const ms2 of (snap.mechSlots ?? [])) {
+              const st: any = ms2?.state; const se: any = ms2?.session;
+              if (!st || !se) continue;
+              const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+              const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+              const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
+              const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
+              const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
+              const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
+              const total = armorMax + isMax;
+              if (total <= 0) continue;
+              const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
+              const key = `${st.chassis || ''} ${st.model || ''}`.trim();
+              if (key) map[key] = pct;
+            }
+            await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
+            sim.markSynced?.();
+          } catch (err) {
+            console.warn('[destruction] auto-save FUERZA5/ESTADOMECHS fallo', err);
+          }
           closeModal();
         };
         return (
