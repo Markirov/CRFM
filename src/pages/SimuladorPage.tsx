@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Crosshair } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
@@ -22,8 +23,9 @@ import type { FireTarget } from '@/lib/combat-types';
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
 export function SimuladorPage() {
-  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster } = useAppStore();
+  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setFinanzasPendingModal, setTallerAutoLoadSlot } = useAppStore();
   const sim = useSimulador();
+  const navigate = useNavigate();
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
   const prevSubTabRef = useRef<string | null>(null);
@@ -207,6 +209,11 @@ export function SimuladorPage() {
               onSetMoveMode={sim.setMoveMode}
               onSetJumpUsed={sim.setJumpUsed}
               onLoadPilot={p => sim.setPilotFull(p.name, p.gunnery, p.piloting)}
+              onOpenTaller={() => {
+                setTallerAutoLoadSlot(sim.currentMechIdx);
+                setFinanzasPendingModal('taller');
+                navigate('/finanzas');
+              }}
             />
 
             <button
