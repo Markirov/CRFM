@@ -17,7 +17,6 @@ import { SimuladorPortada } from '@/components/simulador/SimuladorPortada';
 import { FuerzaSyncBar } from '@/components/simulador/FuerzaSyncBar';
 import { SubtabRightPortal } from '@/components/shell/SubtabRightPortal';
 import { useAppStore } from '@/lib/store';
-import { calcAttrAvg, calcTIR } from '@/lib/barracones-data';
 import type { FireTarget } from '@/lib/combat-types';
 
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
@@ -42,49 +41,22 @@ export function SimuladorPage() {
     if (tab !== sim.activeTab) sim.setActiveTab(tab as 'mechs' | 'vehicles');
   }, [activeSubTab]);
 
-  // Pilotos disponibles \u2014 fuente: roster (Personajes sheet).
-  // Disparo/Pilotaje vienen directos de columnas O y P (RosterEntry.disparoMech/pilotajeMech).
-  // Si la sheet no los trae, fallback a calculo TIR via habilidades del slot Barracones.
+  // Pilotos disponibles desde roster (Personajes sheet). Disparo/Pilotaje
+  // SIEMPRE de cols O/P (disparoMech/pilotajeMech). Sin fallback Barracones
+  // para evitar matches cruzados (NPCs leian skills de Castigador).
   const availablePilots = useMemo<AvailablePilot[]>(() => {
     const fromRoster = roster
       .filter(r => r.estado === 'activo' || r.estado === 'herido')
       .map(r => {
-        // Prioridad: apodo (callsign) → nombre real → jugador (handler/DM).
-        // NPCs suelen tener jugador="Marcos" (DM) → si va antes que nombre, todos los NPCs salen como Marcos.
         const name = r.apodo || r.nombre || r.jugador;
         if (!name) return null;
-        let gunnery  = r.disparoMech;
-        let piloting = r.pilotajeMech;
-        if (gunnery === null || piloting === null) {
-          // Fallback: busca el slot Barracones por jugador/nombre y recalcula TIR
-          try {
-            const raw = localStorage.getItem('barracones_slots_v1');
-            if (raw) {
-              const slots: any[] = JSON.parse(raw);
-              const norm = (s: string) => (s || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-              const target = norm(r.jugador) || norm(r.nombre);
-              const p = slots.find(s => s && (norm(s.callsign) === target || norm(s.nombre) === target));
-              if (p) {
-                const habs: { nombre: string; nivel: number }[] = Array.isArray(p.habilidades) ? p.habilidades : [];
-                const disparoSkill = habs.find(h => norm(h.nombre) === 'disparo mech');
-                const pilotarSkill = habs.find(h => {
-                  const n = norm(h.nombre); return n === 'pilotaje mech' || n === 'pilotar mech';
-                });
-                const attrAvg = calcAttrAvg(p.fue ?? 6, p.des ?? 6, p.int ?? 6, p.car ?? 6);
-                if (gunnery === null && disparoSkill)  gunnery  = Math.max(0, calcTIR(attrAvg, disparoSkill.nivel));
-                if (piloting === null && pilotarSkill) piloting = Math.max(0, calcTIR(attrAvg, pilotarSkill.nivel));
-              }
-            }
-          } catch { /* ignore */ }
-        }
         return {
           name,
-          gunnery:  gunnery  ?? 4,
-          piloting: piloting ?? 5,
+          gunnery:  r.disparoMech  ?? 4,
+          piloting: r.pilotajeMech ?? 5,
         };
       })
       .filter((x): x is AvailablePilot => x !== null);
-    // Dedup por nombre (por si roster trae duplicados)
     const seen = new Set<string>();
     return fromRoster.filter(p => {
       const k = p.name.toLowerCase();
