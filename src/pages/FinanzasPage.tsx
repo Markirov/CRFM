@@ -2238,6 +2238,42 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx }: {
                   <FacturaRow label="Retros"         value={factura.retros} />
                   <FacturaRow label="Radiadores"     value={factura.radiadores} />
                   <FacturaRow label="Armas"          value={factura.armas} />
+                  {(damage.armas?.length ?? 0) > 0 && (
+                    <div style={{
+                      marginLeft: 12, padding: '4px 8px',
+                      borderLeft: `2px solid ${T.outlineV}`,
+                      fontFamily: '"Share Tech Mono", monospace', fontSize: 9, color: T.outline,
+                      display: 'flex', flexDirection: 'column', gap: 4,
+                    }}>
+                      {(damage.armas ?? []).map((a, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ flex: 1, color: a.status === 'destruida' ? T.bloodLight : T.bone }}>
+                            {a.name} <span style={{ color: T.outline }}>
+                              [{a.loc} {a.slotsHit}/{a.slotsTotal} · {a.status === 'destruida' ? 'DESTR' : 'parcial'}]
+                            </span>
+                          </span>
+                          <input
+                            type="number"
+                            value={a.cost || ''}
+                            placeholder="₡ coste"
+                            onFocus={e => e.target.select()}
+                            onChange={e => {
+                              const val = parseInt(e.target.value) || 0;
+                              setDamage(d => ({
+                                ...d,
+                                armas: (d.armas ?? []).map((w, j) => j === i ? { ...w, cost: val } : w),
+                              }));
+                            }}
+                            style={{
+                              width: 90, padding: '2px 4px',
+                              background: T.surfaceLow, border: `1px solid ${T.outlineV}`,
+                              color: T.bone, fontFamily: '"Share Tech Mono", monospace', fontSize: 10,
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <FacturaRow label="Munición"       value={factura.municion} />
                   {municionDetalle.length > 0 && (
                     <div style={{
