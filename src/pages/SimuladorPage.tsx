@@ -265,8 +265,10 @@ export function SimuladorPage() {
         }
       }
 
+      console.log('[Campaign] setCampaignMode(true) -> ON. Iniciales:', CAMPAIGN_PILOT_ORDER.map(h => h.slice(0,2).toUpperCase()));
       setCampaignMode(true);
     } catch (err) {
+      console.error('[Campaign] error en handleToggleCampaign:', err);
       alert('Fallo al cargar FUERZACAMPAÑA: ' + err);
     }
   };
