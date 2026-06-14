@@ -19,11 +19,11 @@ import {
 
 export function TallerPage() {
   const { activeSubTab, setActiveSubTab, campaign } = useAppStore();
-  const view: 'factura' | 'prioridades' = activeSubTab === 'prioridades' ? 'prioridades' : 'factura';
+  const view: 'factura' | 'prioridades' = activeSubTab === 'factura' ? 'factura' : 'prioridades';
 
   useEffect(() => {
     if (activeSubTab !== 'factura' && activeSubTab !== 'prioridades') {
-      setActiveSubTab('factura');
+      setActiveSubTab('prioridades');
     }
   }, [activeSubTab, setActiveSubTab]);
 
@@ -46,6 +46,7 @@ function TallerInlineWrapper({ campaignDate }: { campaignDate: string }) {
   return (
     <TallerModal
       key={resetKey}
+      inline
       campaignDate={campaignDate}
       onClose={() => setResetKey(k => k + 1)}
       onCommit={async (total, concepto, mechName) => {

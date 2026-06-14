@@ -26,8 +26,8 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       { id: 'taller',        label: 'Taller',            icon: '🔧', path: '/taller',        palette: 'amber',
         tabs: [
-          { id: 'factura',    label: 'Factura' },
           { id: 'prioridades', label: 'Prioridades' },
+          { id: 'factura',    label: 'Factura' },
         ],
       },
       {

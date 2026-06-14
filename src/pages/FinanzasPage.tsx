@@ -1795,7 +1795,7 @@ function BreakdownRow({ label, detail, value, color, bold }: {
 //  TALLER MODAL (A1) — factura reparación post-combate
 // ══════════════════════════════════════════════════════════
 
-export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore }: {
+export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, inline }: {
   campaignDate: string;
   onClose: () => void;
   onCommit: (total: number, concepto: string, mechName: string) => Promise<void>;
@@ -1803,6 +1803,8 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore }:
   initialSimSlotIdx?: number | null;
   /** Notifica al caller tras restaurar mech en simulador (para rehydrate). */
   onRestore?: () => void;
+  /** Render como pagina inline (sin overlay fixed). Default false = modal. */
+  inline?: boolean;
 }) {
   const { isTabletDown, isMobile } = useViewport();
   const { catalog } = useMechCatalog();
@@ -1923,20 +1925,21 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore }:
   const updActuador = (name: keyof typeof PRECIO_ACTUADOR, qty: number) =>
     setDamage(d => ({ ...d, actuadores: { ...d.actuadores, [name]: qty } }));
 
-  return (
-    <div style={{
-      position: 'fixed', inset: 0,
-      background: 'rgba(0,0,0,0.8)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      zIndex: 100,
-    }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: T.surface, border: `1px solid ${T.gold}`,
+  const outerStyle: React.CSSProperties = inline
+    ? { width: '100%', maxWidth: 1100, margin: '0 auto' }
+    : { position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 };
+  const innerStyle: React.CSSProperties = inline
+    ? { background: T.surface, border: `1px solid ${T.gold}`,
         padding: 'clamp(14px, 2.5vw, 26px)',
-        width: 'min(1100px, 95vw)',
-        maxHeight: '92vh', overflow: 'auto',
-        clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%)',
-      }}>
+        clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%)' }
+    : { background: T.surface, border: `1px solid ${T.gold}`,
+        padding: 'clamp(14px, 2.5vw, 26px)',
+        width: 'min(1100px, 95vw)', maxHeight: '92vh', overflow: 'auto',
+        clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%)' };
+  return (
+    <div style={outerStyle} onClick={inline ? undefined : onClose}>
+      <div onClick={e => e.stopPropagation()} style={innerStyle}>
         <SmallLabel>Taller · Factura reparación Mech (Ayudas BW:BX)</SmallLabel>
         <h2 style={{
           margin: '6px 0 16px',
