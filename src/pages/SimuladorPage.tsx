@@ -462,7 +462,17 @@ export function SimuladorPage() {
                   const isDestroyed = w.slotIndices?.length > 0 && w.slotIndices.every(idx => ss.crits[w.loc]?.[idx]?.hit);
                   const wFam = w.ammoFamilyKey.split(':').slice(2).join(':') || w.ammoFamilyKey;
                   const noAmmo = w.usesAmmo && !ss.ammoBins.some(b => (b.familyKey.split(':').slice(2).join(':') || b.familyKey) === wFam && b.current >= w.ammoUse);
-                  const armMod = (w.loc === 'LA' || w.loc === 'RA') ? sim.armActuatorMod[w.loc] : 0;
+                  const baseArmMod = (w.loc === 'LA' || w.loc === 'RA') ? sim.armActuatorMod[w.loc] : 0;
+                  // critMods manuales en slots de actuador del brazo → aplica a TODAS armas del brazo (igual que armMod).
+                  const ACTUATOR_NAMES = ['Shoulder', 'Upper Arm Actuator', 'Lower Arm Actuator', 'Hand Actuator'];
+                  const actuatorCritMod = (w.loc === 'LA' || w.loc === 'RA')
+                    ? (ss.crits?.[w.loc] ?? []).reduce((sum, slot, idx) => {
+                        if (!slot || !ACTUATOR_NAMES.includes(slot.name)) return sum;
+                        const m = ss.critMods?.[`${w.loc}:${idx}`];
+                        return sum + (m?.atk ?? 0);
+                      }, 0)
+                    : 0;
+                  const armMod = baseArmMod + actuatorCritMod;
                   const wMod = ss.weaponMods?.[w.id] || { heat: 0, atk: 0 };
                   // critMod per-arma: solo los slots de esta arma cuentan.
                   const slotCritMod = (w.slotIndices ?? []).reduce((acc, idx) => {
@@ -506,7 +516,10 @@ export function SimuladorPage() {
                           </span>
                         )}
                         {armMod > 0 && !isDestroyed && (
-                          <span className="text-amber-400/80" title={`Actuador brazo dañado: +${armMod} a impacto (afecta todas las armas del brazo)`}>+{armMod}🦾</span>
+                          <span
+                            className="text-amber-400/80"
+                            title={`Actuador brazo: +${armMod} a impacto (afecta todas las armas del brazo)${actuatorCritMod > 0 ? ` — incluye +${actuatorCritMod} de mod manual en actuador` : ''}`}
+                          >+{armMod}🦾</span>
                         )}
                         {wMod.atk > 0 && (
                           <span className="text-amber-400/80" title={`Dificultad extra (mod arma): +${wMod.atk}`}>+{wMod.atk}⚠</span>
