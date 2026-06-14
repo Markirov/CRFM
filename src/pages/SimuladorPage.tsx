@@ -54,15 +54,11 @@ export function SimuladorPage() {
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
   const [destroyedBusy, setDestroyedBusy] = useState(false);
-  const [campaignMode, setCampaignMode] = useState<boolean>(() => sessionStorage.getItem('kk_campaign_mode') === '1');
+  // Modo campaña SIEMPRE arranca OFF. Usuario lo activa manualmente.
+  const [campaignMode, setCampaignMode] = useState<boolean>(false);
   const prevSubTabRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    sessionStorage.setItem('kk_campaign_mode', campaignMode ? '1' : '0');
-  }, [campaignMode]);
-
-  // Auto-save FUERZA5 cada 5 minutos si modo campaña y hay cambios.
-  // Requiere que el slot 5 este previamente desbloqueado (sessionStorage).
+  // Auto-save FUERZACAMPAÑA cada 5 minutos si modo campaña y hay cambios.
   useEffect(() => {
     if (!campaignMode) return;
     const id = setInterval(async () => {
@@ -215,9 +211,7 @@ export function SimuladorPage() {
         }
       }
 
-      console.log('[Campaign] roster size at entry:', roster.length, roster.map(r => r.jugador));
       const entry = await loadFuerzaCampana();
-      console.log('[Campaign] FUERZACAMPAÑA entry:', entry);
       const loadedMechSlots = entry?.snapshot?.mechSlots ?? [];
       if (entry?.snapshot?.schemaVersion) {
         sim.hydrateFromSnapshot(entry.snapshot);
@@ -234,8 +228,7 @@ export function SimuladorPage() {
       for (let i = 0; i < CAMPAIGN_PILOT_ORDER.length; i++) {
         const handle = CAMPAIGN_PILOT_ORDER[i];
         const pilot = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
-        console.log(`[Campaign] slot ${i} (${handle}): pilot=`, pilot?.jugador, 'mech=', pilot?.mech);
-        if (!pilot?.mech) { console.warn(`[Campaign] skip ${handle}: no roster entry or sin mech`); continue; }
+        if (!pilot?.mech) continue;
         const loaded: any = loadedMechSlots[i];
         const loadedName = loaded?.state
           ? `${loaded.state.chassis || ''} ${loaded.state.model || ''}`.trim().toLowerCase()
@@ -274,22 +267,14 @@ export function SimuladorPage() {
           }
         }
         if (text) {
-          console.log(`[Campaign] cargando ${pilot.mech} en slot ${i} (${handle}) - fname=${fname} textLen=${text.length} first120=${text.slice(0, 120).replace(/\n/g, '|')}`);
-          try {
-            sim.loadUnitText(text, fname, i);
-            console.log(`[Campaign] loadUnitText OK slot ${i}`);
-          } catch (e) {
-            console.error(`[Campaign] loadUnitText THREW slot ${i}:`, e);
-          }
+          sim.loadUnitText(text, fname, i);
         } else {
-          console.warn(`[Campaign] mech NO encontrado en catalogo: ${pilot.mech} (PJ ${handle}) — urls probadas: assets/mechs/${encodeURIComponent(pilot.mech)}.ssw|.mtf`);
+          console.warn(`[Campaign] mech no encontrado en catalogo: ${pilot.mech} (PJ ${handle})`);
         }
       }
 
-      console.log('[Campaign] setCampaignMode(true) -> ON. Iniciales:', CAMPAIGN_PILOT_ORDER.map(h => h.slice(0,2).toUpperCase()));
       setCampaignMode(true);
     } catch (err) {
-      console.error('[Campaign] error en handleToggleCampaign:', err);
       alert('Fallo al cargar FUERZACAMPAÑA: ' + err);
     }
   };
@@ -396,6 +381,7 @@ export function SimuladorPage() {
           activeIndex={activeIdx}
           onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
           onFileUpload={sim.handleFileUpload}
+          shortLabels={campaignPilots ?? undefined}
         />
         <FuerzaSyncBar
           dirty={sim.dirty}
