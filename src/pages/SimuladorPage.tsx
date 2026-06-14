@@ -490,7 +490,12 @@ export function SimuladorPage() {
                         <span className="text-[8px] text-secondary/40">{w.loc} • {w.r}</span>
                       </div>
                       <div className="flex items-center gap-2 text-[9px]">
-                        <span>🔥{effectiveHeat}{wMod.heat > 0 && <span className="text-amber-400/80"> (+{wMod.heat})</span>}</span>
+                        <span>
+                          🔥{effectiveHeat}
+                          {(wMod.heat > 0 || slotCritMod.heat > 0) && (
+                            <span className="text-amber-400/80"> (+{wMod.heat + slotCritMod.heat})</span>
+                          )}
+                        </span>
                         <span>💥{w.dmg}</span>
                         {!isDestroyed && (
                           <span
@@ -501,10 +506,13 @@ export function SimuladorPage() {
                           </span>
                         )}
                         {armMod > 0 && !isDestroyed && (
-                          <span className="text-amber-400/80">+{armMod}</span>
+                          <span className="text-amber-400/80" title={`Actuador brazo dañado: +${armMod} a impacto (afecta todas las armas del brazo)`}>+{armMod}🦾</span>
                         )}
                         {wMod.atk > 0 && (
-                          <span className="text-amber-400/80" title={`Dificultad extra: +${wMod.atk} a la tirada de impacto`}>+{wMod.atk}⚠</span>
+                          <span className="text-amber-400/80" title={`Dificultad extra (mod arma): +${wMod.atk}`}>+{wMod.atk}⚠</span>
+                        )}
+                        {slotCritMod.atk > 0 && (
+                          <span className="text-amber-400/80" title={`Crítico en slot del arma: +${slotCritMod.atk} a impacto`}>+{slotCritMod.atk}💢</span>
                         )}
                         {w.usesAmmo && (
                           <span className={noAmmo ? 'text-error' : ''}>

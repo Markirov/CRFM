@@ -143,7 +143,7 @@ export function getMoveHeat(mode: MoveMode, jumpUsed: number): number {
     case 'stand': return 0;
     case 'walk': return 1;
     case 'run': return 2;
-    case 'jump': return Math.max(3, jumpUsed); // min 3 for jump
+    case 'jump': return Math.max(0, jumpUsed); // 1 heat por cada hex saltado
     default: return 0;
   }
 }
@@ -639,7 +639,19 @@ export function mechCalcHeatDelta(state: MechState, session: MechSession): HeatD
     }, 0);
   const engineHeat = sysHits.engine * 5;
 
-  const generated = move + weapons + engineHeat;
+  // critMods en slots Jump Jet → solo cuando el mech salta.
+  let jumpCritHeat = 0;
+  if (session.moveMode === 'jump') {
+    for (const [key, mod] of Object.entries(session.critMods || {})) {
+      if (!mod?.heat) continue;
+      const [loc, idxStr] = key.split(':');
+      const idx = Number(idxStr);
+      const slotName = session.crits?.[loc]?.[idx]?.name;
+      if (slotName === 'Jump Jet') jumpCritHeat += mod.heat;
+    }
+  }
+
+  const generated = move + weapons + engineHeat + jumpCritHeat;
   const dissipated = Math.max(0, state.diss - sysHits.heatsinks);
   const delta = generated - dissipated;
 
