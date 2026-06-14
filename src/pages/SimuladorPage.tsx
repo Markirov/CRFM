@@ -244,18 +244,34 @@ export function SimuladorPage() {
         // Match tolerante: substring en cualquier direccion
         const isCorrect = loadedName && (loadedName.includes(expected) || expected.includes(loadedName));
         if (isCorrect) continue; // slot ya tiene el mech del PJ correcto
+        // Variantes nombre — Unidad concatena chassis duplicado al final.
+        // Ej: "Crusader CRD-3R KKK Crusader" -> probar tambien sin trailing "Crusader".
+        const nameVariants: string[] = [pilot.mech];
+        const tokens = pilot.mech.split(/\s+/);
+        if (tokens.length > 1 && tokens[0].toLowerCase() === tokens[tokens.length - 1].toLowerCase()) {
+          nameVariants.push(tokens.slice(0, -1).join(' '));
+        }
         // Fetch + load (sobreescribe si habia mech equivocado)
-        const enc = encodeURIComponent(pilot.mech);
         let text: string | null = null;
         let fname = '';
-        for (const url of [`${BASE}assets/mechs/${enc}.ssw`, `${BASE}assets/mechs/${enc}.mtf`]) {
-          try {
-            const res = await fetch(url);
-            if (!res.ok) continue;
-            text = await res.text();
-            fname = url.split('/').pop() || `${pilot.mech}.ssw`;
-            break;
-          } catch {/* ignore */}
+        outerFetch: for (const candidate of nameVariants) {
+          const enc = encodeURIComponent(candidate);
+          for (const url of [`${BASE}assets/mechs/${enc}.ssw`, `${BASE}assets/mechs/${enc}.mtf`]) {
+            try {
+              const res = await fetch(url);
+              if (!res.ok) continue;
+              const body = await res.text();
+              // Vite SPA fallback devuelve index.html con 200. Rechaza si parece HTML.
+              const trimmed = body.trimStart().slice(0, 30).toLowerCase();
+              if (trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html')) {
+                console.warn(`[Campaign] ${url} devolvio HTML (archivo no existe). Probando siguiente variante.`);
+                continue;
+              }
+              text = body;
+              fname = url.split('/').pop() || `${candidate}.ssw`;
+              break outerFetch;
+            } catch {/* ignore */}
+          }
         }
         if (text) {
           console.log(`[Campaign] cargando ${pilot.mech} en slot ${i} (${handle}) - fname=${fname} textLen=${text.length} first120=${text.slice(0, 120).replace(/\n/g, '|')}`);
