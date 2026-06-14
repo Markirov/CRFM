@@ -186,6 +186,26 @@ export function calcPilotingTotal(basePiloting: number, gyroHits: number, wounds
   return basePiloting + (gyroHits * 3);
 }
 
+/** Suma del modificador de dificultad (atk) de todos los componentes con ajuste manual activo. */
+export function getCritModsAtkTotal(critMods: Record<string, { heat: number; atk: number }> | undefined): number {
+  if (!critMods) return 0;
+  return Object.values(critMods).reduce((sum, m) => sum + (m.atk || 0), 0);
+}
+
+/** Modificadores critMods (heat + atk) en los slots de un arma concreta. */
+export function getWeaponCritMod(
+  weapon: { loc: string; slotIndices?: number[] },
+  critMods: Record<string, { heat: number; atk: number }> | undefined,
+): { heat: number; atk: number } {
+  if (!critMods) return { heat: 0, atk: 0 };
+  let heat = 0, atk = 0;
+  for (const idx of (weapon.slotIndices ?? [])) {
+    const m = critMods[`${weapon.loc}:${idx}`];
+    if (m) { heat += m.heat || 0; atk += m.atk || 0; }
+  }
+  return { heat, atk };
+}
+
 /** Shooting modifier from arm actuator crits for a given location (LA or RA) */
 export function getArmActuatorMod(crits: Record<string, CritSlot[]>, loc: string): number {
   let mod = 0;
@@ -276,7 +296,7 @@ export interface DamageResult {
 }
 
 /** Damage per round for ammo explosion. Gauss ammo returns 0 (it doesn't explode). */
-function ammoExplosionDmgPerRound(family: string | null): number {
+export function ammoExplosionDmgPerRound(family: string | null): number {
   if (!family) return 1;
   if (/Gauss/i.test(family)) return 0; // Gauss ammo: no explosion
   const acM = family.match(/(?:Ultra\s*|LBX\s*|Light\s*)?AC\s*\/\s*(\d+)/i);
@@ -438,8 +458,28 @@ export function mechApplyDamage(
 
   if (remaining <= 0) return { session: s, logs };
 
-  // 2. IS
   const isKey = slotDef.ik;
+
+  // 1.5 Localización YA destruida (IS≤0 previamente) — transfer directo al siguiente
+  // Aplica cada vez, no solo la primera. Bug fix: antes el damage se "comía" en una loc muerta.
+  const maxIS = state.is[isKey as keyof typeof state.is] ?? 0;
+  if (maxIS > 0 && (s.is[isKey] ?? 0) <= 0) {
+    const transferTo = DAMAGE_TRANSFER[isKey];
+    if (transferTo) {
+      const tArmorKey = transferTo === 'CT' ? 'CTf'
+                      : transferTo === 'LT' ? 'LTf'
+                      : transferTo === 'RT' ? 'RTf'
+                      : transferTo;
+      logs.push(`> ${isKey} ya DESTRUIDO — TRANSFER: ${remaining} → ${transferTo}`);
+      const sub = mechApplyDamage(state, s, tArmorKey, remaining);
+      return { session: sub.session, logs: [...logs, ...sub.logs] };
+    }
+    // Sin transfer (CT/HD) → daño absorbido por nada (ya está destruido el mech)
+    logs.push(`> ${isKey} ya DESTRUIDO — damage descartado`);
+    return { session: s, logs };
+  }
+
+  // 2. IS
   if (s.is[isKey] !== undefined && s.is[isKey] > 0) {
     const absorbed = Math.min(remaining, s.is[isKey]);
     s.is[isKey] -= absorbed;
@@ -519,7 +559,55 @@ export function mechApplyHeal(
     if (heal > 0) logs.push(`> ARMOR ${slotDef.l}: +${heal} (${s.armor[armorKey]}/${maxArmor})`);
   }
 
+  // 3. Revert destruction si las condiciones ya no aplican
+  if (s.destroyed) {
+    const ctOk = (s.is.CT ?? 0) > 0;
+    const hdOk = (s.is.HD ?? 0) > 0;
+    const engineCrits = (s.crits.CT ?? []).filter(c => c.hit && c.name === 'Fusion Engine').length
+                     + (s.crits.LT ?? []).filter(c => c.hit && c.name === 'Fusion Engine').length
+                     + (s.crits.RT ?? []).filter(c => c.hit && c.name === 'Fusion Engine').length;
+    const gyroCrits = (s.crits.CT ?? []).filter(c => c.hit && c.name === 'Gyro').length;
+
+    if (ctOk && hdOk && engineCrits < 3 && gyroCrits < 2) {
+      s.destroyed = false;
+      s.destroyedReason = '';
+      logs.push('> RESUCITADO — condiciones de destrucción revertidas');
+    }
+  }
+
   return { session: s, logs };
+}
+
+/** Force unmark destroyed (revert manual sin condicionar). */
+export function mechForceRevive(session: MechSession): MechSession {
+  if (!session.destroyed) return session;
+  const s = structuredClone(session);
+  s.destroyed = false;
+  s.destroyedReason = '';
+  s.logs.unshift('> REVIVIDO MANUALMENTE (override)');
+  return s;
+}
+
+/** Ajusta munición de un bin específico (+ o -) clamp [0, max]. */
+export function mechAdjustAmmoBin(session: MechSession, binId: number, delta: number): MechSession {
+  const s = structuredClone(session);
+  const bin = s.ammoBins.find(b => b.id === binId);
+  if (!bin) return session;
+  const before = bin.current;
+  bin.current = Math.max(0, Math.min(bin.max, bin.current + delta));
+  if (bin.current === before) return session;
+  s.logs.unshift(`> AMMO ${bin.family} ${bin.loc}: ${before} → ${bin.current} (${delta > 0 ? '+' : ''}${delta})`);
+  return s;
+}
+
+/** Ajusta calor manualmente (flames, infierno, etc). Clamp [0, 99]. */
+export function mechAdjustHeat(session: MechSession, delta: number): MechSession {
+  const s = structuredClone(session);
+  const before = s.heat;
+  s.heat = Math.max(0, Math.min(99, s.heat + delta));
+  if (s.heat === before) return session;
+  s.logs.unshift(`> HEAT ajuste manual: ${before} → ${s.heat} (${delta > 0 ? '+' : ''}${delta})`);
+  return s;
 }
 
 // ── Heat Calculation ──
@@ -537,9 +625,18 @@ export function mechCalcHeatDelta(state: MechState, session: MechSession): HeatD
   const sysHits = countSystemCritHits(session.crits);
 
   const move = getMoveHeat(session.moveMode, session.jumpUsed);
+  // Para cada arma activa: heat base + weaponMods + critMods en SUS slots.
+  // critMods se aplican solo cuando el arma en ese slot se dispara (per-weapon).
   const weapons = state.weapons
     .filter(w => session.activeShots[w.id])
-    .reduce((sum, w) => sum + w.heat, 0);
+    .reduce((sum, w) => {
+      const baseHeat = w.heat + (session.weaponMods?.[w.id]?.heat ?? 0);
+      const slotCritHeat = (w.slotIndices ?? []).reduce((s2, idx) => {
+        const key = `${w.loc}:${idx}`;
+        return s2 + (session.critMods?.[key]?.heat ?? 0);
+      }, 0);
+      return sum + baseHeat + slotCritHeat;
+    }, 0);
   const engineHeat = sysHits.engine * 5;
 
   const generated = move + weapons + engineHeat;

@@ -14,6 +14,7 @@ import { PilotPanel, type AvailablePilot } from '@/components/simulador/PilotPan
 import { HeatMonitor } from '@/components/simulador/HeatMonitor';
 import { ArmorDiagram } from '@/components/simulador/ArmorDiagram';
 import { CriticalMatrix } from '@/components/simulador/CriticalMatrix';
+import { AdjustModModal, type AdjustModTarget } from '@/components/simulador/AdjustModModal';
 import { CombatLog } from '@/components/simulador/CombatLog';
 import { VehiclePanel } from '@/components/simulador/VehiclePanel';
 import { CatalogSearch } from '@/components/simulador/CatalogSearch';
@@ -58,42 +59,61 @@ export function SimuladorPage() {
   const [campaignMode, setCampaignMode] = useState<boolean>(false);
   const prevSubTabRef = useRef<string | null>(null);
 
+  // Modal de ajuste manual de calor/dificultad (armas y componentes)
+  const [adjustTarget, setAdjustTarget] = useState<
+    | (AdjustModTarget & { kind: 'weapon'; id: number })
+    | (AdjustModTarget & { kind: 'crit'; loc: string; slotIdx: number })
+    | null
+  >(null);
+
+  // Guarda snapshot actual en FUERZACAMPAÑA + recalcula ESTADOMECHS.
+  // Reutilizado por: salir de campaña, autosave 5min, guardado manual, y
+  // auto-guardado tras reparación en Taller.
+  const saveCampaignProgress = async (nombre = 'Campaña'): Promise<boolean> => {
+    try {
+      const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
+      const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+               + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+      const res = await saveFuerzaCampana({ nombre, bv, snapshot: snap });
+      if (!res?.success) {
+        alert('Error guardando FUERZACAMPAÑA: ' + ((res as any)?.error || 'no_response'));
+        return false;
+      }
+      // ESTADOMECHS map
+      const map: Record<string, number> = {};
+      for (const ms2 of (snap.mechSlots ?? [])) {
+        const st: any = ms2?.state; const se: any = ms2?.session;
+        if (!st || !se) continue;
+        const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+        const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+        const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
+        const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
+        const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
+        const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
+        const total = armorMax + isMax;
+        if (total <= 0) continue;
+        const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
+        const key = `${st.chassis || ''} ${st.model || ''}`.trim();
+        if (key) map[key] = pct;
+      }
+      await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
+      sim.markSynced?.();
+      return true;
+    } catch (err) {
+      alert('Fallo guardando: ' + err);
+      return false;
+    }
+  };
+
   // Auto-save FUERZACAMPAÑA cada 5 minutos si modo campaña y hay cambios.
   useEffect(() => {
     if (!campaignMode) return;
     const id = setInterval(async () => {
       if (!sim.dirty) return;
-      try {
-        if (!isCampaignUnlocked()) return; // sin clave -> skip
-        const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
-        const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
-                 + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-        const res = await saveFuerzaCampana({ nombre: 'Campaña', bv, snapshot: snap });
-        if (res?.success) {
-          // ESTADOMECHS map
-          const map: Record<string, number> = {};
-          for (const ms2 of (snap.mechSlots ?? [])) {
-            const st: any = ms2?.state; const se: any = ms2?.session;
-            if (!st || !se) continue;
-            const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
-            const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
-            const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
-            const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
-            const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
-            const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
-            const total = armorMax + isMax;
-            if (total <= 0) continue;
-            const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
-            const key = `${st.chassis || ''} ${st.model || ''}`.trim();
-            if (key) map[key] = pct;
-          }
-          await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
-          sim.markSynced?.();
-          console.log('[Campaign] auto-save FUERZA5 OK', new Date().toLocaleTimeString());
-        }
-      } catch (err) {
-        console.warn('[Campaign] auto-save fallo', err);
-      }
+      if (!isCampaignUnlocked()) return; // sin clave -> skip
+      const ok = await saveCampaignProgress('Campaña');
+      if (ok) console.log('[Campaign] auto-save FUERZA5 OK', new Date().toLocaleTimeString());
+      else console.warn('[Campaign] auto-save fallo');
     }, 5 * 60 * 1000); // 5 min
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -149,38 +169,8 @@ export function SimuladorPage() {
       // Salir: pregunta si guardar a FUERZACAMPAÑA
       const choice = confirm('¿Guardar estado actual a FUERZACAMPAÑA antes de salir?\n\nOK = Guardar y salir\nCancelar = Solo salir (sin guardar)');
       if (choice) {
-        try {
-          const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
-          const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
-                   + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-          const res = await saveFuerzaCampana({ nombre: 'Campaña', bv, snapshot: snap });
-          if (!res?.success) {
-            alert('Error guardando FUERZACAMPAÑA: ' + ((res as any)?.error || 'no_response'));
-            return;
-          }
-          // ESTADOMECHS map
-          const map: Record<string, number> = {};
-          for (const ms2 of (snap.mechSlots ?? [])) {
-            const st: any = ms2?.state; const se: any = ms2?.session;
-            if (!st || !se) continue;
-            const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
-            const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
-            const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
-            const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
-            const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
-            const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
-            const total = armorMax + isMax;
-            if (total <= 0) continue;
-            const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
-            const key = `${st.chassis || ''} ${st.model || ''}`.trim();
-            if (key) map[key] = pct;
-          }
-          await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
-          sim.markSynced?.();
-        } catch (err) {
-          alert('Fallo guardando: ' + err);
-          return;
-        }
+        const ok = await saveCampaignProgress('Campaña');
+        if (!ok) return;
       }
       // Limpia el simulador para dejarlo listo para partidas sueltas
       sim.resetSession();
@@ -392,6 +382,7 @@ export function SimuladorPage() {
           markSynced={sim.markSynced}
           campaignMode={campaignMode}
           onToggleCampaignMode={handleToggleCampaign}
+          onSaveCampaign={campaignMode ? () => saveCampaignProgress('Campaña') : undefined}
           bvTotal={
             sim.mechSlots.reduce((acc, s) => acc + (s.state?.bv ?? 0), 0) +
             sim.vehicleSlots.reduce((acc, s) => acc + ((s.state as any)?.bv ?? 0), 0)
@@ -460,7 +451,9 @@ export function SimuladorPage() {
           <div className="col-span-1 md:col-span-3 space-y-4">
             {/* Weapons */}
             <section className="bg-surface-container-low p-4 clip-chamfer border-l-2 border-primary-container/30">
-              <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">Armas</h2>
+              <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">
+                Armas
+              </h2>
               <div className="space-y-1">
                 {ms.weapons.length === 0 ? (
                   <div className="font-mono text-[10px] text-secondary/40 italic py-4 text-center">Sin armas</div>
@@ -470,27 +463,48 @@ export function SimuladorPage() {
                   const wFam = w.ammoFamilyKey.split(':').slice(2).join(':') || w.ammoFamilyKey;
                   const noAmmo = w.usesAmmo && !ss.ammoBins.some(b => (b.familyKey.split(':').slice(2).join(':') || b.familyKey) === wFam && b.current >= w.ammoUse);
                   const armMod = (w.loc === 'LA' || w.loc === 'RA') ? sim.armActuatorMod[w.loc] : 0;
-                  const weaponToHit = sim.gunneryTotal + armMod;
+                  const wMod = ss.weaponMods?.[w.id] || { heat: 0, atk: 0 };
+                  // critMod per-arma: solo los slots de esta arma cuentan.
+                  const slotCritMod = (w.slotIndices ?? []).reduce((acc, idx) => {
+                    const m = ss.critMods?.[`${w.loc}:${idx}`];
+                    return m ? { heat: acc.heat + (m.heat || 0), atk: acc.atk + (m.atk || 0) } : acc;
+                  }, { heat: 0, atk: 0 });
+                  const weaponToHit = sim.gunneryTotal + armMod + wMod.atk + slotCritMod.atk;
+                  const effectiveHeat = w.heat + wMod.heat + slotCritMod.heat;
 
                   return (
                     <div key={w.id}
-                      onClick={() => !isDestroyed && sim.toggleWeapon(w.id)}
                       className={`flex items-center justify-between p-2 transition-all text-[10px] font-mono border-l-2 ${
-                        isDestroyed ? 'opacity-20 cursor-not-allowed border-error line-through'
-                        : isActive ? 'bg-error/20 border-error text-error cursor-pointer'
-                        : noAmmo ? 'opacity-40 border-outline-variant cursor-not-allowed'
-                        : 'border-transparent hover:bg-secondary/10 text-secondary cursor-pointer'
+                        isDestroyed ? 'opacity-20 border-error line-through'
+                        : isActive ? 'bg-error/20 border-error text-error'
+                        : noAmmo ? 'opacity-40 border-outline-variant'
+                        : (wMod.heat > 0 || wMod.atk > 0) ? 'border-amber-400/60 text-secondary'
+                        : 'border-transparent hover:bg-secondary/10 text-secondary'
                       }`}
                     >
-                      <div className="flex flex-col">
+                      <div
+                        onClick={() => !isDestroyed && sim.toggleWeapon(w.id)}
+                        className={`flex flex-col flex-1 ${!isDestroyed ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                      >
                         <span className="font-bold uppercase">{w.name}</span>
                         <span className="text-[8px] text-secondary/40">{w.loc} • {w.r}</span>
                       </div>
                       <div className="flex items-center gap-2 text-[9px]">
-                        <span>🔥{w.heat}</span>
+                        <span>🔥{effectiveHeat}{wMod.heat > 0 && <span className="text-amber-400/80"> (+{wMod.heat})</span>}</span>
                         <span>💥{w.dmg}</span>
+                        {!isDestroyed && (
+                          <span
+                            className="text-secondary/60"
+                            title="Total para impactar (Habilidad + modificadores de movimiento/calor del piloto no incluidos)"
+                          >
+                            🎯{weaponToHit}+
+                          </span>
+                        )}
                         {armMod > 0 && !isDestroyed && (
                           <span className="text-amber-400/80">+{armMod}</span>
+                        )}
+                        {wMod.atk > 0 && (
+                          <span className="text-amber-400/80" title={`Dificultad extra: +${wMod.atk} a la tirada de impacto`}>+{wMod.atk}⚠</span>
                         )}
                         {w.usesAmmo && (
                           <span className={noAmmo ? 'text-error' : ''}>
@@ -509,7 +523,16 @@ export function SimuladorPage() {
 
           {/* Bottom: Critical Matrix */}
           <div className="col-span-1 md:col-span-12">
-            <CriticalMatrix state={ms} session={ss} onToggleCrit={sim.toggleCrit} sysHits={sim.sysHits} />
+            <CriticalMatrix
+              state={ms}
+              session={ss}
+              onToggleCrit={sim.toggleCrit}
+              sysHits={sim.sysHits}
+              onAdjustComponent={(loc, slotIdx, name) => {
+                const mod = ss.critMods?.[`${loc}:${slotIdx}`] || { heat: 0, atk: 0 };
+                setAdjustTarget({ kind: 'crit', loc, slotIdx, label: `${loc} / ${name}`, heat: mod.heat, atk: mod.atk });
+              }}
+            />
           </div>
         </div>
       ) : vs && vss ? (
@@ -543,6 +566,11 @@ export function SimuladorPage() {
             // restoreMechSlotFull ya actualizó localStorage; rehidratamos el estado en RAM
             const snap = loadLocalSnapshot();
             if (snap) sim.hydrateFromSnapshot(snap);
+            // En modo campaña, guarda automáticamente el progreso tras reparar
+            if (campaignMode && isCampaignUnlocked()) {
+              saveCampaignProgress('Campaña auto').catch(err =>
+                console.warn('[Taller] auto-save tras reparación fallo', err));
+            }
           }}
           onCommit={async (total, concepto, mechName) => {
             await commitLibroEntryAndTreasury({
@@ -589,29 +617,7 @@ export function SimuladorPage() {
           try { const fresh = await loadRoster(); setRoster(fresh); } catch {/* ignore */}
           // Auto-guarda FUERZA5 + ESTADOMECHS con el estado limpio
           try {
-            const snap: any = { schemaVersion: 1, updatedAt: new Date().toISOString(), ...sim.getSnapshot() };
-            const bv = (snap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
-                     + (snap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-            await saveFuerzaCampana({ nombre: 'Campaña auto', bv, snapshot: snap });
-            // ESTADOMECHS map
-            const map: Record<string, number> = {};
-            for (const ms2 of (snap.mechSlots ?? [])) {
-              const st: any = ms2?.state; const se: any = ms2?.session;
-              if (!st || !se) continue;
-              const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
-              const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
-              const armorMax = armorLocs.reduce((s,k) => s + ((st.armor || {})[k] ?? 0), 0);
-              const armorCur = armorLocs.reduce((s,k) => s + ((se.armor || {})[k] ?? 0), 0);
-              const isMax    = isLocs.reduce((s,k) => s + ((st.is || {})[k] ?? 0), 0);
-              const isCur    = isLocs.reduce((s,k) => s + ((se.is || {})[k] ?? 0), 0);
-              const total = armorMax + isMax;
-              if (total <= 0) continue;
-              const pct = se.destroyed ? 0 : Math.round(((armorCur + isCur) / total) * 100);
-              const key = `${st.chassis || ''} ${st.model || ''}`.trim();
-              if (key) map[key] = pct;
-            }
-            await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
-            sim.markSynced?.();
+            await saveCampaignProgress('Campaña auto');
           } catch (err) {
             console.warn('[destruction] auto-save FUERZA5/ESTADOMECHS fallo', err);
           }
@@ -662,6 +668,24 @@ export function SimuladorPage() {
           </div>
         );
       })()}
+
+      {/* Modal ajuste manual calor/dificultad — armas y componentes */}
+      {adjustTarget && (
+        <AdjustModModal
+          target={adjustTarget}
+          onClose={() => setAdjustTarget(null)}
+          onChangeHeat={(v) => {
+            if (adjustTarget.kind === 'weapon') sim.setWeaponMod(adjustTarget.id, 'heat', v);
+            else sim.setCritMod(adjustTarget.loc, adjustTarget.slotIdx, 'heat', v);
+            setAdjustTarget(t => t ? { ...t, heat: v } : t);
+          }}
+          onChangeAtk={(v) => {
+            if (adjustTarget.kind === 'weapon') sim.setWeaponMod(adjustTarget.id, 'atk', v);
+            else sim.setCritMod(adjustTarget.loc, adjustTarget.slotIdx, 'atk', v);
+            setAdjustTarget(t => t ? { ...t, atk: v } : t);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -747,7 +771,6 @@ function InfantryView({ sim }: { sim: SimHandle }) {
           />
         </div>
       )}
-
     </div>
   );
 }

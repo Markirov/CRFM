@@ -13,7 +13,7 @@ import {
   calcGunneryTotal, calcPilotingTotal,
   countSystemCritHits, canFire,
   getHeatMPPenalty,
-  getArmActuatorMod, getLegActuatorEffects,
+  getArmActuatorMod, getLegActuatorEffects, getCritModsAtkTotal,
   vehicleApplyDamage, vehicleApplyHeal,
   vehicleToggleWeapon, vehicleNextTurn, vehicleToggleCrit,
   vehicleApplyCritEffect,
@@ -346,6 +346,61 @@ const [damageAmount, setDamageAmount] = useState(0);
     updateMechSession(s => mechToggleCrit(mechState, s, loc, slotIdx));
   };
 
+  /**
+   * Ajusta el modificador manual de un arma (heat extra al disparar / dificultad extra al impactar).
+   * Rango 0-5 cada uno. Valor 0 en ambos elimina la entrada del mapa.
+   */
+  const setWeaponMod = (weaponId: number, field: 'heat' | 'atk', value: number) => {
+    if (!mechState || !mechSession) return;
+    const w = mechState.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    const clamped = Math.max(0, Math.min(5, value));
+    updateMechSession(s => {
+      const weaponMods = { ...(s.weaponMods || {}) };
+      const cur = weaponMods[weaponId] || { heat: 0, atk: 0 };
+      const next = { ...cur, [field]: clamped };
+      if (next.heat === 0 && next.atk === 0) {
+        delete weaponMods[weaponId];
+      } else {
+        weaponMods[weaponId] = next;
+      }
+      const label = field === 'heat' ? 'calor extra' : 'dificultad extra';
+      return {
+        ...s,
+        weaponMods,
+        logs: [`> ${w.name}: ${label} ajustado a ${clamped}`, ...(s.logs || [])].slice(0, 50),
+      };
+    });
+  };
+
+  /**
+   * Ajusta el modificador manual de un componente/crítico (Gyro, Reactor, Actuador, etc.).
+   * Clave = "LOC:slotIdx". Rango 0-5 cada uno. Valor 0 en ambos elimina la entrada.
+   */
+  const setCritMod = (loc: string, slotIdx: number, field: 'heat' | 'atk', value: number) => {
+    if (!mechState || !mechSession) return;
+    const slot = mechSession.crits[loc]?.[slotIdx];
+    if (!slot) return;
+    const clamped = Math.max(0, Math.min(5, value));
+    const key = `${loc}:${slotIdx}`;
+    updateMechSession(s => {
+      const critMods = { ...(s.critMods || {}) };
+      const cur = critMods[key] || { heat: 0, atk: 0 };
+      const next = { ...cur, [field]: clamped };
+      if (next.heat === 0 && next.atk === 0) {
+        delete critMods[key];
+      } else {
+        critMods[key] = next;
+      }
+      const label = field === 'heat' ? 'calor extra' : 'dificultad extra';
+      return {
+        ...s,
+        critMods,
+        logs: [`> ${loc}/${slot.name}: ${label} ajustado a ${clamped}`, ...(s.logs || [])].slice(0, 50),
+      };
+    });
+  };
+
   const forceReviveMech = () => {
     if (!mechSession) return;
     updateMechSession(s => mechForceRevive(s));
@@ -466,6 +521,9 @@ const [damageAmount, setDamageAmount] = useState(0);
   const gunneryTotal = mechSession
     ? calcGunneryTotal(mechSession.pilot.gunnery, mechSession.heat, mechSession.wounds, sysHits.sensors, mechSession.moveMode)
     : 4;
+
+  /** Suma de los +atk de todos los componentes con ajuste manual (Gyro, Reactor, Actuador, etc.). */
+  const critModsAtkTotal = mechSession ? getCritModsAtkTotal(mechSession.critMods) : 0;
 
   const pilotingTotal = mechSession
     ? calcPilotingTotal(mechSession.pilot.piloting, sysHits.gyro, mechSession.wounds) + legEffects.pilotingMod
@@ -680,7 +738,7 @@ const [damageAmount, setDamageAmount] = useState(0);
     handleFileUpload, loadUnitText,
     toggleWeapon, handleFire,
     handleDamage, applyDamageToSelected,
-    toggleCrit,
+    toggleCrit, setWeaponMod, setCritMod,
     forceReviveMech, adjustAmmo, adjustHeat,
     setMoveMode, setJumpUsed,
     setWounds, setPilot, setPilotFull, resetLog,
@@ -698,7 +756,7 @@ const [damageAmount, setDamageAmount] = useState(0);
     vehicleAdjustPendingCrit,
 
     // Computed
-    sysHits, gunneryTotal, pilotingTotal,
+    sysHits, gunneryTotal, pilotingTotal, critModsAtkTotal,
     canMechFire, effectiveWalkMP, effectiveRunMP,
     armActuatorMod,
 
