@@ -215,7 +215,9 @@ export function SimuladorPage() {
         }
       }
 
+      console.log('[Campaign] roster size at entry:', roster.length, roster.map(r => r.jugador));
       const entry = await loadFuerzaCampana();
+      console.log('[Campaign] FUERZACAMPAÑA entry:', entry);
       const loadedMechSlots = entry?.snapshot?.mechSlots ?? [];
       if (entry?.snapshot?.schemaVersion) {
         sim.hydrateFromSnapshot(entry.snapshot);
@@ -232,7 +234,8 @@ export function SimuladorPage() {
       for (let i = 0; i < CAMPAIGN_PILOT_ORDER.length; i++) {
         const handle = CAMPAIGN_PILOT_ORDER[i];
         const pilot = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
-        if (!pilot?.mech) continue;
+        console.log(`[Campaign] slot ${i} (${handle}): pilot=`, pilot?.jugador, 'mech=', pilot?.mech);
+        if (!pilot?.mech) { console.warn(`[Campaign] skip ${handle}: no roster entry or sin mech`); continue; }
         const loaded: any = loadedMechSlots[i];
         const loadedName = loaded?.state
           ? `${loaded.state.chassis || ''} ${loaded.state.model || ''}`.trim().toLowerCase()
@@ -255,9 +258,10 @@ export function SimuladorPage() {
           } catch {/* ignore */}
         }
         if (text) {
+          console.log(`[Campaign] cargando ${pilot.mech} en slot ${i} (${handle})`);
           sim.loadUnitText(text, fname, i);
         } else {
-          console.warn(`[Campaign] mech no encontrado en catalogo: ${pilot.mech} (PJ ${handle})`);
+          console.warn(`[Campaign] mech NO encontrado en catalogo: ${pilot.mech} (PJ ${handle}) — urls probadas: assets/mechs/${encodeURIComponent(pilot.mech)}.ssw|.mtf`);
         }
       }
 
