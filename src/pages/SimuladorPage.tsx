@@ -141,16 +141,12 @@ export function SimuladorPage() {
     });
   }, [roster]);
 
-  // Modo campaña: orden FIJO de PJs (CAMPAIGN_PILOT_ORDER). Cada slot
-  // pre-bound al PJ en esa posicion. Si el roster no tiene ese jugador,
-  // se muestra label con el handle igualmente.
+  // Modo campaña: orden FIJO de PJs (CAMPAIGN_PILOT_ORDER). Slot N
+  // muestra iniciales 2-letras del jugador (estilo Barracones).
   const campaignPilots = useMemo(() => {
     if (!campaignMode) return null;
-    return CAMPAIGN_PILOT_ORDER.map(handle => {
-      const entry = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
-      return entry?.apodo || entry?.nombre || handle;
-    });
-  }, [campaignMode, roster]);
+    return CAMPAIGN_PILOT_ORDER.map(handle => handle.slice(0, 2).toUpperCase());
+  }, [campaignMode]);
 
   const handleToggleCampaign = async () => {
     if (campaignMode) {
@@ -229,14 +225,23 @@ export function SimuladorPage() {
         sim.resetSession();
       }
 
-      // Pre-bind: por cada PJ en orden, si el snapshot NO traia mech en
-      // su slot, fetch desde catalogo (roster.mech) y carga en ese slot.
+      // Pre-bind: por cada PJ en orden, valida que el slot tenga SU mech.
+      // Si el snapshot trae mech equivocado en ese slot (snapshot viejo con
+      // orden distinto), recarga desde catalogo y sobreescribe.
       const BASE = import.meta.env.BASE_URL;
       for (let i = 0; i < CAMPAIGN_PILOT_ORDER.length; i++) {
         const handle = CAMPAIGN_PILOT_ORDER[i];
         const pilot = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
         if (!pilot?.mech) continue;
-        if ((loadedMechSlots[i] as any)?.state) continue; // ya cargado
+        const loaded: any = loadedMechSlots[i];
+        const loadedName = loaded?.state
+          ? `${loaded.state.chassis || ''} ${loaded.state.model || ''}`.trim().toLowerCase()
+          : '';
+        const expected = pilot.mech.trim().toLowerCase();
+        // Match tolerante: substring en cualquier direccion
+        const isCorrect = loadedName && (loadedName.includes(expected) || expected.includes(loadedName));
+        if (isCorrect) continue; // slot ya tiene el mech del PJ correcto
+        // Fetch + load (sobreescribe si habia mech equivocado)
         const enc = encodeURIComponent(pilot.mech);
         let text: string | null = null;
         let fname = '';
