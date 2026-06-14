@@ -258,8 +258,13 @@ export function SimuladorPage() {
           } catch {/* ignore */}
         }
         if (text) {
-          console.log(`[Campaign] cargando ${pilot.mech} en slot ${i} (${handle})`);
-          sim.loadUnitText(text, fname, i);
+          console.log(`[Campaign] cargando ${pilot.mech} en slot ${i} (${handle}) - fname=${fname} textLen=${text.length} first120=${text.slice(0, 120).replace(/\n/g, '|')}`);
+          try {
+            sim.loadUnitText(text, fname, i);
+            console.log(`[Campaign] loadUnitText OK slot ${i}`);
+          } catch (e) {
+            console.error(`[Campaign] loadUnitText THREW slot ${i}:`, e);
+          }
         } else {
           console.warn(`[Campaign] mech NO encontrado en catalogo: ${pilot.mech} (PJ ${handle}) — urls probadas: assets/mechs/${encodeURIComponent(pilot.mech)}.ssw|.mtf`);
         }

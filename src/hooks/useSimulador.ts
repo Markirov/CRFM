@@ -229,7 +229,7 @@ const [damageAmount, setDamageAmount] = useState(0);
     if (ext === 'ssw' || ext === 'mtf') {
       try {
         const parsed = mechParseMech(text);
-        if (!parsed) return;
+        if (!parsed) { console.warn('[useSim] mechParseMech returned null/falsy for', filename, '— text starts:', text.slice(0, 80)); return; }
 
         const mechData: MechState = {
           source: ext === 'ssw' ? 'SSW' : 'MTF',
@@ -275,6 +275,7 @@ const [damageAmount, setDamageAmount] = useState(0);
 
         const session = mechInitSession(mechData);
         const mIdx = targetIdx ?? currentMechIdx;
+        console.log('[useSim] parsed OK, writing slot', mIdx, mechData.chassis, mechData.model);
         setMechSlots(prev => {
           const next = [...prev];
           next[mIdx] = { state: mechData, session };
