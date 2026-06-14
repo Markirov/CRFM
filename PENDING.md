@@ -23,6 +23,23 @@ Implementar campo `horas` en `RepairBreakdown` + UI badge "X horas reparación" 
 
 ---
 
+## Simulador — Autocannons solo cargan 1 linea de criticos
+
+Bug: al cargar mech con AC/2, AC/5, AC/10, AC/20 (y posiblemente LB-X / UAC),
+solo aparece la primera linea/slot del arma en la matriz de criticos.
+El resto de slots que deberia ocupar (AC/20 = 10 slots, AC/10 = 7, AC/5 = 4,
+AC/2 = 1) salen vacios.
+
+Revisar parsers (`src/lib/parsers.ts` mechParseSSW / mechParseMTF) — probable
+que slotsUsed o slotIndices del arma no se rellenen para AC. Compare con LRM/SRM
+que sí pintan multiples slots correctamente.
+
+Impacto: criticos de AC no se pueden marcar como hit en simulador → reparacion
+parcial vs destruida del arma mal evaluada. Bug visible al cargar Marauder
+(AC/5) o Cataphract (AC/10).
+
+---
+
 ## MTF → SSW conversión
 
 Status: parked. MTF files se aceptan as-is en `import-units.cjs`, pero index extrae solo nombre (BV2 = 0).
