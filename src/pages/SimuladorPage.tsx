@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch } from '@/lib/sheets-service';
-import { loadLocalSnapshot } from '@/lib/simulador-persistence';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, type FuerzaSlot } from '@/lib/sheets-service';
+import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
@@ -190,17 +190,72 @@ export function SimuladorPage() {
           return;
         }
       }
+      // Limpia el simulador para dejarlo listo para partidas sueltas
+      sim.resetSession();
       setCampaignMode(false);
       return;
     }
     // Entrar: pide clave + carga FUERZACAMPAÑA
     if (!gateCampaignWrite('cargar FUERZACAMPAÑA')) return;
     try {
+      // Si hay una partida suelta en curso, respaldarla antes de sobrescribir
+      const currentSnap = loadLocalSnapshot();
+      if (currentSnap && snapshotHasUnits(currentSnap)) {
+        const slots = await loadAllFuerzaConfigSlots();
+        const freeSlot = ([5, 4, 3, 2, 1] as FuerzaSlot[]).find(s => !slots[s]?.snapshot);
+        const bv = (currentSnap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+                 + (currentSnap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+        let targetSlot: FuerzaSlot | null = freeSlot ?? null;
+        if (!targetSlot) {
+          const overwrite = confirm('Los 5 slots de Fuerzas están ocupados.\n\n¿Sobrescribir FUERZA5 con la partida suelta actual antes de cargar la campaña?\n\nOK = Sobrescribir FUERZA5\nCancelar = Descartar partida suelta sin guardar');
+          if (overwrite) targetSlot = 5;
+        }
+        if (targetSlot) {
+          const res = await saveFuerzaConfigSlot(targetSlot, { nombre: 'Partida suelta', bv, snapshot: currentSnap });
+          if (!res?.success) {
+            alert('Error guardando partida suelta en FUERZA' + targetSlot + ': ' + ((res as any)?.error || 'no_response'));
+            // continúa igualmente con la carga de campaña
+          }
+        }
+      }
+
       const entry = await loadFuerzaCampana();
+      const loadedMechSlots = entry?.snapshot?.mechSlots ?? [];
       if (entry?.snapshot?.schemaVersion) {
         sim.hydrateFromSnapshot(entry.snapshot);
         sim.markSynced();
+      } else {
+        // Sin FUERZACAMPAÑA guardada todavía: arranca limpio
+        sim.resetSession();
       }
+
+      // Pre-bind: por cada PJ en orden, si el snapshot NO traia mech en
+      // su slot, fetch desde catalogo (roster.mech) y carga en ese slot.
+      const BASE = import.meta.env.BASE_URL;
+      for (let i = 0; i < CAMPAIGN_PILOT_ORDER.length; i++) {
+        const handle = CAMPAIGN_PILOT_ORDER[i];
+        const pilot = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
+        if (!pilot?.mech) continue;
+        if ((loadedMechSlots[i] as any)?.state) continue; // ya cargado
+        const enc = encodeURIComponent(pilot.mech);
+        let text: string | null = null;
+        let fname = '';
+        for (const url of [`${BASE}assets/mechs/${enc}.ssw`, `${BASE}assets/mechs/${enc}.mtf`]) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) continue;
+            text = await res.text();
+            fname = url.split('/').pop() || `${pilot.mech}.ssw`;
+            break;
+          } catch {/* ignore */}
+        }
+        if (text) {
+          sim.loadUnitText(text, fname, i);
+        } else {
+          console.warn(`[Campaign] mech no encontrado en catalogo: ${pilot.mech} (PJ ${handle})`);
+        }
+      }
+
       setCampaignMode(true);
     } catch (err) {
       alert('Fallo al cargar FUERZACAMPAÑA: ' + err);
