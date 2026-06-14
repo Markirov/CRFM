@@ -11,12 +11,10 @@ import type { NavSection, Palette } from './types';
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    label: 'OPERACIONES',
+    label: 'HQ',
     items: [
       { id: 'comision',      label: 'Comisión',         icon: '🏛️', path: '/comision',      palette: 'amber' },
       { id: 'reclutamiento', label: 'Reclutamiento',    icon: '👤', path: '/reclutamiento', palette: 'amber' },
-      { id: 'barracones',    label: 'Barracones',       icon: '🏠', path: '/barracones',    palette: 'amber' },
-      { id: 'hoja',          label: 'Hoja de Servicio', icon: '📝', path: '/hoja-servicio', palette: 'amber' },
       { id: 'finanzas',      label: 'Finanzas',         icon: '💰', path: '/finanzas',      palette: 'amber',
         tabs: [
           { id: 'home',        label: 'Inicio' },
@@ -24,12 +22,12 @@ export const NAV_SECTIONS: NavSection[] = [
           { id: 'personal',    label: 'Personal' },
         ],
       },
-      { id: 'taller',        label: 'Taller',            icon: '🔧', path: '/taller',        palette: 'amber',
-        tabs: [
-          { id: 'prioridades', label: 'Prioridades' },
-          { id: 'factura',    label: 'Factura' },
-        ],
-      },
+      { id: 'barracones',    label: 'Barracones',       icon: '🏠', path: '/barracones',    palette: 'amber' },
+    ],
+  },
+  {
+    label: 'OPERACIONES',
+    items: [
       {
         id: 'simulador', label: 'Simulador', icon: '⚔️', path: '/simulador', palette: 'green',
         tabs: [
@@ -38,12 +36,19 @@ export const NAV_SECTIONS: NavSection[] = [
           { id: 'vehiculos',  label: 'Vehículos' },
         ],
       },
+      { id: 'taller',        label: 'Taller',            icon: '🔧', path: '/taller',        palette: 'amber',
+        tabs: [
+          { id: 'prioridades', label: 'Prioridades' },
+          { id: 'factura',    label: 'Factura' },
+        ],
+      },
+      { id: 'hud',           label: 'Seguimiento de Combate', icon: '🎯', path: '/hud',          palette: 'green' },
+      { id: 'hoja',          label: 'Hoja de Servicio', icon: '📝', path: '/hoja-servicio', palette: 'amber' },
     ],
   },
   {
     label: 'TÁCTICO',
     items: [
-      { id: 'hud',    label: 'HUD Táctico',       icon: '🎯', path: '/hud',    palette: 'green' },
       { id: 'ayudas', label: 'Ayudas',             icon: '📋', path: '/ayudas', palette: 'blue' },
       { id: 'tro',    label: 'Technical Readout',  icon: '📖', path: '/tro',    palette: 'blue' },
     ],
