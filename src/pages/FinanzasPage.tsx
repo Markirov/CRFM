@@ -149,7 +149,6 @@ export function FinanzasPage() {
         onHome={()      => { setFinanzasPendingModal(null); setActiveSubTab('home'); }}
         onLibro={()     => { setFinanzasPendingModal(null); setActiveSubTab('libro-mayor'); }}
         onCompras={()   => goToLibroWithModal('compras')}
-        onTaller={()    => goToLibroWithModal('taller')}
         onPersonal={()  => setActiveSubTab('personal')}
         onProjector={() => goToLibroWithModal('projector')}
       />
@@ -172,12 +171,12 @@ interface FinanzasActionBarProps {
   onHome:      () => void;
   onLibro:     () => void;
   onCompras:   () => void;
-  onTaller:    () => void;
+  // onTaller removido — Taller vive en sidebar (/taller)
   onPersonal:  () => void;
   onProjector: () => void;
 }
 
-function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onTaller, onPersonal, onProjector }: FinanzasActionBarProps) {
+function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal, onProjector }: FinanzasActionBarProps) {
   const BTN_BASE: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: 8,
     padding: '10px 14px',
@@ -208,7 +207,6 @@ function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onTaller, o
         📒 LIBRO DE CUENTAS
       </button>
       <button style={BTN_BASE} onClick={onCompras}>🛒 COMPRAS</button>
-      <button style={BTN_BASE} onClick={onTaller}>🔧 TALLER</button>
       <button style={active(activeView === 'personal')} onClick={onPersonal}>
         👥 PERSONAL
       </button>

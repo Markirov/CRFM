@@ -17,6 +17,7 @@ import { HojaServicioPage } from '@/pages/HojaServicioPage';
 import { HojaServicioPageLegacy } from '@/pages/HojaServicioPageLegacy';
 import { SimuladorPage } from '@/pages/SimuladorPage';
 import { FinanzasPage } from '@/pages/FinanzasPage';
+import { TallerPage } from '@/pages/TallerPage';
 import { HudTacticoPage } from '@/pages/HudTacticoPage';
 import { AyudasPage } from '@/pages/AyudasPage';
 import { TROPage } from '@/pages/TROPage';
@@ -129,6 +130,7 @@ export function App() {
           <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
           <Route path="/simulador"      element={<SimuladorPage />} />
           <Route path="/finanzas"       element={<FinanzasPage />} />
+          <Route path="/taller"         element={<TallerPage />} />
           <Route path="/hud"            element={<HudTacticoPage />} />
           <Route path="/ayudas"         element={<AyudasPage />} />
           <Route path="/tro"            element={<TROPage />} />
