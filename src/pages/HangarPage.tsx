@@ -319,6 +319,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
         tons,
         bv:          selected.bv2,
         era:         selected.year ? String(selected.year) : (selected.era ? String(selected.era) : ''),
+        sourceFile:  selected.file,
         precioBase:  precioFinal,
         fechaCompra: campaignDate,
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,

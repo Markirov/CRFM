@@ -23,6 +23,8 @@ export interface HangarItem {
   bv?:          number;
   era?:         string;
   techRating?:  string;   // 'A'..'F' (alimenta MechMaintenanceState)
+  /** Nombre del .ssw en public/assets/mechs/ (clave para fetch en Simulador). */
+  sourceFile?:  string;
 
   // ── Económico ──
   /** Precio canon/TRO del mech nuevo (referencia). */
@@ -62,6 +64,7 @@ export function newHangarItem(input: {
   era?:        string;
   techRating?: string;
   pilotoIdx?:  number;
+  sourceFile?: string;
 }): HangarItem {
   const now = new Date().toISOString();
   return {
@@ -72,6 +75,7 @@ export function newHangarItem(input: {
     bv:          input.bv,
     era:         input.era,
     techRating:  input.techRating,
+    sourceFile:  input.sourceFile,
     precioBase:  input.precioBase,
     valorActual: input.precioBase,
     fechaCompra: input.fechaCompra,

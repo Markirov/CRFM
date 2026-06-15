@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Crosshair } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, type FuerzaSlot } from '@/lib/firebase-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, loadHangar, type FuerzaSlot } from '@/lib/firebase-service';
+import type { HangarItem } from '@/lib/hangar-types';
 import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
@@ -57,6 +58,10 @@ export function SimuladorPage() {
   const [destroyedBusy, setDestroyedBusy] = useState(false);
   // Modo campaña SIEMPRE arranca OFF. Usuario lo activa manualmente.
   const [campaignMode, setCampaignMode] = useState<boolean>(false);
+
+  // Hangar items mapeados a slot del simulador (solo válidos en campaignMode).
+  // hangarBySlot[i] = HangarItem asignado al PJ que ocupa el slot i, o null.
+  const [hangarBySlot, setHangarBySlot] = useState<(HangarItem | null)[]>(Array(8).fill(null));
   const prevSubTabRef = useRef<string | null>(null);
 
   // Modal de ajuste manual de calor/dificultad (armas y componentes)
@@ -175,6 +180,7 @@ export function SimuladorPage() {
       // Limpia el simulador para dejarlo listo para partidas sueltas
       sim.resetSession();
       setCampaignMode(false);
+      setHangarBySlot(Array(8).fill(null));
       return;
     }
     // Entrar: pide clave + carga FUERZACAMPAÑA
@@ -211,58 +217,59 @@ export function SimuladorPage() {
         sim.resetSession();
       }
 
-      // Pre-bind: por cada PJ en orden, valida que el slot tenga SU mech.
-      // Si el snapshot trae mech equivocado en ese slot (snapshot viejo con
-      // orden distinto), recarga desde catalogo y sobreescribe.
+      // Pre-bind: cada slot del simulador recibe el mech del HANGAR asignado
+      // al PJ correspondiente. Fuente: collection hangar/ (item.pilotoIdx).
       const BASE = import.meta.env.BASE_URL;
+      const hangarRes = await loadHangar();
+      const hangarItems: HangarItem[] = Array.isArray(hangarRes.data?.items)
+        ? (hangarRes.data!.items as HangarItem[]) : [];
+      const newHangarBySlot: (HangarItem | null)[] = Array(8).fill(null);
+
       for (let i = 0; i < CAMPAIGN_PILOT_ORDER.length; i++) {
         const handle = CAMPAIGN_PILOT_ORDER[i];
-        const pilot = roster.find(r => r.jugador.toLowerCase() === handle.toLowerCase());
-        if (!pilot?.mech) continue;
+        const rosterIdx = roster.findIndex(r => r.jugador.toLowerCase() === handle.toLowerCase());
+        if (rosterIdx < 0) continue;
+        const item = hangarItems.find(it => it.pilotoIdx === rosterIdx);
+        if (!item) continue;
+        newHangarBySlot[i] = item;
+
+        // Mech ya cargado en el slot que coincide con el del hangar? saltar.
         const loaded: any = loadedMechSlots[i];
         const loadedName = loaded?.state
           ? `${loaded.state.chassis || ''} ${loaded.state.model || ''}`.trim().toLowerCase()
           : '';
-        const expected = pilot.mech.trim().toLowerCase();
-        // Match tolerante: substring en cualquier direccion
-        const isCorrect = loadedName && (loadedName.includes(expected) || expected.includes(loadedName));
-        if (isCorrect) continue; // slot ya tiene el mech del PJ correcto
-        // Variantes nombre — Unidad concatena chassis duplicado al final.
-        // Ej: "Crusader CRD-3R KKK Crusader" -> probar tambien sin trailing "Crusader".
-        const nameVariants: string[] = [pilot.mech];
-        const tokens = pilot.mech.split(/\s+/);
-        if (tokens.length > 1 && tokens[0].toLowerCase() === tokens[tokens.length - 1].toLowerCase()) {
-          nameVariants.push(tokens.slice(0, -1).join(' '));
-        }
-        // Fetch + load (sobreescribe si habia mech equivocado)
+        const expected = `${item.chassis} ${item.model}`.trim().toLowerCase();
+        if (loadedName && (loadedName.includes(expected) || expected.includes(loadedName))) continue;
+
+        // Fetch del .ssw — prioriza sourceFile guardado en el item
+        const candidates: string[] = [];
+        if (item.sourceFile) candidates.push(item.sourceFile);
+        candidates.push(`${item.chassis} ${item.model}.ssw`);
+        candidates.push(`${item.chassis} ${item.model}.mtf`);
+
         let text: string | null = null;
         let fname = '';
-        outerFetch: for (const candidate of nameVariants) {
-          const enc = encodeURIComponent(candidate);
-          for (const url of [`${BASE}assets/mechs/${enc}.ssw`, `${BASE}assets/mechs/${enc}.mtf`]) {
-            try {
-              const res = await fetch(url);
-              if (!res.ok) continue;
-              const body = await res.text();
-              // Vite SPA fallback devuelve index.html con 200. Rechaza si parece HTML.
-              const trimmed = body.trimStart().slice(0, 30).toLowerCase();
-              if (trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html')) {
-                console.warn(`[Campaign] ${url} devolvio HTML (archivo no existe). Probando siguiente variante.`);
-                continue;
-              }
-              text = body;
-              fname = url.split('/').pop() || `${candidate}.ssw`;
-              break outerFetch;
-            } catch {/* ignore */}
-          }
+        for (const fn of candidates) {
+          const url = `${BASE}assets/mechs/${encodeURIComponent(fn)}`;
+          try {
+            const res = await fetch(url);
+            if (!res.ok) continue;
+            const body = await res.text();
+            const trimmed = body.trimStart().slice(0, 30).toLowerCase();
+            if (trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html')) continue;
+            text = body;
+            fname = fn;
+            break;
+          } catch {/* ignore */}
         }
         if (text) {
           sim.loadUnitText(text, fname, i);
         } else {
-          console.warn(`[Campaign] mech no encontrado en catalogo: ${pilot.mech} (PJ ${handle})`);
+          console.warn(`[Campaign] mech del hangar no encontrado en assets: ${item.chassis} ${item.model} (PJ ${handle})`);
         }
       }
 
+      setHangarBySlot(newHangarBySlot);
       setCampaignMode(true);
     } catch (err) {
       alert('Fallo al cargar FUERZACAMPAÑA: ' + err);
@@ -350,13 +357,44 @@ export function SimuladorPage() {
   const slotCount = isMech ? sim.mechSlots.length : sim.vehicleSlots.length;
   const activeIdx = isMech ? sim.currentMechIdx : sim.currentVehicleIdx;
 
+  // ── Lock model swap en modo campaña ──
+  // Slot bloqueado = campaignMode + isMech + hangarBySlot[i] presente.
+  // Significa: el mech del slot lo fija el hangar; no se puede sustituir.
+  const lockedSlots = useMemo<boolean[]>(() => {
+    if (!campaignMode || !isMech) return Array(slotCount).fill(false);
+    return Array.from({ length: slotCount }, (_, i) => !!hangarBySlot[i]);
+  }, [campaignMode, isMech, slotCount, hangarBySlot]);
+  const activeLocked = lockedSlots[activeIdx] === true;
+
+  const blockMsg = (i: number) => {
+    const h = hangarBySlot[i];
+    return `Slot ${i + 1} bloqueado en modo campaña.\n\nEl hangar asigna "${h?.chassis} ${h?.model}" a este PJ.\nPara cambiarlo edita la asignación en /hangar (Inventario) o desactiva modo campaña.`;
+  };
+
+  const guardedFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (activeLocked) {
+      alert(blockMsg(activeIdx));
+      e.target.value = '';
+      return;
+    }
+    sim.handleFileUpload(e);
+  };
+
+  const guardedLoadUnitText = (text: string, file: string) => {
+    if (activeLocked) {
+      alert(blockMsg(activeIdx));
+      return;
+    }
+    sim.loadUnitText(text, file);
+  };
+
   return (
     <div className="p-6 animate-[fadeInUp_0.3s_ease]">
       {/* Subtab right-slot: flags + search + slot picker + sync */}
       <SubtabRightPortal>
         {flagToggles}
         <CatalogSearch
-          onLoad={sim.loadUnitText}
+          onLoad={guardedLoadUnitText}
           allowClan={allowClan}
           limitToYear={limitToYear}
           onSwitchTab={tab => {
@@ -370,8 +408,9 @@ export function SimuladorPage() {
           slotCount={slotCount}
           activeIndex={activeIdx}
           onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
-          onFileUpload={sim.handleFileUpload}
+          onFileUpload={guardedFileUpload}
           shortLabels={campaignPilots ?? undefined}
+          lockedSlots={lockedSlots}
         />
         <FuerzaSyncBar
           dirty={sim.dirty}
