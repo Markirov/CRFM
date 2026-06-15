@@ -14,6 +14,7 @@ export const pageLoaders = {
   '/hoja-servicio-legacy': () => import('@/pages/HojaServicioPageLegacy'),
   '/simulador':            () => import('@/pages/SimuladorPage'),
   '/finanzas':             () => import('@/pages/FinanzasPage'),
+  '/hangar':               () => import('@/pages/HangarPage'),
   '/taller':               () => import('@/pages/TallerPage'),
   '/hud':                  () => import('@/pages/HudTacticoPage'),
   '/ayudas':               () => import('@/pages/AyudasPage'),

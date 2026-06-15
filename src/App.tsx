@@ -21,6 +21,7 @@ const HojaServicioPage      = lazy(() => pageLoaders['/hoja-servicio']().then(m 
 const HojaServicioPageLegacy= lazy(() => pageLoaders['/hoja-servicio-legacy']().then(m => ({ default: m.HojaServicioPageLegacy })));
 const SimuladorPage         = lazy(() => pageLoaders['/simulador']().then(m => ({ default: m.SimuladorPage })));
 const FinanzasPage          = lazy(() => pageLoaders['/finanzas']().then(m => ({ default: m.FinanzasPage })));
+const HangarPage            = lazy(() => pageLoaders['/hangar']().then(m => ({ default: m.HangarPage })));
 const TallerPage            = lazy(() => pageLoaders['/taller']().then(m => ({ default: m.TallerPage })));
 const HudTacticoPage        = lazy(() => pageLoaders['/hud']().then(m => ({ default: m.HudTacticoPage })));
 const AyudasPage            = lazy(() => pageLoaders['/ayudas']().then(m => ({ default: m.AyudasPage })));
@@ -138,6 +139,7 @@ export function App() {
             <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
             <Route path="/simulador"      element={<SimuladorPage />} />
             <Route path="/finanzas"       element={<FinanzasPage />} />
+            <Route path="/hangar"         element={<HangarPage />} />
             <Route path="/taller"         element={<TallerPage />} />
             <Route path="/hud"            element={<HudTacticoPage />} />
             <Route path="/ayudas"         element={<AyudasPage />} />

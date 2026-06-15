@@ -22,6 +22,13 @@ export const NAV_SECTIONS: NavSection[] = [
           { id: 'personal',    label: 'Personal' },
         ],
       },
+      { id: 'hangar',        label: 'Hangar',           icon: '🛠️', path: '/hangar',        palette: 'amber',
+        tabs: [
+          { id: 'inventario', label: 'Inventario' },
+          { id: 'comprar',    label: 'Comprar' },
+          { id: 'vender',     label: 'Vender' },
+        ],
+      },
       { id: 'barracones',    label: 'Barracones',       icon: '🏠', path: '/barracones',    palette: 'amber' },
     ],
   },

@@ -53,9 +53,8 @@ const T = {
 // ── Catálogos ──────────────────────────────────────────────
 const CATEGORIAS: { key: LibroMayorCategoria; label: string; tipo: LibroMayorTipo }[] = [
   { key: 'contrato_secundario',    label: 'Contrato secundario',  tipo: 'ingreso' },
-  { key: 'venta_mech',             label: 'Venta de Mech',         tipo: 'ingreso' },
   { key: 'ingreso_misc',           label: 'Ingreso varios',         tipo: 'ingreso' },
-  { key: 'compra_mech',            label: 'Compra de Mech',         tipo: 'gasto'   },
+  // compra_mech / venta_mech viven en /hangar (Cuartel General · Hangar)
   { key: 'repuestos',              label: 'Repuestos',              tipo: 'gasto'   },
   { key: 'sueldo_extra',           label: 'Sueldo extra',           tipo: 'gasto'   },
   { key: 'mantenimiento_mensual',  label: 'Mantenimiento mensual',  tipo: 'gasto'   },
