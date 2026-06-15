@@ -181,8 +181,15 @@ export interface CalculoTiempo {
 
 export function calcularMinutosDisponibles(cfg: ConfiguracionTiempo): CalculoTiempo {
   const horasTotales = Math.max(0, cfg.valor) * FACTOR_HORAS[cfg.unidad];
-  const minutosBase  = Math.round(horasTotales * (MINUTOS_POR_DIA_NORMAL / 24)); // = horas * 20
-  const turnosMax    = Math.max(1, Math.floor(horasTotales / 24));
+
+  // 'horas' = horas activas de trabajo (×60). Otras unidades = elapsed clock
+  // → 8h/24h efectivo (×20). Turnos extendidos solo aplican a elapsed.
+  const esElapsed = cfg.unidad !== 'horas';
+  const minutosBase = esElapsed
+    ? Math.round(horasTotales * (MINUTOS_POR_DIA_NORMAL / 24)) // 8h/24h
+    : Math.round(horasTotales * 60);                            // 60 min/hora activa
+
+  const turnosMax = esElapsed ? Math.max(1, Math.floor(horasTotales / 24)) : 0;
   const turnosExtendidos = Math.min(turnosMax, Math.max(0, Math.floor(cfg.turnosExtendidos)));
   const minutosExtra = turnosExtendidos * MINUTOS_EXTRA_POR_TURNO;
   return {
