@@ -3,7 +3,7 @@ import { X, Save, Loader, LogOut } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { useAppStore } from '@/lib/store';
-import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
+import { loadConfig, saveConfigBatch, resetLegacyMechAssignments } from '@/lib/firebase-service';
 import { formatCzar, parseCurrencyValue } from '@/lib/currency-utils';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -115,6 +115,37 @@ export function SecretMenu({ open, onClose }: Props) {
 
   const updateCombat = (key: string, val: string) => {
     setCombat(prev => ({ ...prev, [key]: parseInt(val) || 0 }));
+  };
+
+  const [resetState, setResetState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
+  const [resetMsg, setResetMsg] = useState('');
+
+  const handleResetMechs = async () => {
+    const ok = window.confirm(
+      'Borrar TODAS las asignaciones piloto↔mech legacy?\n\n' +
+      'Esto limpia:\n' +
+      '· PILOTO_N_MECH en config/main (Firestore)\n' +
+      '· Campo `mech` en cada doc personajes/ (Firestore)\n' +
+      '· Cache local de barracones\n\n' +
+      'El hangar (collection hangar/) NO se toca.\n' +
+      'Tras esto, asignar todo desde Hangar/Inventario o ficha piloto.\n\n' +
+      'Acción irreversible. Continuar?'
+    );
+    if (!ok) return;
+    setResetState('running');
+    try {
+      const res = await resetLegacyMechAssignments();
+      if (!res.success) throw new Error(res.error ?? 'fail');
+      // Wipe local cache
+      localStorage.removeItem('barracones_slots_v1');
+      // Wipe store
+      setCampaign({ pilotMechs: ['', '', '', '', '', ''] });
+      setResetMsg(`config: 6 · personajes: ${res.data?.personajesCleared ?? 0}`);
+      setResetState('done');
+    } catch (e: any) {
+      setResetMsg(e?.message ?? 'error');
+      setResetState('error');
+    }
   };
 
   if (!open) return null;
@@ -240,6 +271,32 @@ export function SecretMenu({ open, onClose }: Props) {
                     <div className="font-mono text-[9px] text-outline">
                       Equivalente formateado: {formatCzar(treasury)}
                     </div>
+                  </div>
+
+                  {/* ─ Migración Hangar (one-shot) ─ */}
+                  <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-2">
+                    <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">
+                      Migración · Reset asignaciones piloto↔mech
+                    </div>
+                    <div className="font-mono text-[9px] text-outline leading-relaxed">
+                      Borra todos los mechs asignados a pilotos desde Sheets/legacy.
+                      No toca <code className="text-red-400/80">hangar/</code>.
+                      Tras esto reasignar desde Hangar/Inventario o ficha piloto.
+                    </div>
+                    <button
+                      onClick={handleResetMechs}
+                      disabled={resetState === 'running'}
+                      className={`w-full h-9 font-mono text-[10px] uppercase tracking-widest border transition-colors ${
+                        resetState === 'done'    ? 'border-primary bg-primary/15 text-primary'
+                        : resetState === 'error' ? 'border-error bg-error/15 text-error'
+                        : 'border-red-400 bg-red-400/10 text-red-400 hover:bg-red-400/20'
+                      }`}
+                    >
+                      {resetState === 'running' ? 'Borrando…'
+                        : resetState === 'done'  ? `✓ Limpiado (${resetMsg})`
+                        : resetState === 'error' ? `✗ ${resetMsg}`
+                        : 'Borrar asignaciones piloto↔mech (legacy)'}
+                    </button>
                   </div>
 
                   {/* ─ Diseño UI ─ */}

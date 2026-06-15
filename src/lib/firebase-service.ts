@@ -134,6 +134,31 @@ export const savePlayer = (data: any): Promise<Envelope<any>> =>
 
 export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data);
 
+/** Migración: borra mech asignado del piloto en config/main
+ *  (PILOTO_N_MECH) y en cada doc de `personajes/` (campo `mech`).
+ *  Hangar ahora es la fuente única; legacy se purga. */
+export const resetLegacyMechAssignments = () =>
+  safe(async () => {
+    // 1) Borra PILOTO_1_MECH..PILOTO_6_MECH del config
+    const cfgPatch: Record<string, string> = {};
+    for (let i = 1; i <= 6; i++) cfgPatch[`PILOTO_${i}_MECH`] = '';
+    await setDoc(CONFIG_REF(), cfgPatch, { merge: true });
+
+    // 2) Borra `mech` de todos los personajes
+    const snap = await getDocs(PERSONAJES_COL());
+    const ops: Promise<unknown>[] = [];
+    let touched = 0;
+    snap.forEach(d => {
+      const data = d.data() as any;
+      if (data?.mech) {
+        ops.push(setDoc(doc(PERSONAJES_COL(), d.id), { mech: '' }, { merge: true }));
+        touched++;
+      }
+    });
+    await Promise.all(ops);
+    return { configCleared: 6, personajesCleared: touched };
+  });
+
 // ── Roster (derivado de collection personajes) ─────────────────
 
 const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
