@@ -14,8 +14,9 @@ import { loadHangar, saveHangarItem } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 
 export function MechAssignmentBar({ pilotIdx }: { pilotIdx: number }) {
-  const { campaign } = useAppStore();
-  const pilotName = campaign?.pilotNames?.[pilotIdx] || `Piloto ${pilotIdx + 1}`;
+  const { roster } = useAppStore();
+  const pilotEntry = roster[pilotIdx];
+  const pilotName = pilotEntry?.apodo || pilotEntry?.nombre || `Piloto ${pilotIdx + 1}`;
 
   const [items, setItems] = useState<HangarItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,8 @@ export function MechAssignmentBar({ pilotIdx }: { pilotIdx: number }) {
 
     // Caso 3: target ya tenía otro piloto → preguntar
     if (target.pilotoIdx !== undefined && target.pilotoIdx !== pilotIdx) {
-      const otroPiloto = campaign?.pilotNames?.[target.pilotoIdx] || `Piloto ${target.pilotoIdx + 1}`;
+      const otroR = roster[target.pilotoIdx];
+      const otroPiloto = otroR?.apodo || otroR?.nombre || `Piloto ${target.pilotoIdx + 1}`;
       const ok = window.confirm(
         `"${target.chassis} ${target.model}" ya está asignado a ${otroPiloto}.\n\n` +
         `Reasignar a ${pilotName}? ${otroPiloto} se quedará sin mech.`
@@ -111,7 +113,8 @@ export function MechAssignmentBar({ pilotIdx }: { pilotIdx: number }) {
         <option value="">— Sin mech (reserva) —</option>
         {items.map(it => {
           const taken = it.pilotoIdx !== undefined && it.pilotoIdx !== pilotIdx;
-          const otroPiloto = taken ? (campaign?.pilotNames?.[it.pilotoIdx!] || `P${it.pilotoIdx! + 1}`) : '';
+          const otroR = taken ? roster[it.pilotoIdx!] : null;
+          const otroPiloto = taken ? (otroR?.apodo || otroR?.nombre || `P${it.pilotoIdx! + 1}`) : '';
           return (
             <option key={it.id} value={it.id}>
               {it.chassis} {it.model} · {it.tons}t{taken ? ` · ⚠ ${otroPiloto}` : ''}

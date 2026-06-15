@@ -62,10 +62,16 @@ export function HangarPage() {
 //  INVENTARIO
 // ══════════════════════════════════════════════════════════
 
+function pilotLabel(roster: { apodo: string; nombre: string }[], idx: number): string {
+  const r = roster[idx];
+  if (!r) return `Piloto ${idx + 1}`;
+  return r.apodo || r.nombre || `Piloto ${idx + 1}`;
+}
+
 function InventarioTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
-  const { campaign } = useAppStore();
+  const { roster } = useAppStore();
   const fmt = (n: number) => n.toLocaleString('es-ES') + ' ₡';
 
   const handleAssign = async (item: HangarItem, pilotoIdx: number | undefined) => {
@@ -76,7 +82,7 @@ function InventarioTab({ items, loading, refresh }: {
       return;
     }
 
-    const pilotName = campaign?.pilotNames?.[pilotoIdx] || `Piloto ${pilotoIdx + 1}`;
+    const pilotName = pilotLabel(roster, pilotoIdx);
 
     // Conflicto: piloto ya tenía otro mech?
     const previo = items.find(it => it.pilotoIdx === pilotoIdx && it.id !== item.id);
@@ -91,7 +97,7 @@ function InventarioTab({ items, loading, refresh }: {
 
     // Conflicto: este mech estaba con otro piloto?
     if (item.pilotoIdx !== undefined && item.pilotoIdx !== pilotoIdx) {
-      const otroPiloto = campaign?.pilotNames?.[item.pilotoIdx] || `Piloto ${item.pilotoIdx + 1}`;
+      const otroPiloto = pilotLabel(roster, item.pilotoIdx);
       const ok = window.confirm(
         `"${item.chassis} ${item.model}" estaba con ${otroPiloto}.\n\n` +
         `Reasignar a ${pilotName}?`
@@ -140,8 +146,8 @@ function InventarioTab({ items, loading, refresh }: {
                       className="bg-surface-container border border-outline-variant/40 px-1 py-0.5 font-mono text-[10px] text-secondary"
                     >
                       <option value="">— Reserva —</option>
-                      {(campaign?.pilotNames ?? []).map((n, i) => (
-                        <option key={i} value={i}>{n || `Piloto ${i + 1}`}</option>
+                      {roster.map((r, i) => (
+                        <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
                       ))}
                     </select>
                   </td>
@@ -162,7 +168,7 @@ function InventarioTab({ items, loading, refresh }: {
 // ══════════════════════════════════════════════════════════
 
 function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
-  const { campaign, setActiveSubTab } = useAppStore();
+  const { campaign, setActiveSubTab, roster } = useAppStore();
   const { catalog } = useMechCatalog();
   const [searchParams, setSearchParams] = useSearchParams();
   const campaignDate = useMemo(
@@ -191,10 +197,13 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   }, [catalog, query]);
 
   // Compra
-  const [precio, setPrecio] = useState(0);
+  const [precio, setPrecio] = useState(0);     // precio canon detectado
+  const [factorPct, setFactorPct] = useState(100); // descuento/markup 0-200%
   const [pilotoIdx, setPilotoIdx] = useState<number | ''>('');
   const [notas, setNotas] = useState('');
   const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+
+  const precioFinal = Math.round(precio * (factorPct / 100));
 
   // Carga el .ssw para extraer tons/cost/chassis/model
   const loadSswDetail = async (m: CatalogMech) => {
@@ -231,7 +240,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
   const handleClear = () => {
     setSelected(null); setQuery(''); setPrecio(0); setPilotoIdx(''); setNotas('');
-    setChassis(''); setModel(''); setTons(0);
+    setChassis(''); setModel(''); setTons(0); setFactorPct(100);
   };
 
   // ── Prefill desde TRO: ?buy=<file.ssw> ──
@@ -249,7 +258,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   }, [catalog, searchParams]);
 
   const handleComprar = async () => {
-    if (!selected || precio <= 0 || !chassis || tons <= 0) return;
+    if (!selected || precioFinal <= 0 || !chassis || tons <= 0) return;
     setCommitState('sending');
     try {
       const item = newHangarItem({
@@ -258,21 +267,22 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
         tons,
         bv:          selected.bv2,
         era:         selected.year ? String(selected.year) : (selected.era ? String(selected.era) : ''),
-        precioBase:  precio,
+        precioBase:  precioFinal,
         fechaCompra: campaignDate,
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,
       });
-      if (notas) item.notas = notas;
+      const factorNote = factorPct !== 100 ? ` · factor ${factorPct}%` : '';
+      if (notas || factorPct !== 100) item.notas = `${notas}${factorNote}`.trim();
 
       await saveHangarItem(item);
       await commitLibroEntryAndTreasury({
         id:        genId('lm'),
         fecha:     campaignDate,
         concepto:  `Compra · ${item.chassis} ${item.model}`,
-        cantidad:  precio,
+        cantidad:  precioFinal,
         tipo:      'gasto',
         categoria: 'compra_mech',
-        nota:      notas || `${item.tons}t · BV ${item.bv ?? '?'}`,
+        nota:      `${item.tons}t · BV ${item.bv ?? '?'}${factorNote}${notas ? ' · ' + notas : ''}`,
         jugador:   '',
       });
 
@@ -377,7 +387,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-                Precio (canon: {(selected.cost ?? 0).toLocaleString('es-ES')} ₡)
+                Precio base canon
               </label>
               <input
                 type="number" min={0}
@@ -397,10 +407,46 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
                 className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
               >
                 <option value="">— Reserva —</option>
-                {(campaign?.pilotNames ?? []).map((n, i) => (
-                  <option key={i} value={i}>{n || `Piloto ${i + 1}`}</option>
+                {roster.map((r, i) => (
+                  <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          {/* Factor descuento/markup — análogo al estadoFactPct del Taller */}
+          <div>
+            <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
+              Factor compra: <span className="text-primary-container font-bold">{factorPct}%</span>
+              <span className="text-secondary/50 ml-2">
+                ({factorPct < 100 ? `−${100 - factorPct}% descuento`
+                  : factorPct > 100 ? `+${factorPct - 100}% sobreprecio`
+                  : 'canon'})
+              </span>
+            </label>
+            <input
+              type="range" min={0} max={200} step={5}
+              value={factorPct}
+              onChange={e => setFactorPct(parseInt(e.target.value) || 0)}
+              className="w-full"
+            />
+            <div className="flex justify-between font-mono text-[9px] text-secondary/50 mt-0.5">
+              <span>0%</span><span>50%</span><span>100%</span><span>150%</span><span>200%</span>
+            </div>
+          </div>
+
+          <div className="border border-primary-container/40 bg-primary-container/5 p-2 font-mono text-[10px] grid grid-cols-3 gap-2">
+            <div>
+              <div className="text-secondary/60 uppercase tracking-widest text-[8px]">Canon</div>
+              <div className="text-secondary">{precio.toLocaleString('es-ES')} ₡</div>
+            </div>
+            <div>
+              <div className="text-secondary/60 uppercase tracking-widest text-[8px]">× Factor</div>
+              <div className="text-secondary">{factorPct}%</div>
+            </div>
+            <div>
+              <div className="text-primary-container uppercase tracking-widest text-[8px]">Final</div>
+              <div className="text-primary-container font-bold text-sm">{precioFinal.toLocaleString('es-ES')} ₡</div>
             </div>
           </div>
 
@@ -418,9 +464,9 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
           <button
             onClick={handleComprar}
-            disabled={precio <= 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
+            disabled={precioFinal <= 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
             className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-              precio <= 0 || tons <= 0 || !chassis
+              precioFinal <= 0 || tons <= 0 || !chassis
                 ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
                 : commitState === 'done'
                   ? 'border-primary bg-primary/20 text-primary'
@@ -432,7 +478,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
             {commitState === 'sending' ? 'Registrando…'
               : commitState === 'done'  ? '✓ Mech añadido al hangar'
               : commitState === 'error' ? '✗ Error — reintenta'
-              : `Comprar (${precio.toLocaleString('es-ES')} ₡)`}
+              : `Comprar (${precioFinal.toLocaleString('es-ES')} ₡)`}
           </button>
         </div>
       )}
@@ -447,7 +493,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 function VenderTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
-  const { campaign, setActiveSubTab } = useAppStore();
+  const { campaign, setActiveSubTab, roster } = useAppStore();
   const campaignDate = useMemo(
     () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
     [campaign?.campaignYear, campaign?.campaignMonth],
@@ -545,7 +591,7 @@ function VenderTab({ items, loading, refresh }: {
         <div>Tons: <span className="text-secondary">{selected.tons}</span></div>
         <div>BV: <span className="text-secondary">{selected.bv ?? '—'}</span></div>
         <div>Valor ref: <span className="text-secondary">{(selected.valorActual ?? selected.precioBase).toLocaleString('es-ES')} ₡</span></div>
-        <div>Piloto: <span className="text-secondary">{selected.pilotoIdx !== undefined ? (campaign?.pilotNames?.[selected.pilotoIdx] || `Piloto ${selected.pilotoIdx + 1}`) : 'Reserva'}</span></div>
+        <div>Piloto: <span className="text-secondary">{selected.pilotoIdx !== undefined ? pilotLabel(roster, selected.pilotoIdx) : 'Reserva'}</span></div>
       </div>
 
       <div>
