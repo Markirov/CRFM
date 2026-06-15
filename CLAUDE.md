@@ -229,16 +229,16 @@ Los parsers devuelven objetos que pueden no tener todos los campos que `MechStat
 
 ---
 
-## Backend: Google Apps Script
+## Backend: Firebase Firestore
 
-URL por defecto: `https://script.google.com/macros/s/AKfycbyAAh-lYB1L72hTH72lpYDD0mcaAyeERLjJp1e0Ar0hhuZK8TszJdu-qmlN_cwi4sEncQ/exec`
+Servicio en `src/lib/firebase-service.ts`. Funciones principales:
+- `loadConfig()`, `saveConfigBatch(cfg)` — config global (doc `config/main`)
+- `loadPlayer(name)`, `searchPilots(name)`, `savePlayer(data)`, `savePilot(data)` — `personajes/{name}`
+- `loadRosterAsEnvelope()` — agregado del roster (orden CAMPAIGN_PILOT_ORDER)
+- `loadLogros()`, `loadPersonal()`, `loadLibroMayor()`, `loadCronicas()`, `loadParteDiario()`, `loadMovimientos()`, `loadFuerzaCampana()`, etc.
+- `sheetsGet/sheetsPost` shims legacy (routing a Firestore equivalents)
 
-Configurable vía localStorage: `GOOGLE_SCRIPT_URL_CUSTOM`
-
-Servicio en `src/lib/sheets-service.ts` con:
-- `sheetsGet(params)` — GET request
-- `sheetsPost(body)` — POST request
-- `loadConfig()`, `loadPlayer(name)`, `savePlayer(data)`, `loadUnitSheet(name)`
+Apps Script legacy archivado en `herramientas/sheets-service.legacy.ts`.
 
 ---
 

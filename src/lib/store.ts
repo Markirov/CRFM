@@ -3,9 +3,6 @@ import type { CampaignConfig, Palette } from './types';
 import { saveConfigBatch } from './firebase-service';
 import type { RosterEntry } from './roster';
 
-const DEFAULT_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbyIDYDFO2UyLJ7I6c0QadLU4O85gQWPoaaYo9HmObQaZloSq8bsy_ET_UevkLvDY61a9w/exec';
-
 interface AppState {
   campaign: CampaignConfig;
   setCampaign: (patch: Partial<CampaignConfig>) => void;
@@ -49,7 +46,6 @@ export const useAppStore = create<AppState>((set) => ({
     campaignYear: 3026,
     campaignMonth: 1,
     unitName: "King Karl's Kürassiers",
-    scriptUrl: localStorage.getItem('GOOGLE_SCRIPT_URL_CUSTOM') || DEFAULT_SCRIPT_URL,
     pilotNames:  [],
     pilotApodos: [],
     pilotMechs:  [],

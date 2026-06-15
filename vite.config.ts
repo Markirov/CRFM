@@ -13,5 +13,17 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor':    ['react', 'react-dom', 'react-router-dom'],
+          'firebase-app':    ['firebase/app', 'firebase/analytics'],
+          'firebase-store':  ['firebase/firestore'],
+          'firebase-auth':   ['firebase/auth'],
+          'icons':           ['lucide-react'],
+          'd3':              ['d3-delaunay'],
+        },
+      },
+    },
   },
 });

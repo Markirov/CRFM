@@ -133,7 +133,6 @@ export interface CampaignConfig {
   campaignYear: number;
   campaignMonth: number;
   unitName: string;
-  scriptUrl: string;
   pilotNames:  string[]; // PILOTO_1_NOMBRE … PILOTO_6_NOMBRE from config
   pilotApodos: string[]; // PILOTO_1_APODO … PILOTO_6_APODO from config
   pilotMechs:  string[]; // PILOTO_1_MECH … PILOTO_6_MECH from config

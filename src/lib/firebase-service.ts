@@ -132,9 +132,6 @@ export const savePlayer = (data: any): Promise<Envelope<any>> =>
 
 export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data);
 
-/** Stub legacy: backend ya no usa Apps Script URL. */
-export const syncScriptUrlFromRemote = async (): Promise<void> => {};
-
 // ── Roster (derivado de collection personajes) ─────────────────
 
 const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
