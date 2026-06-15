@@ -48,16 +48,36 @@ function newId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-// ── Stub no-op para mantener compat con código que aún la llame ──
-export async function syncScriptUrlFromRemote(): Promise<void> {
-  // No-op en modo Firebase. Lo dejamos por compat call-sites antiguos.
+// ── Shims sheetsGet/sheetsPost ──────────────────────────────────
+// Routean acciones legacy a sus equivalentes Firestore. Devuelven
+// el mismo envelope para compat con call-sites antiguos (roster.ts,
+// telegram-service.ts).
+
+export async function sheetsGet(params: Record<string, string>) {
+  const action = params.action;
+  switch (action) {
+    case 'getRoster':           return await loadRosterAsEnvelope();
+    case 'getConfiguracion':    return await loadConfig();
+    case 'getLogros':           return await loadLogros();
+    case 'getHistorial':        return await loadHistorial();
+    case 'getLibroMayor':       return await loadLibroMayor();
+    case 'getPersonal':         return await loadPersonal();
+    case 'getFuerzas':          return await loadFuerzas();
+    case 'getCronicas':         return await loadCronicas();
+    case 'getOrdenDia':         return await loadOrdenDia();
+    case 'getParteDiario':      return await loadParteDiario();
+    case 'getMovimientos':      return await loadMovimientos(Number(params.limit) || 5);
+  }
+  // Por defecto: si trae 'jugador' sin action → loadPlayer
+  if (params.jugador && !action) return await loadPlayer(params.jugador);
+  console.warn('[firebase] sheetsGet sin handler:', params);
+  return { success: false, error: `Acción no soportada en Firebase: ${action}` };
 }
 
-// ── Generic helpers (no se usan en runtime, solo para tests) ────
-export const sheetsGet  = async (_p: Record<string, string>) =>
-  ({ success: false, error: 'sheetsGet no soportado en modo Firebase' });
-export const sheetsPost = async (_b: Record<string, any>) =>
-  ({ success: false, error: 'sheetsPost no soportado en modo Firebase' });
+export async function sheetsPost(_body: Record<string, any>) {
+  console.warn('[firebase] sheetsPost legacy llamado, no-op:', _body);
+  return { success: false, error: 'sheetsPost legacy no soportado — usar funciones directas firebase-service' };
+}
 
 // ═══════════════════════════════════════════════════════════════
 // CONFIG (doc único config/main)
@@ -111,6 +131,57 @@ export const savePlayer = (data: any) =>
   });
 
 export const savePilot = (data: any) => savePlayer(data);
+
+// ── Roster (derivado de collection personajes) ─────────────────
+
+const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
+
+function pickSkillLevel(extraSkills: any, names: string[]): number | null {
+  if (!Array.isArray(extraSkills)) return null;
+  for (const s of extraSkills) {
+    if (!s?.name) continue;
+    const n = String(s.name).toLowerCase();
+    if (names.some(target => n === target.toLowerCase())) {
+      const lvl = Number(s.level);
+      return Number.isFinite(lvl) ? lvl : null;
+    }
+  }
+  return null;
+}
+
+async function loadRosterAsEnvelope() {
+  try {
+    const snap = await getDocs(PERSONAJES_COL());
+    const roster = snap.docs.map(d => {
+      const data = d.data() as any;
+      const jugador = String(data.jugador ?? d.id);
+      const orderIdx = CAMPAIGN_PILOT_ORDER.indexOf(jugador);
+      return {
+        order:         orderIdx >= 0 ? orderIdx + 1 : 99,
+        fila:          0,
+        nombre:        data.nombre ?? '',
+        nombreDisplay: data.nombreDisplay ?? data.nombre ?? '',
+        jugador,
+        apodo:         data.apodo ?? '',
+        origen:        data.origen ?? '',
+        afiliacion:    data.afiliacion ?? '',
+        mech:          data.mech ?? '',
+        xpTotal:       Number(data.xpTotal) || 0,
+        xpDisponible:  Number(data.xpDisponible ?? data.xpTotal) || 0,
+        sueldo:        data.sueldo ?? '',
+        dinero:        data.cbills ?? data.dinero ?? '',
+        estado:        data.estado ?? 'activo',
+        lanza:         data.lanza ?? '',
+        disparoMech:   data.disparoMech ?? pickSkillLevel(data.extraSkills, ['Disparo Mech', 'Disparar Mech']),
+        pilotajeMech:  data.pilotajeMech ?? pickSkillLevel(data.extraSkills, ['Pilotar Mech', 'Pilotaje Mech']),
+      };
+    }).sort((a, b) => a.order - b.order);
+    return { success: true, data: { roster } };
+  } catch (e: any) {
+    console.error('[firebase] loadRoster:', e);
+    return { success: false, error: e?.message ?? String(e) };
+  }
+}
 
 /** Borra mech asignado (col Q) de un jugador. */
 export const removeMechFromUnit = (jugador: string) =>

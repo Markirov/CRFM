@@ -76,12 +76,17 @@ async function migratePersonajes() {
   for (const name of PILOTOS) {
     try {
       const r = await sheetsGet({ jugador: name });
-      if (!r || (typeof r === 'object' && Object.keys(r).length === 0)) {
+      // Apps Script envuelve: {success, msg, result, personajes:[{...real}]}
+      const real = Array.isArray(r?.personajes) ? r.personajes[0]
+                 : Array.isArray(r?.data?.personajes) ? r.data.personajes[0]
+                 : r;
+      if (!real || (typeof real === 'object' && Object.keys(real).length === 0)) {
         console.log(`  [${name}] vacío`);
         bump(section, 'skip');
         continue;
       }
-      await setDoc(doc(db, 'personajes', name), r, { merge: true });
+      // Sobrescribir (no merge) para limpiar el wrapper viejo si existía
+      await setDoc(doc(db, 'personajes', name), real);
       console.log(`  [${name}] OK`);
       bump(section, 'ok');
     } catch (e: any) {
