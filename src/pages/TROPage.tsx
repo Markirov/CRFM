@@ -4,8 +4,10 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
-import { Search, X, Loader } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, X, Loader, ShoppingCart } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
+import { parseSSWBasic, type ParsedSSWBasic } from '@/lib/ssw-basic';
 
 type UnitKind = 'mechs' | 'vehicles' | 'infantry' | 'battlearmor';
 
@@ -297,8 +299,10 @@ function DetailPanel({ entry, text, loading, onClose }: {
   loading: boolean;
   onClose: () => void;
 }) {
+  const navigate = useNavigate();
+  const { setActiveSubTab } = useAppStore();
   // Parse rápido SSW XML para sacar datos básicos
-  const parsed = useMemo(() => parseSSWBasic(text ?? ''), [text]);
+  const parsed: ParsedSSWBasic = useMemo(() => parseSSWBasic(text ?? ''), [text]);
 
   return (
     <div style={{
@@ -404,7 +408,7 @@ function DetailPanel({ entry, text, loading, onClose }: {
       </div>
 
       {/* Actions */}
-      <div style={{ padding: '10px 16px', borderTop: '1px solid #4e453a40', background: '#10141a' }}>
+      <div style={{ padding: '10px 16px', borderTop: '1px solid #4e453a40', background: '#10141a', display: 'flex', flexDirection: 'column', gap: 6 }}>
         <button onClick={() => {
           // Drop file en localStorage para que Simulador lo recoja
           if (!text) return;
@@ -419,65 +423,29 @@ function DetailPanel({ entry, text, loading, onClose }: {
           fontSize: 10, letterSpacing: 2, fontWeight: 700,
           cursor: text ? 'pointer' : 'not-allowed', opacity: text ? 1 : 0.4,
         }}>ENVIAR A SIMULADOR →</button>
+
+        {entry.kind === 'mechs' && (
+          <button onClick={() => {
+            if (!text) return;
+            setActiveSubTab('comprar');
+            navigate(`/hangar?buy=${encodeURIComponent(entry.file)}`);
+          }} style={{
+            width: '100%', padding: '8px 12px',
+            background: '#ffd79b', color: '#0a0e14',
+            border: 'none', fontFamily: '"Share Tech Mono", monospace',
+            fontSize: 10, letterSpacing: 2, fontWeight: 700,
+            cursor: text ? 'pointer' : 'not-allowed', opacity: text ? 1 : 0.4,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}>
+            <ShoppingCart size={12} /> COMPRAR PARA HANGAR
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-// ── SSW basic parser ──────────────────────────────────────
-interface ParsedSSW {
-  chassis: string | null;
-  model: string | null;
-  tons: number | null;
-  era: string | null;
-  engineType: string | null;
-  engineRating: number | null;
-  walkMP: number | null;
-  jumpMP: number | null;
-  armorType: string | null;
-  armorTotal: number | null;
-  heatSinks: number | null;
-  heatSinkType: string | null;
-  weapons: string[];
-  cost: number | null;
-}
-
-function parseSSWBasic(text: string): ParsedSSW {
-  const get = (tag: string) => {
-    const m = text.match(new RegExp(`<${tag}>([^<]*)</${tag}>`, 'i'));
-    return m ? m[1].trim() : null;
-  };
-  const getNum = (tag: string) => {
-    const v = get(tag);
-    if (v == null) return null;
-    const n = parseFloat(v);
-    return Number.isFinite(n) ? n : null;
-  };
-
-  const weapons: string[] = [];
-  const wMatches = text.matchAll(/<weapon>[\s\S]*?<name>([^<]+)<\/name>[\s\S]*?(<location>([^<]+)<\/location>)?[\s\S]*?<\/weapon>/g);
-  for (const m of wMatches) {
-    const loc = m[3] ? ` [${m[3]}]` : '';
-    weapons.push(`${m[1]}${loc}`);
-  }
-
-  return {
-    chassis:      get('chassis'),
-    model:        get('model'),
-    tons:         getNum('tons') || getNum('mass'),
-    era:          get('era') || get('introyear'),
-    engineType:   get('enginetype') || get('engine'),
-    engineRating: getNum('rating') || getNum('enginerating'),
-    walkMP:       getNum('walkmp') || getNum('walk'),
-    jumpMP:       getNum('jumpmp') || getNum('jump'),
-    armorType:    get('armortype'),
-    armorTotal:   getNum('armortotal') || getNum('armorpoints'),
-    heatSinks:    getNum('heatsinks') || getNum('numheatsinks'),
-    heatSinkType: get('heatsinktype') || get('hstype'),
-    weapons:      weapons.slice(0, 40),
-    cost:         getNum('cost'),
-  };
-}
+// ── SSW basic parser: ahora vive en @/lib/ssw-basic ──────────
 
 // ── UI helpers ──────────────────────────────────────────
 function Th({ children, onClick, active, desc, align = 'left' }: {

@@ -6,12 +6,14 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
-import { Search, Trash2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Search, Trash2, Loader } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadHangar, saveHangarItem, deleteHangarItem } from '@/lib/firebase-service';
 import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
 import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
+import { parseSSWBasic } from '@/lib/ssw-basic';
 
 export function HangarPage() {
   const { activeSubTab, setActiveSubTab } = useAppStore();
@@ -162,6 +164,7 @@ function InventarioTab({ items, loading, refresh }: {
 function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   const { campaign, setActiveSubTab } = useAppStore();
   const { catalog } = useMechCatalog();
+  const [searchParams, setSearchParams] = useSearchParams();
   const campaignDate = useMemo(
     () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
     [campaign?.campaignYear, campaign?.campaignMonth],
@@ -170,13 +173,20 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   // Búsqueda catálogo
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<CatalogMech | null>(null);
+  const [loadingSsw, setLoadingSsw] = useState(false);
+
+  // Datos resueltos del .ssw (tons/chassis/model/cost) — el catálogo
+  // solo trae name/bv2/file/year, todo lo demás viene del fichero
+  const [chassis, setChassis] = useState('');
+  const [model, setModel] = useState('');
+  const [tons, setTons] = useState(0);
 
   const suggestions = useMemo(() => {
     if (!catalog || query.trim().length < 2) return [];
     const q = query.trim().toLowerCase();
     return catalog.mechs.filter(m => {
-      const full = m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`;
-      return full.toLowerCase().includes(q);
+      const label = m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`;
+      return label.toLowerCase().includes(q);
     }).slice(0, 12);
   }, [catalog, query]);
 
@@ -186,26 +196,68 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   const [notas, setNotas] = useState('');
   const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
 
+  // Carga el .ssw para extraer tons/cost/chassis/model
+  const loadSswDetail = async (m: CatalogMech) => {
+    setLoadingSsw(true);
+    try {
+      const base = import.meta.env.BASE_URL;
+      const res = await fetch(`${base}assets/mechs/${encodeURIComponent(m.file)}`);
+      if (!res.ok) throw new Error('No se pudo cargar el fichero');
+      const text = await res.text();
+      const p = parseSSWBasic(text);
+
+      // chassis/model: del .ssw, fallback al name del index
+      const fallback = m.name || `${m.chassis ?? ''} ${m.model ?? ''}`.trim();
+      setChassis(p.chassis || (fallback.split(' ')[0] ?? ''));
+      setModel(p.model || fallback.split(' ').slice(1).join(' '));
+      setTons(p.tons ?? m.tons ?? 0);
+      setPrecio(p.cost ?? m.cost ?? 0);
+    } catch {
+      // Fallback: solo lo que viene del index
+      setChassis(m.chassis ?? m.name?.split(' ')[0] ?? '');
+      setModel(m.model ?? m.name?.split(' ').slice(1).join(' ') ?? '');
+      setTons(m.tons ?? 0);
+      setPrecio(m.cost ?? 0);
+    } finally {
+      setLoadingSsw(false);
+    }
+  };
+
   const handleSelect = (m: CatalogMech) => {
     setSelected(m);
-    setQuery(m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`.trim());
-    setPrecio(m.cost ?? 0);
+    setQuery(m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`.trim());
+    void loadSswDetail(m);
   };
 
   const handleClear = () => {
     setSelected(null); setQuery(''); setPrecio(0); setPilotoIdx(''); setNotas('');
+    setChassis(''); setModel(''); setTons(0);
   };
 
+  // ── Prefill desde TRO: ?buy=<file.ssw> ──
+  useEffect(() => {
+    const buyFile = searchParams.get('buy');
+    if (!buyFile || !catalog || selected) return;
+    const m = catalog.mechs.find(x => x.file === buyFile);
+    if (m) {
+      handleSelect(m);
+      // Limpia el param para no re-disparar
+      searchParams.delete('buy');
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalog, searchParams]);
+
   const handleComprar = async () => {
-    if (!selected || precio <= 0) return;
+    if (!selected || precio <= 0 || !chassis || tons <= 0) return;
     setCommitState('sending');
     try {
       const item = newHangarItem({
-        chassis:     selected.chassis,
-        model:       selected.model,
-        tons:        selected.tons,
+        chassis,
+        model,
+        tons,
         bv:          selected.bv2,
-        era:         String(selected.era ?? ''),
+        era:         selected.year ? String(selected.year) : (selected.era ? String(selected.era) : ''),
         precioBase:  precio,
         fechaCompra: campaignDate,
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,
@@ -270,7 +322,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
                   onClick={() => handleSelect(m)}
                   className="w-full text-left px-2 py-1 font-mono text-[10px] text-on-surface hover:bg-primary-container/15 flex items-center justify-between gap-2"
                 >
-                  <span>{m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
+                  <span>{m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
                   <span className="text-secondary/50 text-[9px]">{m.tons}t · BV {m.bv2}</span>
                 </button>
               </li>
@@ -281,14 +333,43 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
       {selected && (
         <div className="border border-primary-container/30 bg-primary-container/5 p-3 space-y-2">
-          <div className="font-headline text-sm font-bold text-primary-container">
-            {selected.chassis} {selected.model}
+          <div className="font-headline text-sm font-bold text-primary-container flex items-center gap-2">
+            {chassis} {model}
+            {loadingSsw && <Loader size={12} className="animate-spin text-secondary/50" />}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[10px] text-secondary/70">
-            <div>Tons: <span className="text-secondary">{selected.tons}</span></div>
-            <div>BV: <span className="text-secondary">{selected.bv2}</span></div>
-            <div>Era: <span className="text-secondary">{selected.era}</span></div>
-            <div>Tech: <span className="text-secondary">{selected.techBase}</span></div>
+          <div className="grid grid-cols-3 gap-2 font-mono text-[10px] text-secondary/70">
+            <div>BV: <span className="text-secondary">{selected.bv2 ?? '—'}</span></div>
+            <div>Año: <span className="text-secondary">{selected.year ?? '—'}</span></div>
+            <div>Archivo: <span className="text-secondary truncate inline-block max-w-[120px]" title={selected.file}>{selected.file}</span></div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Chasis</label>
+              <input
+                value={chassis}
+                onChange={e => setChassis(e.target.value)}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Modelo</label>
+              <input
+                value={model}
+                onChange={e => setModel(e.target.value)}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              />
+            </div>
+            <div>
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Tons</label>
+              <input
+                type="number" min={0}
+                value={tons || ''}
+                onFocus={e => e.target.select()}
+                onChange={e => setTons(parseInt(e.target.value) || 0)}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -335,9 +416,9 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
           <button
             onClick={handleComprar}
-            disabled={precio <= 0 || commitState === 'sending'}
+            disabled={precio <= 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
             className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-              precio <= 0
+              precio <= 0 || tons <= 0 || !chassis
                 ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
                 : commitState === 'done'
                   ? 'border-primary bg-primary/20 text-primary'
