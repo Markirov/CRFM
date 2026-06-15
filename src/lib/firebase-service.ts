@@ -27,6 +27,7 @@
 
 import {
   collection, doc, getDoc, getDocs, setDoc, deleteDoc,
+  deleteField,
   query, orderBy, limit as fsLimit,
 } from 'firebase/firestore';
 import { db } from './firebase-config';
@@ -488,11 +489,42 @@ export const loadHangar = () =>
     return { items };
   });
 
+/** Sanitiza objeto para Firestore:
+ *  - undefined en top-level → deleteField() (borra el campo del doc)
+ *  - undefined anidado → omitido del objeto
+ *  Firestore no acepta undefined, solo null o ausencia. */
+function sanitizeForFirestore(obj: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined) {
+      out[k] = deleteField();
+    } else if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+      out[k] = stripUndefinedDeep(v as Record<string, unknown>);
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+function stripUndefinedDeep(obj: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined) continue;
+    if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+      out[k] = stripUndefinedDeep(v as Record<string, unknown>);
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
 export const saveHangarItem = (item: HangarItem) =>
   safe(async () => {
     const id = item.id;
-    const next = { ...item, id, updatedAt: new Date().toISOString() };
-    await setDoc(doc(HANGAR_COL(), id), next, { merge: true });
+    const payload = sanitizeForFirestore({ ...item, id, updatedAt: new Date().toISOString() });
+    await setDoc(doc(HANGAR_COL(), id), payload, { merge: true });
     return { id };
   });
 
@@ -505,10 +537,10 @@ export const deleteHangarItem = (id: string) =>
 /** Asigna piloto (idx 0..5) o desasigna (pasar undefined). */
 export const assignPilotToHangar = (id: string, pilotoIdx: number | undefined) =>
   safe(async () => {
-    const patch: Partial<HangarItem> = {
+    const patch = sanitizeForFirestore({
       pilotoIdx,
       updatedAt: new Date().toISOString(),
-    };
+    });
     await setDoc(doc(HANGAR_COL(), id), patch, { merge: true });
     return { id, pilotoIdx };
   });

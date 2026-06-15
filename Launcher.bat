@@ -18,6 +18,7 @@ echo   2^) Rebuild indexes
 echo   3^) Deploy ^(bump + commit + push - Action despliega^)
 echo   4^) Firebase deploy directo ^(skip Action^)
 echo   5^) Backup Firestore ^(JSON local^)
+echo   6^) Sync Solaris -^> assets ^(+ rebuild^)
 echo   0^) Salir
 echo.
 set /p RUNSEQ="Secuencia: "
@@ -69,6 +70,11 @@ if "%OPT%"=="4" (
 if "%OPT%"=="5" (
   echo --- [5] Backup Firestore ---
   call "%ROOT%scripts\backup.bat"
+  exit /b %ERRORLEVEL%
+)
+if "%OPT%"=="6" (
+  echo --- [6] Sync Solaris ---
+  call "%ROOT%scripts\sync-solaris.bat"
   exit /b %ERRORLEVEL%
 )
 
