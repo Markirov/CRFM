@@ -8,7 +8,7 @@ import { useAppStore } from '@/lib/store';
 import { appendLog } from '@/lib/barracones-log';
 
 const STORAGE_KEY = 'barracones_slots_v1';
-const SLOT_COUNT = 6;
+const SLOT_COUNT = 8;
 
 // ── Sheets ↔ Pilot conversion ──────────────────────────────
 
