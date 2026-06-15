@@ -4,7 +4,13 @@
 //  Tabla de tiempos derivada de Tech Manual (p.99-100) + CamOps (p.221).
 // ══════════════════════════════════════════════════════════════
 
-import type { MechRepairDamage } from './repair-engine';
+import type { MechRepairDamage, MechRepairConfig, RepairSystem } from './repair-engine';
+import {
+  costoActuador, costoBlindaje, costoCabina, costoEstructura, costoGyro,
+  costoMiomero, costoRadiadores, costoReactor, costoRetros, costoSensores,
+  costoSoporteVida, costoArmas,
+  PRECIO_ACTUADOR,
+} from './repair-engine';
 import type { PersonalEntry, PersonalNivel } from './firebase-service';
 
 // ── Constantes (spec sec 2) ───────────────────────────────────
@@ -44,6 +50,7 @@ export interface RepairItem {
   tiempoBase:    number;   // minutos
   divisible:     boolean;  // true solo para Blindaje
   puntosDanados?: number;  // solo si divisible
+  costoBase:     number;   // ₡ a estadoFactPct=100%. 0 si daño parcial canon
 }
 
 export type EstadoItem = 'reparado' | 'parcial' | 'pendiente';
@@ -63,6 +70,10 @@ export interface ResultadoCalculo {
   resultados:         ResultadoItem[];
   minutosUsadosTotal: number;
   minutosSinUsar:     number;
+  /** Suma costoBase items con estado != pendiente (sin aplicar estadoFactPct). */
+  costoReparadoBruto: number;
+  /** Suma costoBase items pendientes (o resto parcial blindaje). */
+  costoPendiente:     number;
 }
 
 // ── Tabla tiempos por componente (Tech Manual p.99-100 + CamOps p.221) ──
@@ -244,6 +255,7 @@ export function calcularReparaciones(
   items: RepairItem[],
   minutosDisponibles: number,
   minutosBase: number,
+  config?: MechRepairConfig,
 ): ResultadoCalculo & { pendientesBlindaje: RepairItem[] } {
   let minutosRestantes = minutosDisponibles;
   const resultados: ResultadoItem[] = [];
@@ -289,6 +301,8 @@ export function calcularReparaciones(
     }
   }
 
+  const { costoReparadoBruto, costoPendiente } = agregarCostes(resultados, config);
+
   return {
     minutosDisponibles,
     minutosBase,
@@ -296,6 +310,8 @@ export function calcularReparaciones(
     resultados,
     minutosUsadosTotal: minutosDisponibles - minutosRestantes,
     minutosSinUsar:     minutosRestantes,
+    costoReparadoBruto,
+    costoPendiente,
     pendientesBlindaje,
   };
 }
@@ -305,6 +321,7 @@ export function calcularReparaciones(
 export function aplicarAsignacionBlindaje(
   base: ReturnType<typeof calcularReparaciones>,
   asignaciones: Record<string, number>,
+  config?: MechRepairConfig,
 ): ResultadoCalculo {
   const minutosBase = base.minutosBase;
   const resultados = base.resultados.map(r => ({ ...r }));
@@ -325,6 +342,8 @@ export function aplicarAsignacionBlindaje(
     minutosRestantes -= minutosUsar;
   }
 
+  const { costoReparadoBruto, costoPendiente } = agregarCostes(resultados, config);
+
   return {
     minutosDisponibles: base.minutosDisponibles,
     minutosBase,
@@ -332,7 +351,49 @@ export function aplicarAsignacionBlindaje(
     resultados,
     minutosUsadosTotal: base.minutosDisponibles - minutosRestantes,
     minutosSinUsar:     minutosRestantes,
+    costoReparadoBruto,
+    costoPendiente,
   };
+}
+
+// ── Agregados de coste (spec 1.4) ─────────────────────────────
+
+/** Coste de un resultado individual.
+ *  - Pendiente → 0
+ *  - Reparado (no divisible) → costoBase entero
+ *  - Reparado (divisible/blindaje) → costoBlindaje(config, puntosReparados) si hay config; si no costoBase
+ *  - Parcial → coste proporcional puntosReparados (solo blindaje) */
+function costoDeResultado(r: ResultadoItem, config?: MechRepairConfig): number {
+  if (r.estado === 'pendiente') return 0;
+  if (r.item.divisible && config) {
+    const pts = r.puntosReparados ?? 0;
+    return costoBlindaje(config, pts);
+  }
+  if (r.estado === 'reparado') return r.item.costoBase;
+  // Parcial sin config: estimación lineal
+  const pts = r.puntosReparados ?? 0;
+  const total = r.item.puntosDanados ?? 0;
+  return total > 0 ? Math.round(r.item.costoBase * pts / total) : 0;
+}
+
+/** Suma agregada: bruto reparado vs pendiente. */
+export function agregarCostes(
+  resultados: ResultadoItem[],
+  config?: MechRepairConfig,
+): { costoReparadoBruto: number; costoPendiente: number } {
+  let costoReparadoBruto = 0;
+  let costoPendiente = 0;
+  for (const r of resultados) {
+    const usado = costoDeResultado(r, config);
+    costoReparadoBruto += usado;
+    costoPendiente += Math.max(0, r.item.costoBase - usado);
+  }
+  return { costoReparadoBruto, costoPendiente };
+}
+
+/** Coste final aplicando estadoFactPct (mismo criterio que Factura). */
+export function costoFinal(costoReparadoBruto: number, estadoFactPct: number): number {
+  return Math.round(costoReparadoBruto * (estadoFactPct / 100));
 }
 
 // ── Mapeo MechRepairDamage → RepairItem[] (spec sec 9) ────────
@@ -356,7 +417,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('reactor'), nombre: `Reactor (${damage.reactor}/3)`,
       localizacion: 'CT', categoria: 'SoporteVital',
-      tiempoBase: tiempo, divisible: false,
+      tiempoBase: tiempo, divisible: false, costoBase: 0,
     });
   }
 
@@ -368,7 +429,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('gyro'), nombre: `Giroscopio (${damage.gyro}/2)`,
       localizacion: 'CT', categoria: 'SoporteVital',
-      tiempoBase: tiempo, divisible: false,
+      tiempoBase: tiempo, divisible: false, costoBase: 0,
     });
   }
 
@@ -377,7 +438,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('cabina'), nombre: 'Cabina',
       localizacion: 'HD', categoria: 'SoporteVital',
-      tiempoBase: TIEMPO_COMPONENTE.COCKPIT, divisible: false,
+      tiempoBase: TIEMPO_COMPONENTE.COCKPIT, divisible: false, costoBase: 0,
     });
   }
 
@@ -386,7 +447,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('soporte'), nombre: 'Soporte vital',
       localizacion: 'HD', categoria: 'SoporteVital',
-      tiempoBase: TIEMPO_COMPONENTE.SOPORTE_VIDA, divisible: false,
+      tiempoBase: TIEMPO_COMPONENTE.SOPORTE_VIDA, divisible: false, costoBase: 0,
     });
   }
 
@@ -396,7 +457,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('sensores'), nombre: `Sensores x${damage.sensores}`,
       localizacion: 'HD', categoria: 'Sensores',
-      tiempoBase: tiempo, divisible: false,
+      tiempoBase: tiempo, divisible: false, costoBase: 0,
     });
   }
 
@@ -405,7 +466,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('rads'), nombre: `Radiadores x${damage.radiadores}`,
       localizacion: 'CT', categoria: 'Movilidad',
-      tiempoBase: TIEMPO_COMPONENTE.HEAT_SINK * damage.radiadores, divisible: false,
+      tiempoBase: TIEMPO_COMPONENTE.HEAT_SINK * damage.radiadores, divisible: false, costoBase: 0,
     });
   }
 
@@ -414,7 +475,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('jumps'), nombre: `Jump jets x${damage.retros}`,
       localizacion: 'CT', categoria: 'Movilidad',
-      tiempoBase: TIEMPO_COMPONENTE.JUMP_JET * damage.retros, divisible: false,
+      tiempoBase: TIEMPO_COMPONENTE.JUMP_JET * damage.retros, divisible: false, costoBase: 0,
     });
   }
 
@@ -433,7 +494,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('act'), nombre: `Actuador ${act} x${qty}`,
       localizacion: 'LL', categoria: categoriaDeActuador(),
-      tiempoBase: tiempoUnit * qty, divisible: false,
+      tiempoBase: tiempoUnit * qty, divisible: false, costoBase: 0,
     });
   }
 
@@ -442,7 +503,7 @@ export function mapearDamageARepairItems(
     items.push({
       id: nextId('is'), nombre: `Estructura interna (${damage.estructura} pts)`,
       localizacion: 'CT', categoria: 'Estructura',
-      tiempoBase: TIEMPO_COMPONENTE.ESTRUCTURA_PER_PT * damage.estructura, divisible: false,
+      tiempoBase: TIEMPO_COMPONENTE.ESTRUCTURA_PER_PT * damage.estructura, divisible: false, costoBase: 0,
     });
   }
 
@@ -456,7 +517,7 @@ export function mapearDamageARepairItems(
       id: nextId('arma'), nombre: `${arma.name}${arma.status === 'parcial' ? ' (parcial)' : ''}`,
       localizacion: (arma.loc as Localizacion) || 'CT',
       categoria: 'Armas',
-      tiempoBase: tFinal, divisible: false,
+      tiempoBase: tFinal, divisible: false, costoBase: 0,
     });
   }
 
@@ -466,7 +527,92 @@ export function mapearDamageARepairItems(
       id: nextId('armor'), nombre: `Blindaje (${damage.blindaje} pts)`,
       localizacion: 'CT', categoria: 'Blindaje',
       tiempoBase: damage.blindaje * MINUTOS_POR_PUNTO_BLINDAJE, divisible: true,
-      puntosDanados: damage.blindaje,
+      puntosDanados: damage.blindaje, costoBase: 0,
+    });
+  }
+
+  return items;
+}
+
+// ── Mapeo CON coste por item (spec 1.3) ──────────────────────────
+
+/** Igual que mapearDamageARepairItems pero rellena costoBase usando funcs
+ *  per-componente de repair-engine, parametrizadas por system propio|canon.
+ *  Añade item de munición si damage.municion > 0. */
+export function mapearDamageARepairItemsConCoste(
+  damage: MechRepairDamage,
+  config: MechRepairConfig,
+  system: RepairSystem,
+  mechTons?: number,
+): RepairItem[] {
+  const items = mapearDamageARepairItems(damage, mechTons);
+
+  // Index armas por nombre para asignar coste posicional cuando hay duplicados
+  let armaIdx = 0;
+
+  for (const item of items) {
+    const prefix = item.id.split('_')[0];
+    switch (prefix) {
+      case 'reactor':
+        item.costoBase = costoReactor(config, damage.reactor, system); break;
+      case 'gyro':
+        item.costoBase = costoGyro(config, damage.gyro, system); break;
+      case 'cabina':
+        item.costoBase = costoCabina(damage.cabinaDañada); break;
+      case 'soporte':
+        item.costoBase = costoSoporteVida(config, damage.soporteVida, system); break;
+      case 'sensores':
+        item.costoBase = costoSensores(config, damage.sensores, system); break;
+      case 'rads':
+        item.costoBase = costoRadiadores(config, damage.radiadores); break;
+      case 'jumps':
+        item.costoBase = costoRetros(config, damage.retros); break;
+      case 'act': {
+        // nombre "Actuador {Tipo} x{qty}"
+        const m = item.nombre.match(/Actuador (\w+) x(\d+)/);
+        if (m) {
+          const tipo = m[1] as keyof typeof PRECIO_ACTUADOR;
+          const qty = Number(m[2]);
+          item.costoBase = costoActuador(tipo, qty, config);
+        }
+        break;
+      }
+      case 'is':
+        item.costoBase = costoEstructura(config, damage.estructura, system); break;
+      case 'arma': {
+        const arma = (damage.armas ?? [])[armaIdx++];
+        item.costoBase = arma?.cost ?? 0;
+        // Canon: parcial = 0 ₡ (solo labor)
+        if (system === 'canon' && arma?.status === 'parcial') item.costoBase = 0;
+        break;
+      }
+      case 'armor':
+        item.costoBase = costoBlindaje(config, damage.blindaje); break;
+      default:
+        item.costoBase = 0;
+    }
+  }
+
+  // Miomero: spec mapea pero la versión base no genera item. Añadir si hay daño.
+  if (damage.miomero > 0) {
+    items.push({
+      id: nextId('miomero'), nombre: `Miomero x${damage.miomero}`,
+      localizacion: 'CT', categoria: 'Movilidad',
+      tiempoBase: TIEMPO_COMPONENTE.HEAT_SINK * damage.miomero, divisible: false,
+      costoBase: costoMiomero(config, damage.miomero, system),
+    });
+  }
+
+  // Armas suma global → si quisiéramos coste agregado canon
+  void costoArmas; // mantén import válido por si fuera necesario
+
+  // Munición: nuevo item si damage.municion > 0
+  if ((damage.municion ?? 0) > 0) {
+    items.push({
+      id: nextId('ammo'), nombre: 'Reposición de munición',
+      localizacion: 'CT', categoria: 'Armas',
+      tiempoBase: TIEMPO_COMPONENTE.AMMO_BIN, divisible: false,
+      costoBase: damage.municion ?? 0,
     });
   }
 

@@ -184,6 +184,125 @@ export interface RepairBreakdown {
   destruido:   boolean;
 }
 
+// ══════════════════════════════════════════════════════════════
+//  Funciones coste por componente — single source of truth.
+//  Tanto `calcRepairCost` (propio) como `calcRepairCostCanon`
+//  las usan. También `mapearDamageARepairItemsConCoste`.
+// ══════════════════════════════════════════════════════════════
+
+export type RepairSystem = 'propio' | 'canon';
+
+/** Idéntico en ambos sistemas: precio_actuador × peso × qty */
+export function costoActuador(nombre: keyof typeof PRECIO_ACTUADOR, qty: number, config: MechRepairConfig): number {
+  const price = PRECIO_ACTUADOR[nombre] ?? 0;
+  return price * config.tons * qty;
+}
+
+/** Idéntico ambos: precio_retro × cantidad */
+export function costoRetros(config: MechRepairConfig, qty: number): number {
+  const retroBase = PRECIO_RETROS[config.retroType] ?? PRECIO_RETROS['Estandar'];
+  return retroBase * qty;
+}
+
+/** Idéntico ambos: precio_radiador × cantidad */
+export function costoRadiadores(config: MechRepairConfig, qty: number): number {
+  const radBase = PRECIO_RADIADORES[config.radType] ?? PRECIO_RADIADORES['Normales'];
+  return radBase * qty;
+}
+
+/** Idéntico ambos: 200k si cabina dañada, 0 si no */
+export function costoCabina(cabinaDanada: boolean): number {
+  return cabinaDanada ? PRECIO_CABINA : 0;
+}
+
+/** Idéntico ambos: precio_blindaje × ceil(pts/16) */
+export function costoBlindaje(config: MechRepairConfig, puntosDanados: number): number {
+  const blindajeBase = PRECIO_BLINDAJE[config.blindajeType] ?? PRECIO_BLINDAJE['Estandar'];
+  return blindajeBase * Math.ceil(puntosDanados / 16);
+}
+
+/** Armas: suma cost por arma dañada. Idéntico ambos. */
+export function costoArmas(damageArmas: { cost?: number }[]): number {
+  return (damageArmas ?? []).reduce((s, w) => s + (w.cost || 0), 0);
+}
+
+/** DIFIERE: propio escala por uds; canon es flat (1 ud por mech) */
+export function costoSoporteVida(_config: MechRepairConfig, qty: number, system: RepairSystem): number {
+  return system === 'canon'
+    ? (qty > 0 ? PRECIO_SOPORTE_VIDA : 0)
+    : qty * PRECIO_SOPORTE_VIDA;
+}
+
+/** DIFIERE: propio = qty × 2000 × peso/2 ; canon = flat 2000 × peso */
+export function costoSensores(config: MechRepairConfig, qty: number, system: RepairSystem): number {
+  const peso = config.tons;
+  return system === 'canon'
+    ? (qty > 0 ? PRECIO_SENSORES_BASE * peso : 0)
+    : qty * PRECIO_SENSORES_BASE * (peso / 2);
+}
+
+/** DIFIERE: propio = base×peso×pts/2 ; canon = base×peso×pts / (peso×2.5) */
+export function costoEstructura(config: MechRepairConfig, pts: number, system: RepairSystem): number {
+  if (pts <= 0) return 0;
+  const estructuraBase = PRECIO_ESTRUCTURA[config.estructuraType] ?? PRECIO_ESTRUCTURA['Estandar'];
+  const peso = config.tons;
+  return system === 'canon'
+    ? Math.round((estructuraBase * peso * pts) / (peso * 2.5))
+    : Math.round(estructuraBase * peso * pts / 2);
+}
+
+/** DIFIERE: propio = base×qty ; canon = base×peso solo si tipo no Estandar */
+export function costoMiomero(config: MechRepairConfig, qty: number, system: RepairSystem): number {
+  const miomeroBase = PRECIO_MIOMERO[config.miomeroType] ?? PRECIO_MIOMERO['Estandar'];
+  if (system === 'canon') {
+    return (config.miomeroType !== 'Estandar' && qty > 0) ? miomeroBase * config.tons : 0;
+  }
+  return miomeroBase * qty;
+}
+
+/** DIFIERE: propio aplica /2 salvo destruido; canon cobra solo si destruido (nivel 3) */
+export function costoReactor(config: MechRepairConfig, nivel: number, system: RepairSystem): number {
+  if (nivel <= 0) return 0;
+  const reactorBase = PRECIO_REACTOR[config.reactorType] ?? PRECIO_REACTOR['Fusion'];
+  const peso = config.tons;
+  const rating = config.engineRating ?? (config.walkMP * peso);
+  const destruido = nivel >= 3;
+  if (system === 'canon') {
+    return destruido ? Math.round((reactorBase * rating * peso) / 75) : 0;
+  }
+  return Math.round(
+    destruido
+      ? (reactorBase * rating * peso) / 75
+      : (reactorBase * rating * peso) / 75 * nivel / 2,
+  );
+}
+
+/** Calcula gyro tons canon: ceil(engineRating/100), modificado por tipo gyro. */
+export function canonGyroTons(engineRating: number, gyroType: string): number {
+  const base = Math.ceil(engineRating / 100);
+  switch (gyroType) {
+    case 'XL':       return Math.ceil(base / 2);
+    case 'Compacto': return Math.ceil(base * 1.5);
+    case 'Pesado':   return base * 2;
+    default:         return base;
+  }
+}
+
+/** DIFIERE: propio = base × mult × ceil(peso/100) × nivel/2 ;
+ *  canon = gyroTons × base si nivel>=2 */
+export function costoGyro(config: MechRepairConfig, nivel: number, system: RepairSystem): number {
+  if (nivel <= 0) return 0;
+  const gyroBase = PRECIO_GYRO_BASE[config.gyroType] ?? PRECIO_GYRO_BASE['Estandar'];
+  const gyroMult = GYRO_MULTIPLIER[config.gyroType] ?? GYRO_MULTIPLIER['Estandar'];
+  const peso = config.tons;
+  if (system === 'canon') {
+    const rating = config.engineRating ?? (config.walkMP * peso);
+    const gyroTons = canonGyroTons(rating, config.gyroType);
+    return nivel >= 2 ? gyroTons * gyroBase : 0;
+  }
+  return Math.round(Math.ceil(peso / 100) * gyroBase * gyroMult * nivel / 2);
+}
+
 // ── Calculadora ───────────────────────────────────────────
 
 /** Calcula factura completa siguiendo fórmulas exactas Taller G5:G19.
@@ -203,80 +322,25 @@ export function calcRepairCost(
   estadoFactPct = 100,
   pctDañoTotal = 0,
 ): RepairBreakdown {
-  const peso = config.tons;
-  const mov  = config.walkMP;
-  const potencia = mov * peso;        // B6 = B3*B4
-
-  // === Reactor (Taller G5) ===
-  // =(VLOOKUP(B5,Ayudas!BW22:BX28,2,0) * B6 * B4) / 75 * B15 / 2
-  // Reactor=3 (destruido) → asume reactor nuevo entero, no usa /2
-  const reactorBase = PRECIO_REACTOR[config.reactorType] ?? PRECIO_REACTOR['Fusion'];
   const destruido = damage.reactor >= 3;
-  const reactor = damage.reactor > 0
-    ? Math.round(
-        destruido
-          ? (reactorBase * potencia * peso) / 75            // entero
-          : (reactorBase * potencia * peso) / 75 * damage.reactor / 2
-      )
-    : 0;
 
-  // === Gyro (Taller G6) ===
-  // =ROUNDUP(B4/100,0) * precioBase(B11) * multiplier(B11) * B16/2
-  const gyroBase = PRECIO_GYRO_BASE[config.gyroType] ?? PRECIO_GYRO_BASE['Estandar'];
-  const gyroMult = GYRO_MULTIPLIER[config.gyroType] ?? GYRO_MULTIPLIER['Estandar'];
-  const gyro = damage.gyro > 0
-    ? Math.round(Math.ceil(peso / 100) * gyroBase * gyroMult * damage.gyro / 2)
-    : 0;
+  const reactor     = costoReactor(config, damage.reactor, 'propio');
+  const gyro        = costoGyro(config, damage.gyro, 'propio');
+  const cabina      = costoCabina(damage.cabinaDañada);
+  const soporteVida = costoSoporteVida(config, damage.soporteVida, 'propio');
+  const sensores    = costoSensores(config, damage.sensores, 'propio');
+  const estructura  = costoEstructura(config, damage.estructura, 'propio');
+  const blindaje    = costoBlindaje(config, damage.blindaje);
+  const miomero     = costoMiomero(config, damage.miomero, 'propio');
 
-  // === Cabina (Taller G7) ===
-  // =IF(B17="SI", Ayudas!BX2, 0) → 200k binario
-  const cabina = damage.cabinaDañada ? PRECIO_CABINA : 0;
-
-  // === Soporte Vital (Taller G8) ===
-  // =B18 * Ayudas!BX3 → cantidad × 50k
-  const soporteVida = damage.soporteVida * PRECIO_SOPORTE_VIDA;
-
-  // === Sensores (Taller G9) ===
-  // =B19 * Ayudas!BX4 * B4/2 → cantidad × 2k × peso/2
-  const sensores = damage.sensores * PRECIO_SENSORES_BASE * (peso / 2);
-
-  // === Estructura (Taller G10) ===
-  // =VLOOKUP(B8,Ayudas!BW10:BX12,2,0) * B4 * B20/2
-  // ESTRUCTURA: precio × peso × pts_perdidos / 2
-  const estructuraBase = PRECIO_ESTRUCTURA[config.estructuraType] ?? PRECIO_ESTRUCTURA['Estandar'];
-  const estructura = Math.round(estructuraBase * peso * damage.estructura / 2);
-
-  // === Blindaje (Taller G11) ===
-  // =VLOOKUP(B10,Ayudas!BW50:BX57,2,0) * ROUNDUP(B21/16,0)
-  // BLINDAJE: precio × ceil(pts/16) → compra por toneladas (16 pts=1 ton)
-  const blindajeBase = PRECIO_BLINDAJE[config.blindajeType] ?? PRECIO_BLINDAJE['Estandar'];
-  const blindaje = blindajeBase * Math.ceil(damage.blindaje / 16);
-
-  // === Miomero (Taller G12) ===
-  // =VLOOKUP(B9,Ayudas!BW6:BX8,2,0) * B22 → precio × cantidad uds dañadas
-  const miomeroBase = PRECIO_MIOMERO[config.miomeroType] ?? PRECIO_MIOMERO['Estandar'];
-  const miomero = miomeroBase * damage.miomero;
-
-  // === Actuadores (Taller G13) ===
-  // Suma de cada actuador: precio × peso × cantidad
   const actuadores = Object.entries(damage.actuadores ?? {}).reduce((sum, [name, qty]) => {
-    const price = PRECIO_ACTUADOR[name as keyof typeof PRECIO_ACTUADOR] ?? 0;
-    return sum + price * peso * (qty ?? 0);
+    return sum + costoActuador(name as keyof typeof PRECIO_ACTUADOR, qty ?? 0, config);
   }, 0);
 
-  // === Retros (Taller G14) ===
-  // =VLOOKUP(B12,Ayudas!BW42:BX43,2,0) * B23 → precio × cantidad
-  const retroBase = PRECIO_RETROS[config.retroType] ?? PRECIO_RETROS['Estandar'];
-  const retros = retroBase * damage.retros;
-
-  // === Radiadores (Taller G15) ===
-  // =VLOOKUP(B13,Ayudas!BW47:BX48,2,0) * B24 → precio × cantidad
-  const radBase = PRECIO_RADIADORES[config.radType] ?? PRECIO_RADIADORES['Normales'];
-  const radiadores = radBase * damage.radiadores;
-
-  // === Armas + Munición ===
-  const armas    = (damage.armas ?? []).reduce((s, w) => s + (w.cost || 0), 0);
-  const municion = damage.municion ?? 0;
+  const retros     = costoRetros(config, damage.retros);
+  const radiadores = costoRadiadores(config, damage.radiadores);
+  const armas      = costoArmas(damage.armas ?? []);
+  const municion   = damage.municion ?? 0;
 
   const subtotal =
     reactor + gyro + cabina + soporteVida + sensores +
@@ -284,12 +348,7 @@ export function calcRepairCost(
     actuadores + retros + radiadores +
     armas + municion;
 
-  // === Total (Taller G19) ===
-  // =SUM(G5:G17) * VLOOKUP(F2,Ayudas!AA1:AB31,2,0) / 100
   const total = Math.round(subtotal * (estadoFactPct / 100));
-
-  // === Estado mech (Taller G21) ===
-  // Reactor=3 → DESTRUIDO. Si no, lookup en tabla ESTADO.
   const estadoMech: EstadoMech = destruido ? 'DESTRUIDO' : clasificarEstadoMech(pctDañoTotal);
 
   return {
@@ -581,20 +640,6 @@ export function emptyDamage(): MechRepairDamage {
 //  Precios componente desde TechManual (TM)
 // ══════════════════════════════════════════════════════════════
 
-export type RepairSystem = 'propio' | 'canon';
-
-/** Calcula gyro tons canon: ceil(engineRating/100), modificado por tipo gyro. */
-function canonGyroTons(engineRating: number, gyroType: string): number {
-  const base = Math.ceil(engineRating / 100);
-  switch (gyroType) {
-    case 'XL':       return Math.ceil(base / 2);  // XL gyro pesa la mitad
-    case 'Compacto': return Math.ceil(base * 1.5);
-    case 'Pesado':   return base * 2;
-    default:         return base; // Estandar
-  }
-}
-
-
 /**
  * Factura canon (CamOps): sólo se carga el precio total de la pieza
  * cuando está destruida. Daño parcial (1-2 crits sin destrucción)
@@ -606,64 +651,25 @@ export function calcRepairCostCanon(
   estadoFactPct = 100,
   pctDañoTotal = 0,
 ): RepairBreakdown {
-  const peso   = config.tons;
-  const rating = config.engineRating ?? (config.walkMP * peso);
-
-  // === Reactor (TM) ===
-  // Precio = base × rating × tons / 75. Sólo si destruido (3 crits).
-  const reactorBase = PRECIO_REACTOR[config.reactorType] ?? PRECIO_REACTOR['Fusion'];
   const destruido = damage.reactor >= 3;
-  const reactor = destruido ? Math.round((reactorBase * rating * peso) / 75) : 0;
 
-  // === Gyro (TM) === gyro_tons × precio_base. Sólo si gyro=2 (destruido)
-  const gyroBase  = PRECIO_GYRO_BASE[config.gyroType] ?? PRECIO_GYRO_BASE['Estandar'];
-  const gyroTons  = canonGyroTons(rating, config.gyroType);
-  const gyro = damage.gyro >= 2 ? gyroTons * gyroBase : 0;
+  const reactor     = costoReactor(config, damage.reactor, 'canon');
+  const gyro        = costoGyro(config, damage.gyro, 'canon');
+  const cabina      = costoCabina(damage.cabinaDañada);
+  const soporteVida = costoSoporteVida(config, damage.soporteVida, 'canon');
+  const sensores    = costoSensores(config, damage.sensores, 'canon');
+  const estructura  = costoEstructura(config, damage.estructura, 'canon');
+  const blindaje    = costoBlindaje(config, damage.blindaje);
+  const miomero     = costoMiomero(config, damage.miomero, 'canon');
 
-  // === Cabina === flat 200k binario
-  const cabina = damage.cabinaDañada ? PRECIO_CABINA : 0;
-
-  // === Soporte Vital === flat 50k (sólo hay 1 ud por mech en canon)
-  const soporteVida = damage.soporteVida > 0 ? PRECIO_SOPORTE_VIDA : 0;
-
-  // === Sensores === 2000 × tons (sólo 1 conjunto por mech)
-  const sensores = damage.sensores > 0 ? PRECIO_SENSORES_BASE * peso : 0;
-
-  // === Estructura === TM p.557: PRECIO_ESTRUCTURA × Unit Tonnage para
-  // reemplazo total. Pts perdidos / IS_total × cost para parcial.
-  const estructuraBase = PRECIO_ESTRUCTURA[config.estructuraType] ?? PRECIO_ESTRUCTURA['Estandar'];
-  const isTotalPts = peso * 2.5; // aprox IS total ~ 2.5 pts/ton
-  const estructura = damage.estructura > 0
-    ? Math.round((estructuraBase * peso * damage.estructura) / isTotalPts)
-    : 0;
-
-  // === Blindaje === ceil(pts/16) × precio_ton (idéntico a propio)
-  const blindajeBase = PRECIO_BLINDAJE[config.blindajeType] ?? PRECIO_BLINDAJE['Estandar'];
-  const blindaje = blindajeBase * Math.ceil(damage.blindaje / 16);
-
-  // === Miomero === En canon no se reemplaza por uds; sólo si triple-strength
-  // se considera componente premium. Tratamos como flat 0 si Estandar.
-  const miomero = config.miomeroType !== 'Estandar' && damage.miomero > 0
-    ? (PRECIO_MIOMERO[config.miomeroType] ?? 0) * peso
-    : 0;
-
-  // === Actuadores === TM p.557: precio_base × Unit Tonnage × qty.
-  // Hombro 100 / Codo 50 / Mano 80 / Cadera 150 / Rodilla 80 / Tobillo 120 (per ton).
   const actuadores = Object.entries(damage.actuadores ?? {}).reduce((sum, [name, qty]) => {
-    const pricePerTon = PRECIO_ACTUADOR[name as keyof typeof PRECIO_ACTUADOR] ?? 0;
-    return sum + pricePerTon * peso * (qty ?? 0);
+    return sum + costoActuador(name as keyof typeof PRECIO_ACTUADOR, qty ?? 0, config);
   }, 0);
 
-  // === Retros === Canon: precio × uds (sin peso)
-  const retroBase = PRECIO_RETROS[config.retroType] ?? PRECIO_RETROS['Estandar'];
-  const retros = retroBase * damage.retros;
-
-  // === Radiadores === Canon TM: 2000 single / 6000 double cada uno
-  const radBase = PRECIO_RADIADORES[config.radType] ?? PRECIO_RADIADORES['Normales'];
-  const radiadores = radBase * damage.radiadores;
-
-  const armas    = (damage.armas ?? []).reduce((s, w) => s + (w.cost || 0), 0);
-  const municion = damage.municion ?? 0;
+  const retros     = costoRetros(config, damage.retros);
+  const radiadores = costoRadiadores(config, damage.radiadores);
+  const armas      = costoArmas(damage.armas ?? []);
+  const municion   = damage.municion ?? 0;
 
   const subtotal =
     reactor + gyro + cabina + soporteVida + sensores +
@@ -671,9 +677,7 @@ export function calcRepairCostCanon(
     actuadores + retros + radiadores +
     armas + municion;
 
-  // Estado factura: % modificador (default 100). Permite cargos/descuentos.
   const total = Math.round(subtotal * (estadoFactPct / 100));
-
   const estadoMech: EstadoMech = destruido ? 'DESTRUIDO' : clasificarEstadoMech(pctDañoTotal);
 
   return {
