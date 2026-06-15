@@ -1,21 +1,22 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-title King Karl -- Launcher
+title CRFM -- Launcher
 set "ROOT=%~dp0"
 cd /d "%ROOT%"
 
 :menu
 cls
 echo ==========================================
-echo  KING KARL - TASK LAUNCHER
+echo  CRFM - TASK LAUNCHER
 echo ==========================================
 echo.
 echo Elige una secuencia (varias opciones y orden libre)
 echo Ejemplo: 2 1 3
 echo.
 echo   1^) Local dev server
-Echo   2^) Rebuild indexes
-Echo   3^) Deploy
+echo   2^) Rebuild indexes
+echo   3^) Deploy ^(bump + commit + push - Action despliega^)
+echo   4^) Firebase deploy directo ^(skip Action^)
 echo   0^) Salir
 echo.
 set /p RUNSEQ="Secuencia: "
@@ -57,6 +58,11 @@ if "%OPT%"=="2" (
 if "%OPT%"=="3" (
   echo --- [3] Deploy ---
   call "%ROOT%scripts\deploy.bat"
+  exit /b %ERRORLEVEL%
+)
+if "%OPT%"=="4" (
+  echo --- [4] Firebase deploy directo ---
+  call "%ROOT%scripts\deploy-firebase.bat"
   exit /b %ERRORLEVEL%
 )
 

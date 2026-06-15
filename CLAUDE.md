@@ -1,10 +1,13 @@
 # CLAUDE.md — Contexto del Proyecto para Claude Code
 
 ## Proyecto
-**King Karl's Kürassiers — Fleet Command**  
-App de gestión de campaña BattleTech. React + TypeScript + Tailwind v4 + Vite.  
-Repo: `https://github.com/Markirov/King-Karl`  
-Deploy: `https://markirov.github.io/King-Karl/`
+**CRFM — Comisión de Revisión y Fianza de Mercenarios**
+App de gestión de campaña BattleTech. React + TS + Tailwind v4 + Vite + Firebase.
+Repo: `https://github.com/Markirov/CRFM`
+Deploy: `https://crfm-dc873.web.app` (Firebase Hosting)
+Backend: Firebase (Firestore + Auth Google con whitelist)
+Path local: `E:\Drive\CBT\CFRM-firebase\`
+Dev server: port 5000
 
 ---
 
@@ -14,16 +17,26 @@ Deploy: `https://markirov.github.io/King-Karl/`
 - **Tailwind CSS v4** con `@theme` tokens (NO Tailwind config file — todo en `src/index.css`)
 - **Vite 6** con `@tailwindcss/vite` plugin
 - **Zustand** para estado global (campaña, UI)
-- **React Router v7** con `HashRouter` (para GitHub Pages)
+- **React Router v7** con `BrowserRouter`
+- **Firebase 12** (Firestore + Auth)
 - **Lucide React** para iconos
 - **Motion** (Framer Motion) disponible pero no usado aún
 
 ## Deploy
 
-GitHub Actions automático. Push a `main` → build → deploy a GitHub Pages.
-- `base: '/King-Karl/'` en `vite.config.ts`
-- Assets estáticos en `/public/` (se referencian con `import.meta.env.BASE_URL`)
-- Workflow en `.github/workflows/deploy.yml`
+GitHub Action automático. Push a `main` → build → deploy a Firebase Hosting.
+- `base: '/'` en `vite.config.ts`
+- Assets estáticos en `/public/` (`import.meta.env.BASE_URL`)
+- Workflow: `.github/workflows/firebase-deploy.yml`
+- Secret GitHub: `FIREBASE_SERVICE_ACCOUNT_CRFM_DC873`
+- Hosting: SPA rewrites, cache headers en `firebase.json`
+
+## Auth
+
+Google sign-in. Whitelist en `src/lib/firebase-config.ts` (`ALLOWED_EMAILS`) Y en `firestore.rules`. Cambiar emails = actualizar AMBOS sitios + `firebase deploy --only firestore:rules`.
+
+Gate: `src/components/shell/AuthGate.tsx` envuelve App en `main.tsx`.
+Logout: botón en SecretMenu.
 
 ---
 
