@@ -19,10 +19,13 @@ import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
 import { loadLocalSnapshot } from '@/lib/simulador-persistence';
-import { deriveDamageFromSession } from '@/lib/repair-engine';
+import {
+  deriveDamageFromSession, configFromCatalog,
+  type MechRepairConfig, type RepairSystem,
+} from '@/lib/repair-engine';
 import {
   PRESETS, calcularMinutosDisponibles, aplicarPreset, calcularReparaciones,
-  mapearDamageARepairItems, MINUTOS_POR_PUNTO_BLINDAJE,
+  mapearDamageARepairItemsConCoste, MINUTOS_POR_PUNTO_BLINDAJE, costoFinal,
   agregarPersonal, bayMultiplier, aplicarMultiplierBay, listarBays,
   type Preset, type OrdenSecundario, type RepairItem, type ResultadoItem,
   type UnidadTiempo,
@@ -82,6 +85,8 @@ function TallerInlineWrapper({ campaignDate }: { campaignDate: string }) {
 // ══════════════════════════════════════════════════════════
 
 function PrioridadesTab() {
+  const { campaign } = useAppStore();
+
   // ── Selector de mech (del simulador) ──
   const [simSlotIdx, setSimSlotIdx] = useState<number | null>(null);
   const simSlots = useMemo(() => {
@@ -152,15 +157,38 @@ function PrioridadesTab() {
 
   const bayMult = useMemo(() => bayMultiplier(bayTechSkill, bayAstechs), [bayTechSkill, bayAstechs]);
 
-  // ── Construir items desde mech seleccionado ──
-  const baseItems = useMemo<RepairItem[]>(() => {
-    if (simSlotIdx === null) return [];
+  // ── Sistema de coste + factor estado factura ──
+  const [system, setSystem] = useState<RepairSystem>('canon');
+  const [estadoFactPct, setEstadoFactPct] = useState(100);
+
+  // ── Mech seleccionado: nombre + config + damage (compartido) ──
+  const mechCtx = useMemo(() => {
+    if (simSlotIdx === null) return null;
     const snap = loadLocalSnapshot();
     const slot = snap?.mechSlots[simSlotIdx];
-    if (!slot?.state || !slot?.session) return [];
-    const { damage } = deriveDamageFromSession(slot.state, slot.session);
-    return mapearDamageARepairItems(damage, slot.state.tonnage);
+    if (!slot?.state || !slot?.session) return null;
+    const st = slot.state;
+    const { damage } = deriveDamageFromSession(st, slot.session);
+    const config: MechRepairConfig = configFromCatalog({
+      tons:   st.tonnage,
+      walkMP: st.walkMP,
+      armor:  { type: st.armorType || 'Standard' },
+      engine: { type: 'Fusion', rating: st.walkMP * st.tonnage },
+      heatSinks: { type: st.hsDouble ? 'Double' : 'Single' },
+    });
+    return {
+      mechName: `${st.chassis} ${st.model}`,
+      tons:     st.tonnage,
+      config,
+      damage,
+    };
   }, [simSlotIdx]);
+
+  // ── Construir items desde mech seleccionado (con coste) ──
+  const baseItems = useMemo<RepairItem[]>(() => {
+    if (!mechCtx) return [];
+    return mapearDamageARepairItemsConCoste(mechCtx.damage, mechCtx.config, system, mechCtx.tons);
+  }, [mechCtx, system]);
 
   // Aplica multiplier de bay a los tiempos base.
   const itemsAjustados = useMemo(
@@ -205,9 +233,42 @@ function PrioridadesTab() {
   };
 
   const resultado = useMemo(
-    () => calcularReparaciones(displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase),
-    [displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase],
+    () => calcularReparaciones(
+      displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase,
+      mechCtx?.config,
+    ),
+    [displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase, mechCtx?.config],
   );
+
+  // ── Commit gasto a tesorería ──
+  const campaignDate = useMemo(
+    () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
+    [campaign?.campaignYear, campaign?.campaignMonth],
+  );
+  const totalAplicado = costoFinal(resultado.costoReparadoBruto, estadoFactPct);
+  const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+
+  const registrarGasto = async () => {
+    if (!mechCtx || totalAplicado <= 0) return;
+    setCommitState('sending');
+    try {
+      await commitLibroEntryAndTreasury({
+        id:        genId('lm'),
+        fecha:     campaignDate,
+        concepto:  `Reparación parcial · ${mechCtx.mechName}`,
+        cantidad:  totalAplicado,
+        tipo:      'gasto',
+        categoria: 'repuestos',
+        nota:      `Taller priorizado · ${preset.nombre} · est ${estadoFactPct}%`,
+        jugador:   '',
+      });
+      setCommitState('done');
+      setTimeout(() => setCommitState('idle'), 2500);
+    } catch {
+      setCommitState('error');
+      setTimeout(() => setCommitState('idle'), 3000);
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease] max-w-6xl mx-auto">
@@ -284,7 +345,15 @@ function PrioridadesTab() {
           resultados={resultado.resultados}
           onReorder={reorderManual}
         />
-        <ResultsSummary resultado={resultado} />
+        <ResultsSummary
+          resultado={resultado}
+          system={system} setSystem={setSystem}
+          estadoFactPct={estadoFactPct} setEstadoFactPct={setEstadoFactPct}
+          totalAplicado={totalAplicado}
+          mechName={mechCtx?.mechName ?? null}
+          commitState={commitState}
+          onRegistrarGasto={registrarGasto}
+        />
       </div>
     </div>
   );
@@ -638,12 +707,24 @@ function SortableRow({
 
 // ── ResultsSummary ──
 
-function ResultsSummary({ resultado }: { resultado: ReturnType<typeof calcularReparaciones> }) {
+function ResultsSummary(p: {
+  resultado: ReturnType<typeof calcularReparaciones>;
+  system: RepairSystem; setSystem: (s: RepairSystem) => void;
+  estadoFactPct: number; setEstadoFactPct: (n: number) => void;
+  totalAplicado: number;
+  mechName: string | null;
+  commitState: 'idle' | 'sending' | 'done' | 'error';
+  onRegistrarGasto: () => void;
+}) {
+  const { resultado } = p;
   const rep = resultado.resultados.filter(r => r.estado === 'reparado');
   const par = resultado.resultados.filter(r => r.estado === 'parcial');
   const pen = resultado.resultados.filter(r => r.estado === 'pendiente');
   const blindajePts = rep.filter(r => r.item.divisible).reduce((s, r) => s + (r.puntosReparados ?? 0), 0)
                    + par.filter(r => r.item.divisible).reduce((s, r) => s + (r.puntosReparados ?? 0), 0);
+
+  const fmt = (n: number) => n.toLocaleString('es-ES') + ' ₡';
+  const btnDisabled = !p.mechName || p.totalAplicado <= 0 || p.commitState === 'sending';
 
   return (
     <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
@@ -664,15 +745,82 @@ function ResultsSummary({ resultado }: { resultado: ReturnType<typeof calcularRe
           <div className="text-error font-bold text-base">{pen.length}</div>
         </div>
       </div>
-      <div className="font-mono text-[10px] text-secondary/70 space-y-1">
+      <div className="font-mono text-[10px] text-secondary/70 space-y-1 mb-3">
         <div>Min usados: <span className="text-primary">{resultado.minutosUsadosTotal}</span></div>
         <div>Min libres: <span className="text-secondary">{resultado.minutosSinUsar}</span></div>
         {blindajePts > 0 && <div>Blindaje recuperado: <span className="text-primary-container">{blindajePts} pts</span></div>}
         {resultado.minutosSinUsar > 0 && resultado.pendientesBlindaje?.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-outline-variant/30 text-amber-400 text-[9px]">
-            Sobran {resultado.minutosSinUsar} min (~{Math.floor(resultado.minutosSinUsar / MINUTOS_POR_PUNTO_BLINDAJE)} pts blindaje). Próxima iter: ArmorOfferPanel.
+          <div className="text-amber-400 text-[9px]">
+            Sobran {resultado.minutosSinUsar} min (~{Math.floor(resultado.minutosSinUsar / MINUTOS_POR_PUNTO_BLINDAJE)} pts blindaje).
           </div>
         )}
+      </div>
+
+      {/* Bloque coste + tesorería */}
+      <div className="border-t border-outline-variant/30 pt-3 space-y-2">
+        <div className="flex items-center gap-2">
+          <label className="font-mono text-[9px] uppercase tracking-widest text-secondary/60">Sistema:</label>
+          <div className="grid grid-cols-2 gap-1 flex-1">
+            {(['canon', 'propio'] as RepairSystem[]).map(s => (
+              <button
+                key={s}
+                onClick={() => p.setSystem(s)}
+                className={`px-2 py-1 border font-mono text-[9px] uppercase ${
+                  p.system === s
+                    ? 'border-primary-container bg-primary-container/15 text-primary-container'
+                    : 'border-outline-variant/40 text-secondary/60 hover:border-primary-container/60'
+                }`}
+              >{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 font-mono text-[10px]">
+          <div className="border border-primary/40 bg-primary/5 p-2">
+            <div className="text-primary uppercase tracking-widest text-[8px]">Reparado bruto</div>
+            <div className="text-primary font-bold text-sm">{fmt(resultado.costoReparadoBruto)}</div>
+          </div>
+          <div className="border border-error/40 bg-error/5 p-2">
+            <div className="text-error uppercase tracking-widest text-[8px]">Pendiente</div>
+            <div className="text-error font-bold text-sm">{fmt(resultado.costoPendiente)}</div>
+          </div>
+        </div>
+
+        <div>
+          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
+            Estado factura: <span className="text-primary-container font-bold">{p.estadoFactPct}%</span>
+          </label>
+          <input
+            type="range" min={0} max={150} step={5}
+            value={p.estadoFactPct}
+            onChange={e => p.setEstadoFactPct(parseInt(e.target.value) || 0)}
+            className="w-full"
+          />
+        </div>
+
+        <div className="border border-primary-container/40 bg-primary-container/5 p-2 font-mono text-[10px]">
+          <div className="text-primary-container uppercase tracking-widest text-[8px]">Total aplicado</div>
+          <div className="text-primary-container font-bold text-base">{fmt(p.totalAplicado)}</div>
+        </div>
+
+        <button
+          onClick={p.onRegistrarGasto}
+          disabled={btnDisabled}
+          className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
+            btnDisabled
+              ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
+              : p.commitState === 'done'
+                ? 'border-primary bg-primary/20 text-primary'
+                : p.commitState === 'error'
+                  ? 'border-error bg-error/20 text-error'
+                  : 'border-primary-container bg-primary-container/15 text-primary-container hover:bg-primary-container/25'
+          }`}
+        >
+          {p.commitState === 'sending' ? 'Registrando…'
+            : p.commitState === 'done' ? '✓ Gasto registrado'
+            : p.commitState === 'error' ? '✗ Error — reintenta'
+            : 'Registrar gasto en tesorería'}
+        </button>
       </div>
     </section>
   );
