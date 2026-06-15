@@ -68,6 +68,32 @@ function pilotLabel(roster: { apodo: string; nombre: string }[], idx: number): s
   return r.apodo || r.nombre || `Piloto ${idx + 1}`;
 }
 
+function Th({ children, align = 'left' }: { children: React.ReactNode; align?: 'left' | 'right' | 'center' }) {
+  return (
+    <th
+      style={{ textAlign: align }}
+      className="px-2 py-2 font-mono text-[8px] uppercase tracking-widest text-secondary/60 border-b border-outline-variant/40"
+    >
+      {children}
+    </th>
+  );
+}
+
+/** Mapea year canon → era de BattleTech. */
+function eraLabel(year: number): string {
+  if (year >= 3151)             return 'IlClan';
+  if (year >= 3132)             return 'Oscuro';
+  if (year >= 3081)             return 'Republica';
+  if (year >= 3068)             return 'Jihad';
+  if (year >= 3050)             return 'Invasion Clan';
+  if (year >= 3020)             return 'Sucesion 3';
+  if (year >= 2860)             return 'Sucesion 2';
+  if (year >= 2786)             return 'Sucesion 1';
+  if (year >= 2570)             return 'Edad Estrella';
+  if (year >= 2350)             return 'Edad Guerra';
+  return 'Antiguo';
+}
+
 function InventarioTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
@@ -122,39 +148,65 @@ function InventarioTab({ items, loading, refresh }: {
       )}
       {items.length > 0 && (
         <div className="overflow-x-auto">
-          <table className="w-full font-mono text-[10px]">
-            <thead className="text-secondary/60 uppercase text-[8px] tracking-widest">
-              <tr className="border-b border-outline-variant/30">
-                <th className="text-left py-1 pr-2">Mech</th>
-                <th className="text-right pr-2">Tons</th>
-                <th className="text-right pr-2">BV</th>
-                <th className="text-left pr-2">Asignado</th>
-                <th className="text-right pr-2">Valor</th>
-                <th className="text-left pr-2">Compra</th>
+          <table className="w-full font-mono text-[10px] border-separate border-spacing-0">
+            <thead>
+              <tr className="bg-surface-container">
+                <Th>Nombre</Th>
+                <Th align="center">Tipo</Th>
+                <Th align="right">Tons</Th>
+                <Th align="right">BV</Th>
+                <Th align="right">Año</Th>
+                <Th align="left">Era</Th>
+                <Th align="right">Valor</Th>
+                <Th align="left">Asignado</Th>
+                <Th align="left">Compra</Th>
               </tr>
             </thead>
             <tbody>
-              {items.map(it => (
-                <tr key={it.id} className="border-b border-outline-variant/20 hover:bg-primary-container/5">
-                  <td className="py-1 pr-2 text-on-surface">{it.chassis} {it.model}</td>
-                  <td className="text-right pr-2 text-secondary">{it.tons}</td>
-                  <td className="text-right pr-2 text-secondary">{it.bv ?? '—'}</td>
-                  <td className="pr-2">
-                    <select
-                      value={it.pilotoIdx ?? ''}
-                      onChange={e => handleAssign(it, e.target.value === '' ? undefined : Number(e.target.value))}
-                      className="bg-surface-container border border-outline-variant/40 px-1 py-0.5 font-mono text-[10px] text-secondary"
-                    >
-                      <option value="">— Reserva —</option>
-                      {roster.map((r, i) => (
-                        <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="text-right pr-2 text-primary-container">{fmt(it.valorActual)}</td>
-                  <td className="pr-2 text-secondary/60 text-[9px]">{it.fechaCompra}</td>
-                </tr>
-              ))}
+              {items.map(it => {
+                const taken = it.pilotoIdx !== undefined;
+                const pilotName = taken ? pilotLabel(roster, it.pilotoIdx!) : null;
+                return (
+                  <tr key={it.id} className="border-b border-outline-variant/20 hover:bg-primary-container/5 group">
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-on-surface font-bold">
+                      {it.chassis} {it.model}
+                    </td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-center">
+                      <span className="inline-block px-1.5 py-0.5 border border-green-400/50 text-green-400 text-[8px] tracking-widest">
+                        MECH
+                      </span>
+                    </td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-amber-400">{it.tons}</td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-secondary">{it.bv ?? '—'}</td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-secondary">
+                      {it.era || '—'}
+                    </td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-secondary/70">
+                      {(it.era && /^\d+$/.test(it.era)) ? eraLabel(parseInt(it.era)) : '—'}
+                    </td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-primary-container">{fmt(it.valorActual)}</td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${taken ? 'bg-green-400' : 'bg-outline-variant/40'}`} />
+                        <select
+                          value={it.pilotoIdx ?? ''}
+                          onChange={e => handleAssign(it, e.target.value === '' ? undefined : Number(e.target.value))}
+                          className={`bg-surface-container border px-1.5 py-0.5 font-mono text-[10px] ${
+                            taken ? 'border-green-400/40 text-green-400' : 'border-outline-variant/40 text-secondary/60'
+                          }`}
+                          title={taken ? `Asignado a ${pilotName}` : 'Sin asignar (reserva)'}
+                        >
+                          <option value="">— Reserva —</option>
+                          {roster.map((r, i) => (
+                            <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </td>
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-secondary/60 text-[9px]">{it.fechaCompra}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
