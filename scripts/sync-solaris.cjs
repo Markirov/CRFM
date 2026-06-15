@@ -30,7 +30,7 @@ function candidateSources() {
     path.join(docs, 'Solaris Skunk Werks', 'Saves'),
     path.join(docs, 'SSW', 'Saves'),
     path.join(docs, 'SSW', 'mechs'),
-    'C:\\Solaris Skunk Werks\\Saves',
+    'E:\\Drive\\CBT\\SSW_0.7.4',
     'C:\\SSW\\Saves',
     'C:\\Program Files (x86)\\Solaris Skunk Werks\\Saves',
     'C:\\Program Files\\Solaris Skunk Werks\\Saves',
