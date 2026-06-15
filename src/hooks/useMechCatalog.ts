@@ -84,8 +84,8 @@ let cachedPromise: Promise<Catalog> | null = null;
 
 async function loadCatalog(): Promise<Catalog> {
   const base = import.meta.env.BASE_URL;
-  // Usa minified en prod, legible en dev
-  const suffix = import.meta.env.DEV ? 'index.json' : 'index.min.json';
+  // index.min.json no se genera (no hay build step). Usa siempre index.json.
+  const suffix = 'index.json';
   const [mechs, vehicles] = await Promise.all([
     fetch(`${base}assets/mechs/${suffix}`).then(r => r.ok ? r.json() : []),
     fetch(`${base}assets/vehicles/${suffix}`).then(r => r.ok ? r.json() : []),
