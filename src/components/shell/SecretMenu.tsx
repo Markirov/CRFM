@@ -241,8 +241,9 @@ export function SecretMenu({ open, onClose }: Props) {
                           <input value={p.rank} onChange={e => updatePilot(i, 'rank', e.target.value)}
                             placeholder="Rango"
                             className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-green-400" />
-                          <input value={p.mech} readOnly title="Solo lectura (desde Sheets)"
-                            className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-outline opacity-60 cursor-not-allowed" />
+                          <input value={p.mech} onChange={e => updatePilot(i, 'mech', e.target.value)}
+                            placeholder="Mech asignado"
+                            className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-green-400" />
                         </div>
                       ))}
                     </div>
