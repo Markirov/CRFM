@@ -14,8 +14,8 @@ interface PlayerDef {
   color:   string;
 }
 
-const DEFAULT_PLAYERS = ['Marcos', 'Jaime', 'Joan', 'Alex', 'Zhao', 'Erik'] as const;
-const PLAYER_COLORS = ['#4ade80', '#60a5fa', '#fbbf24', '#c084fc', '#f87171', '#34d399'] as const;
+const DEFAULT_PLAYERS = ['Marcos', 'Jaime', 'Joan', 'Alex', 'Zhao', 'Erik', 'Val', 'Tariq'] as const;
+const PLAYER_COLORS = ['#4ade80', '#60a5fa', '#fbbf24', '#c084fc', '#f87171', '#34d399', '#ec4899', '#fb923c'] as const;
 const PILOT_SCALE: Record<string, number> = {
   zhao: 0.84,
   erik: 0.18,
