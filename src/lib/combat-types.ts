@@ -187,6 +187,9 @@ export type SlotState = 'loaded' | 'empty';
 export interface MechSlot {
   state: MechState | null;
   session: MechSession | null;
+  /** Estado de mantenimiento rutinario (Quality Rating + historial).
+   *  Opcional: snapshots antiguos no lo tienen; UI hace fallback a DEFAULT_MAINTENANCE_STATE. */
+  maintenance?: import('./maintenance-engine').MechMaintenanceState;
 }
 
 export interface VehicleSlot {
