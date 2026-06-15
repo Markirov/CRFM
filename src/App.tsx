@@ -10,23 +10,25 @@ import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 
-// Pages lazy-loaded — split por ruta
-const ComisionPage          = lazy(() => import('@/pages/ComisionPage').then(m => ({ default: m.ComisionPage })));
-const ReclutamientoPage     = lazy(() => import('@/pages/ReclutamientoPage').then(m => ({ default: m.ReclutamientoPage })));
-const BarraconesPage        = lazy(() => import('@/pages/BarraconesPage').then(m => ({ default: m.BarraconesPage })));
-const BarraconesPageLegacy  = lazy(() => import('@/pages/BarraconesPageLegacy').then(m => ({ default: m.BarraconesPageLegacy })));
-const HojaServicioPage      = lazy(() => import('@/pages/HojaServicioPage').then(m => ({ default: m.HojaServicioPage })));
-const HojaServicioPageLegacy= lazy(() => import('@/pages/HojaServicioPageLegacy').then(m => ({ default: m.HojaServicioPageLegacy })));
-const SimuladorPage         = lazy(() => import('@/pages/SimuladorPage').then(m => ({ default: m.SimuladorPage })));
-const FinanzasPage          = lazy(() => import('@/pages/FinanzasPage').then(m => ({ default: m.FinanzasPage })));
-const TallerPage            = lazy(() => import('@/pages/TallerPage').then(m => ({ default: m.TallerPage })));
-const HudTacticoPage        = lazy(() => import('@/pages/HudTacticoPage').then(m => ({ default: m.HudTacticoPage })));
-const AyudasPage            = lazy(() => import('@/pages/AyudasPage').then(m => ({ default: m.AyudasPage })));
-const TROPage               = lazy(() => import('@/pages/TROPage').then(m => ({ default: m.TROPage })));
-const MapaEstelarPage       = lazy(() => import('@/pages/MapaEstelarPage').then(m => ({ default: m.MapaEstelarPage })));
-const CronicasPage          = lazy(() => import('@/pages/CronicasPage').then(m => ({ default: m.CronicasPage })));
-const LogrosPage            = lazy(() => import('@/pages/LogrosPage').then(m => ({ default: m.LogrosPage })));
-const PortadaPage           = lazy(() => import('@/pages/PortadaPage').then(m => ({ default: m.PortadaPage })));
+import { pageLoaders } from '@/lib/page-loaders';
+
+// Pages lazy-loaded — split por ruta. pageLoaders es el single source.
+const ComisionPage          = lazy(() => pageLoaders['/comision']().then(m => ({ default: m.ComisionPage })));
+const ReclutamientoPage     = lazy(() => pageLoaders['/reclutamiento']().then(m => ({ default: m.ReclutamientoPage })));
+const BarraconesPage        = lazy(() => pageLoaders['/barracones']().then(m => ({ default: m.BarraconesPage })));
+const BarraconesPageLegacy  = lazy(() => pageLoaders['/barracones-legacy']().then(m => ({ default: m.BarraconesPageLegacy })));
+const HojaServicioPage      = lazy(() => pageLoaders['/hoja-servicio']().then(m => ({ default: m.HojaServicioPage })));
+const HojaServicioPageLegacy= lazy(() => pageLoaders['/hoja-servicio-legacy']().then(m => ({ default: m.HojaServicioPageLegacy })));
+const SimuladorPage         = lazy(() => pageLoaders['/simulador']().then(m => ({ default: m.SimuladorPage })));
+const FinanzasPage          = lazy(() => pageLoaders['/finanzas']().then(m => ({ default: m.FinanzasPage })));
+const TallerPage            = lazy(() => pageLoaders['/taller']().then(m => ({ default: m.TallerPage })));
+const HudTacticoPage        = lazy(() => pageLoaders['/hud']().then(m => ({ default: m.HudTacticoPage })));
+const AyudasPage            = lazy(() => pageLoaders['/ayudas']().then(m => ({ default: m.AyudasPage })));
+const TROPage               = lazy(() => pageLoaders['/tro']().then(m => ({ default: m.TROPage })));
+const MapaEstelarPage       = lazy(() => pageLoaders['/mapa']().then(m => ({ default: m.MapaEstelarPage })));
+const CronicasPage          = lazy(() => pageLoaders['/cronicas']().then(m => ({ default: m.CronicasPage })));
+const LogrosPage            = lazy(() => pageLoaders['/logros']().then(m => ({ default: m.LogrosPage })));
+const PortadaPage           = lazy(() => pageLoaders['/portada']().then(m => ({ default: m.PortadaPage })));
 
 function RouteSpinner() {
   return (

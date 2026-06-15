@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { NAV_SECTIONS } from '@/lib/navigation';
 import { useAppStore } from '@/lib/store';
+import { preloadByPath } from '@/lib/page-loaders';
 import { VERSION_DISPLAY } from '@/version';
 
 export function Sidebar() {
@@ -53,6 +54,9 @@ export function Sidebar() {
                 <Link
                   key={item.id}
                   to={item.path}
+                  onMouseEnter={() => preloadByPath(item.path)}
+                  onFocus={() => preloadByPath(item.path)}
+                  onTouchStart={() => preloadByPath(item.path)}
                   onClick={() => {
                     setSidebarOpen(false);
                     if (item.id === 'simulador')   setSimuladorPortada(true);
