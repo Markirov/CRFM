@@ -150,8 +150,8 @@ const PERSONAL_COL = () => collection(db, 'personal');
 export const loadPersonal = () =>
   safe(async () => {
     const snap = await getDocs(PERSONAL_COL());
-    const personal = snap.docs.map(d => ({ id: d.id, ...d.data() })) as PersonalEntry[];
-    return { personal };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() })) as PersonalEntry[];
+    return { entries, personal: entries };
   });
 
 export const savePersonalEntry = (e: PersonalEntry) =>
@@ -193,8 +193,8 @@ const LIBRO_COL = () => collection(db, 'libroMayor');
 export const loadLibroMayor = () =>
   safe(async () => {
     const snap = await getDocs(query(LIBRO_COL(), orderBy('fecha', 'desc')));
-    const libro = snap.docs.map(d => ({ id: d.id, ...d.data() })) as LibroMayorEntry[];
-    return { libro };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() })) as LibroMayorEntry[];
+    return { entries, libro: entries };
   });
 
 export const saveLibroMayorEntry = (e: LibroMayorEntry) =>
@@ -446,15 +446,15 @@ const GASTOS_COL    = () => collection(db, 'gastosXP');
 export const loadHistorial = () =>
   safe(async () => {
     const snap = await getDocs(query(HISTORIAL_COL(), orderBy('ts', 'desc'), fsLimit(200)));
-    const historial = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    return { historial };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return { entries, historial: entries };
   });
 
 export const loadLogros = () =>
   safe(async () => {
     const snap = await getDocs(LOGROS_COL());
-    const logros = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    return { logros };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return { entries, logros: entries };
   });
 
 /** Compat: registrarMejora simple. */
@@ -585,8 +585,8 @@ const ORDEN_COL = () => collection(db, 'ordenDia');
 export const loadOrdenDia = () =>
   safe(async () => {
     const snap = await getDocs(query(ORDEN_COL(), orderBy('ts', 'desc')));
-    const ordenDia = snap.docs.map(d => ({ id: d.id, ...d.data() })) as OrdenDiaRemote[];
-    return { ordenDia };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() })) as OrdenDiaRemote[];
+    return { entries, ordenDia: entries };
   });
 
 export const saveOrdenDiaRemote = (o: OrdenDiaRemote) =>
@@ -613,8 +613,8 @@ const PARTE_COL = () => collection(db, 'parteDiario');
 export const loadParteDiario = () =>
   safe(async () => {
     const snap = await getDocs(query(PARTE_COL(), orderBy('ts', 'desc')));
-    const partes = snap.docs.map(d => ({ id: d.id, ...d.data() })) as ParteDiarioRemote[];
-    return { partes };
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() })) as ParteDiarioRemote[];
+    return { entries, partes: entries };
   });
 
 export const saveParteDiarioRemote = (p: ParteDiarioRemote) =>
