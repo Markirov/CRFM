@@ -32,6 +32,17 @@ export function parseSSWBasic(text: string): ParsedSSWBasic {
     const n = parseFloat(v);
     return Number.isFinite(n) ? n : null;
   };
+  // Atributos del root <mech name="X" model="Y" tons="N" ...>
+  const getAttr = (attr: string) => {
+    const m = text.match(new RegExp(`<mech\\b[^>]*\\s${attr}="([^"]*)"`, 'i'));
+    return m ? m[1].trim() : null;
+  };
+  const getAttrNum = (attr: string) => {
+    const v = getAttr(attr);
+    if (v == null) return null;
+    const n = parseFloat(v);
+    return Number.isFinite(n) ? n : null;
+  };
 
   const weapons: string[] = [];
   const wMatches = text.matchAll(/<weapon>[\s\S]*?<name>([^<]+)<\/name>[\s\S]*?(<location>([^<]+)<\/location>)?[\s\S]*?<\/weapon>/g);
@@ -41,10 +52,10 @@ export function parseSSWBasic(text: string): ParsedSSWBasic {
   }
 
   return {
-    chassis:      get('chassis'),
-    model:        get('model'),
-    tons:         getNum('tons') || getNum('mass'),
-    era:          get('era') || get('introyear'),
+    chassis:      get('chassis') || getAttr('name'),
+    model:        get('model')   || getAttr('model'),
+    tons:         getNum('tons') || getNum('mass') || getAttrNum('tons') || getAttrNum('mass'),
+    era:          get('era') || get('year') || get('introyear'),
     engineType:   get('enginetype') || get('engine'),
     engineRating: getNum('rating') || getNum('enginerating'),
     walkMP:       getNum('walkmp') || getNum('walk'),
