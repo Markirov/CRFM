@@ -296,7 +296,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
       </h2>
 
       {/* Buscador catálogo */}
-      <div className="relative">
+      <div>
         <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
           Buscar en catálogo TRO
         </label>
@@ -314,22 +314,24 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
             </button>
           )}
         </div>
-        {!selected && suggestions.length > 0 && (
-          <ul className="absolute z-10 left-0 right-0 mt-1 max-h-60 overflow-y-auto bg-surface-container border border-outline-variant/40 custom-scrollbar">
-            {suggestions.map(m => (
-              <li key={m.file}>
-                <button
-                  onClick={() => handleSelect(m)}
-                  className="w-full text-left px-2 py-1 font-mono text-[10px] text-on-surface hover:bg-primary-container/15 flex items-center justify-between gap-2"
-                >
-                  <span>{m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
-                  <span className="text-secondary/50 text-[9px]">{m.tons}t · BV {m.bv2}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+      {!selected && suggestions.length > 0 && (
+        <ul className="mt-1 max-h-72 overflow-y-auto bg-surface-container-high border border-primary-container/30 custom-scrollbar">
+          {suggestions.map(m => (
+            <li key={m.file} className="border-b border-outline-variant/15 last:border-b-0">
+              <button
+                onClick={() => handleSelect(m)}
+                className="w-full text-left px-3 py-2 font-mono text-[11px] text-on-surface hover:bg-primary-container/20 flex items-center justify-between gap-2"
+              >
+                <span>{m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
+                <span className="text-secondary/60 text-[9px]">
+                  {m.bv2 ? `BV ${m.bv2}` : ''}{m.year ? ` · ${m.year}` : ''}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {selected && (
         <div className="border border-primary-container/30 bg-primary-container/5 p-3 space-y-2">

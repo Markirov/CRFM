@@ -4,6 +4,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { useAppStore } from '@/lib/store';
 import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
+import { formatCzar, parseCurrencyValue } from '@/lib/currency-utils';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -37,6 +38,7 @@ export function SecretMenu({ open, onClose }: Props) {
   const [system, setSystem]     = useState('');
   const [faction, setFaction]   = useState('');
   const [prompt, setPrompt]     = useState('');
+  const [treasury, setTreasury] = useState(0);
   const [combat, setCombat]     = useState(COMBAT_DEFAULTS);
 
   // Reset on open
@@ -60,6 +62,7 @@ export function SecretMenu({ open, onClose }: Props) {
       setSystem(cfg['SISTEMA_ACTUAL'] || '');
       setFaction(cfg['FACCION_ACTUAL'] || '');
       setPrompt(cfg['PROMPT_INSTRUCCIONES'] || '');
+      setTreasury(parseCurrencyValue(cfg['CONTRATO_VALOR']) ?? 0);
 
       let cc = COMBAT_DEFAULTS;
       try { cc = { ...COMBAT_DEFAULTS, ...JSON.parse(localStorage.getItem('combatConfig') || '{}') }; } catch {}
@@ -81,6 +84,7 @@ export function SecretMenu({ open, onClose }: Props) {
     setSaving(true);
 
     // Save config to Firestore
+    const tesoreriaStr = formatCzar(treasury).replace(' ₡', '');
     const config: Record<string, string> = {
       'AÑO_CAMPANA': String(year),
       'MES_CAMPANA': String(month),
@@ -88,11 +92,17 @@ export function SecretMenu({ open, onClose }: Props) {
       'SISTEMA_ACTUAL': system,
       'FACCION_ACTUAL': faction,
       'PROMPT_INSTRUCCIONES': prompt,
+      'CONTRATO_VALOR': tesoreriaStr,
     };
     try { await saveConfigBatch(config); } catch {}
 
     // Update Zustand store
-    setCampaign({ campaignYear: year, campaignMonth: month, unitName: company || undefined });
+    setCampaign({
+      campaignYear: year,
+      campaignMonth: month,
+      unitName: company || undefined,
+      contratoValor: tesoreriaStr,
+    });
 
     // Save combat config to localStorage
     localStorage.setItem('combatConfig', JSON.stringify(combat));
@@ -207,6 +217,29 @@ export function SecretMenu({ open, onClose }: Props) {
                     <Label>Prompt instrucciones</Label>
                     <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={3}
                       className="w-full bg-surface-container-lowest border border-outline-variant/25 px-2 py-1.5 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container resize-none custom-scrollbar" />
+                  </div>
+
+                  {/* ─ Tesorería (override directo, sin asiento) ─ */}
+                  <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">
+                        Tesorería · Override directo
+                      </div>
+                      <div className="font-mono text-[8px] text-red-400/60 uppercase tracking-widest">
+                        ⚠ No crea asiento · No aparece en libro mayor
+                      </div>
+                    </div>
+                    <Label>Saldo actual (₡)</Label>
+                    <input
+                      type="number"
+                      value={treasury}
+                      onChange={e => setTreasury(parseInt(e.target.value) || 0)}
+                      onFocus={e => e.target.select()}
+                      className="w-full h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
+                    />
+                    <div className="font-mono text-[9px] text-outline">
+                      Equivalente formateado: {formatCzar(treasury)}
+                    </div>
                   </div>
 
                   {/* ─ Diseño UI ─ */}
