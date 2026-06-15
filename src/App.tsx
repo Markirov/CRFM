@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Loader } from 'lucide-react';
 import { Sidebar } from '@/components/shell/Sidebar';
 import { Header } from '@/components/shell/Header';
 import { SectionTabs } from '@/components/shell/SectionTabs';
@@ -8,23 +9,31 @@ import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 
-// Pages
-import { ComisionPage } from '@/pages/ComisionPage';
-import { ReclutamientoPage } from '@/pages/ReclutamientoPage';
-import { BarraconesPage } from '@/pages/BarraconesPage';
-import { BarraconesPageLegacy } from '@/pages/BarraconesPageLegacy';
-import { HojaServicioPage } from '@/pages/HojaServicioPage';
-import { HojaServicioPageLegacy } from '@/pages/HojaServicioPageLegacy';
-import { SimuladorPage } from '@/pages/SimuladorPage';
-import { FinanzasPage } from '@/pages/FinanzasPage';
-import { TallerPage } from '@/pages/TallerPage';
-import { HudTacticoPage } from '@/pages/HudTacticoPage';
-import { AyudasPage } from '@/pages/AyudasPage';
-import { TROPage } from '@/pages/TROPage';
-import { MapaEstelarPage } from '@/pages/MapaEstelarPage';
-import { CronicasPage } from '@/pages/CronicasPage';
-import { LogrosPage } from '@/pages/LogrosPage';
-import { PortadaPage } from '@/pages/PortadaPage';
+// Pages lazy-loaded — split por ruta
+const ComisionPage          = lazy(() => import('@/pages/ComisionPage').then(m => ({ default: m.ComisionPage })));
+const ReclutamientoPage     = lazy(() => import('@/pages/ReclutamientoPage').then(m => ({ default: m.ReclutamientoPage })));
+const BarraconesPage        = lazy(() => import('@/pages/BarraconesPage').then(m => ({ default: m.BarraconesPage })));
+const BarraconesPageLegacy  = lazy(() => import('@/pages/BarraconesPageLegacy').then(m => ({ default: m.BarraconesPageLegacy })));
+const HojaServicioPage      = lazy(() => import('@/pages/HojaServicioPage').then(m => ({ default: m.HojaServicioPage })));
+const HojaServicioPageLegacy= lazy(() => import('@/pages/HojaServicioPageLegacy').then(m => ({ default: m.HojaServicioPageLegacy })));
+const SimuladorPage         = lazy(() => import('@/pages/SimuladorPage').then(m => ({ default: m.SimuladorPage })));
+const FinanzasPage          = lazy(() => import('@/pages/FinanzasPage').then(m => ({ default: m.FinanzasPage })));
+const TallerPage            = lazy(() => import('@/pages/TallerPage').then(m => ({ default: m.TallerPage })));
+const HudTacticoPage        = lazy(() => import('@/pages/HudTacticoPage').then(m => ({ default: m.HudTacticoPage })));
+const AyudasPage            = lazy(() => import('@/pages/AyudasPage').then(m => ({ default: m.AyudasPage })));
+const TROPage               = lazy(() => import('@/pages/TROPage').then(m => ({ default: m.TROPage })));
+const MapaEstelarPage       = lazy(() => import('@/pages/MapaEstelarPage').then(m => ({ default: m.MapaEstelarPage })));
+const CronicasPage          = lazy(() => import('@/pages/CronicasPage').then(m => ({ default: m.CronicasPage })));
+const LogrosPage            = lazy(() => import('@/pages/LogrosPage').then(m => ({ default: m.LogrosPage })));
+const PortadaPage           = lazy(() => import('@/pages/PortadaPage').then(m => ({ default: m.PortadaPage })));
+
+function RouteSpinner() {
+  return (
+    <div className="h-full flex items-center justify-center">
+      <Loader size={28} className="animate-spin text-primary-container" />
+    </div>
+  );
+}
 
 export function App() {
   const location = useLocation();
@@ -113,25 +122,27 @@ export function App() {
           ${hasTabs ? '' : 'mt-12 h-[calc(100vh-48px)]'}
         `}
       >
-        <Routes>
-          <Route path="/"               element={<Navigate to="/portada" replace />} />
-          <Route path="/portada"        element={<PortadaPage />} />
-          <Route path="/comision"       element={<ComisionPage />} />
-          <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
-          <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
-          <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
-          <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
-          <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
-          <Route path="/simulador"      element={<SimuladorPage />} />
-          <Route path="/finanzas"       element={<FinanzasPage />} />
-          <Route path="/taller"         element={<TallerPage />} />
-          <Route path="/hud"            element={<HudTacticoPage />} />
-          <Route path="/ayudas"         element={<AyudasPage />} />
-          <Route path="/tro"            element={<TROPage />} />
-          <Route path="/mapa"            element={<MapaEstelarPage />} />
-          <Route path="/cronicas"       element={<CronicasPage />} />
-          <Route path="/logros"         element={<LogrosPage />} />
-        </Routes>
+        <Suspense fallback={<RouteSpinner />}>
+          <Routes>
+            <Route path="/"               element={<Navigate to="/portada" replace />} />
+            <Route path="/portada"        element={<PortadaPage />} />
+            <Route path="/comision"       element={<ComisionPage />} />
+            <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
+            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
+            <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
+            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
+            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
+            <Route path="/simulador"      element={<SimuladorPage />} />
+            <Route path="/finanzas"       element={<FinanzasPage />} />
+            <Route path="/taller"         element={<TallerPage />} />
+            <Route path="/hud"            element={<HudTacticoPage />} />
+            <Route path="/ayudas"         element={<AyudasPage />} />
+            <Route path="/tro"            element={<TROPage />} />
+            <Route path="/mapa"            element={<MapaEstelarPage />} />
+            <Route path="/cronicas"       element={<CronicasPage />} />
+            <Route path="/logros"         element={<LogrosPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Background decoration */}
