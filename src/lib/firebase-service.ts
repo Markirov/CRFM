@@ -65,12 +65,16 @@ export const sheetsPost = async (_b: Record<string, any>) =>
 
 const CONFIG_REF = () => doc(db, 'config', 'main');
 
-export const loadConfig = () =>
-  safe(async () => {
+export const loadConfig = async (): Promise<{ success: boolean; data?: { config: Record<string, any> }; error?: string }> => {
+  try {
     const snap = await getDoc(CONFIG_REF());
-    const config = snap.exists() ? snap.data() : {};
-    return { config };
-  });
+    const config: Record<string, any> = snap.exists() ? (snap.data() as any) : {};
+    return { success: true, data: { config } };
+  } catch (e: any) {
+    console.error('[firebase] loadConfig:', e);
+    return { success: false, error: e?.message ?? String(e) };
+  }
+};
 
 export const saveConfigBatch = (config: Record<string, string>) =>
   safe(async () => {

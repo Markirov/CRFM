@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
 import { StarMap } from '@/features/starMap/StarMap';
 import { SUCS_YEARS } from '@/features/starMap/constants';
 import { useStarSystems } from '@/features/jumpCalculator/hooks/useStarSystems';
 import type { StarSystem } from '@/features/jumpCalculator/types';
+import { JumpCalculator } from '@/features/jumpCalculator/JumpCalculator';
 
 function closestSucsYear(campaignYear: number): number {
   let best: number = SUCS_YEARS[0];
@@ -72,11 +73,27 @@ function SystemSearch({
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export function MapaEstelarPage() {
-  const { campaign }  = useAppStore();
+  const { campaign, activeSubTab, setActiveSubTab } = useAppStore();
   const { db }        = useStarSystems();
   const defaultYear   = closestSucsYear(campaign.campaignYear);
 
   const [focusSystem, setFocusSystem] = useState<StarSystem | null>(null);
+
+  const view: 'mapa' | 'saltos' = activeSubTab === 'saltos' ? 'saltos' : 'mapa';
+
+  useEffect(() => {
+    if (activeSubTab !== 'mapa-estelar' && activeSubTab !== 'saltos') {
+      setActiveSubTab('mapa-estelar');
+    }
+  }, [activeSubTab, setActiveSubTab]);
+
+  if (view === 'saltos') {
+    return (
+      <div className="flex flex-col h-full overflow-auto p-4 sm:p-6">
+        <JumpCalculator />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">

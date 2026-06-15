@@ -1,8 +1,12 @@
 import { useReducer, useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Play, RotateCcw, Cloud, Download, Upload, ChevronDown, ChevronUp, Skull, Shield, FileText, Search } from 'lucide-react';
+import { Plus, Trash2, Play, RotateCcw, Cloud, Download, Upload, ChevronDown, ChevronUp, Skull, Shield, FileText, Search, Archive } from 'lucide-react';
 import { getVeterancy } from '@/lib/barracones-data';
-import { loadPlayer } from '@/lib/sheets-service';
+import {
+  loadPlayer,
+  loadAllEnemigoConfigSlots, saveEnemigoConfigSlot, clearEnemigoConfigSlot,
+  type EnemigoSlot, type EnemigoConfigEntry,
+} from '@/lib/sheets-service';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -225,6 +229,54 @@ export function HudTacticoPage() {
     saveForces(updated); setForcesState(updated);
   }, [forces]);
 
+  // ── Slots ENEMIGO en Configuracion (5 fijos) ──
+  const [enemigoSlots, setEnemigoSlots] = useState<Record<EnemigoSlot, EnemigoConfigEntry | null>>({ 1: null, 2: null, 3: null, 4: null, 5: null });
+  const [enemigoLoading, setEnemigoLoading] = useState(false);
+  const [enemigoNombre, setEnemigoNombre] = useState('');
+
+  const refreshEnemigoSlots = useCallback(async () => {
+    setEnemigoLoading(true);
+    const all = await loadAllEnemigoConfigSlots();
+    setEnemigoSlots(all);
+    setEnemigoLoading(false);
+  }, []);
+
+  // Carga una vez al montar
+  useEffect(() => { refreshEnemigoSlots(); }, [refreshEnemigoSlots]);
+
+  const handleSaveEnemigoSlot = useCallback(async (slot: EnemigoSlot) => {
+    if (state.enemies.length === 0) return;
+    const nombre = enemigoNombre.trim() || `Enemigo ${slot}`;
+    const enemies = state.enemies.map(e => ({ name: e.name, xp: e.xp, color: e.color }));
+    const res = await saveEnemigoConfigSlot(slot, { nombre, enemies });
+    if (res?.success) {
+      await refreshEnemigoSlots();
+      setEnemigoNombre('');
+    } else {
+      alert('Error guardando ENEMIGO' + slot);
+    }
+  }, [state.enemies, enemigoNombre, refreshEnemigoSlots]);
+
+  const handleLoadEnemigoSlot = useCallback((slot: EnemigoSlot, replace: boolean) => {
+    const entry = enemigoSlots[slot];
+    if (!entry || !Array.isArray(entry.enemies)) return;
+    const newEnemies: BTEnemy[] = entry.enemies.map(u => ({
+      id: Date.now().toString() + Math.random().toString(36).slice(2),
+      name: u.name, xp: u.xp, color: u.color,
+    }));
+    if (replace) {
+      dispatch({ type: 'LOAD_ENEMIES', enemies: newEnemies });
+    } else {
+      newEnemies.forEach(e => dispatch({ type: 'ADD_ENEMY', enemy: e }));
+    }
+  }, [enemigoSlots]);
+
+  const handleClearEnemigoSlot = useCallback(async (slot: EnemigoSlot) => {
+    if (!confirm(`Borrar ENEMIGO${slot}?`)) return;
+    await clearEnemigoConfigSlot(slot);
+    await refreshEnemigoSlots();
+  }, [refreshEnemigoSlots]);
+
   const exportForces = useCallback(() => {
     const blob = new Blob([JSON.stringify(forces, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -248,18 +300,18 @@ export function HudTacticoPage() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="p-6 animate-[fadeInUp_0.3s_ease]">
+    <div className="p-2 sm:p-4 md:p-6 animate-[fadeInUp_0.3s_ease]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase">
+      <div className="flex items-center justify-between mb-3 sm:mb-6 flex-wrap gap-2 sm:gap-3">
+        <h1 className="font-headline text-base sm:text-xl font-black text-primary-container tracking-tighter uppercase">
           HUD TACTICO
         </h1>
-        <div className="flex items-center gap-2 font-mono text-[10px] text-outline uppercase tracking-widest">
+        <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-[9px] sm:text-[10px] text-outline uppercase tracking-widest">
           {(['setup','combat','results'] as Step[]).map((step, i) => (
-            <span key={step} className="flex items-center gap-2">
+            <span key={step} className="flex items-center gap-1.5 sm:gap-2">
               {i > 0 && <span className="text-outline">›</span>}
               <span className={state.step === step ? 'text-green-400 font-bold' : ''}>
-                {step === 'setup' ? 'Preparación' : step === 'combat' ? 'Combate' : 'Resultados'}
+                {step === 'setup' ? 'Prep' : step === 'combat' ? 'Combate' : 'XP'}
               </span>
             </span>
           ))}
@@ -268,10 +320,10 @@ export function HudTacticoPage() {
 
       {/* ── SETUP VIEW ── */}
       {state.step === 'setup' && (
-        <div className="max-w-2xl space-y-5">
+        <div className="max-w-2xl space-y-3 sm:space-y-5">
 
           {/* Jugadores */}
-          <section className="bg-surface-container p-4 border-t-2 border-primary-container">
+          <section className="bg-surface-container p-3 sm:p-4 border-t-2 border-primary-container">
             <h2 className="font-headline text-[10px] font-bold text-primary-container tracking-[3px] uppercase mb-3">
               Combatientes activos
             </h2>
@@ -299,7 +351,7 @@ export function HudTacticoPage() {
           </section>
 
           {/* Añadir hostiles */}
-          <section className="bg-surface-container p-4 border-t-2 border-error">
+          <section className="bg-surface-container p-3 sm:p-4 border-t-2 border-error">
             <h2 className="font-headline text-[10px] font-bold text-error tracking-[3px] uppercase mb-3">
               Hostiles
             </h2>
@@ -376,7 +428,7 @@ export function HudTacticoPage() {
           </section>
 
           {/* Fuerzas guardadas */}
-          <section className="bg-surface-container p-4 border-t-2 border-secondary">
+          <section className="bg-surface-container p-3 sm:p-4 border-t-2 border-secondary">
             <h2 className="font-headline text-[10px] font-bold text-secondary tracking-[3px] uppercase mb-3">
               Fuerzas guardadas
             </h2>
@@ -422,6 +474,86 @@ export function HudTacticoPage() {
             )}
           </section>
 
+          {/* Slots ENEMIGO1..5 — Configuracion sheet */}
+          <section className="bg-surface-container p-3 sm:p-4 border-t-2 border-amber-400">
+            <h2 className="font-headline text-[10px] font-bold text-amber-400 tracking-[3px] uppercase mb-2 flex items-center gap-2">
+              <Archive size={12} /> Slots Enemigo (Configuracion)
+            </h2>
+            <p className="font-mono text-[9px] text-outline mb-3">
+              5 slots fijos en celdas ENEMIGO1..ENEMIGO5. Guardar sobrescribe.
+            </p>
+
+            <input
+              value={enemigoNombre}
+              onChange={e => setEnemigoNombre(e.target.value)}
+              placeholder="Nombre fuerza enemiga (opcional, default Enemigo N)"
+              className="w-full h-8 bg-surface-container-high border border-outline-variant/30 px-3 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-amber-400 mb-3"
+            />
+
+            {enemigoLoading && (
+              <p className="text-[10px] font-mono text-outline italic text-center py-2">Cargando slots…</p>
+            )}
+
+            {!enemigoLoading && (
+              <div className="space-y-1.5">
+                {([1, 2, 3, 4, 5] as EnemigoSlot[]).map(s => {
+                  const entry = enemigoSlots[s];
+                  const occupied = !!entry?.enemies?.length;
+                  return (
+                    <div key={s} className="border border-outline-variant/30 bg-surface-container-high p-2">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="font-headline text-[10px] font-bold text-amber-400 tracking-widest">
+                          ENEMIGO{s}
+                        </span>
+                        {occupied ? (
+                          <span className="font-mono text-[9px] text-secondary/70">
+                            {entry!.nombre} · {entry!.count}u · {entry!.totalBV} BV
+                          </span>
+                        ) : (
+                          <span className="font-mono text-[9px] text-outline italic">— vacío —</span>
+                        )}
+                      </div>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => handleSaveEnemigoSlot(s)}
+                          disabled={state.enemies.length === 0}
+                          className="flex-1 bg-amber-400/15 hover:bg-amber-400/30 disabled:opacity-30 border border-amber-400/50 text-amber-400 py-1 font-mono text-[9px] uppercase tracking-widest"
+                          title={occupied ? 'Sobrescribir slot' : 'Guardar en slot vacío'}
+                        >
+                          {occupied ? 'Sobrescribir' : 'Guardar'}
+                        </button>
+                        <button
+                          onClick={() => handleLoadEnemigoSlot(s, true)}
+                          disabled={!occupied}
+                          className="flex-1 bg-green-400/15 hover:bg-green-400/30 disabled:opacity-20 border border-green-400/50 text-green-400 py-1 font-mono text-[9px] uppercase tracking-widest"
+                        >
+                          Cargar
+                        </button>
+                        {state.enemies.length > 0 && occupied && (
+                          <button
+                            onClick={() => handleLoadEnemigoSlot(s, false)}
+                            className="bg-secondary/15 hover:bg-secondary/30 border border-secondary/50 text-secondary py-1 px-2 font-mono text-[9px] uppercase tracking-widest"
+                            title="Añadir a actuales"
+                          >
+                            +
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleClearEnemigoSlot(s)}
+                          disabled={!occupied}
+                          className="bg-error/15 hover:bg-error/30 disabled:opacity-20 border border-error/50 text-error py-1 px-2 font-mono text-[9px] uppercase tracking-widest"
+                          title="Vaciar slot"
+                        >
+                          <Trash2 size={9} />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
           {/* Start button */}
           <button onClick={() => dispatch({ type: 'START' })} disabled={!canStart}
             className={`w-full h-14 font-headline text-sm font-black uppercase tracking-[4px] border-2 transition-all ${
@@ -436,12 +568,12 @@ export function HudTacticoPage() {
 
       {/* ── COMBAT VIEW ── */}
       {state.step === 'combat' && (
-        <div className="max-w-3xl space-y-4">
+        <div className="max-w-3xl space-y-3 sm:space-y-4">
 
           {/* Player panel: bonus XP + rerolls + initiative */}
-          <div className="bg-surface-container p-3 border-t-2 border-amber-400">
-            <div className="text-[8px] font-mono text-outline uppercase tracking-[3px] mb-3">Gastos de sesión por jugador</div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="bg-surface-container p-2 sm:p-3 border-t-2 border-amber-400">
+            <div className="text-[8px] font-mono text-outline uppercase tracking-[3px] mb-2 sm:mb-3">Gastos de sesión por jugador</div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {Array.from({ length: Math.min(state.numPlayers, 4) }).map((_, i) => {
                 const bonus = state.bonus[i] ?? 0;
                 const pi = playerInfo[i];
@@ -522,28 +654,28 @@ export function HudTacticoPage() {
                   style={{ borderLeftColor: enemy.color, borderLeftWidth: 4 }}>
 
                   {/* Enemy header */}
-                  <div className="flex items-center justify-between px-4 py-2.5 border-b border-outline-variant/20">
-                    <div>
-                      <div className="font-headline text-sm font-bold uppercase tracking-widest" style={{ color: enemy.color }}>
+                  <div className="flex items-center justify-between gap-2 px-2 sm:px-4 py-2 sm:py-2.5 border-b border-outline-variant/20">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-headline text-xs sm:text-sm font-bold uppercase tracking-widest truncate" style={{ color: enemy.color }}>
                         {enemy.name}
                       </div>
-                      <div className="font-mono text-[9px] text-outline mt-0.5">
-                        Valor: <span className="text-green-400 font-bold">{enemy.xp} XP</span>
-                        {totalH > 0 && <span className="ml-3">· {totalH} impactos · {Math.round(enemy.xp / totalH)} XP/golpe</span>}
+                      <div className="font-mono text-[8px] sm:text-[9px] text-outline mt-0.5">
+                        <span className="text-green-400 font-bold">{enemy.xp} XP</span>
+                        {totalH > 0 && <span className="ml-2"> · {totalH} hits · {Math.round(enemy.xp / totalH)}/h</span>}
                       </div>
                     </div>
                     <button onClick={() => dispatch({ type: 'TOGGLE_DEAD', id: enemy.id })}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 border font-mono text-[9px] font-bold uppercase tracking-widest transition-all ${
+                      className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 border font-mono text-[9px] font-bold uppercase tracking-widest transition-all shrink-0 ${
                         isDead
                           ? 'border-error/50 bg-error/10 text-error hover:bg-error/20'
                           : 'border-outline-variant/30 text-outline hover:border-green-400 hover:text-green-400'
                       }`}>
-                      {isDead ? <><Skull size={10} /> Abatido</> : <><Shield size={10} /> Vivo</>}
+                      {isDead ? <><Skull size={10} /> <span className="hidden sm:inline">Abatido</span></> : <><Shield size={10} /> <span className="hidden sm:inline">Vivo</span></>}
                     </button>
                   </div>
 
                   {/* Hit counters */}
-                  <div className={`grid p-3 gap-2 ${state.numPlayers <= 3 ? 'grid-cols-3' : state.numPlayers === 4 ? 'grid-cols-4' : 'grid-cols-5'}`}>
+                  <div className={`grid p-2 sm:p-3 gap-1.5 sm:gap-2 ${state.numPlayers <= 3 ? 'grid-cols-3' : state.numPlayers === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-5'}`}>
                     {Array.from({ length: state.numPlayers }).map((_, i) => (
                       <div key={i} className="flex flex-col gap-1">
                         {/* Hit button */}

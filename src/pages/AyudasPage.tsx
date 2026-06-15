@@ -8,6 +8,7 @@ import { DamageGrouperView }    from '@/components/ayudas/DamageGrouperView';
 import { ModifiersView }        from '@/components/ayudas/ModifiersView';
 import { InfantryView }         from '@/components/ayudas/InfantryView';
 import { InfantryWeaponsView }  from '@/components/ayudas/InfantryWeaponsView';
+import { C3CalculatorView }     from '@/components/ayudas/C3CalculatorView';
 import { JumpCalculator }       from '@/features/jumpCalculator/JumpCalculator';
 
 type View =
@@ -20,6 +21,7 @@ type View =
   | 'modifiers'
   | 'infantry'
   | 'infantry-weapons'
+  | 'c3-calculator'
   | 'jump-calculator';
 
 interface Section {
@@ -44,9 +46,10 @@ const SECTIONS: Section[] = [
   {
     label: 'Utilidades',
     buttons: [
-      { view: 'cluster',   icon: '💥', text: 'Cluster Misiles', desc: 'Tabla 2D6 × tamaño lanzador' },
-      { view: 'grouper',   icon: '📊', text: 'Agrupador Daño',  desc: 'Grupos de 5 puntos + localizaciones' },
-      { view: 'modifiers', icon: '📐', text: 'Modificadores',   desc: 'Ataque · Movimiento · Terreno · Calor' },
+      { view: 'cluster',        icon: '💥', text: 'Cluster Misiles', desc: 'Tabla 2D6 × tamaño lanzador' },
+      { view: 'grouper',        icon: '📊', text: 'Agrupador Daño',  desc: 'Grupos de 5 puntos + localizaciones' },
+      { view: 'modifiers',      icon: '📐', text: 'Modificadores',   desc: 'Ataque · Movimiento · Terreno · Calor' },
+      { view: 'c3-calculator',  icon: '📡', text: 'Calculadora C3',  desc: 'BV + componentes red C3 Standard' },
     ],
   },
   {
@@ -68,6 +71,7 @@ const VIEW_TITLES: Record<View, string> = {
   'modifiers':        'Tabla de Modificadores',
   'infantry':         'TRR Infantería',
   'infantry-weapons': 'Tabla de Armamento — Infantería',
+  'c3-calculator':    'Calculadora de Red C3 Standard',
   'jump-calculator':  'Calculadora de Saltos Hiperespaciales',
 };
 
@@ -111,22 +115,6 @@ export function AyudasPage() {
             </div>
           ))}
 
-          {/* Navegación */}
-          <div>
-            <div className="text-[9px] font-mono text-secondary/40 uppercase tracking-[4px] mb-3 border-b border-outline-variant/20 pb-1">
-              Navegación
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <button onClick={() => setView('jump-calculator')}
-                className="group text-left p-4 bg-surface-container border border-outline-variant/25 hover:border-primary/40 hover:bg-surface-container-high transition-all clip-chamfer">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🚀</span>
-                  <span className="font-headline text-sm font-bold text-primary-container group-hover:text-primary transition-colors uppercase tracking-wide">Calculadora de Saltos</span>
-                </div>
-                <p className="text-[10px] font-mono text-secondary/40 group-hover:text-secondary/60 transition-colors">Rutas KF Drive · Dijkstra · 2866 sistemas</p>
-              </button>
-            </div>
-          </div>
         </div>
       )}
 
@@ -140,7 +128,7 @@ export function AyudasPage() {
           {view === 'modifiers'       && <ModifiersView />}
           {view === 'infantry'         && <InfantryView />}
           {view === 'infantry-weapons' && <InfantryWeaponsView />}
-          {view === 'jump-calculator'  && <JumpCalculator />}
+          {view === 'c3-calculator'    && <C3CalculatorView />}
         </div>
       )}
     </div>
