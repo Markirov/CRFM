@@ -32,7 +32,7 @@ import {
   loadPersonal, savePersonalEntry, deletePersonalEntry,
   type LibroMayorEntry, type LibroMayorCategoria, type LibroMayorTipo,
   type PersonalEntry, type PersonalRol, type PersonalNivel, type PersonalEstado,
-} from '@/lib/sheets-service';
+} from '@/lib/firebase-service';
 
 // ── Paleta ─────────────────────────────────────────────────
 const T = {

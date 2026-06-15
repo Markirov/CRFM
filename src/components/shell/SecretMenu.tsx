@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Save, Loader } from 'lucide-react';
+import { X, Save, Loader, LogOut } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase-config';
 import { useAppStore } from '@/lib/store';
-import { loadConfig, saveConfigBatch } from '@/lib/sheets-service';
+import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -20,7 +22,7 @@ const COMBAT_DEFAULTS = {
 interface Props { open: boolean; onClose: () => void }
 
 export function SecretMenu({ open, onClose }: Props) {
-  const { setCampaign } = useAppStore();
+  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns } = useAppStore();
   const [step, setStep] = useState<'password' | 'config'>('password');
   const [pw, setPw]     = useState('');
   const [error, setError] = useState(false);
@@ -54,7 +56,7 @@ export function SecretMenu({ open, onClose }: Props) {
     setLoading(true);
     try {
       const res = await loadConfig();
-      const cfg = res.success ? (res.data?.config ?? res.data ?? {}) : {};
+      const cfg: Record<string, any> = (res.success ? (res.data?.config ?? res.data ?? {}) : {}) as Record<string, any>;
 
       setYear(parseInt(cfg['AÑO_CAMPANA']) || 3028);
       setMonth(parseInt(cfg['MES_CAMPANA']) || 1);
@@ -182,6 +184,11 @@ export function SecretMenu({ open, onClose }: Props) {
                   className="flex items-center gap-1.5 px-3 h-8 bg-green-400/10 border border-green-400 text-green-400 font-mono text-[10px] uppercase tracking-widest hover:bg-green-400/20 disabled:opacity-40 transition-all">
                   {saving ? <Loader size={11} className="animate-spin" /> : <Save size={11} />} Guardar
                 </button>
+                <button onClick={() => signOut(auth)}
+                  className="flex items-center gap-1 px-3 h-8 border border-error/40 text-error font-mono text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all"
+                  title={auth.currentUser?.email ?? ''}>
+                  <LogOut size={11} /> Salir
+                </button>
                 <button onClick={onClose}
                   className="flex items-center gap-1 px-3 h-8 border border-primary-container/40 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/10 transition-all">
                   <X size={11} /> Cerrar
@@ -215,6 +222,22 @@ export function SecretMenu({ open, onClose }: Props) {
                     <input value={scriptUrl} onChange={e => setScriptUrl(e.target.value)}
                       placeholder="https://script.google.com/macros/s/..."
                       className="w-full h-8 bg-surface-container-lowest border border-outline-variant/25 px-2 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" />
+                    <button
+                      onClick={async () => {
+                        const { syncScriptUrlFromRemote } = await import('@/lib/firebase-service');
+                        await syncScriptUrlFromRemote();
+                        const remote = localStorage.getItem('GOOGLE_SCRIPT_URL_REMOTE');
+                        if (remote) {
+                          alert(`URL sincronizada desde config.json:\n${remote}\n\nRecarga la app (F5) para usarla.`);
+                        } else {
+                          alert('No se pudo leer config.json o no contiene scriptUrl válida.');
+                        }
+                      }}
+                      className="w-full h-7 bg-secondary/10 hover:bg-secondary/25 border border-secondary/40 text-secondary font-mono text-[9px] uppercase tracking-widest transition-colors"
+                      title="Descarga la URL del config.json remoto y la actualiza en localStorage"
+                    >
+                      ↻ Sync desde config.json
+                    </button>
                   </div>
 
                   {/* ─ Crónicas / Campaña ─ */}
@@ -247,6 +270,28 @@ export function SecretMenu({ open, onClose }: Props) {
                             className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-outline opacity-60 cursor-not-allowed" />
                         </div>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* ─ Diseño UI ─ */}
+                  <div className="lg:col-span-2 bg-amber-400/5 border border-amber-400/30 p-3 space-y-2">
+                    <div className="font-mono text-[10px] font-bold text-amber-400 uppercase tracking-[2px]">Diseño UI</div>
+                    <label className="flex items-center gap-3 cursor-pointer select-none py-2">
+                      <input
+                        type="checkbox"
+                        checked={useLegacyDesigns}
+                        onChange={e => setUseLegacyDesigns(e.target.checked)}
+                        className="w-4 h-4 accent-amber-400 cursor-pointer"
+                      />
+                      <span className="font-mono text-[11px] text-on-surface">
+                        Usar versiones legacy (Barracones · Hoja de Servicio)
+                      </span>
+                      <span className="font-mono text-[9px] text-outline ml-auto">
+                        {useLegacyDesigns ? 'LEGACY' : 'MODERNO'}
+                      </span>
+                    </label>
+                    <div className="font-mono text-[9px] text-outline">
+                      Off → diseños nuevos (P2 Medallón / P3 Two-Tone). On → versiones P1 originales.
                     </div>
                   </div>
 

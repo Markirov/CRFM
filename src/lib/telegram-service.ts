@@ -12,7 +12,7 @@
 //   - parte_nuevo
 // ═══════════════════════════════════════════════════════════════
 
-import { sheetsPost } from './sheets-service';
+import { sheetsPost } from './firebase-service';
 
 export type TelegramEvent =
   | 'mision_cerrada'

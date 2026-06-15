@@ -6,7 +6,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/sheets-service';
+import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
 import { loadLocalSnapshot } from '@/lib/simulador-persistence';
 import { deriveDamageFromSession } from '@/lib/repair-engine';

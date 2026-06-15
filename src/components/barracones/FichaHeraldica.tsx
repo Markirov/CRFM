@@ -315,9 +315,10 @@ const MELEE_WEAPONS = INFANTRY_WEAPON_TABLE.filter(w =>
   ['melee', 'espada', 'granada'].includes(w.tipo.toLowerCase())
 );
 
-export function FichaHeraldica({ pilot, pilotImg, onAddQuirk, onSetWeapon, onSetArmadura, onSetArmadura2, onSetNotas, onUpgradeSkill, onUpgradeAttr, onAddSkill }: {
+export function FichaHeraldica({ pilot, pilotImg, apodoOverride, onAddQuirk, onSetWeapon, onSetArmadura, onSetArmadura2, onSetNotas, onUpgradeSkill, onUpgradeAttr, onAddSkill }: {
   pilot: Pilot;
   pilotImg?: string;
+  apodoOverride?: string;
   onAddQuirk?:     (quirkId: string, mechName: string) => void;
   onSetWeapon?:    (idx: number, slot: Partial<Pilot['armas'][0]>) => void;
   onSetArmadura?:  (a: Pilot['armadura'])  => void;

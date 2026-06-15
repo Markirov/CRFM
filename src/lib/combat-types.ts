@@ -88,6 +88,14 @@ export interface MechSession {
   destroyed: boolean;
   destroyedReason: string;
   logs: string[];
+
+  /** Ajustes manuales por arma (id) tras reparación parcial: heat extra al disparar + dificultad extra al impactar. */
+  weaponMods?: Record<number, { heat: number; atk: number }>;
+  /**
+   * Ajustes manuales por componente (no destruido, marcado como "modificación" en CriticalMatrix).
+   * Clave = "LOC:slotIdx" (ej. "RT:5"). heat = extra de calor por turno; atk = extra a la tirada de disparo.
+   */
+  critMods?: Record<string, { heat: number; atk: number }>;
 }
 
 export interface CritSlot {

@@ -5,7 +5,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/lib/store';
-import { loadLogros } from '@/lib/sheets-service';
+import { loadLogros } from '@/lib/firebase-service';
 import { pilotSlug, findByJugador } from '@/lib/roster';
 import { Loader } from 'lucide-react';
 

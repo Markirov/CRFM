@@ -410,7 +410,7 @@ function DetailPanel({ entry, text, loading, onClose }: {
           if (!text) return;
           try {
             localStorage.setItem('kk_tro_send_to_sim', JSON.stringify({ text, file: entry.file, kind: entry.kind }));
-            window.location.hash = '#/simulador';
+            window.location.assign('/simulador');
           } catch { /* silent */ }
         }} style={{
           width: '100%', padding: '8px 12px',

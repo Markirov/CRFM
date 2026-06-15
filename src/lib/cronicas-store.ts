@@ -8,7 +8,7 @@ import {
   loadCronicas as loadCronicasEndpoint,
   saveCronicaRemote,
   deleteCronicaRemote,
-} from '@/lib/sheets-service';
+} from '@/lib/firebase-service';
 
 export type CronicaAutor = 'mando' | 'contratista' | 'narrador';
 export type CronicaTag   = 'aar' | 'politica' | 'personal' | 'salto';

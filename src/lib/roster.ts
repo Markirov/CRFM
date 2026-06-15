@@ -3,7 +3,7 @@
 //  Fuente única de verdad para nombres, apodos, mechs, estado.
 // ══════════════════════════════════════════════════════════════
 
-import { sheetsGet } from './sheets-service';
+import { sheetsGet } from './firebase-service';
 
 export type PilotEstado = 'activo' | 'herido' | 'hospitalizado' | 'kia' | 'mia' | 'retirado';
 

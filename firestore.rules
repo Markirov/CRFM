@@ -2,22 +2,24 @@ rules_version = '2';
 
 // ═══════════════════════════════════════════════════════════════
 // CRFM — Firestore Security Rules
-//
-// MODO DEV (actual): acceso abierto con caducidad.
-// Cambiar fecha o cerrar acceso cuando metamos Firebase Auth.
-//
-// Para producción:
-//   - allow read: if request.auth != null;
-//   - allow write: if request.auth.token.admin == true; (custom claim)
+// Acceso restringido a emails whitelisted (Google sign-in).
 // ═══════════════════════════════════════════════════════════════
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Acceso abierto temporal hasta 2026-12-31.
-    // Una vez vencido, todas las requests fallan hasta que actualices reglas.
+    function isAllowed() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'marcosfenollar@gmail.com',
+          'jdelamotasanchis@gmail.com',
+          'torrifm@gmail.com'
+        ];
+    }
+
     match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+      allow read, write: if isAllowed();
     }
   }
 }

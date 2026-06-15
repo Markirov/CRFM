@@ -6,7 +6,7 @@ import {
   loadPlayer,
   loadAllEnemigoConfigSlots, saveEnemigoConfigSlot, clearEnemigoConfigSlot,
   type EnemigoSlot, type EnemigoConfigEntry,
-} from '@/lib/sheets-service';
+} from '@/lib/firebase-service';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

@@ -1,10 +1,10 @@
 // FuerzaSyncBar — indicador estado + Slots/Reset fuerza
 import { useEffect, useRef, useState } from 'react';
-import { CloudUpload, AlertCircle, Trash2, Archive, Lock, LockOpen } from 'lucide-react';
+import { CloudUpload, AlertCircle, Trash2, Archive, Lock, LockOpen, Save } from 'lucide-react';
 import {
   loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, clearFuerzaConfigSlot,
   type FuerzaSlot, type FuerzaConfigEntry,
-} from '@/lib/sheets-service';
+} from '@/lib/firebase-service';
 import type { SimuladorSnapshot } from '@/lib/simulador-persistence';
 import { useDismissable } from '@/hooks/useDismissable';
 
@@ -21,17 +21,20 @@ interface Props {
   campaignMode?: boolean;
   /** Toggle handler (pide clave si activa). */
   onToggleCampaignMode?: () => void | Promise<void>;
+  /** Guardado manual a FUERZACAMPAÑA + ESTADOMECHS (solo visible si campaignMode). */
+  onSaveCampaign?: () => Promise<boolean> | void;
 }
 
 type PushState = 'idle' | 'pushing' | 'ok' | 'error';
 
 export function FuerzaSyncBar({
   dirty, lastLocalSave, getSnapshot, hydrateFromSnapshot, clearCurrentUnit, markSynced, bvTotal,
-  campaignMode, onToggleCampaignMode,
+  campaignMode, onToggleCampaignMode, onSaveCampaign,
 }: Props) {
   const [pushState, setPushState] = useState<PushState>('idle');
   const [pushError, setPushError] = useState<string | null>(null);
   const [lastSyncIso, setLastSyncIso] = useState<string | null>(null);
+  const [campaignSaving, setCampaignSaving] = useState(false);
 
   const [slotsPanelOpen, setSlotsPanelOpen] = useState(false);
 
@@ -172,20 +175,41 @@ export function FuerzaSyncBar({
             5 espacios en celdas FUERZA1..5 de Configuracion. Guardar sobrescribe.
           </div>
 
-          {/* Toggle Modo Campaña */}
+          {/* Toggle Modo Campaña + Guardar manual */}
           {onToggleCampaignMode && (
-            <button
-              onClick={onToggleCampaignMode}
-              className={`w-full flex items-center justify-center gap-2 px-3 py-2 mb-3 clip-chamfer font-mono text-[10px] uppercase tracking-widest transition-colors border ${
-                campaignMode
-                  ? 'bg-amber-400/20 border-amber-400 text-amber-400'
-                  : 'bg-surface-container border-outline-variant/40 text-secondary/70 hover:border-amber-400/60 hover:text-amber-400'
-              }`}
-              title={campaignMode ? 'Modo campaña activo — pulsa para salir' : 'Activar modo campaña (carga FUERZA5 + lock)'}
-            >
-              {campaignMode ? <Lock size={12} /> : <LockOpen size={12} />}
-              {campaignMode ? 'Modo Campaña ON' : 'Modo Campaña'}
-            </button>
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={onToggleCampaignMode}
+                className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors border ${
+                  campaignMode
+                    ? 'bg-amber-400/20 border-amber-400 text-amber-400'
+                    : 'bg-surface-container border-outline-variant/40 text-secondary/70 hover:border-amber-400/60 hover:text-amber-400'
+                }`}
+                title={campaignMode ? 'Modo campaña activo — pulsa para salir' : 'Activar modo campaña (carga FUERZACAMPAÑA + lock)'}
+              >
+                {campaignMode ? <Lock size={11} /> : <LockOpen size={11} />}
+                Campaña{campaignMode ? ' ON' : ''}
+              </button>
+
+              {campaignMode && onSaveCampaign && (
+                <button
+                  onClick={async () => {
+                    setCampaignSaving(true);
+                    try {
+                      await onSaveCampaign();
+                    } finally {
+                      setCampaignSaving(false);
+                    }
+                  }}
+                  disabled={campaignSaving}
+                  className="flex items-center justify-center gap-1.5 px-2 py-1.5 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors border bg-surface-container border-outline-variant/40 text-secondary/70 hover:border-emerald-400/60 hover:text-emerald-400 disabled:opacity-40"
+                  title="Guardar progreso ahora (FUERZACAMPAÑA + ESTADOMECHS)"
+                >
+                  <Save size={11} className={campaignSaving ? 'animate-pulse' : ''} />
+                  {campaignSaving ? 'Guardando…' : 'Guardar'}
+                </button>
+              )}
+            </div>
           )}
 
           {/* Modo campaña: oculta lista FUERZA1-5 (FUERZA5 se gestiona auto) */}

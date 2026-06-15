@@ -13,24 +13,22 @@ export function Header() {
     <>
       <header
         className="
-          fixed top-0 left-0 lg:left-[220px] right-0 h-12
+          fixed top-0 left-0 2xl:left-[220px] right-0 h-12
           bg-surface-dim border-b border-surface-container-highest
-          flex items-center justify-between px-4 lg:px-6 z-[99]
+          flex items-center justify-between px-4 2xl:px-6 z-[99]
           backdrop-blur-xl
         "
       >
         {/* Mobile hamburger */}
         <button
           onClick={toggleSidebar}
-          className="lg:hidden w-9 h-9 flex items-center justify-center bg-surface-container border border-outline-variant text-primary-container"
+          className="2xl:hidden w-9 h-9 flex items-center justify-center bg-surface-container border border-outline-variant text-primary-container"
         >
           <Menu size={18} />
         </button>
 
         <span className="font-headline text-[11px] font-semibold text-on-surface-variant tracking-[2px] uppercase">
-          Comisión de Revisión y Fianza de{' '}
-          <span onClick={() => setSecretOpen(true)} className="cursor-default select-none">M</span>
-          ercenarios
+          Comisión de Revisión y Fianza de Mercenarios
         </span>
 
         <div className="flex items-center gap-5">
@@ -40,7 +38,11 @@ export function Header() {
               {MESES[(campaign.campaignMonth || 1) - 1]} de {campaign.campaignYear}
             </span>
           </div>
-          <button className="w-8 h-8 flex items-center justify-center text-outline hover:text-primary-container transition-colors">
+          <button
+            onClick={() => setSecretOpen(true)}
+            aria-label="Ajustes"
+            className="w-8 h-8 flex items-center justify-center text-outline hover:text-primary-container transition-colors"
+          >
             <Settings size={16} />
           </button>
         </div>

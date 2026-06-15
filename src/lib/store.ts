@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { CampaignConfig, Palette } from './types';
-import { saveConfigBatch } from './sheets-service';
+import { saveConfigBatch } from './firebase-service';
 import type { RosterEntry } from './roster';
 
 const DEFAULT_SCRIPT_URL =

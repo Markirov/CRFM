@@ -8,7 +8,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getVeterancy } from '@/lib/barracones-data';
 import { useAppStore } from '@/lib/store';
-import { registerMissionFull, registerXPExpense, commitLibroEntryAndTreasury } from '@/lib/sheets-service';
+import { registerMissionFull, registerXPExpense, commitLibroEntryAndTreasury } from '@/lib/firebase-service';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { sendTelegramNotif, getTelegramToggle } from '@/lib/telegram-service';
 import { TelegramToggle } from '@/components/ui/TelegramToggle';

@@ -8,7 +8,7 @@ import {
   loadParteDiario as loadParteDiarioEndpoint,
   saveParteDiarioRemote,
   deleteParteDiarioRemote,
-} from '@/lib/sheets-service';
+} from '@/lib/firebase-service';
 
 export type ParteTone = 'info' | 'victoria' | 'warning' | 'status';
 

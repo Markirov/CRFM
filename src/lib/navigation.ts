@@ -11,7 +11,7 @@ import type { NavSection, Palette } from './types';
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    label: 'HQ',
+    label: 'CUARTEL GENERAL',
     items: [
       { id: 'comision',      label: 'Comisión',         icon: '🏛️', path: '/comision',      palette: 'amber' },
       { id: 'reclutamiento', label: 'Reclutamiento',    icon: '👤', path: '/reclutamiento', palette: 'amber' },
@@ -50,13 +50,18 @@ export const NAV_SECTIONS: NavSection[] = [
     label: 'TÁCTICO',
     items: [
       { id: 'ayudas', label: 'Ayudas',             icon: '📋', path: '/ayudas', palette: 'blue' },
-      { id: 'tro',    label: 'Technical Readout',  icon: '📖', path: '/tro',    palette: 'blue' },
+      { id: 'tro',    label: 'Manual Técnico',  icon: '📖', path: '/tro',    palette: 'blue' },
     ],
   },
   {
     label: 'INTEL',
     items: [
-      { id: 'mapa',     label: 'Mapa Estelar', icon: '🌌', path: '/mapa',     palette: 'blue'  },
+      { id: 'mapa',     label: 'Navegación', icon: '🌌', path: '/mapa',     palette: 'blue',
+        tabs: [
+                    { id: 'saltos',       label: 'Calculadora de Saltos' },
+                    { id: 'mapa-estelar', label: 'Mapa Estelar' },
+        ],
+      },
       { id: 'logros',   label: 'Logros',        icon: '🎖️', path: '/logros',   palette: 'amber' },
       { id: 'cronicas', label: 'Crónicas',      icon: '📜', path: '/cronicas', palette: 'amber' },
     ],

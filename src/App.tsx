@@ -5,7 +5,7 @@ import { Header } from '@/components/shell/Header';
 import { SectionTabs } from '@/components/shell/SectionTabs';
 import { useAppStore } from '@/lib/store';
 import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
-import { loadConfig } from '@/lib/sheets-service';
+import { loadConfig } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 
 // Pages
@@ -34,7 +34,7 @@ export function App() {
   useEffect(() => {
     loadConfig().then(res => {
       if (!res.success) return;
-      const d = res.data?.config ?? res.data;
+      const d: Record<string, any> = (res.data?.config ?? res.data ?? {}) as Record<string, any>;
       if (!d) return;
       const patch: Record<string, any> = {};
       const year  = parseInt(d['AÑO_CAMPANA'] ?? d['campaignYear']);

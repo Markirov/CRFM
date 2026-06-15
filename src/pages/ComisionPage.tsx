@@ -14,7 +14,7 @@ import type { LogEntry } from '@/lib/barracones-log';
 import { readCronicas, loadCronicasFromSheets, sortCronicas, type CronicaEntry } from '@/lib/cronicas-store';
 import { stripMarkdownLite } from '@/lib/markdown-lite';
 import { readPartes, loadPartesFromSheets, type ParteEntry, type ParteTone } from '@/lib/parte-store';
-import { loadMovimientos, type MovimientoEntry } from '@/lib/sheets-service';
+import { loadMovimientos, type MovimientoEntry } from '@/lib/firebase-service';
 import { isActivo } from '@/lib/roster';
 // IMPORTANTE: Importamos el catálogo global para que lea tonelaje y BV de modelos que no tienen .ssw
 import { useMechCatalog, findMechByName } from '@/hooks/useMechCatalog';
@@ -24,7 +24,7 @@ const SLOT_COUNT = 6;
 
 // ⚠️ MOCK DEL SIMULADOR ASÍNCRONO DESDE SHEETS
 // Reemplaza esto por tu función real que haga el fetch a Sheets
-// (por ejemplo: import { loadSnapshotFromSheets } from '@/lib/sheets-service';)
+// (por ejemplo: import { loadSnapshotFromSheets } from '@/lib/firebase-service';)
 const loadSnapshotFromSheets = async (): Promise<any> => {
   return new Promise(resolve => {
     setTimeout(() => {

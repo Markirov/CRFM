@@ -108,29 +108,32 @@ export const saveConfigBatch = (config: Record<string, string>) =>
 
 const PERSONAJES_COL = () => collection(db, 'personajes');
 
-/** Lee un jugador por nombre (= doc id). */
-export const loadPlayer = (name: string) =>
+/** Lee un jugador por nombre (= doc id). Devuelve envelope shape Apps Script. */
+export const loadPlayer = (name: string): Promise<Envelope<any>> =>
   safe(async () => {
     const snap = await getDoc(doc(PERSONAJES_COL(), name));
-    if (!snap.exists()) return null;
-    return { jugador: name, ...snap.data() };
+    if (!snap.exists()) return { result: 'success', msg: '', personajes: [], jugador: name };
+    const obj = { jugador: name, ...snap.data() };
+    return { result: 'success', msg: '', personajes: [obj], ...obj };
   });
 
-/** Igual que loadPlayer — alias para call-site searchPilots. */
-export const searchPilots = (name: string) => loadPlayer(name);
+export const searchPilots = (name: string): Promise<Envelope<any>> => loadPlayer(name);
 
 /** Hoja de unidad — col Q (mech asignado) + datos base. */
-export const loadUnitSheet = (name: string) => loadPlayer(name);
+export const loadUnitSheet = (name: string): Promise<Envelope<any>> => loadPlayer(name);
 
-export const savePlayer = (data: any) =>
+export const savePlayer = (data: any): Promise<Envelope<any>> =>
   safe(async () => {
     const id = String(data.jugador ?? data.nombre ?? '').trim();
     if (!id) throw new Error('savePlayer: falta jugador/nombre');
     await setDoc(doc(PERSONAJES_COL(), id), data, { merge: true });
-    return { id };
+    return { id, result: 'success', msg: 'Guardado' };
   });
 
-export const savePilot = (data: any) => savePlayer(data);
+export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data);
+
+/** Stub legacy: backend ya no usa Apps Script URL. */
+export const syncScriptUrlFromRemote = async (): Promise<void> => {};
 
 // ── Roster (derivado de collection personajes) ─────────────────
 
@@ -521,11 +524,11 @@ export const loadHistorial = () =>
     return { entries, historial: entries };
   });
 
-export const loadLogros = () =>
+export const loadLogros = (): Promise<Envelope<any>> =>
   safe(async () => {
     const snap = await getDocs(LOGROS_COL());
     const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    return { entries, logros: entries };
+    return { entries, logros: entries, msg: '' };
   });
 
 /** Compat: registrarMejora simple. */

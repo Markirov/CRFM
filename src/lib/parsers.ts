@@ -261,8 +261,15 @@ export function mechParseSSW(text: string){
     'NARC':2,'INAESTHETICIST':2,
   };
   function equipSlotCount(rawName: string): number {
-    const n = mechNormEquipName(rawName).replace(/^(IS|CL)/,'');
-    for(const [k,v] of Object.entries(EQUIP_SLOT_COUNT)) if(n.includes(k)) return v;
+    const n = mechNormEquipName(rawName)
+      .replace(/^(IS|CL)/,'')
+      .replace(/AUTOCANNON/,'AC')
+      .replace(/LIGHTAC/,'LAC');
+    // Exact match first (avoids 'AC2' matching inside 'AC20')
+    if(EQUIP_SLOT_COUNT[n] != null) return EQUIP_SLOT_COUNT[n];
+    // Fallback: longest-key substring match for variants not exactly normalized
+    const keys = Object.keys(EQUIP_SLOT_COUNT).sort((a,b)=>b.length-a.length);
+    for(const k of keys) if(n.includes(k)) return EQUIP_SLOT_COUNT[k];
     return 1;
   }
 

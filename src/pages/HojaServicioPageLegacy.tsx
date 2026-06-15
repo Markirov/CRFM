@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, Loader, CheckCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { getVeterancy } from '@/lib/barracones-data';
-import { loadPlayer, registerMission, registerXPExpense } from '@/lib/sheets-service';
+import { loadPlayer, registerMission, registerXPExpense } from '@/lib/firebase-service';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

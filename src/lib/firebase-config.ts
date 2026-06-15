@@ -5,7 +5,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported as analyticsSupported } from "firebase/analytics";
-// import { getAuth } from "firebase/auth"; // Activar cuando hagamos el Login
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCNxTd8StB__GsBaIWto-FAk0uVJm9yyAI",
@@ -24,4 +24,11 @@ export const db = getFirestore(app);
 // Analytics solo en runtime browser que lo soporte (evita crash en SSR/dev edge cases).
 analyticsSupported().then(ok => { if (ok) getAnalytics(app); }).catch(() => {});
 
-// export const auth = getAuth(app); // Para el futuro sistema de roles
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+
+export const ALLOWED_EMAILS = [
+  'marcosfenollar@gmail.com',
+  'jdelamotasanchis@gmail.com',
+  'torrifm@gmail.com',
+] as const;

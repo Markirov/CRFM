@@ -5,7 +5,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import type { MechRepairDamage } from './repair-engine';
-import type { PersonalEntry, PersonalNivel } from './sheets-service';
+import type { PersonalEntry, PersonalNivel } from './firebase-service';
 
 // ── Constantes (spec sec 2) ───────────────────────────────────
 

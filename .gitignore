@@ -7,3 +7,12 @@ dist
 .vscode/
 .idea/
 Thumbs.db
+
+# Firebase
+.firebase/
+firebase-debug.log
+*.firebase-adminsdk.json
+FIREBASE_SERVICE_ACCOUNT*.json
+*service-account*.json
+credenciales*.json
+secrets.*
