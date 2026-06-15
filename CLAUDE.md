@@ -38,6 +38,17 @@ Google sign-in. Whitelist en `src/lib/firebase-config.ts` (`ALLOWED_EMAILS`) Y e
 Gate: `src/components/shell/AuthGate.tsx` envuelve App en `main.tsx`.
 Logout: botón en SecretMenu.
 
+## Backup Firestore
+
+`scripts/backup-firestore.ts` exporta todas las colecciones a `backups/YYYY-MM-DD_HHmmss/<col>.json`. Usa Firebase Admin SDK con service account.
+
+Setup (una vez):
+1. Firebase Console → Project Settings → Service Accounts → Generate new private key → descarga JSON
+2. Guarda fuera del repo (p.ej. `C:\firebase-keys\crfm-backup.json`)
+3. `setx GOOGLE_APPLICATION_CREDENTIALS "C:\firebase-keys\crfm-backup.json"` (permanente)
+
+Uso: Launcher opción 5, o `npx tsx scripts/backup-firestore.ts`. Carpeta `backups/` ignorada en git.
+
 ---
 
 ## Estructura del Proyecto

@@ -16,3 +16,6 @@ FIREBASE_SERVICE_ACCOUNT*.json
 *service-account*.json
 credenciales*.json
 secrets.*
+
+# Local backups
+backups/

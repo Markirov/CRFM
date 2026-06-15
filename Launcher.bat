@@ -17,6 +17,7 @@ echo   1^) Local dev server
 echo   2^) Rebuild indexes
 echo   3^) Deploy ^(bump + commit + push - Action despliega^)
 echo   4^) Firebase deploy directo ^(skip Action^)
+echo   5^) Backup Firestore ^(JSON local^)
 echo   0^) Salir
 echo.
 set /p RUNSEQ="Secuencia: "
@@ -63,6 +64,11 @@ if "%OPT%"=="3" (
 if "%OPT%"=="4" (
   echo --- [4] Firebase deploy directo ---
   call "%ROOT%scripts\deploy-firebase.bat"
+  exit /b %ERRORLEVEL%
+)
+if "%OPT%"=="5" (
+  echo --- [5] Backup Firestore ---
+  call "%ROOT%scripts\backup.bat"
   exit /b %ERRORLEVEL%
 )
 
