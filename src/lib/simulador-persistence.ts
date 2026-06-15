@@ -122,6 +122,40 @@ export function restoreMechSlotFull(slotIdx: number): boolean {
   return true;
 }
 
+// ── Mantenimiento por slot ─────────────────────────────────
+
+import { DEFAULT_MAINTENANCE_STATE, type MechMaintenanceState } from './maintenance-engine';
+
+/** Lee MechMaintenanceState de un slot del simulador.
+ *  Devuelve DEFAULT_MAINTENANCE_STATE si no existe (snapshot viejo). */
+export function loadMechMaintenance(slotIdx: number): MechMaintenanceState {
+  const snap = loadLocalSnapshot();
+  const slot = snap?.mechSlots[slotIdx];
+  if (!slot?.maintenance) return { ...DEFAULT_MAINTENANCE_STATE, historial: [] };
+  return slot.maintenance;
+}
+
+/** Persiste MechMaintenanceState en el slot. No-op si snapshot/slot no existe. */
+export function saveMechMaintenance(slotIdx: number, state: MechMaintenanceState): boolean {
+  const snap = loadLocalSnapshot();
+  if (!snap) return false;
+  const slot = snap.mechSlots[slotIdx];
+  if (!slot) return false;
+  slot.maintenance = state;
+  saveLocalSnapshot({
+    activeTab:         snap.activeTab,
+    currentMechIdx:    snap.currentMechIdx,
+    currentVehicleIdx: snap.currentVehicleIdx,
+    activeInfantryIdx: snap.activeInfantryIdx,
+    activeBAIdx:       snap.activeBAIdx,
+    mechSlots:         snap.mechSlots,
+    vehicleSlots:      snap.vehicleSlots,
+    infantrySlots:     snap.infantrySlots,
+    baSlots:           snap.baSlots,
+  });
+  return true;
+}
+
 /** True si el snapshot tiene al menos una unidad cargada (state!=null en algún slot). */
 export function snapshotHasUnits(snap: SimuladorSnapshot): boolean {
   return (

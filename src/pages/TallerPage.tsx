@@ -18,11 +18,19 @@ import { GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
-import { loadLocalSnapshot } from '@/lib/simulador-persistence';
+import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
 import {
   deriveDamageFromSession, configFromCatalog,
   type MechRepairConfig, type RepairSystem,
 } from '@/lib/repair-engine';
+import {
+  mergeDamage, emptyDamage, calcularTNMantenimiento, resolverMaintenanceCheck,
+  roll2D6, tirarDanoAleatorio, aplicarDamagePatches, describirDamagePatch,
+  calcularCosteMantenimiento, clasePorTonelaje, TIEMPO_MANTENIMIENTO,
+  TN_BASE_EXPERIENCIA,
+  type QualityRating, type ExperienciaEquipo, type MechMaintenanceState,
+  type DamagePatch, type ResultadoMaintenanceCheck, type MaintenanceLogEntry,
+} from '@/lib/maintenance-engine';
 import {
   PRESETS, calcularMinutosDisponibles, aplicarPreset, calcularReparaciones,
   mapearDamageARepairItemsConCoste, MINUTOS_POR_PUNTO_BLINDAJE, costoFinal,
@@ -33,10 +41,14 @@ import {
 
 export function TallerPage() {
   const { activeSubTab, setActiveSubTab, campaign } = useAppStore();
-  const view: 'factura' | 'prioridades' = activeSubTab === 'factura' ? 'factura' : 'prioridades';
+  type View = 'factura' | 'prioridades' | 'mantenimiento';
+  const view: View =
+    activeSubTab === 'factura'       ? 'factura'
+    : activeSubTab === 'mantenimiento' ? 'mantenimiento'
+    : 'prioridades';
 
   useEffect(() => {
-    if (activeSubTab !== 'factura' && activeSubTab !== 'prioridades') {
+    if (activeSubTab !== 'factura' && activeSubTab !== 'prioridades' && activeSubTab !== 'mantenimiento') {
       setActiveSubTab('prioridades');
     }
   }, [activeSubTab, setActiveSubTab]);
@@ -46,7 +58,8 @@ export function TallerPage() {
     [campaign?.campaignYear, campaign?.campaignMonth],
   );
 
-  if (view === 'prioridades') return <PrioridadesTab />;
+  if (view === 'prioridades')   return <PrioridadesTab />;
+  if (view === 'mantenimiento') return <MantenimientoTab />;
 
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease]">
@@ -169,6 +182,8 @@ function PrioridadesTab() {
     if (!slot?.state || !slot?.session) return null;
     const st = slot.state;
     const { damage } = deriveDamageFromSession(st, slot.session);
+    const mant = loadMechMaintenance(simSlotIdx);
+    const merged = mant.extraDamage ? mergeDamage(damage, mant.extraDamage) : damage;
     const config: MechRepairConfig = configFromCatalog({
       tons:   st.tonnage,
       walkMP: st.walkMP,
@@ -180,7 +195,7 @@ function PrioridadesTab() {
       mechName: `${st.chassis} ${st.model}`,
       tons:     st.tonnage,
       config,
-      damage,
+      damage:   merged,
     };
   }, [simSlotIdx]);
 
@@ -823,5 +838,393 @@ function ResultsSummary(p: {
         </button>
       </div>
     </section>
+  );
+}
+
+// ══════════════════════════════════════════════════════════
+//  TAB MANTENIMIENTO
+// ══════════════════════════════════════════════════════════
+
+const QUALITY_COLOR: Record<QualityRating, string> = {
+  A: 'text-error',
+  B: 'text-amber-500',
+  C: 'text-amber-400',
+  D: 'text-primary-container',
+  E: 'text-primary',
+  F: 'text-primary',
+};
+
+function MantenimientoTab() {
+  const { campaign } = useAppStore();
+
+  // ── Selector mech ──
+  const [simSlotIdx, setSimSlotIdx] = useState<number | null>(null);
+  const simSlots = useMemo(() => {
+    const snap = loadLocalSnapshot();
+    if (!snap) return [];
+    return snap.mechSlots
+      .map((s, i) => ({ slot: s, idx: i }))
+      .filter(({ slot }) => slot?.state && slot?.session);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [simSlotIdx]);
+
+  // ── Estado mantenimiento del mech (persistido) ──
+  const [mant, setMantState] = useState<MechMaintenanceState | null>(null);
+
+  useEffect(() => {
+    if (simSlotIdx === null) { setMantState(null); return; }
+    setMantState(loadMechMaintenance(simSlotIdx));
+  }, [simSlotIdx]);
+
+  // ── Datos del mech (tons, jump jets, ammo) ──
+  const mechInfo = useMemo(() => {
+    if (simSlotIdx === null) return null;
+    const snap = loadLocalSnapshot();
+    const slot = snap?.mechSlots[simSlotIdx];
+    if (!slot?.state) return null;
+    const st = slot.state;
+    return {
+      mechName: `${st.chassis} ${st.model}`,
+      tons:     st.tonnage,
+      hayJumpJets: (st.jumpMP ?? 0) > 0,
+      hayMunicion: (st.weapons ?? []).some(w => /ammo|mun/i.test(w.name || '')) ||
+                   ((slot.session?.ammoBins ?? []).length > 0),
+    };
+  }, [simSlotIdx]);
+
+  // ── Inputs flow ──
+  const [modCondiciones, setModCondiciones] = useState(0);
+  const [rollManual, setRollManual] = useState<number | ''>('');
+  const [lastRoll, setLastRoll] = useState<number | null>(null);
+  const [resultado, setResultado] = useState<ResultadoMaintenanceCheck | null>(null);
+  const [patchesPendientes, setPatchesPendientes] = useState<DamagePatch[]>([]);
+  const [tiradasRestantes, setTiradasRestantes] = useState(0);
+  const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+
+  // Reset flow al cambiar mech
+  useEffect(() => {
+    setLastRoll(null); setResultado(null); setPatchesPendientes([]); setTiradasRestantes(0);
+    setRollManual(''); setModCondiciones(0); setCommitState('idle');
+  }, [simSlotIdx]);
+
+  // ── Calcs ──
+  const tn = useMemo(() => {
+    if (!mant) return 0;
+    return calcularTNMantenimiento(mant.experienciaEquipo, mant.techRating, mant.qualityRating, modCondiciones);
+  }, [mant, modCondiciones]);
+
+  const costo = useMemo(() => {
+    if (!mant || !mechInfo) return 0;
+    return calcularCosteMantenimiento(mechInfo.tons, mant.qualityRating);
+  }, [mant, mechInfo]);
+
+  const tiempo = mechInfo ? TIEMPO_MANTENIMIENTO[clasePorTonelaje(mechInfo.tons)] : 0;
+
+  // ── Persistir cambios al state ──
+  const updateMant = (patch: Partial<MechMaintenanceState>) => {
+    if (simSlotIdx === null || !mant) return;
+    const next = { ...mant, ...patch };
+    setMantState(next);
+    saveMechMaintenance(simSlotIdx, next);
+  };
+
+  // ── Acciones flow ──
+  const handleTirar = () => {
+    const r = roll2D6();
+    setLastRoll(r);
+    setRollManual(r);
+  };
+
+  const handleResolver = () => {
+    if (!mant) return;
+    const r = typeof rollManual === 'number' ? rollManual : (lastRoll ?? 0);
+    if (r < 2 || r > 12) return;
+    const res = resolverMaintenanceCheck(r, tn, mant.qualityRating);
+    setResultado(res);
+    setTiradasRestantes(res.tiradasDano ?? 0);
+    setPatchesPendientes([]);
+  };
+
+  const handleTirarDano = () => {
+    if (!mechInfo) return;
+    const newPatches = tirarDanoAleatorio(mechInfo.hayJumpJets, mechInfo.hayMunicion);
+    setPatchesPendientes(p => [...p, ...newPatches]);
+    setTiradasRestantes(t => Math.max(0, t - 1));
+  };
+
+  const campaignDate = useMemo(
+    () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
+    [campaign?.campaignYear, campaign?.campaignMonth],
+  );
+
+  const handleAplicarTodo = () => {
+    if (!mant || !resultado || simSlotIdx === null) return;
+    const baseExtra = mant.extraDamage ?? emptyDamage();
+    const nuevoExtra = aplicarDamagePatches(baseExtra, patchesPendientes);
+    const entry: MaintenanceLogEntry = {
+      fecha:          campaignDate,
+      tn:             resultado.tn,
+      roll:           resultado.roll,
+      resultado:      resultado.mos > 0 ? 'MoS' : 'MoF',
+      margen:         resultado.mos > 0 ? resultado.mos : resultado.mof,
+      cambioQuality:  resultado.cambioQuality,
+      danosGenerados: patchesPendientes.map(describirDamagePatch),
+      costo,
+    };
+    updateMant({
+      qualityRating: resultado.cambioQuality ?? mant.qualityRating,
+      extraDamage:   nuevoExtra,
+      historial:     [entry, ...mant.historial].slice(0, 50),
+    });
+    // Reset flow
+    setLastRoll(null); setResultado(null); setPatchesPendientes([]);
+    setTiradasRestantes(0); setRollManual('');
+  };
+
+  const handleRegistrarGasto = async () => {
+    if (!mant || !mechInfo || costo <= 0) return;
+    setCommitState('sending');
+    try {
+      await commitLibroEntryAndTreasury({
+        id:        genId('lm'),
+        fecha:     campaignDate,
+        concepto:  `Mantenimiento rutinario · ${mechInfo.mechName} · Quality ${mant.qualityRating}`,
+        cantidad:  costo,
+        tipo:      'gasto',
+        categoria: 'mantenimiento_mensual',
+        nota:      `Equipo ${mant.experienciaEquipo} · TR ${mant.techRating}`,
+        jugador:   '',
+      });
+      setCommitState('done');
+      setTimeout(() => setCommitState('idle'), 2500);
+    } catch {
+      setCommitState('error');
+      setTimeout(() => setCommitState('idle'), 3000);
+    }
+  };
+
+  return (
+    <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease] max-w-6xl mx-auto">
+      <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase mb-4">
+        Mantenimiento rutinario
+      </h1>
+
+      {/* Selector mech */}
+      <section className="mb-4 bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
+        <label className="block font-mono text-[10px] uppercase tracking-widest text-secondary/60 mb-2">
+          Mech del simulador
+        </label>
+        <select
+          value={simSlotIdx ?? ''}
+          onChange={e => setSimSlotIdx(e.target.value === '' ? null : Number(e.target.value))}
+          className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+        >
+          <option value="">— Seleccionar —</option>
+          {simSlots.map(({ slot, idx }) => (
+            <option key={idx} value={idx}>
+              SLOT {idx + 1}: {slot.state!.chassis} {slot.state!.model}
+            </option>
+          ))}
+        </select>
+        {simSlots.length === 0 && (
+          <p className="font-mono text-[9px] text-secondary/50 mt-2 italic">
+            No hay mechs cargados en simulador.
+          </p>
+        )}
+      </section>
+
+      {mant && mechInfo && (
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Estado + Config */}
+          <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer space-y-3">
+            <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase">
+              Estado del mech
+            </h2>
+            <div className="flex items-center gap-3">
+              <div className={`font-headline text-4xl font-black ${QUALITY_COLOR[mant.qualityRating]}`}>
+                {mant.qualityRating}
+              </div>
+              <div className="font-mono text-[10px] text-secondary/70 space-y-0.5">
+                <div>Clase: <span className="text-primary-container">{clasePorTonelaje(mechInfo.tons)}</span></div>
+                <div>Coste/ciclo: <span className="text-primary-container">{costo.toLocaleString('es-ES')} ₡</span></div>
+                <div>Tiempo: <span className="text-secondary">{tiempo} min</span> (informativo)</div>
+              </div>
+            </div>
+
+            <div className="border-t border-outline-variant/30 pt-3 space-y-2">
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60">
+                Experiencia del equipo
+              </label>
+              <select
+                value={mant.experienciaEquipo}
+                onChange={e => updateMant({ experienciaEquipo: e.target.value as ExperienciaEquipo })}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              >
+                {(Object.keys(TN_BASE_EXPERIENCIA) as ExperienciaEquipo[]).map(x => (
+                  <option key={x} value={x}>{x} (TN base {TN_BASE_EXPERIENCIA[x]})</option>
+                ))}
+              </select>
+
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60">
+                Tech Rating del chasis
+              </label>
+              <select
+                value={mant.techRating}
+                onChange={e => updateMant({ techRating: e.target.value })}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              >
+                {['A','B','C','D','E','F'].map(x => <option key={x} value={x}>{x}</option>)}
+              </select>
+
+              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60">
+                Modificador condiciones
+              </label>
+              <input
+                type="number"
+                value={modCondiciones}
+                onChange={e => setModCondiciones(parseInt(e.target.value) || 0)}
+                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
+              />
+            </div>
+
+            {/* Bloque coste + tesorería */}
+            <div className="border-t border-outline-variant/30 pt-3">
+              <button
+                onClick={handleRegistrarGasto}
+                disabled={costo <= 0 || commitState === 'sending'}
+                className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
+                  commitState === 'done'
+                    ? 'border-primary bg-primary/20 text-primary'
+                    : commitState === 'error'
+                      ? 'border-error bg-error/20 text-error'
+                      : 'border-primary-container bg-primary-container/15 text-primary-container hover:bg-primary-container/25'
+                }`}
+              >
+                {commitState === 'sending' ? 'Registrando…'
+                  : commitState === 'done'  ? '✓ Gasto registrado'
+                  : commitState === 'error' ? '✗ Error — reintenta'
+                  : `Registrar gasto (${costo.toLocaleString('es-ES')} ₡)`}
+              </button>
+            </div>
+          </section>
+
+          {/* Flujo chequeo */}
+          <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer space-y-3">
+            <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase">
+              Chequeo de mantenimiento
+            </h2>
+
+            <div className="border border-outline-variant/40 bg-surface-container p-2 font-mono text-[11px]">
+              TN actual: <span className="text-primary-container font-bold text-base">{tn}</span>
+              <span className="text-secondary/50 text-[9px] ml-2">
+                (exp + tech + quality + cond)
+              </span>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleTirar}
+                className="flex-1 py-1.5 border border-primary-container/40 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/10"
+              >Tirar 2D6</button>
+              <input
+                type="number" min={2} max={12} placeholder="o manual"
+                value={rollManual}
+                onChange={e => setRollManual(e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
+                className="w-20 bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary text-center"
+              />
+              <button
+                onClick={handleResolver}
+                disabled={typeof rollManual !== 'number' || rollManual < 2 || rollManual > 12}
+                className="flex-1 py-1.5 border border-primary/40 text-primary font-mono text-[10px] uppercase tracking-widest hover:bg-primary/10 disabled:opacity-30"
+              >Resolver</button>
+            </div>
+
+            {resultado && (
+              <div className="border border-outline-variant/40 bg-surface-container p-2 font-mono text-[10px] text-secondary/80 space-y-1">
+                <div>
+                  Roll <span className="text-primary-container font-bold">{resultado.roll}</span> vs TN {resultado.tn} →{' '}
+                  {resultado.mos > 0
+                    ? <span className="text-primary font-bold">MoS {resultado.mos}{resultado.mos === 6 ? '+' : ''}</span>
+                    : <span className="text-error font-bold">MoF {resultado.mof}{resultado.mof === 7 ? '+' : ''}</span>}
+                </div>
+                {resultado.cambioQuality && (
+                  <div>Cambio Quality: <span className={`font-bold ${QUALITY_COLOR[resultado.cambioQuality]}`}>{mant.qualityRating} → {resultado.cambioQuality}</span></div>
+                )}
+                {resultado.experienciaExtra && (
+                  <div className="text-amber-400">Equipo gana XP (no implementado aún)</div>
+                )}
+                {(resultado.tiradasDano ?? 0) > 0 && (
+                  <div>Tiradas de daño: <span className="text-error font-bold">{resultado.tiradasDano}</span></div>
+                )}
+              </div>
+            )}
+
+            {tiradasRestantes > 0 && (
+              <button
+                onClick={handleTirarDano}
+                className="w-full py-1.5 border border-error/50 text-error font-mono text-[10px] uppercase tracking-widest hover:bg-error/10"
+              >
+                Tirar daño ({tiradasRestantes} restantes)
+              </button>
+            )}
+
+            {patchesPendientes.length > 0 && (
+              <div className="border border-error/30 bg-error/5 p-2 font-mono text-[9px] text-secondary/80 space-y-0.5">
+                <div className="text-error uppercase tracking-widest text-[8px] mb-1">Daños generados</div>
+                {patchesPendientes.map((p, i) => (
+                  <div key={i}>• {describirDamagePatch(p)}</div>
+                ))}
+              </div>
+            )}
+
+            {resultado && tiradasRestantes === 0 && (
+              <button
+                onClick={handleAplicarTodo}
+                className="w-full py-2 border border-primary-container bg-primary-container/15 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/25"
+              >Aplicar todo (persistir)</button>
+            )}
+          </section>
+
+          {/* Historial */}
+          {mant.historial.length > 0 && (
+            <section className="md:col-span-2 bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
+              <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-2">
+                Historial ({mant.historial.length})
+              </h2>
+              <div className="overflow-x-auto">
+                <table className="w-full font-mono text-[10px]">
+                  <thead className="text-secondary/60 uppercase text-[8px] tracking-widest">
+                    <tr className="border-b border-outline-variant/30">
+                      <th className="text-left py-1 pr-2">Fecha</th>
+                      <th className="text-right pr-2">Roll/TN</th>
+                      <th className="text-left pr-2">Resultado</th>
+                      <th className="text-left pr-2">Quality</th>
+                      <th className="text-left pr-2">Daños</th>
+                      <th className="text-right">Costo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mant.historial.map((h, i) => (
+                      <tr key={i} className="border-b border-outline-variant/20">
+                        <td className="py-1 pr-2 text-secondary/70">{h.fecha}</td>
+                        <td className="text-right pr-2 text-secondary">{h.roll}/{h.tn}</td>
+                        <td className={`pr-2 font-bold ${h.resultado === 'MoS' ? 'text-primary' : 'text-error'}`}>
+                          {h.resultado} {h.margen}
+                        </td>
+                        <td className="pr-2">{h.cambioQuality ? <span className={QUALITY_COLOR[h.cambioQuality]}>→ {h.cambioQuality}</span> : '—'}</td>
+                        <td className="pr-2 text-secondary/70 text-[9px]">
+                          {(h.danosGenerados ?? []).length > 0 ? (h.danosGenerados ?? []).join(' · ') : '—'}
+                        </td>
+                        <td className="text-right text-primary-container">{h.costo.toLocaleString('es-ES')} ₡</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

@@ -38,8 +38,9 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       { id: 'taller',        label: 'Taller',            icon: '🔧', path: '/taller',        palette: 'amber',
         tabs: [
-          { id: 'prioridades', label: 'Prioridades' },
-          { id: 'factura',    label: 'Factura' },
+          { id: 'prioridades',   label: 'Prioridades' },
+          { id: 'mantenimiento', label: 'Mantenimiento' },
+          { id: 'factura',       label: 'Factura' },
         ],
       },
       { id: 'hud',           label: 'Seguimiento de Combate', icon: '🎯', path: '/hud',          palette: 'green' },

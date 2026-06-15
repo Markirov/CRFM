@@ -214,6 +214,9 @@ export interface MechMaintenanceState {
   experienciaEquipo: ExperienciaEquipo; // default 'Regular'
   techRating:        string;            // 'A'..'F', default 'D'
   historial:         MaintenanceLogEntry[];
+  /** Daño acumulado por tiradas fallidas de mantenimiento.
+   *  Se suma al damage derivado del simulador en PrioridadesTab. */
+  extraDamage?:      MechRepairDamage;
 }
 
 export const DEFAULT_MAINTENANCE_STATE: MechMaintenanceState = {
@@ -222,3 +225,31 @@ export const DEFAULT_MAINTENANCE_STATE: MechMaintenanceState = {
   techRating:        'D',
   historial:         [],
 };
+
+/** Empty damage para inicializar extraDamage. */
+export function emptyDamage(): MechRepairDamage {
+  return {
+    reactor: 0, gyro: 0, cabinaDañada: false, soporteVida: 0,
+    sensores: 0, estructura: 0, blindaje: 0, miomero: 0,
+    retros: 0, radiadores: 0, actuadores: {}, armas: [], municion: 0,
+  };
+}
+
+/** Suma dos MechRepairDamage. Clamp reactor 0..3, gyro 0..2. */
+export function mergeDamage(a: MechRepairDamage, b: MechRepairDamage): MechRepairDamage {
+  return {
+    reactor:      Math.min(3, (a.reactor ?? 0) + (b.reactor ?? 0)),
+    gyro:         Math.min(2, (a.gyro ?? 0) + (b.gyro ?? 0)),
+    cabinaDañada: a.cabinaDañada || b.cabinaDañada,
+    soporteVida:  (a.soporteVida ?? 0) + (b.soporteVida ?? 0),
+    sensores:     (a.sensores ?? 0) + (b.sensores ?? 0),
+    estructura:   (a.estructura ?? 0) + (b.estructura ?? 0),
+    blindaje:     (a.blindaje ?? 0) + (b.blindaje ?? 0),
+    miomero:      (a.miomero ?? 0) + (b.miomero ?? 0),
+    retros:       (a.retros ?? 0) + (b.retros ?? 0),
+    radiadores:   (a.radiadores ?? 0) + (b.radiadores ?? 0),
+    actuadores:   { ...(a.actuadores ?? {}), ...(b.actuadores ?? {}) },
+    armas:        [...(a.armas ?? []), ...(b.armas ?? [])],
+    municion:     (a.municion ?? 0) + (b.municion ?? 0),
+  };
+}
