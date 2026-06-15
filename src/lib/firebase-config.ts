@@ -4,9 +4,9 @@
 
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-// import { getAuth } from "firebase/auth"; // Lo descomentaremos cuando hagamos el Login
+import { getAnalytics, isSupported as analyticsSupported } from "firebase/analytics";
+// import { getAuth } from "firebase/auth"; // Activar cuando hagamos el Login
 
-// ⚠️ SUSTITUYE ESTO POR EL OBJETO QUE TE HA DADO FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCNxTd8StB__GsBaIWto-FAk0uVJm9yyAI",
   authDomain: "crfm-dc873.firebaseapp.com",
@@ -20,5 +20,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
+
+// Analytics solo en runtime browser que lo soporte (evita crash en SSR/dev edge cases).
+analyticsSupported().then(ok => { if (ok) getAnalytics(app); }).catch(() => {});
 
 // export const auth = getAuth(app); // Para el futuro sistema de roles
