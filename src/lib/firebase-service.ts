@@ -19,6 +19,7 @@
 //   logros/{id}                       — logros pilotos
 //   mejoras/{id}                      — XP gastado en subidas
 //   gastosXP/{id}                     — gastos XP varios
+//   hangar/{id}                       — inventario de mechs (HangarItem)
 //
 // API envelope: { success: boolean, data?: any, error?: string }
 // Igual que sheets-service para compat 1:1 con código existente.
@@ -67,6 +68,7 @@ export async function sheetsGet(params: Record<string, string>) {
     case 'getOrdenDia':         return await loadOrdenDia();
     case 'getParteDiario':      return await loadParteDiario();
     case 'getMovimientos':      return await loadMovimientos(Number(params.limit) || 5);
+    case 'getHangar':           return await loadHangar();
   }
   // Por defecto: si trae 'jugador' sin action → loadPlayer
   if (params.jugador && !action) return await loadPlayer(params.jugador);
@@ -442,6 +444,48 @@ export const saveFuerza = (data: {
     };
     await setDoc(doc(FUERZAS_COL(), id), entry, { merge: true });
     return { id };
+  });
+
+// ═══════════════════════════════════════════════════════════════
+// HANGAR — inventario de mechs propiedad de la compañía
+// (distinto de fuerzas/: aquellas son snapshots de simulador,
+// hangar son mechs físicos con asignación a piloto + valor + estado)
+// ═══════════════════════════════════════════════════════════════
+
+import type { HangarItem } from './hangar-types';
+
+const HANGAR_COL = () => collection(db, 'hangar');
+
+export const loadHangar = () =>
+  safe(async () => {
+    const snap = await getDocs(query(HANGAR_COL(), orderBy('createdAt', 'asc')));
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() })) as HangarItem[];
+    return { items };
+  });
+
+export const saveHangarItem = (item: HangarItem) =>
+  safe(async () => {
+    const id = item.id;
+    const next = { ...item, id, updatedAt: new Date().toISOString() };
+    await setDoc(doc(HANGAR_COL(), id), next, { merge: true });
+    return { id };
+  });
+
+export const deleteHangarItem = (id: string) =>
+  safe(async () => {
+    await deleteDoc(doc(HANGAR_COL(), id));
+    return { id };
+  });
+
+/** Asigna piloto (idx 0..5) o desasigna (pasar undefined). */
+export const assignPilotToHangar = (id: string, pilotoIdx: number | undefined) =>
+  safe(async () => {
+    const patch: Partial<HangarItem> = {
+      pilotoIdx,
+      updatedAt: new Date().toISOString(),
+    };
+    await setDoc(doc(HANGAR_COL(), id), patch, { merge: true });
+    return { id, pilotoIdx };
   });
 
 // ═══════════════════════════════════════════════════════════════

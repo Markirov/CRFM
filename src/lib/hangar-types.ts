@@ -1,0 +1,83 @@
+// ══════════════════════════════════════════════════════════════
+//  hangar-types.ts — Inventario persistente de mechs propiedad
+//  de la compañía. Distinto de `fuerzas/` (snapshots de simulador
+//  para combates concretos). Aquí: 1 doc por mech físico que la
+//  unidad posee, con asignación opcional a piloto + precio + estado.
+//
+//  Collection Firestore: hangar/{id}
+//  Manipulación: src/lib/firebase-service.ts (load/save/delete).
+// ══════════════════════════════════════════════════════════════
+
+import type { QualityRating } from './maintenance-engine';
+import type { MechRepairDamage } from './repair-engine';
+
+/** Un mech físico del hangar. */
+export interface HangarItem {
+  /** ID estable; prefijo "hng_" para distinguir en logs. */
+  id:           string;
+
+  // ── Identidad mech ──
+  chassis:      string;   // "Atlas"
+  model:        string;   // "AS7-D"
+  tons:         number;
+  bv?:          number;
+  era?:         string;
+  techRating?:  string;   // 'A'..'F' (alimenta MechMaintenanceState)
+
+  // ── Económico ──
+  /** Precio canon/TRO del mech nuevo (referencia). */
+  precioBase:   number;
+  /** Valor actual; arranca = precioBase, se ajusta por estado/depreciación. */
+  valorActual:  number;
+  /** Fecha de compra en formato campaña (ISO yyyy-mm-dd). */
+  fechaCompra:  string;
+
+  // ── Asignación ──
+  /** Índice de piloto 0..5 (1..6 UI). undefined = sin asignar (reserva). */
+  pilotoIdx?:   number;
+
+  // ── Estado persistente ──
+  /** 0..100. Espejo de campaign.estadoMechs para este mech. */
+  estadoPct?:    number;
+  /** Quality rating actual (sigue MechMaintenanceState). */
+  qualityRating?: QualityRating;
+  /** Daño acumulado que persiste fuera del simulador
+   *  (por mantenimiento fallido, combate offline narrativo, etc.). */
+  damagePersist?: MechRepairDamage;
+
+  // ── Meta ──
+  notas?:       string;
+  createdAt:    string;   // ISO timestamp
+  updatedAt:    string;   // ISO timestamp
+}
+
+/** Crea un HangarItem nuevo con defaults; el caller rellena lo demás. */
+export function newHangarItem(input: {
+  chassis:     string;
+  model:       string;
+  tons:        number;
+  precioBase:  number;
+  fechaCompra: string;
+  bv?:         number;
+  era?:        string;
+  techRating?: string;
+  pilotoIdx?:  number;
+}): HangarItem {
+  const now = new Date().toISOString();
+  return {
+    id:          `hng_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+    chassis:     input.chassis,
+    model:       input.model,
+    tons:        input.tons,
+    bv:          input.bv,
+    era:         input.era,
+    techRating:  input.techRating,
+    precioBase:  input.precioBase,
+    valorActual: input.precioBase,
+    fechaCompra: input.fechaCompra,
+    pilotoIdx:   input.pilotoIdx,
+    estadoPct:   100,
+    createdAt:   now,
+    updatedAt:   now,
+  };
+}

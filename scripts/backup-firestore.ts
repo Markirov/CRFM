@@ -23,6 +23,7 @@ const COLLECTIONS = [
   'cronicas',
   'parteDiario',
   'movimientos',
+  'hangar',
   'fuerzas',
   'ordenDia',
   'historial',
