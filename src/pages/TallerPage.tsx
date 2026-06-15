@@ -5,6 +5,16 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
+import {
+  DndContext, closestCenter, KeyboardSensor, PointerSensor,
+  useSensor, useSensors, type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove, SortableContext, sortableKeyboardCoordinates,
+  useSortable, verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
@@ -163,9 +173,40 @@ function PrioridadesTab() {
     [itemsAjustados, preset, ordenSec],
   );
 
+  // Orden manual via drag/flechas. Cuando set -> presetId pasa a 'manual'.
+  const [manualOrder, setManualOrder] = useState<string[]>([]);
+
+  // Reset manual order al cambiar mech.
+  useEffect(() => { setManualOrder([]); }, [simSlotIdx]);
+
+  // Si user cambia preset a otro distinto de manual, limpiar orden manual.
+  const setPresetIdSafe = (id: string) => {
+    if (id !== 'manual') setManualOrder([]);
+    setPresetId(id);
+  };
+
+  // displayItems: si presetId='manual' y manualOrder definido, ordenar por manualOrder.
+  const displayItems = useMemo<RepairItem[]>(() => {
+    if (presetId !== 'manual' || manualOrder.length === 0) return orderedItems;
+    const byId = new Map(orderedItems.map(it => [it.id, it]));
+    const out: RepairItem[] = [];
+    for (const id of manualOrder) {
+      const it = byId.get(id);
+      if (it) { out.push(it); byId.delete(id); }
+    }
+    for (const it of byId.values()) out.push(it);
+    return out;
+  }, [orderedItems, manualOrder, presetId]);
+
+  // Reordenar manualmente: switch a preset manual, set nuevo orden.
+  const reorderManual = (newOrder: string[]) => {
+    setPresetId('manual');
+    setManualOrder(newOrder);
+  };
+
   const resultado = useMemo(
-    () => calcularReparaciones(orderedItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase),
-    [orderedItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase],
+    () => calcularReparaciones(displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase),
+    [displayItems, tiempoCalc.minutosDisponibles, tiempoCalc.minutosBase],
   );
 
   return (
@@ -224,7 +265,7 @@ function PrioridadesTab() {
 
         {/* Preset Selector */}
         <PresetSelector
-          presetId={presetId} setPresetId={setPresetId}
+          presetId={presetId} setPresetId={setPresetIdSafe}
           ordenSec={ordenSec} setOrdenSec={setOrdenSec}
         />
 
@@ -239,8 +280,9 @@ function PrioridadesTab() {
       {/* Lista items + resultados */}
       <div className="grid md:grid-cols-2 gap-4 mt-4">
         <RepairItemList
-          items={orderedItems}
+          items={displayItems}
           resultados={resultado.resultados}
+          onReorder={reorderManual}
         />
         <ResultsSummary resultado={resultado} />
       </div>
@@ -465,8 +507,37 @@ function BudgetBar(p: { minutosBase: number; minutosExtra: number; minutosUsados
 
 // ── RepairItemList ──
 
-function RepairItemList({ items, resultados }: { items: RepairItem[]; resultados: ResultadoItem[] }) {
+function RepairItemList({
+  items, resultados, onReorder,
+}: {
+  items: RepairItem[];
+  resultados: ResultadoItem[];
+  onReorder: (newOrder: string[]) => void;
+}) {
   const resultadoMap = new Map(resultados.map(r => [r.item.id, r]));
+  const ids = items.map(it => it.id);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    const oldIdx = ids.indexOf(String(active.id));
+    const newIdx = ids.indexOf(String(over.id));
+    if (oldIdx < 0 || newIdx < 0) return;
+    onReorder(arrayMove(ids, oldIdx, newIdx));
+  };
+
+  const moveBy = (id: string, delta: number) => {
+    const idx = ids.indexOf(id);
+    const target = idx + delta;
+    if (idx < 0 || target < 0 || target >= ids.length) return;
+    onReorder(arrayMove(ids, idx, target));
+  };
+
   return (
     <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
       <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3">
@@ -477,30 +548,91 @@ function RepairItemList({ items, resultados }: { items: RepairItem[]; resultados
           Sin daños registrados. Selecciona un mech con combate previo.
         </p>
       )}
-      <ul className="space-y-1.5">
-        {items.map(it => {
-          const r = resultadoMap.get(it.id);
-          const estado = r?.estado ?? 'pendiente';
-          const bg =
-            estado === 'reparado' ? 'border-primary/60 bg-primary/5' :
-            estado === 'parcial'  ? 'border-amber-400/60 bg-amber-400/5' :
-            'border-error/40 bg-error/5';
-          return (
-            <li key={it.id} className={`border ${bg} p-2 flex items-center gap-2`}>
-              <span className="font-mono text-[9px] text-secondary/60 w-14 uppercase">{it.categoria}</span>
-              <span className="font-mono text-[10px] text-secondary flex-1 truncate">{it.nombre}</span>
-              <span className="font-mono text-[9px] text-secondary/60">{it.localizacion}</span>
-              <span className="font-mono text-[10px] text-primary-container font-bold w-14 text-right">{it.tiempoBase}min</span>
-              <span className={`font-mono text-[8px] uppercase tracking-widest w-12 text-right ${
-                estado === 'reparado' ? 'text-primary' :
-                estado === 'parcial'  ? 'text-amber-400' :
-                'text-error'
-              }`}>{estado.slice(0,4)}{r?.riesgoFatiga ? '⚠' : ''}</span>
-            </li>
-          );
-        })}
-      </ul>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+          <ul className="space-y-1.5">
+            {items.map((it, idx) => (
+              <SortableRow
+                key={it.id}
+                item={it}
+                resultado={resultadoMap.get(it.id)}
+                isFirst={idx === 0}
+                isLast={idx === items.length - 1}
+                onUp={() => moveBy(it.id, -1)}
+                onDown={() => moveBy(it.id, +1)}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
     </section>
+  );
+}
+
+function SortableRow({
+  item, resultado, isFirst, isLast, onUp, onDown,
+}: {
+  item: RepairItem;
+  resultado: ResultadoItem | undefined;
+  isFirst: boolean;
+  isLast: boolean;
+  onUp: () => void;
+  onDown: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.6 : 1,
+    zIndex: isDragging ? 10 : 'auto',
+  };
+  const estado = resultado?.estado ?? 'pendiente';
+  const bg =
+    estado === 'reparado' ? 'border-primary/60 bg-primary/5' :
+    estado === 'parcial'  ? 'border-amber-400/60 bg-amber-400/5' :
+    'border-error/40 bg-error/5';
+
+  return (
+    <li ref={setNodeRef} style={style} className={`border ${bg} p-2 flex items-center gap-2`}>
+      <button
+        type="button"
+        {...attributes}
+        {...listeners}
+        className="text-secondary/40 hover:text-primary-container cursor-grab active:cursor-grabbing touch-none"
+        title="Arrastrar para reordenar"
+      >
+        <GripVertical size={12} />
+      </button>
+      <span className="font-mono text-[9px] text-secondary/60 w-14 uppercase">{item.categoria}</span>
+      <span className="font-mono text-[10px] text-secondary flex-1 truncate">{item.nombre}</span>
+      <span className="font-mono text-[9px] text-secondary/60">{item.localizacion}</span>
+      <span className="font-mono text-[10px] text-primary-container font-bold w-14 text-right">{item.tiempoBase}min</span>
+      <span className={`font-mono text-[8px] uppercase tracking-widest w-12 text-right ${
+        estado === 'reparado' ? 'text-primary' :
+        estado === 'parcial'  ? 'text-amber-400' :
+        'text-error'
+      }`}>{estado.slice(0,4)}{resultado?.riesgoFatiga ? '⚠' : ''}</span>
+      <div className="flex flex-col gap-0.5">
+        <button
+          type="button"
+          onClick={onUp}
+          disabled={isFirst}
+          className="text-secondary/50 hover:text-primary-container disabled:opacity-20 disabled:cursor-not-allowed"
+          title="Subir"
+        >
+          <ChevronUp size={12} />
+        </button>
+        <button
+          type="button"
+          onClick={onDown}
+          disabled={isLast}
+          className="text-secondary/50 hover:text-primary-container disabled:opacity-20 disabled:cursor-not-allowed"
+          title="Bajar"
+        >
+          <ChevronDown size={12} />
+        </button>
+      </div>
+    </li>
   );
 }
 

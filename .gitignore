@@ -19,3 +19,7 @@ secrets.*
 
 # Local backups
 backups/
+
+# Local tooling/refs no comiteables
+herramientas/
+AutoMover.py
