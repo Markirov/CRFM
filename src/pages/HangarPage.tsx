@@ -67,6 +67,36 @@ function InventarioTab({ items, loading, refresh }: {
   const fmt = (n: number) => n.toLocaleString('es-ES') + ' ₡';
 
   const handleAssign = async (item: HangarItem, pilotoIdx: number | undefined) => {
+    // Caso: desasignar
+    if (pilotoIdx === undefined) {
+      await saveHangarItem({ ...item, pilotoIdx: undefined });
+      void refresh();
+      return;
+    }
+
+    const pilotName = campaign?.pilotNames?.[pilotoIdx] || `Piloto ${pilotoIdx + 1}`;
+
+    // Conflicto: piloto ya tenía otro mech?
+    const previo = items.find(it => it.pilotoIdx === pilotoIdx && it.id !== item.id);
+    if (previo) {
+      const ok = window.confirm(
+        `${pilotName} ya tenía "${previo.chassis} ${previo.model}".\n\n` +
+        `Reasignar a "${item.chassis} ${item.model}"? El anterior pasará a reserva.`
+      );
+      if (!ok) return;
+      await saveHangarItem({ ...previo, pilotoIdx: undefined });
+    }
+
+    // Conflicto: este mech estaba con otro piloto?
+    if (item.pilotoIdx !== undefined && item.pilotoIdx !== pilotoIdx) {
+      const otroPiloto = campaign?.pilotNames?.[item.pilotoIdx] || `Piloto ${item.pilotoIdx + 1}`;
+      const ok = window.confirm(
+        `"${item.chassis} ${item.model}" estaba con ${otroPiloto}.\n\n` +
+        `Reasignar a ${pilotName}?`
+      );
+      if (!ok) return;
+    }
+
     await saveHangarItem({ ...item, pilotoIdx });
     void refresh();
   };

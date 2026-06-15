@@ -37,9 +37,6 @@ export function SecretMenu({ open, onClose }: Props) {
   const [system, setSystem]     = useState('');
   const [faction, setFaction]   = useState('');
   const [prompt, setPrompt]     = useState('');
-  const [pilots, setPilots]     = useState<{ name: string; rank: string; mech: string }[]>(
-    Array(6).fill(null).map(() => ({ name: '', rank: '', mech: '' })),
-  );
   const [combat, setCombat]     = useState(COMBAT_DEFAULTS);
 
   // Reset on open
@@ -63,13 +60,6 @@ export function SecretMenu({ open, onClose }: Props) {
       setSystem(cfg['SISTEMA_ACTUAL'] || '');
       setFaction(cfg['FACCION_ACTUAL'] || '');
       setPrompt(cfg['PROMPT_INSTRUCCIONES'] || '');
-
-      const p = [1, 2, 3, 4, 5, 6].map(i => ({
-        name: cfg[`PILOTO_${i}_NOMBRE`] || '',
-        rank: cfg[`PILOTO_${i}_RANGO`] || '',
-        mech: cfg[`PILOTO_${i}_MECH`] || '',
-      }));
-      setPilots(p);
 
       let cc = COMBAT_DEFAULTS;
       try { cc = { ...COMBAT_DEFAULTS, ...JSON.parse(localStorage.getItem('combatConfig') || '{}') }; } catch {}
@@ -99,12 +89,6 @@ export function SecretMenu({ open, onClose }: Props) {
       'FACCION_ACTUAL': faction,
       'PROMPT_INSTRUCCIONES': prompt,
     };
-    pilots.forEach((p, i) => {
-      config[`PILOTO_${i + 1}_NOMBRE`] = p.name;
-      config[`PILOTO_${i + 1}_RANGO`] = p.rank;
-      config[`PILOTO_${i + 1}_MECH`] = p.mech;
-    });
-
     try { await saveConfigBatch(config); } catch {}
 
     // Update Zustand store
@@ -117,10 +101,6 @@ export function SecretMenu({ open, onClose }: Props) {
 
     setSaving(false);
     onClose();
-  };
-
-  const updatePilot = (idx: number, field: string, val: string) => {
-    setPilots(prev => prev.map((p, i) => i === idx ? { ...p, [field]: val } : p));
   };
 
   const updateCombat = (key: string, val: string) => {
@@ -227,26 +207,6 @@ export function SecretMenu({ open, onClose }: Props) {
                     <Label>Prompt instrucciones</Label>
                     <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={3}
                       className="w-full bg-surface-container-lowest border border-outline-variant/25 px-2 py-1.5 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container resize-none custom-scrollbar" />
-                  </div>
-
-                  {/* ─ Pilotos ─ */}
-                  <div className="lg:col-span-2 bg-green-400/5 border border-green-400/20 p-3 space-y-2">
-                    <div className="font-mono text-[10px] font-bold text-green-400 uppercase tracking-[2px]">Pilotos (Crónicas)</div>
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                      {pilots.map((p, i) => (
-                        <div key={i} className="space-y-1.5">
-                          <input value={p.name} onChange={e => updatePilot(i, 'name', e.target.value)}
-                            placeholder={`Piloto ${i + 1}`}
-                            className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-green-400" />
-                          <input value={p.rank} onChange={e => updatePilot(i, 'rank', e.target.value)}
-                            placeholder="Rango"
-                            className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-green-400" />
-                          <input value={p.mech} onChange={e => updatePilot(i, 'mech', e.target.value)}
-                            placeholder="Mech asignado"
-                            className="w-full h-7 bg-surface-container-lowest border border-green-400/20 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-green-400" />
-                        </div>
-                      ))}
-                    </div>
                   </div>
 
                   {/* ─ Diseño UI ─ */}

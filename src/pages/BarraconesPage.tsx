@@ -4,6 +4,7 @@ import { Download, Upload, Plus, Trash2, Cloud, Save, Loader } from 'lucide-reac
 import { useBarracones } from '@/hooks/useBarracones';
 import { BarraconesPortada } from '@/components/barracones/BarraconesPortada';
 import { FichaHeraldica }    from '@/components/barracones/FichaHeraldica';
+import { MechAssignmentBar } from '@/components/barracones/MechAssignmentBar';
 import { SheetsPanel }       from '@/components/barracones/SheetsPanel';
 import { CombatePanel }      from '@/components/barracones/CombatePanel';
 import { pilotSlug } from '@/lib/roster';
@@ -238,6 +239,8 @@ export function BarraconesPage() {
 
           {/* FICHA */}
           {tab === 'ficha' && (
+            <>
+            <MechAssignmentBar pilotIdx={activeIdx} />
             <FichaHeraldica
               pilot={pilot}
               pilotImg={activeRosterEntry ? `${BASE}pilot-${pilotSlug(activeRosterEntry.jugador)}.png` : undefined}
@@ -251,6 +254,7 @@ export function BarraconesPage() {
               onUpgradeAttr={sim.upgradeAttr}
               onAddSkill={sim.addSkill}
             />
+            </>
           )}
 
           {/* COMBATE */}
