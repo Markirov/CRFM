@@ -119,11 +119,11 @@ export function findMechByName(mechs: CatalogMech[], name: string): CatalogMech 
   if (!name) return null;
   const q = name.trim().toLowerCase();
   // Match exacto primero
-  const exact = mechs.find(m => m.fullName.toLowerCase() === q);
+  const exact = mechs.find(m => m?.fullName?.toLowerCase() === q);
   if (exact) return exact;
   // Substring: chassis + model
   return mechs.find(m =>
-    q.includes(m.chassis.toLowerCase()) &&
+    m?.chassis && q.includes(m.chassis.toLowerCase()) &&
     (!m.model || q.includes(m.model.toLowerCase()))
   ) ?? null;
 }

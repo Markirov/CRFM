@@ -889,8 +889,7 @@ export function ComisionPage() {
         imgScale:   meta.imgScale,
         imgOffsetX: meta.imgOffsetX,
       };
-    } catch (e) {
-      console.error('[ComisionPage] mechCards error i=', i, 'r=', r, 'err=', e);
+    } catch {
       return null;
     }
   });
