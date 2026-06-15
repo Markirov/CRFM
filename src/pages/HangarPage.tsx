@@ -174,7 +174,10 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   const suggestions = useMemo(() => {
     if (!catalog || query.trim().length < 2) return [];
     const q = query.trim().toLowerCase();
-    return catalog.mechs.filter(m => m.fullName.toLowerCase().includes(q)).slice(0, 12);
+    return catalog.mechs.filter(m => {
+      const full = m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`;
+      return full.toLowerCase().includes(q);
+    }).slice(0, 12);
   }, [catalog, query]);
 
   // Compra
@@ -185,7 +188,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
   const handleSelect = (m: CatalogMech) => {
     setSelected(m);
-    setQuery(m.fullName);
+    setQuery(m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`.trim());
     setPrecio(m.cost ?? 0);
   };
 
@@ -267,7 +270,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
                   onClick={() => handleSelect(m)}
                   className="w-full text-left px-2 py-1 font-mono text-[10px] text-on-surface hover:bg-primary-container/15 flex items-center justify-between gap-2"
                 >
-                  <span>{m.fullName}</span>
+                  <span>{m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
                   <span className="text-secondary/50 text-[9px]">{m.tons}t · BV {m.bv2}</span>
                 </button>
               </li>
