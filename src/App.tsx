@@ -4,6 +4,7 @@ import { Loader } from 'lucide-react';
 import { Sidebar } from '@/components/shell/Sidebar';
 import { Header } from '@/components/shell/Header';
 import { SectionTabs } from '@/components/shell/SectionTabs';
+import { RouteErrorBoundary } from '@/components/shell/RouteErrorBoundary';
 import { useAppStore } from '@/lib/store';
 import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig } from '@/lib/firebase-service';
@@ -122,6 +123,7 @@ export function App() {
           ${hasTabs ? '' : 'mt-12 h-[calc(100vh-48px)]'}
         `}
       >
+        <RouteErrorBoundary key={location.pathname}>
         <Suspense fallback={<RouteSpinner />}>
           <Routes>
             <Route path="/"               element={<Navigate to="/portada" replace />} />
@@ -143,6 +145,7 @@ export function App() {
             <Route path="/logros"         element={<LogrosPage />} />
           </Routes>
         </Suspense>
+        </RouteErrorBoundary>
       </main>
 
       {/* Background decoration */}
