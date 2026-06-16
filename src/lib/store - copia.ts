@@ -3,6 +3,8 @@ import type { CampaignConfig, Palette } from './types';
 import { saveConfigBatch } from './firebase-service';
 import type { RosterEntry } from './roster';
 
+export type UserRole = 'admin' | 'dm' | 'pj' | null;
+
 interface AppState {
   campaign: CampaignConfig;
   setCampaign: (patch: Partial<CampaignConfig>) => void;
@@ -38,6 +40,10 @@ interface AppState {
   /** Slot de simulador a auto-cargar cuando se abre TallerModal desde botón llave. */
   tallerAutoLoadSlot: number | null;
   setTallerAutoLoadSlot: (v: number | null) => void;
+
+  /** Rol del usuario autenticado, leído del Custom Claim de Firebase Auth. */
+  userRole: UserRole;
+  setUserRole: (r: UserRole) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -91,4 +97,7 @@ export const useAppStore = create<AppState>((set) => ({
 
   tallerAutoLoadSlot: null,
   setTallerAutoLoadSlot: (v) => set({ tallerAutoLoadSlot: v }),
+
+  userRole: null,
+  setUserRole: (r) => set({ userRole: r }),
 }));

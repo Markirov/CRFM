@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { CampaignConfig, Palette } from './types';
 import { saveConfigBatch } from './firebase-service';
 import type { RosterEntry } from './roster';
+import type { SectionPerm } from './permissions-service';
+import { DEFAULT_PERMISSIONS } from './permissions-service';
 
 export type UserRole = 'admin' | 'dm' | 'pj' | null;
 
@@ -44,6 +46,10 @@ interface AppState {
   /** Rol del usuario autenticado, leído del Custom Claim de Firebase Auth. */
   userRole: UserRole;
   setUserRole: (r: UserRole) => void;
+
+  /** Matriz de permisos cargada desde Firestore (reactiva via onSnapshot). */
+  perms: SectionPerm[];
+  setPerms: (p: SectionPerm[]) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -100,4 +106,8 @@ export const useAppStore = create<AppState>((set) => ({
 
   userRole: null,
   setUserRole: (r) => set({ userRole: r }),
+
+  perms: DEFAULT_PERMISSIONS,
+  setPerms: (p) => set({ perms: p }),
 }));
+

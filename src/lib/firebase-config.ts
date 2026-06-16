@@ -31,4 +31,6 @@ export const ALLOWED_EMAILS = [
   'marcosfenollar@gmail.com',
   'jdelamotasanchis@gmail.com',
   'torrifm@gmail.com',
+  'joanselva@gmail.com',
+  'inquisidordelamente@gmail.com',
 ] as const;

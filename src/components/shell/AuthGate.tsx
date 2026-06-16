@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, signInWithRedirect, signOut, getRedirectResult, type User } from 'firebase/auth';
 import { auth, googleProvider, ALLOWED_EMAILS } from '@/lib/firebase-config';
 import { useAuthRole } from '@/lib/auth-roles';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
@@ -15,26 +15,30 @@ export function AuthGate({ children }: Props) {
   useAuthRole();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, u => {
-      setUser(u);
-      setLoading(false);
-    });
-    return unsub;
-  }, []);
-
-  const handleLogin = async () => {
-    setError('');
-    try {
-      const res = await signInWithPopup(auth, googleProvider);
+  // Recoger resultado del redirect al volver de Google
+  getRedirectResult(auth).then(async (res) => {
+    if (res?.user) {
       const email = res.user.email?.toLowerCase() ?? '';
       if (!ALLOWED_EMAILS.includes(email as any)) {
         await signOut(auth);
         setError(`Acceso denegado para ${email}`);
       }
-    } catch (e: any) {
-      setError(e?.message ?? 'Error de login');
     }
-  };
+  }).catch((e) => {
+    setError(e?.message ?? 'Error de login');
+  });
+
+  const unsub = onAuthStateChanged(auth, u => {
+    setUser(u);
+    setLoading(false);
+  });
+  return unsub;
+}, []);
+
+const handleLogin = async () => {
+  setError('');
+  await signInWithRedirect(auth, googleProvider);
+};
 
   if (loading) {
     return (

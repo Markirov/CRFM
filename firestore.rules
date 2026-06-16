@@ -1,21 +1,54 @@
 rules_version = '2';
 
 // ═══════════════════════════════════════════════════════════════
-// CRFM — Firestore Security Rules v2
-// Acceso por roles via Custom Claims (role: 'admin' | 'dm' | 'pj').
-// Asignar con: npx tsx scripts/set-role.ts email@x.com admin|dm|pj
+// CRFM — Firestore Security Rules v2 (Unificadas)
+// Acceso por roles (admin | dm | pj) + Correos fundadores
 // ═══════════════════════════════════════════════════════════════
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
     // ── Helpers ──────────────────────────────────────────────
-    function role()       { return request.auth.token.role; }
-    function isAdmin()    { return role() == 'admin'; }
-    function isDM()       { return role() == 'dm'; }
-    function isPJ()       { return role() == 'pj'; }
+
+    function isHardcodedAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'marcosfenollar@gmail.com';
+    }
+
+    function isHardcodedPJ() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'jdelamotasanchis@gmail.com',
+          'j.sevabernabeu@gmail.com',
+          'inquisidordelamente@gmail.com',
+        ];
+    }
+
+    function isHardcodedDM() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'torrifm@gmail.com';
+    }
+
+    function claimRole() {
+      return request.auth != null && request.auth.token.role;
+    }
+
+    function isAdmin()    { return isHardcodedAdmin() || claimRole() == 'admin'; }
+    function isDM()       { return isHardcodedDM()    || claimRole() == 'dm'; }
+    function isPJ()       { return isHardcodedPJ()    || claimRole() == 'pj'; }
     function isStaff()    { return isAdmin() || isDM(); }
     function hasAnyRole() { return isAdmin() || isDM() || isPJ(); }
+
+    // ── Permisos UI (matriz editable desde SecretMenu) ────────
+    // PJ y DM leen para que la app aplique readOnly en tiempo real.
+    // Solo admin escribe.
+    match /config/permisos {
+      allow read:  if hasAnyRole();
+      allow write: if isAdmin();
+    }
 
     // ── Config campaña: solo admin ────────────────────────────
     match /config/{doc} {
@@ -30,8 +63,6 @@ service cloud.firestore {
     }
 
     // ── Personajes / Barracones ───────────────────────────────
-    // Todos leen. Staff escribe cualquiera.
-    // PJ escribe solo su propio doc (match por email en el doc).
     match /personajes/{name} {
       allow read:  if hasAnyRole();
       allow write: if isStaff()
@@ -44,7 +75,7 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
-    // ── Crónicas: staff R+W, PJ solo R ───────────────────────
+    // ── Cronicas: staff R+W, PJ solo R ───────────────────────
     match /cronicas/{doc} {
       allow read:  if hasAnyRole();
       allow write: if isStaff();
@@ -56,7 +87,7 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
-    // ── Roles: solo admin R+W ─────────────────────────────────
+    // ── Roles: solo admin ─────────────────────────────────────
     match /roles/{doc} {
       allow read, write: if isAdmin();
     }
@@ -66,8 +97,7 @@ service cloud.firestore {
       allow read, write: if hasAnyRole();
     }
 
-    // ── Resto (parteDiario, logros, movimientos, etc.) ────────
-    // Staff R+W, PJ solo R.
+    // ── Resto: staff R+W, PJ solo R ──────────────────────────
     match /{collection}/{doc} {
       allow read:  if hasAnyRole();
       allow write: if isStaff();

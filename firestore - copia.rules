@@ -56,6 +56,11 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
+    // ── Roles: solo admin R+W ─────────────────────────────────
+    match /roles/{doc} {
+      allow read, write: if isAdmin();
+    }
+
     // ── Fuerzas / Simulador: todos R+W ───────────────────────
     match /fuerzas/{doc} {
       allow read, write: if hasAnyRole();

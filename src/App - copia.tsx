@@ -9,10 +9,10 @@ import { useAppStore } from '@/lib/store';
 import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
-import { usePermissions } from '@/lib/permissions-service';
 
 import { pageLoaders } from '@/lib/page-loaders';
 
+// Pages lazy-loaded — split por ruta. pageLoaders es el single source.
 const ComisionPage          = lazy(() => pageLoaders['/comision']().then(m => ({ default: m.ComisionPage })));
 const ReclutamientoPage     = lazy(() => pageLoaders['/reclutamiento']().then(m => ({ default: m.ReclutamientoPage })));
 const BarraconesPage        = lazy(() => pageLoaders['/barracones']().then(m => ({ default: m.BarraconesPage })));
@@ -41,11 +41,7 @@ function RouteSpinner() {
 
 export function App() {
   const location = useLocation();
-  const { setActivePalette, setCampaign, useLegacyDesigns, setRoster, setRosterLoading, userRole, setPerms } = useAppStore();
-
-  // Permisos reactivos desde Firestore (onSnapshot)
-  const { perms } = usePermissions();
-  useEffect(() => { setPerms(perms); }, [perms, setPerms]);
+  const { setActivePalette, setCampaign, useLegacyDesigns, setRoster, setRosterLoading } = useAppStore();
 
   // Cargar config de campaña desde Firestore al iniciar.
   useEffect(() => {
@@ -72,6 +68,7 @@ export function App() {
         patch.pcJugadores = String(d['PC_JUGADORES'])
           .split(',').map(s => s.trim()).filter(Boolean);
       }
+      // ESTADOMECHS: JSON con %estado por mech (escrito por FuerzaSyncBar al guardar slot 5).
       if (d['ESTADOMECHS']) {
         try {
           const map = JSON.parse(String(d['ESTADOMECHS']));
@@ -80,6 +77,7 @@ export function App() {
       }
       if (Object.keys(patch).length) setCampaign(patch);
 
+      // Hidratar toggle legacy global desde Sheets (sin reescribir a sheets)
       if (d['USE_LEGACY_DESIGNS'] !== undefined) {
         const useLegacy = String(d['USE_LEGACY_DESIGNS']) === '1';
         useAppStore.setState({ useLegacyDesigns: useLegacy });
@@ -88,7 +86,7 @@ export function App() {
     }).catch(() => {});
   }, [setCampaign]);
 
-  // Cargar Roster al arrancar
+  // Cargar Roster (fuente única de pilotos) al arrancar
   useEffect(() => {
     setRosterLoading(true);
     loadRoster()
@@ -104,25 +102,20 @@ export function App() {
   const currentNav = getNavItemByPath(location.pathname);
   const hasTabs = currentNav?.tabs && currentNav.tabs.length > 0;
 
-  // readOnly helper: true si el rol no tiene permiso de escritura en la seccion actual
-  const isReadOnly = (sectionId: string) => {
-    if (userRole === 'admin') return false;
-    if (!userRole) return true;
-    const perm = perms.find(p => p.id === sectionId);
-    if (!perm) return true;
-    return perm[userRole as 'dm' | 'pj'] !== 'write';
-  };
-
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary"
       data-palette={getPaletteForPath(location.pathname)}
     >
+      {/* CRT scanline overlay */}
       <div className="scanline-overlay" />
+
+      {/* Shell */}
       <Sidebar />
       <Header />
       {hasTabs && <SectionTabs tabs={currentNav!.tabs!} />}
 
+      {/* Content area */}
       <main
         style={hasTabs
           ? { marginTop: 'calc(48px + var(--tabs-h, 40px))', height: 'calc(100vh - 48px - var(--tabs-h, 40px))' }
@@ -138,27 +131,28 @@ export function App() {
           <Routes>
             <Route path="/"               element={<Navigate to="/portada" replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
-            <Route path="/comision"       element={<ComisionPage       readOnly={isReadOnly('comision')} />} />
-            <Route path="/reclutamiento"  element={<ReclutamientoPage  readOnly={isReadOnly('reclutamiento')} />} />
-            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy readOnly={isReadOnly('barracones')} /> : <BarraconesPage readOnly={isReadOnly('barracones')} />} />
-            <Route path="/barracones-legacy" element={<BarraconesPageLegacy readOnly={isReadOnly('barracones')} />} />
-            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy readOnly={isReadOnly('hoja')} /> : <HojaServicioPage readOnly={isReadOnly('hoja')} />} />
-            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy readOnly={isReadOnly('hoja')} />} />
-            <Route path="/simulador"      element={<SimuladorPage      readOnly={isReadOnly('simulador')} />} />
-            <Route path="/finanzas"       element={<FinanzasPage       readOnly={isReadOnly('finanzas')} />} />
-            <Route path="/hangar"         element={<HangarPage         readOnly={isReadOnly('hangar')} />} />
-            <Route path="/taller"         element={<TallerPage         readOnly={isReadOnly('taller')} />} />
-            <Route path="/hud"            element={<HudTacticoPage     readOnly={isReadOnly('hud')} />} />
-            <Route path="/ayudas"         element={<AyudasPage         readOnly={isReadOnly('ayudas')} />} />
-            <Route path="/tro"            element={<TROPage            readOnly={isReadOnly('tro')} />} />
-            <Route path="/mapa"           element={<MapaEstelarPage    readOnly={isReadOnly('mapa')} />} />
-            <Route path="/cronicas"       element={<CronicasPage       readOnly={isReadOnly('cronicas')} />} />
-            <Route path="/logros"         element={<LogrosPage         readOnly={isReadOnly('logros')} />} />
+            <Route path="/comision"       element={<ComisionPage />} />
+            <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
+            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
+            <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
+            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
+            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
+            <Route path="/simulador"      element={<SimuladorPage />} />
+            <Route path="/finanzas"       element={<FinanzasPage />} />
+            <Route path="/hangar"         element={<HangarPage />} />
+            <Route path="/taller"         element={<TallerPage />} />
+            <Route path="/hud"            element={<HudTacticoPage />} />
+            <Route path="/ayudas"         element={<AyudasPage />} />
+            <Route path="/tro"            element={<TROPage />} />
+            <Route path="/mapa"            element={<MapaEstelarPage />} />
+            <Route path="/cronicas"       element={<CronicasPage />} />
+            <Route path="/logros"         element={<LogrosPage />} />
           </Routes>
         </Suspense>
         </RouteErrorBoundary>
       </main>
 
+      {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none z-[-1] opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_var(--color-secondary)_0%,_transparent_70%)]" />
       </div>
