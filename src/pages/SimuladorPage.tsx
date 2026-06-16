@@ -169,6 +169,14 @@ export function SimuladorPage() {
     return CAMPAIGN_PILOT_ORDER.map(handle => handle.slice(0, 2).toUpperCase());
   }, [campaignMode]);
 
+  // Lock model swap en modo campaña. Computado pre-early-returns para
+  // mantener orden de hooks estable. slotCount aún no calculado aquí —
+  // usamos length de hangarBySlot. La vista rebana al slotCount real.
+  const lockedSlots = useMemo<boolean[]>(() => {
+    if (!campaignMode) return Array(hangarBySlot.length).fill(false);
+    return hangarBySlot.map(it => !!it);
+  }, [campaignMode, hangarBySlot]);
+
   const handleToggleCampaign = async () => {
     if (campaignMode) {
       // Salir: pregunta si guardar a FUERZACAMPAÑA
@@ -357,14 +365,10 @@ export function SimuladorPage() {
   const slotCount = isMech ? sim.mechSlots.length : sim.vehicleSlots.length;
   const activeIdx = isMech ? sim.currentMechIdx : sim.currentVehicleIdx;
 
-  // ── Lock model swap en modo campaña ──
-  // Slot bloqueado = campaignMode + isMech + hangarBySlot[i] presente.
-  // Significa: el mech del slot lo fija el hangar; no se puede sustituir.
-  const lockedSlots = useMemo<boolean[]>(() => {
-    if (!campaignMode || !isMech) return Array(slotCount).fill(false);
-    return Array.from({ length: slotCount }, (_, i) => !!hangarBySlot[i]);
-  }, [campaignMode, isMech, slotCount, hangarBySlot]);
-  const activeLocked = lockedSlots[activeIdx] === true;
+  // lockedSlots se computa más arriba (antes de early returns) para no
+  // violar reglas de hooks. Aquí se rebanan al slotCount actual.
+  const lockedSlotsForView = isMech ? lockedSlots.slice(0, slotCount) : Array(slotCount).fill(false);
+  const activeLocked = lockedSlotsForView[activeIdx] === true;
 
   const blockMsg = (i: number) => {
     const h = hangarBySlot[i];
@@ -410,7 +414,7 @@ export function SimuladorPage() {
           onSelectIndex={i => isMech ? sim.setCurrentMechIdx(i) : sim.setCurrentVehicleIdx(i)}
           onFileUpload={guardedFileUpload}
           shortLabels={campaignPilots ?? undefined}
-          lockedSlots={lockedSlots}
+          lockedSlots={lockedSlotsForView}
         />
         <FuerzaSyncBar
           dirty={sim.dirty}
