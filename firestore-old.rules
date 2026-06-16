@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// ═══════════════════════════════════════════════════════════════
+// CRFM — Firestore Security Rules
+// Acceso restringido a emails whitelisted (Google sign-in).
+// ═══════════════════════════════════════════════════════════════
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAllowed() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'marcosfenollar@gmail.com',
+          'jdelamotasanchis@gmail.com',
+          'torrifm@gmail.com'
+        ];
+    }
+
+    match /{document=**} {
+      allow read, write: if isAllowed();
+    }
+  }
+}

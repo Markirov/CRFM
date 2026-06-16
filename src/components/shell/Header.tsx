@@ -6,7 +6,7 @@ import { SecretMenu } from './SecretMenu';
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] as const;
 
 export function Header() {
-  const { campaign, toggleSidebar } = useAppStore();
+  const { campaign, toggleSidebar, userRole } = useAppStore();
   const [secretOpen, setSecretOpen] = useState(false);
 
   return (
@@ -38,13 +38,16 @@ export function Header() {
               {MESES[(campaign.campaignMonth || 1) - 1]} de {campaign.campaignYear}
             </span>
           </div>
-          <button
-            onClick={() => setSecretOpen(true)}
-            aria-label="Ajustes"
-            className="w-8 h-8 flex items-center justify-center text-outline hover:text-primary-container transition-colors"
-          >
-            <Settings size={16} />
-          </button>
+
+          {userRole === 'admin' && (
+            <button
+              onClick={() => setSecretOpen(true)}
+              aria-label="Ajustes"
+              className="w-8 h-8 flex items-center justify-center text-outline hover:text-primary-container transition-colors"
+            >
+              <Settings size={16} />
+            </button>
+          )}
         </div>
       </header>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
 import { auth, googleProvider, ALLOWED_EMAILS } from '@/lib/firebase-config';
+import { useAuthRole } from '@/lib/auth-roles';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 
 interface Props { children: ReactNode }
@@ -9,6 +10,9 @@ export function AuthGate({ children }: Props) {
   const [user, setUser]       = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string>('');
+
+  // Carga el Custom Claim 'role' en el store en cuanto hay sesión.
+  useAuthRole();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, u => {

@@ -1,16 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Save, Loader, LogOut } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { useAppStore } from '@/lib/store';
-import { loadConfig, saveConfigBatch, resetLegacyMechAssignments } from '@/lib/firebase-service';
+import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
 import { formatCzar, parseCurrencyValue } from '@/lib/currency-utils';
+import { RolesPanel } from './RolesPanel';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] as const;
 const YEARS = Array.from({ length: 100 }, (_, i) => 3000 + i);
-const PASSWORD = 'Mark';
 
 const COMBAT_DEFAULTS = {
   rangeShort: 0, rangeMedium: 2, rangeLong: 4,
@@ -23,13 +23,9 @@ const COMBAT_DEFAULTS = {
 interface Props { open: boolean; onClose: () => void }
 
 export function SecretMenu({ open, onClose }: Props) {
-  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns } = useAppStore();
-  const [step, setStep] = useState<'password' | 'config'>('password');
-  const [pw, setPw]     = useState('');
-  const [error, setError] = useState(false);
+  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns, userRole } = useAppStore();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [month, setMonth]       = useState(1);
@@ -41,15 +37,11 @@ export function SecretMenu({ open, onClose }: Props) {
   const [treasury, setTreasury] = useState(0);
   const [combat, setCombat]     = useState(COMBAT_DEFAULTS);
 
-  // Reset on open
+  // Load config on open (solo si es admin)
   useEffect(() => {
-    if (open) {
-      setStep('password'); setPw(''); setError(false);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [open]);
+    if (open && userRole === 'admin') loadData();
+  }, [open, userRole]);
 
-  // Load config from Sheets after auth
   const loadData = async () => {
     setLoading(true);
     try {
@@ -71,19 +63,9 @@ export function SecretMenu({ open, onClose }: Props) {
     setLoading(false);
   };
 
-  const verify = () => {
-    if (pw === PASSWORD) {
-      setStep('config');
-      loadData();
-    } else {
-      setError(true); setPw('');
-    }
-  };
-
   const save = async () => {
     setSaving(true);
 
-    // Save config to Firestore
     const tesoreriaStr = formatCzar(treasury).replace(' ₡', '');
     const config: Record<string, string> = {
       'AÑO_CAMPANA': String(year),
@@ -96,7 +78,6 @@ export function SecretMenu({ open, onClose }: Props) {
     };
     try { await saveConfigBatch(config); } catch {}
 
-    // Update Zustand store
     setCampaign({
       campaignYear: year,
       campaignMonth: month,
@@ -104,7 +85,6 @@ export function SecretMenu({ open, onClose }: Props) {
       contratoValor: tesoreriaStr,
     });
 
-    // Save combat config to localStorage
     localStorage.setItem('combatConfig', JSON.stringify(combat));
     localStorage.setItem('CAMPAIGN_YEAR', String(year));
     localStorage.setItem('CAMPAIGN_MONTH', String(month));
@@ -117,228 +97,144 @@ export function SecretMenu({ open, onClose }: Props) {
     setCombat(prev => ({ ...prev, [key]: parseInt(val) || 0 }));
   };
 
-  const [resetState, setResetState] = useState<'idle' | 'running' | 'done' | 'error'>('idle');
-  const [resetMsg, setResetMsg] = useState('');
 
-  const handleResetMechs = async () => {
-    const ok = window.confirm(
-      'Borrar TODAS las asignaciones piloto↔mech legacy?\n\n' +
-      'Esto limpia:\n' +
-      '· PILOTO_N_MECH en config/main (Firestore)\n' +
-      '· Campo `mech` en cada doc personajes/ (Firestore)\n' +
-      '· Cache local de barracones\n\n' +
-      'El hangar (collection hangar/) NO se toca.\n' +
-      'Tras esto, asignar todo desde Hangar/Inventario o ficha piloto.\n\n' +
-      'Acción irreversible. Continuar?'
-    );
-    if (!ok) return;
-    setResetState('running');
-    try {
-      const res = await resetLegacyMechAssignments();
-      if (!res.success) throw new Error(res.error ?? 'fail');
-      // Wipe local cache
-      localStorage.removeItem('barracones_slots_v1');
-      // Wipe store
-      setCampaign({ pilotMechs: ['', '', '', '', '', ''] });
-      setResetMsg(`config: 6 · personajes: ${res.data?.personajesCleared ?? 0}`);
-      setResetState('done');
-    } catch (e: any) {
-      setResetMsg(e?.message ?? 'error');
-      setResetState('error');
-    }
-  };
-
-  if (!open) return null;
+  // Solo admins. Para cualquier otro rol: no renderiza nada.
+  if (!open || userRole !== 'admin') return null;
 
   return (
     <div className="fixed inset-0 z-[9999] bg-black/92 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-background border-2 border-primary-container w-full max-w-[1100px] max-h-[92vh] overflow-hidden flex flex-col"
         onClick={e => e.stopPropagation()}>
 
-        {/* ── PASSWORD STEP ── */}
-        {step === 'password' && (
-          <div className="p-8 flex flex-col items-center gap-4 max-w-sm mx-auto w-full">
-            <h2 className="font-mono text-[12px] font-bold text-primary-container uppercase tracking-[3px]">
-              Configuracion
-            </h2>
-            <p className="font-mono text-[10px] text-outline text-center tracking-widest uppercase">
-              Introduce la contraseña de administrador
-            </p>
-            <input
-              ref={inputRef} type="password" value={pw}
-              onChange={e => { setPw(e.target.value); setError(false); }}
-              onKeyDown={e => e.key === 'Enter' && verify()}
-              placeholder="********"
-              className={`w-full h-10 bg-surface-container-high border px-3 font-mono text-[13px] text-center focus:outline-none ${
-                error ? 'border-error text-error' : 'border-primary-container/40 text-primary-container focus:border-primary-container'
-              }`}
-            />
-            {error && <p className="font-mono text-[9px] text-error">Contraseña incorrecta</p>}
-            <div className="grid grid-cols-2 gap-2 w-full">
-              <button onClick={verify}
-                className="h-9 font-mono text-[10px] font-bold uppercase tracking-widest border-2 border-primary-container text-primary-container hover:bg-primary-container/10 transition-all">
-                Acceder
+        {/* CONFIG */}
+        <>
+          {/* Header bar */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-primary-container/30 shrink-0">
+            <h3 className="font-mono text-[12px] font-bold text-primary-container uppercase tracking-[2px]">
+              Configuracion unificada
+            </h3>
+            <div className="flex gap-2">
+              <button onClick={save} disabled={saving}
+                className="flex items-center gap-1.5 px-3 h-8 bg-green-400/10 border border-green-400 text-green-400 font-mono text-[10px] uppercase tracking-widest hover:bg-green-400/20 disabled:opacity-40 transition-all">
+                {saving ? <Loader size={11} className="animate-spin" /> : <Save size={11} />} Guardar
+              </button>
+              <button onClick={() => signOut(auth)}
+                className="flex items-center gap-1 px-3 h-8 border border-error/40 text-error font-mono text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all"
+                title={auth.currentUser?.email ?? ''}>
+                <LogOut size={11} /> Salir
               </button>
               <button onClick={onClose}
-                className="h-9 font-mono text-[10px] uppercase tracking-widest border border-outline-variant/30 text-outline hover:text-on-surface transition-all">
-                Cancelar
+                className="flex items-center gap-1 px-3 h-8 border border-primary-container/40 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/10 transition-all">
+                <X size={11} /> Cerrar
               </button>
             </div>
           </div>
-        )}
 
-        {/* ── CONFIG STEP ── */}
-        {step === 'config' && (
-          <>
-            {/* Header bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-primary-container/30 shrink-0">
-              <h3 className="font-mono text-[12px] font-bold text-primary-container uppercase tracking-[2px]">
-                Configuracion unificada
-              </h3>
-              <div className="flex gap-2">
-                <button onClick={save} disabled={saving}
-                  className="flex items-center gap-1.5 px-3 h-8 bg-green-400/10 border border-green-400 text-green-400 font-mono text-[10px] uppercase tracking-widest hover:bg-green-400/20 disabled:opacity-40 transition-all">
-                  {saving ? <Loader size={11} className="animate-spin" /> : <Save size={11} />} Guardar
-                </button>
-                <button onClick={() => signOut(auth)}
-                  className="flex items-center gap-1 px-3 h-8 border border-error/40 text-error font-mono text-[10px] uppercase tracking-widest hover:bg-error/10 transition-all"
-                  title={auth.currentUser?.email ?? ''}>
-                  <LogOut size={11} /> Salir
-                </button>
-                <button onClick={onClose}
-                  className="flex items-center gap-1 px-3 h-8 border border-primary-container/40 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/10 transition-all">
-                  <X size={11} /> Cerrar
-                </button>
+          {/* Body */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+            {loading ? (
+              <div className="flex items-center justify-center py-12 gap-2 font-mono text-[10px] text-outline">
+                <Loader size={14} className="animate-spin" /> Cargando configuración…
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-            {/* Body */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-              {loading ? (
-                <div className="flex items-center justify-center py-12 gap-2 font-mono text-[10px] text-outline">
-                  <Loader size={14} className="animate-spin" /> Cargando configuración…
+                {/* Database */}
+                <div className="bg-primary-container/5 border border-primary-container/20 p-3 space-y-2">
+                  <div className="font-mono text-[10px] font-bold text-primary-container uppercase tracking-[2px]">Database / Sistema</div>
+                  <Label>Mes campaña</Label>
+                  <select value={month} onChange={e => setMonth(parseInt(e.target.value))}
+                    className="w-full h-9 bg-surface-container-lowest border border-outline-variant/25 px-2 font-mono text-[11px] text-green-400 focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
+                    {MESES.map((m, i) => <option key={i} value={i + 1}>{m.toUpperCase()}</option>)}
+                  </select>
+                  <Label>Año campaña</Label>
+                  <select value={year} onChange={e => setYear(parseInt(e.target.value))}
+                    className="w-full h-9 bg-surface-container-lowest border border-outline-variant/25 px-2 font-mono text-[11px] text-green-400 focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
+                    {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                  </select>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-                  {/* ─ Database / Sistema ─ */}
-                  <div className="bg-primary-container/5 border border-primary-container/20 p-3 space-y-2">
-                    <div className="font-mono text-[10px] font-bold text-primary-container uppercase tracking-[2px]">Database / Sistema</div>
-                    <Label>Mes campaña</Label>
-                    <select value={month} onChange={e => setMonth(parseInt(e.target.value))}
-                      className="w-full h-9 bg-surface-container-lowest border border-outline-variant/25 px-2 font-mono text-[11px] text-green-400 focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
-                      {MESES.map((m, i) => <option key={i} value={i + 1}>{m.toUpperCase()}</option>)}
-                    </select>
-                    <Label>Año campaña</Label>
-                    <select value={year} onChange={e => setYear(parseInt(e.target.value))}
-                      className="w-full h-9 bg-surface-container-lowest border border-outline-variant/25 px-2 font-mono text-[11px] text-green-400 focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
-                      {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
-                    </select>
-                  </div>
+                {/* Cronicas */}
+                <div className="bg-primary-container/5 border border-primary-container/20 p-3 space-y-2">
+                  <div className="font-mono text-[10px] font-bold text-primary-container uppercase tracking-[2px]">Crónicas / Campaña</div>
+                  <Label>Compañía</Label>
+                  <Input value={company} onChange={setCompany} />
+                  <Label>Sistema</Label>
+                  <Input value={system} onChange={setSystem} />
+                  <Label>Facción</Label>
+                  <Input value={faction} onChange={setFaction} />
+                  <Label>Prompt instrucciones</Label>
+                  <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={3}
+                    className="w-full bg-surface-container-lowest border border-outline-variant/25 px-2 py-1.5 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container resize-none custom-scrollbar" />
+                </div>
 
-                  {/* ─ Crónicas / Campaña ─ */}
-                  <div className="bg-primary-container/5 border border-primary-container/20 p-3 space-y-2">
-                    <div className="font-mono text-[10px] font-bold text-primary-container uppercase tracking-[2px]">Crónicas / Campaña</div>
-                    <Label>Compañía</Label>
-                    <Input value={company} onChange={setCompany} />
-                    <Label>Sistema</Label>
-                    <Input value={system} onChange={setSystem} />
-                    <Label>Facción</Label>
-                    <Input value={faction} onChange={setFaction} />
-                    <Label>Prompt instrucciones</Label>
-                    <textarea value={prompt} onChange={e => setPrompt(e.target.value)} rows={3}
-                      className="w-full bg-surface-container-lowest border border-outline-variant/25 px-2 py-1.5 font-mono text-[10px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container resize-none custom-scrollbar" />
-                  </div>
-
-                  {/* ─ Tesorería (override directo, sin asiento) ─ */}
-                  <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">
-                        Tesorería · Override directo
-                      </div>
-                      <div className="font-mono text-[8px] text-red-400/60 uppercase tracking-widest">
-                        ⚠ No crea asiento · No aparece en libro mayor
-                      </div>
-                    </div>
-                    <Label>Saldo actual (₡)</Label>
-                    <input
-                      type="number"
-                      value={treasury}
-                      onChange={e => setTreasury(parseInt(e.target.value) || 0)}
-                      onFocus={e => e.target.select()}
-                      className="w-full h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
-                    />
-                    <div className="font-mono text-[9px] text-outline">
-                      Equivalente formateado: {formatCzar(treasury)}
-                    </div>
-                  </div>
-
-                  {/* ─ Migración Hangar (one-shot) ─ */}
-                  <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-2">
+                {/* Tesoreria */}
+                <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-2">
+                  <div className="flex items-center justify-between">
                     <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">
-                      Migración · Reset asignaciones piloto↔mech
+                      Tesorería · Override directo
                     </div>
-                    <div className="font-mono text-[9px] text-outline leading-relaxed">
-                      Borra todos los mechs asignados a pilotos desde Sheets/legacy.
-                      No toca <code className="text-red-400/80">hangar/</code>.
-                      Tras esto reasignar desde Hangar/Inventario o ficha piloto.
-                    </div>
-                    <button
-                      onClick={handleResetMechs}
-                      disabled={resetState === 'running'}
-                      className={`w-full h-9 font-mono text-[10px] uppercase tracking-widest border transition-colors ${
-                        resetState === 'done'    ? 'border-primary bg-primary/15 text-primary'
-                        : resetState === 'error' ? 'border-error bg-error/15 text-error'
-                        : 'border-red-400 bg-red-400/10 text-red-400 hover:bg-red-400/20'
-                      }`}
-                    >
-                      {resetState === 'running' ? 'Borrando…'
-                        : resetState === 'done'  ? `✓ Limpiado (${resetMsg})`
-                        : resetState === 'error' ? `✗ ${resetMsg}`
-                        : 'Borrar asignaciones piloto↔mech (legacy)'}
-                    </button>
-                  </div>
-
-                  {/* ─ Diseño UI ─ */}
-                  <div className="lg:col-span-2 bg-amber-400/5 border border-amber-400/30 p-3 space-y-2">
-                    <div className="font-mono text-[10px] font-bold text-amber-400 uppercase tracking-[2px]">Diseño UI</div>
-                    <label className="flex items-center gap-3 cursor-pointer select-none py-2">
-                      <input
-                        type="checkbox"
-                        checked={useLegacyDesigns}
-                        onChange={e => setUseLegacyDesigns(e.target.checked)}
-                        className="w-4 h-4 accent-amber-400 cursor-pointer"
-                      />
-                      <span className="font-mono text-[11px] text-on-surface">
-                        Usar versiones legacy (Barracones · Hoja de Servicio)
-                      </span>
-                      <span className="font-mono text-[9px] text-outline ml-auto">
-                        {useLegacyDesigns ? 'LEGACY' : 'MODERNO'}
-                      </span>
-                    </label>
-                    <div className="font-mono text-[9px] text-outline">
-                      Off → diseños nuevos (P2 Medallón / P3 Two-Tone). On → versiones P1 originales.
+                    <div className="font-mono text-[8px] text-red-400/60 uppercase tracking-widest">
+                      ⚠ No crea asiento · No aparece en libro mayor
                     </div>
                   </div>
-
-                  {/* ─ Combate (modificadores) ─ */}
-                  <div className="lg:col-span-2 bg-secondary/5 border border-secondary/20 p-3 space-y-2">
-                    <div className="font-mono text-[10px] font-bold text-secondary uppercase tracking-[2px]">Combate (modificadores)</div>
-                    <div className="grid grid-cols-11 gap-1.5">
-                      {(Object.keys(COMBAT_DEFAULTS) as (keyof typeof COMBAT_DEFAULTS)[]).map(key => (
-                        <input key={key} type="number"
-                          value={combat[key]}
-                          onChange={e => updateCombat(key, e.target.value)}
-                          title={key}
-                          className="h-8 bg-surface-container-lowest border border-secondary/20 px-1 font-mono text-[11px] text-on-surface text-center focus:outline-none focus:border-secondary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none" />
-                      ))}
-                    </div>
+                  <Label>Saldo actual (₡)</Label>
+                  <input
+                    type="number"
+                    value={treasury}
+                    onChange={e => setTreasury(parseInt(e.target.value) || 0)}
+                    onFocus={e => e.target.select()}
+                    className="w-full h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
+                  />
+                  <div className="font-mono text-[9px] text-outline">
+                    Equivalente formateado: {formatCzar(treasury)}
                   </div>
                 </div>
-              )}
-            </div>
-          </>
-        )}
+
+                <div className="lg:col-span-2 bg-amber-400/5 border border-amber-400/30 p-3 space-y-2">
+                  <div className="font-mono text-[10px] font-bold text-amber-400 uppercase tracking-[2px]">Diseño UI</div>
+                  <label className="flex items-center gap-3 cursor-pointer select-none py-2">
+                    <input
+                      type="checkbox"
+                      checked={useLegacyDesigns}
+                      onChange={e => setUseLegacyDesigns(e.target.checked)}
+                      className="w-4 h-4 accent-amber-400 cursor-pointer"
+                    />
+                    <span className="font-mono text-[11px] text-on-surface">
+                      Usar versiones legacy (Barracones · Hoja de Servicio)
+                    </span>
+                    <span className="font-mono text-[9px] text-outline ml-auto">
+                      {useLegacyDesigns ? 'LEGACY' : 'MODERNO'}
+                    </span>
+                  </label>
+                  <div className="font-mono text-[9px] text-outline">
+                    Off → diseños nuevos (P2 Medallón / P3 Two-Tone). On → versiones P1 originales.
+                  </div>
+                </div>
+
+                {/* Roles extra */}
+                <div className="lg:col-span-2 bg-red-400/5 border border-red-400/30 p-3 space-y-3">
+                  <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">Gestión de Roles</div>
+                  <RolesPanel />
+                </div>
+
+                {/* Combate */}
+                <div className="lg:col-span-2 bg-secondary/5 border border-secondary/20 p-3 space-y-2">
+                  <div className="font-mono text-[10px] font-bold text-secondary uppercase tracking-[2px]">Combate (modificadores)</div>
+                  <div className="grid grid-cols-11 gap-1.5">
+                    {(Object.keys(COMBAT_DEFAULTS) as (keyof typeof COMBAT_DEFAULTS)[]).map(key => (
+                      <input key={key} type="number"
+                        value={combat[key]}
+                        onChange={e => updateCombat(key, e.target.value)}
+                        title={key}
+                        className="h-8 bg-surface-container-lowest border border-secondary/20 px-1 font-mono text-[11px] text-on-surface text-center focus:outline-none focus:border-secondary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       </div>
     </div>
   );
