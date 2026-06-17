@@ -9,7 +9,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCNxTd8StB__GsBaIWto-FAk0uVJm9yyAI",
-  authDomain: "crfm-dc873.firebaseapp.com",
+  authDomain: "legadometalico.com",
   projectId: "crfm-dc873",
   storageBucket: "crfm-dc873.firebasestorage.app",
   messagingSenderId: "191640647112",

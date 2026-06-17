@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import {
   readCronicas, addCronica, updateCronica, deleteCronica,
   loadCronicasFromSheets, sortCronicas,
@@ -484,6 +485,7 @@ function ParteSection() {
 
 export function CronicasPage() {
   const { campaign } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('cronicas');
   const year  = campaign.campaignYear  ?? 3026;
   const month = campaign.campaignMonth ?? 1;
 
@@ -560,6 +562,19 @@ export function CronicasPage() {
     if (!confirm('¿Borrar entrada de Crónicas?')) return;
     deleteCronica(id);
     setEntries(readCronicas());
+  }
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Crónicas</div>
+        </div>
+      </div>
+    );
   }
 
   return (

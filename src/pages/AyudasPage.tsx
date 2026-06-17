@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft } from 'lucide-react';
+import { usePerm } from '@/hooks/usePerm';
 import { MechLocationsView }    from '@/components/ayudas/MechLocationsView';
 import { MechCriticalsView }    from '@/components/ayudas/MechCriticalsView';
 import { VehicleTablesView }    from '@/components/ayudas/VehicleTablesView';
@@ -77,6 +78,20 @@ const VIEW_TITLES: Record<View, string> = {
 
 export function AyudasPage() {
   const [view, setView] = useState<View>('hub');
+  const { readable, writable, loading: permLoading } = usePerm('ayudas');
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Ayudas</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 animate-[fadeInUp_0.3s_ease]">

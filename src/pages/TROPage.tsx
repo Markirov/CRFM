@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, Loader, ShoppingCart } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { parseSSWBasic, type ParsedSSWBasic } from '@/lib/ssw-basic';
 
 type UnitKind = 'mechs' | 'vehicles' | 'infantry' | 'battlearmor';
@@ -49,6 +50,7 @@ type SortBy = 'name' | 'bv2' | 'year' | 'tons';
 
 export function TROPage() {
   const campaignYear = useAppStore(s => s.campaign.campaignYear);
+  const { readable, writable, loading: permLoading } = usePerm('tro');
   const [catalog, setCatalog]   = useState<CatalogEntry[]>([]);
   const [loading, setLoading]   = useState(true);
   const [query, setQuery]       = useState('');
@@ -136,6 +138,19 @@ export function TROPage() {
     if (sortBy === col) setSortDesc(d => !d);
     else { setSortBy(col); setSortDesc(col !== 'name'); }
   };
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el TRO</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 animate-[fadeInUp_0.3s_ease]" style={{ height: 'calc(100vh - 88px)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>

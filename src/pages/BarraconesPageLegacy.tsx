@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Download, Upload, Plus, Trash2, Cloud, Save, Loader } from 'lucide-react';
 import { useBarracones } from '@/hooks/useBarracones';
+import { usePerm } from '@/hooks/usePerm';
 import { BarraconesPortada } from '@/components/barracones/BarraconesPortada';
 import { FichaHeraldicaLegacy as FichaHeraldica } from '@/components/barracones/FichaHeraldicaLegacy';
 import { SheetsPanel }       from '@/components/barracones/SheetsPanel';
@@ -32,6 +33,7 @@ export function BarraconesPageLegacy() {
   const [tab, setTab] = useState<Tab>('ficha');
 
   const { barraconesPortada, setBarraconesPortada, campaign } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('barracones');
   const fixedPlayers = DEFAULT_FIXED_PLAYERS.map((fallback, i) => {
     const fromConfig = campaign.pilotNames?.[i]?.trim();
     return fromConfig || fallback;
@@ -52,6 +54,19 @@ export function BarraconesPageLegacy() {
     sim.setActiveIdx(i);
     await sim.sheetsQuickLoad(DEFAULT_FIXED_PLAYERS[i], i);
   };
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Barracones</div>
+        </div>
+      </div>
+    );
+  }
 
   if (barraconesPortada) {
     return (

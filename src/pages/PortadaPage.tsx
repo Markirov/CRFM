@@ -6,6 +6,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { VERSION_DISPLAY } from '@/version';
 
 const SCAN_CYCLE_MS = 14000;
@@ -113,6 +114,7 @@ export function PortadaPage() {
   const navigate  = useNavigate();
   const { campaign } = useAppStore();
   const BASE = import.meta.env.BASE_URL;
+  const { readable, writable, loading: permLoading } = usePerm('comision');
 
   const n = ICONIC_MECHS.length; // 5
 
@@ -150,6 +152,19 @@ export function PortadaPage() {
   const laserPct = progress * 100;
 
   const mesStr = `${MESES[(campaign.campaignMonth || 1) - 1].toUpperCase()} ${campaign.campaignYear || 3026}`;
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver la Portada</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{

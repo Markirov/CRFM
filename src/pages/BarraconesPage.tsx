@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Download, Upload, Plus, Trash2, Cloud, Save, Loader } from 'lucide-react';
 import { useBarracones } from '@/hooks/useBarracones';
+import { usePerm } from '@/hooks/usePerm';
 import { BarraconesPortada } from '@/components/barracones/BarraconesPortada';
 import { FichaHeraldica }    from '@/components/barracones/FichaHeraldica';
 import { MechAssignmentBar } from '@/components/barracones/MechAssignmentBar';
@@ -21,6 +22,7 @@ export function BarraconesPage() {
   const [tab, setTab] = useState<Tab>('ficha');
 
   const { barraconesPortada, setBarraconesPortada, roster, rosterLoading } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('barracones');
 
   const FIXED_COUNT = roster.length;
   const isFixed = activeIdx < FIXED_COUNT;
@@ -40,6 +42,19 @@ export function BarraconesPage() {
     sim.setActiveIdx(i);
     await sim.sheetsQuickLoad(roster[i].jugador, i);
   };
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Barracones</div>
+        </div>
+      </div>
+    );
+  }
 
   // Loading state mientras roster carga
   if (rosterLoading) {

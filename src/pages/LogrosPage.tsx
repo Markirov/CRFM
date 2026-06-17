@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { loadLogros } from '@/lib/firebase-service';
+import { usePerm } from '@/hooks/usePerm';
 import { pilotSlug, findByJugador } from '@/lib/roster';
 import { Loader } from 'lucide-react';
 
@@ -20,6 +21,7 @@ interface Logro {
 
 export function LogrosPage() {
   const { roster } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('logros');
   const [logros, setLogros] = useState<Logro[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
@@ -46,6 +48,19 @@ export function LogrosPage() {
       .finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
   }, []);
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Logros</div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

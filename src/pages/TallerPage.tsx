@@ -18,6 +18,7 @@ import { GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
 import {
   deriveDamageFromSession, configFromCatalog,
@@ -41,6 +42,7 @@ import {
 
 export function TallerPage() {
   const { activeSubTab, setActiveSubTab, campaign } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('taller');
   type View = 'factura' | 'prioridades' | 'mantenimiento';
   const view: View =
     activeSubTab === 'factura'       ? 'factura'
@@ -57,6 +59,19 @@ export function TallerPage() {
     () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
     [campaign?.campaignYear, campaign?.campaignMonth],
   );
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Taller</div>
+        </div>
+      </div>
+    );
+  }
 
   if (view === 'prioridades')   return <PrioridadesTab />;
   if (view === 'mantenimiento') return <MantenimientoTab />;

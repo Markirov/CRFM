@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { User, Loader, CheckCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { getVeterancy } from '@/lib/barracones-data';
 import { loadPlayer, registerMission, registerXPExpense } from '@/lib/firebase-service';
+import { usePerm } from '@/hooks/usePerm';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -62,6 +63,7 @@ export function HojaServicioPageLegacy() {
     })),
   );
 
+  const { readable, writable, loading: permLoading } = usePerm('hoja');
   const [missionType, setMissionType] = useState('EXPERIENCIA / BALANCE');
   const [duration, setDuration]       = useState('24:00:00');
   const [missionNote, setMissionNote] = useState('MISION COMPLETADA');
@@ -161,6 +163,20 @@ export function HojaServicioPageLegacy() {
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Hoja de Servicio</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 pb-20 animate-[fadeInUp_0.3s_ease]">
 

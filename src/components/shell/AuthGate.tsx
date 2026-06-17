@@ -17,16 +17,23 @@ export function AuthGate({ children }: Props) {
   useEffect(() => {
   // Recoger resultado del redirect al volver de Google
   getRedirectResult(auth).then(async (res) => {
-    if (res?.user) {
-      const email = res.user.email?.toLowerCase() ?? '';
-      if (!ALLOWED_EMAILS.includes(email as any)) {
-        await signOut(auth);
-        setError(`Acceso denegado para ${email}`);
-      }
+  console.log('=== REDIRECT RESULT ===', res);
+  if (res?.user) {
+    const email = res.user.email?.toLowerCase() ?? '';
+    console.log('=== EMAIL ===', email);
+    console.log('=== ALLOWED ===', ALLOWED_EMAILS);
+    console.log('=== MATCH ===', ALLOWED_EMAILS.includes(email as any));
+    if (!ALLOWED_EMAILS.includes(email as any)) {
+      await signOut(auth);
+      setError(`Acceso denegado para ${email}`);
     }
-  }).catch((e) => {
-    setError(e?.message ?? 'Error de login');
-  });
+  } else {
+    console.log('=== NO USER EN REDIRECT RESULT ===');
+  }
+}).catch((e) => {
+  console.error('=== ERROR EN REDIRECT RESULT ===', e);
+  setError(e?.message ?? 'Error de login');
+});
 
   const unsub = onAuthStateChanged(auth, u => {
     setUser(u);

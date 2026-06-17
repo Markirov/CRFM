@@ -3,14 +3,18 @@ import { NAV_SECTIONS } from '@/lib/navigation';
 import { useAppStore } from '@/lib/store';
 import { preloadByPath } from '@/lib/page-loaders';
 import { VERSION_DISPLAY } from '@/version';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase-config';
+import { LogOut } from 'lucide-react';
+import { usePermissions, canRead } from '@/lib/permissions-service';
 
 export function Sidebar() {
   const location = useLocation();
-  const { sidebarOpen, setSidebarOpen, setSimuladorPortada, setBarraconesPortada } = useAppStore();
+  const { sidebarOpen, setSidebarOpen, setSimuladorPortada, setBarraconesPortada, userRole } = useAppStore();
+  const { perms, loading: permsLoading } = usePermissions();
 
   return (
     <>
-      {/* Mobile backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-[149] 2xl:hidden"
@@ -43,43 +47,62 @@ export function Sidebar() {
         </Link>
 
         {/* Nav sections */}
-        {NAV_SECTIONS.map((section) => (
-          <div key={section.label}>
-            <div className="font-headline text-[9px] text-outline tracking-[2px] uppercase px-2 pt-3 pb-1 select-none">
-              {section.label}
+        {NAV_SECTIONS.map((section) => {
+          const visibleItems = section.items.filter(item =>
+  permsLoading || !userRole || canRead(perms, item.id, userRole)
+          );
+          if (visibleItems.length === 0) return null;
+          return (
+            <div key={section.label}>
+              <div className="font-headline text-[9px] text-outline tracking-[2px] uppercase px-2 pt-3 pb-1 select-none">
+                {section.label}
+              </div>
+              {visibleItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.path}
+                    onMouseEnter={() => preloadByPath(item.path)}
+                    onFocus={() => preloadByPath(item.path)}
+                    onTouchStart={() => preloadByPath(item.path)}
+                    onClick={() => {
+                      setSidebarOpen(false);
+                      if (item.id === 'simulador')  setSimuladorPortada(true);
+                      if (item.id === 'barracones') setBarraconesPortada(true);
+                    }}
+                    className={`
+                      flex items-center gap-2.5 w-full px-3.5 py-2.5
+                      font-headline text-[12px] tracking-wider uppercase
+                      border-l-[3px] transition-all duration-200
+                      no-underline
+                      ${isActive
+                        ? 'bg-primary-container/12 border-l-primary-container text-primary-container'
+                        : 'border-l-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-primary-container'
+                      }
+                    `}
+                  >
+                    <span className="text-[16px] w-5 text-center flex-shrink-0">{item.icon}</span>
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
-            {section.items.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.id}
-                  to={item.path}
-                  onMouseEnter={() => preloadByPath(item.path)}
-                  onFocus={() => preloadByPath(item.path)}
-                  onTouchStart={() => preloadByPath(item.path)}
-                  onClick={() => {
-                    setSidebarOpen(false);
-                    if (item.id === 'simulador')   setSimuladorPortada(true);
-                    if (item.id === 'barracones')  setBarraconesPortada(true);
-                  }}
-                  className={`
-                    flex items-center gap-2.5 w-full px-3.5 py-2.5
-                    font-headline text-[12px] tracking-wider uppercase
-                    border-l-[3px] transition-all duration-200
-                    no-underline
-                    ${isActive
-                      ? 'bg-primary-container/12 border-l-primary-container text-primary-container'
-                      : 'border-l-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-primary-container'
-                    }
-                  `}
-                >
-                  <span className="text-[16px] w-5 text-center flex-shrink-0">{item.icon}</span>
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        ))}
+          );
+        })}
+
+        {/* Logout */}
+        <button
+          onClick={() => signOut(auth)}
+          className="flex items-center gap-2.5 w-full px-3.5 py-2.5 mt-2
+            font-headline text-[12px] tracking-wider uppercase
+            border-l-[3px] border-l-transparent
+            text-error/60 hover:text-error hover:bg-error/10
+            transition-all duration-200"
+        >
+          <LogOut size={16} className="w-5 flex-shrink-0" />
+          Cerrar sesión
+        </button>
 
         {/* Footer */}
         <div className="mt-auto pt-4 px-3 border-t border-outline-variant">

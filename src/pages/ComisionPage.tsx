@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useViewport } from '@/hooks/useViewport';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import type { Pilot } from '@/lib/barracones-types';
 import { calcHp } from '@/lib/barracones-data';
 import { readLog, loadLogFromSheets, relTime } from '@/lib/barracones-log';
@@ -747,6 +748,7 @@ export function ComisionPage() {
   const navigate = useNavigate();
   const BASE = import.meta.env.BASE_URL;
   const { isTabletDown, isMobile } = useViewport();
+  const { readable, writable, loading: permLoading } = usePerm('comision');
 
   // NUEVO: Hook del catálogo global
   const { catalog: mechCatalog } = useMechCatalog();
@@ -907,6 +909,19 @@ export function ComisionPage() {
   const bvTotalFmt   = new Intl.NumberFormat('es-ES').format(bvTotal);
   const mechsOpFmt   = `${ready} / ${total}`;
   const personalFmt  = `${personalAct} / ${personalTot}`;
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver la Comisión</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{

@@ -6,6 +6,7 @@ import type { HangarItem } from '@/lib/hangar-types';
 import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
+import { usePerm } from '@/hooks/usePerm';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
 import { InfantryPanel } from '@/components/simulador/infantry/InfantryPanel';
@@ -51,7 +52,21 @@ function gateCampaignWrite(actionLabel: string): boolean {
 export function SimuladorPage() {
   const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
   const sim = useSimulador();
+  const { readable, writable, loading: permLoading } = usePerm('simulador');
   const [allowClan, setAllowClan] = useState(false);
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Simulador</div>
+        </div>
+      </div>
+    );
+  }
   const [limitToYear, setLimitToYear] = useState(true);
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
@@ -465,7 +480,7 @@ export function SimuladorPage() {
 
             <button
               onClick={sim.handleFire}
-              disabled={!sim.canMechFire || ss.destroyed}
+              disabled={!sim.canMechFire || ss.destroyed || !writable}
               className="w-full bg-error/20 hover:bg-error/40 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2"
             >
               <Crosshair size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin de Turno'}
@@ -487,6 +502,7 @@ export function SimuladorPage() {
               setSelectedSection={sim.setSelectedSection}
               onForceRevive={sim.forceReviveMech}
               onAdjustAmmo={sim.adjustAmmo}
+              readOnly={!writable}
             />
           </div>
 

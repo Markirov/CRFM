@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { useViewport } from '@/hooks/useViewport';
+import { usePerm } from '@/hooks/usePerm';
 import { isActivo } from '@/lib/roster';
 import { calcSalary, RANK_LABELS, type Quality } from '@/lib/salary-calc';
 import { calcHangarMonthlyMaintenance, mechWeightClass, type HangarUnit, type UnitClass } from '@/lib/maintenance-calc';
@@ -123,12 +124,26 @@ const catLabel = (k: LibroMayorCategoria) => CATEGORIAS.find(c => c.key === k)?.
 
 export function FinanzasPage() {
   const { activeSubTab, setActiveSubTab, campaign, roster, setFinanzasPendingModal } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('finanzas');
   // Defaults: si la sub-tab activa no es de Finanzas, mostramos 'home'
   const view: 'home' | 'libro-mayor' | 'personal' =
     activeSubTab === 'libro-mayor' ? 'libro-mayor'
     : activeSubTab === 'personal'  ? 'personal'
     : 'home';
   const campaignDate = getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth);
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Finanzas</div>
+        </div>
+      </div>
+    );
+  }
 
   const goToLibroWithModal = (modal: 'taller' | 'compras' | 'projector' | null) => {
     if (modal) setFinanzasPendingModal(modal);
@@ -150,6 +165,7 @@ export function FinanzasPage() {
         onCompras={()   => goToLibroWithModal('compras')}
         onPersonal={()  => setActiveSubTab('personal')}
         onProjector={() => goToLibroWithModal('projector')}
+        writable={writable}
       />
 
       {view === 'home' && <FinanzasHome />}
@@ -173,9 +189,10 @@ interface FinanzasActionBarProps {
   // onTaller removido — Taller vive en sidebar (/taller)
   onPersonal:  () => void;
   onProjector: () => void;
+  writable?: boolean;
 }
 
-function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal, onProjector }: FinanzasActionBarProps) {
+function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal, onProjector, writable = true }: FinanzasActionBarProps) {
   const BTN_BASE: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: 8,
     padding: '10px 14px',
@@ -205,11 +222,11 @@ function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal,
       <button style={active(activeView === 'libro-mayor')} onClick={onLibro}>
         📒 LIBRO DE CUENTAS
       </button>
-      <button style={BTN_BASE} onClick={onCompras}>🛒 COMPRAS</button>
+      <button style={BTN_BASE} onClick={onCompras} disabled={!writable}>🛒 COMPRAS</button>
       <button style={active(activeView === 'personal')} onClick={onPersonal}>
         👥 PERSONAL
       </button>
-      <button style={BTN_BASE} onClick={onProjector}>📊 PROYECTAR MES</button>
+      <button style={BTN_BASE} onClick={onProjector} disabled={!writable}>📊 PROYECTAR MES</button>
     </div>
   );
 }

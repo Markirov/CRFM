@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { StarMap } from '@/features/starMap/StarMap';
 import { SUCS_YEARS } from '@/features/starMap/constants';
 import { useStarSystems } from '@/features/jumpCalculator/hooks/useStarSystems';
@@ -73,6 +74,7 @@ function SystemSearch({
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export function MapaEstelarPage() {
+  const { readable, writable, loading: permLoading } = usePerm('mapa');
   const { campaign, activeSubTab, setActiveSubTab } = useAppStore();
   const { db }        = useStarSystems();
   const defaultYear   = closestSucsYear(campaign.campaignYear);
@@ -86,6 +88,19 @@ export function MapaEstelarPage() {
       setActiveSubTab('mapa-estelar');
     }
   }, [activeSubTab, setActiveSubTab]);
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Mapa Estelar</div>
+        </div>
+      </div>
+    );
+  }
 
   if (view === 'saltos') {
     return (

@@ -7,6 +7,7 @@ import {
   loadAllEnemigoConfigSlots, saveEnemigoConfigSlot, clearEnemigoConfigSlot,
   type EnemigoSlot, type EnemigoConfigEntry,
 } from '@/lib/firebase-service';
+import { usePerm } from '@/hooks/usePerm';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -148,6 +149,7 @@ export function HudTacticoPage() {
   const [newXP,   setNewXP]   = useState('');
   const [forceName, setForceName] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const { readable, writable, loading: permLoading } = usePerm('hud');
 
   // Player info (loaded from Sheets)
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo[]>(
@@ -299,6 +301,20 @@ export function HudTacticoPage() {
   const canStart = state.enemies.length > 0;
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el HUD Táctico</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-2 sm:p-4 md:p-6 animate-[fadeInUp_0.3s_ease]">
       {/* Header */}

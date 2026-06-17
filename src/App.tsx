@@ -104,15 +104,6 @@ export function App() {
   const currentNav = getNavItemByPath(location.pathname);
   const hasTabs = currentNav?.tabs && currentNav.tabs.length > 0;
 
-  // readOnly helper: true si el rol no tiene permiso de escritura en la seccion actual
-  const isReadOnly = (sectionId: string) => {
-    if (userRole === 'admin') return false;
-    if (!userRole) return true;
-    const perm = perms.find(p => p.id === sectionId);
-    if (!perm) return true;
-    return perm[userRole as 'dm' | 'pj'] !== 'write';
-  };
-
   return (
     <div
       className="h-screen overflow-hidden flex flex-col bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary"
@@ -138,22 +129,22 @@ export function App() {
           <Routes>
             <Route path="/"               element={<Navigate to="/portada" replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
-            <Route path="/comision"       element={<ComisionPage       readOnly={isReadOnly('comision')} />} />
-            <Route path="/reclutamiento"  element={<ReclutamientoPage  readOnly={isReadOnly('reclutamiento')} />} />
-            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy readOnly={isReadOnly('barracones')} /> : <BarraconesPage readOnly={isReadOnly('barracones')} />} />
-            <Route path="/barracones-legacy" element={<BarraconesPageLegacy readOnly={isReadOnly('barracones')} />} />
-            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy readOnly={isReadOnly('hoja')} /> : <HojaServicioPage readOnly={isReadOnly('hoja')} />} />
-            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy readOnly={isReadOnly('hoja')} />} />
-            <Route path="/simulador"      element={<SimuladorPage      readOnly={isReadOnly('simulador')} />} />
-            <Route path="/finanzas"       element={<FinanzasPage       readOnly={isReadOnly('finanzas')} />} />
-            <Route path="/hangar"         element={<HangarPage         readOnly={isReadOnly('hangar')} />} />
-            <Route path="/taller"         element={<TallerPage         readOnly={isReadOnly('taller')} />} />
-            <Route path="/hud"            element={<HudTacticoPage     readOnly={isReadOnly('hud')} />} />
-            <Route path="/ayudas"         element={<AyudasPage         readOnly={isReadOnly('ayudas')} />} />
-            <Route path="/tro"            element={<TROPage            readOnly={isReadOnly('tro')} />} />
-            <Route path="/mapa"           element={<MapaEstelarPage    readOnly={isReadOnly('mapa')} />} />
-            <Route path="/cronicas"       element={<CronicasPage       readOnly={isReadOnly('cronicas')} />} />
-            <Route path="/logros"         element={<LogrosPage         readOnly={isReadOnly('logros')} />} />
+            <Route path="/comision"       element={<ComisionPage />} />
+            <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
+            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
+            <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
+            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
+            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
+            <Route path="/simulador"      element={<SimuladorPage />} />
+            <Route path="/finanzas"       element={<FinanzasPage />} />
+            <Route path="/hangar"         element={<HangarPage />} />
+            <Route path="/taller"         element={<TallerPage />} />
+            <Route path="/hud"            element={<HudTacticoPage />} />
+            <Route path="/ayudas"         element={<AyudasPage />} />
+            <Route path="/tro"            element={<TROPage />} />
+            <Route path="/mapa"           element={<MapaEstelarPage />} />
+            <Route path="/cronicas"       element={<CronicasPage />} />
+            <Route path="/logros"         element={<LogrosPage />} />
           </Routes>
         </Suspense>
         </RouteErrorBoundary>

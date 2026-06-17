@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Trash2, Loader } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, loadHangar, saveHangarItem, deleteHangarItem } from '@/lib/firebase-service';
 import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
@@ -17,6 +18,7 @@ import { parseSSWBasic } from '@/lib/ssw-basic';
 
 export function HangarPage() {
   const { activeSubTab, setActiveSubTab } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('hangar');
   type View = 'inventario' | 'comprar' | 'vender';
   const view: View =
     activeSubTab === 'comprar' ? 'comprar'
@@ -44,6 +46,19 @@ export function HangarPage() {
   };
 
   useEffect(() => { void refresh(); }, []);
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Hangar</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease] max-w-6xl mx-auto">

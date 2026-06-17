@@ -15,6 +15,7 @@ interface Props {
   setSelectedSection: (s: string | null) => void;
   onForceRevive?: () => void;
   onAdjustAmmo?: (binId: number, delta: number) => void;
+  readOnly?: boolean;
 }
 
 interface ZoneDef { top: number; left: number; cols: number; label: string; armorKey: string; isKey: string }
@@ -50,7 +51,7 @@ const MECH_ZONES_QUAD: ZoneDef[] = [
 const DOT = 5;
 const GAP = 1;
 
-export function ArmorDiagram({ state, session, selectedSection, damageAmount, setDamageAmount, onSectionClick, onApplyDamage, setSelectedSection, onForceRevive, onAdjustAmmo }: Props) {
+export function ArmorDiagram({ state, session, selectedSection, damageAmount, setDamageAmount, onSectionClick, onApplyDamage, setSelectedSection, onForceRevive, onAdjustAmmo, readOnly }: Props) {
   const MECH_ZONES = state.isQuad ? MECH_ZONES_QUAD : MECH_ZONES_BIPED;
   const detailRef = useRef<HTMLDivElement>(null);
   useDismissable(detailRef, !!selectedSection, () => setSelectedSection(null));
@@ -172,27 +173,29 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
                 })()}
 
                 {/* Damage/Heal slider */}
-                <div className="pt-2 border-t border-outline-variant">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-secondary/60">{damageAmount < 0 ? 'CURAR:' : 'DAÑO:'}</span>
-                    <span className={`font-bold text-[10px] ${damageAmount < 0 ? 'text-primary' : damageAmount > 0 ? 'text-error' : 'text-secondary/40'}`}>
-                      {damageAmount > 0 ? `+${damageAmount}` : damageAmount}
-                    </span>
+                {!readOnly && (
+                  <div className="pt-2 border-t border-outline-variant">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-secondary/60">{damageAmount < 0 ? 'CURAR:' : 'DAÑO:'}</span>
+                      <span className={`font-bold text-[10px] ${damageAmount < 0 ? 'text-primary' : damageAmount > 0 ? 'text-error' : 'text-secondary/40'}`}>
+                        {damageAmount > 0 ? `+${damageAmount}` : damageAmount}
+                      </span>
+                    </div>
+                    <input type="range" min="-30" max="30" value={damageAmount} onChange={e => setDamageAmount(parseInt(e.target.value))}
+                      className="w-full h-1 appearance-none cursor-pointer"
+                      style={{ accentColor: damageAmount < 0 ? 'var(--p)' : 'var(--error)' }} />
+                    <button onClick={onApplyDamage} disabled={damageAmount === 0}
+                      className={`mt-2 w-full disabled:opacity-50 disabled:cursor-not-allowed py-1 uppercase tracking-widest transition-colors border ${
+                        damageAmount < 0
+                          ? 'bg-primary/20 hover:bg-primary/40 border-primary text-primary'
+                          : 'bg-error/20 hover:bg-error/40 border-error text-error'
+                      }`}
+                    >{damageAmount < 0 ? 'Curar' : 'Aplicar'}</button>
                   </div>
-                  <input type="range" min="-30" max="30" value={damageAmount} onChange={e => setDamageAmount(parseInt(e.target.value))}
-                    className="w-full h-1 appearance-none cursor-pointer"
-                    style={{ accentColor: damageAmount < 0 ? 'var(--p)' : 'var(--error)' }} />
-                  <button onClick={onApplyDamage} disabled={damageAmount === 0}
-                    className={`mt-2 w-full disabled:opacity-50 disabled:cursor-not-allowed py-1 uppercase tracking-widest transition-colors border ${
-                      damageAmount < 0
-                        ? 'bg-primary/20 hover:bg-primary/40 border-primary text-primary'
-                        : 'bg-error/20 hover:bg-error/40 border-error text-error'
-                    }`}
-                  >{damageAmount < 0 ? 'Curar' : 'Aplicar'}</button>
-                </div>
+                )}
 
                 {/* Forzar revivir si mech destruido */}
-                {session.destroyed && onForceRevive && (
+                {session.destroyed && onForceRevive && !readOnly && (
                   <div className="pt-2 border-t border-outline-variant">
                     <div className="text-error text-[8px] mb-1 uppercase tracking-widest">{session.destroyedReason || 'DESTRUIDO'}</div>
                     <button
@@ -203,7 +206,7 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
                 )}
 
                 {/* Ammo bins de esta localización — ajuste manual */}
-                {onAdjustAmmo && (() => {
+                {onAdjustAmmo && !readOnly && (() => {
                   const slotDef = ARMOR_SLOTS.find(a => a.k === selectedSection);
                   const isLoc = slotDef?.ik || selectedSection;
                   const bins = session.ammoBins.filter(b => b.loc === isLoc);

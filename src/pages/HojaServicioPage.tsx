@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getVeterancy } from '@/lib/barracones-data';
 import { useAppStore } from '@/lib/store';
+import { usePerm } from '@/hooks/usePerm';
 import { registerMissionFull, registerXPExpense, commitLibroEntryAndTreasury } from '@/lib/firebase-service';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { sendTelegramNotif, getTelegramToggle } from '@/lib/telegram-service';
@@ -448,6 +449,7 @@ export function HojaServicioPage() {
   const location = useLocation();
 
   const { roster, rosterLoading, campaign } = useAppStore();
+  const { readable, writable, loading: permLoading } = usePerm('hoja');
 
   // Pilotos PC activos (no PNJ). Configuracion.PC_JUGADORES filtra; si vacía → todos activos.
   const pcSet = new Set((campaign.pcJugadores ?? []).map(s => s.toLowerCase()));
@@ -685,6 +687,19 @@ export function HojaServicioPage() {
   };
 
   // ── Render ─────────────────────────────────────────────
+
+  // Bloqueo de lectura
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver Hoja de Servicio</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
