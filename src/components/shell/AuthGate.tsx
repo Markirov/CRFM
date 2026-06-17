@@ -29,9 +29,11 @@ export function AuthGate({ children }: Props) {
     if (!user) { setAuthorized(false); return; }
     const email = user.email?.toLowerCase() ?? '';
     getRoles().then(roles => {
+      console.log('[AuthGate] email:', email, '| roles en Firestore:', roles.length, '| emails:', roles.map(r => r.email));
       const found = roles.some(r => r.email?.toLowerCase() === email);
+      console.log('[AuthGate] found:', found);
       setAuthorized(found);
-    }).catch(() => setAuthorized(false));
+    }).catch(e => { console.error('[AuthGate] getRoles() error:', e); setAuthorized(false); });
   }, [user, loading]);
 
   const handleLogin = async () => {
@@ -41,7 +43,9 @@ export function AuthGate({ children }: Props) {
       if (res?.user) {
         const email = res.user.email?.toLowerCase() ?? '';
         const roles = await getRoles();
+        console.log('[AuthGate LOGIN] email:', email, '| roles:', roles.length, '| emails:', roles.map(r => r.email));
         const found = roles.some(r => r.email?.toLowerCase() === email);
+        console.log('[AuthGate LOGIN] found:', found);
         if (!found) {
           await signOut(auth);
           setError(`Acceso denegado para ${email}. Pide al admin que te añada en Settings → Roles.`);
