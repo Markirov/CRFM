@@ -8,8 +8,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { db } from './firebase-config';
-import { useEffect, useState } from 'react';
+import { signOut } from 'firebase/auth';
+import { db, auth } from './firebase-config';
+import { useEffect, useRef, useState } from 'react';
 import type { UserRole } from './store';
 
 export type PermLevel = 'write' | 'read' | 'none';
@@ -66,18 +67,50 @@ export function usePermissions(): {
 } {
   const [perms, setPerms]     = useState<SectionPerm[]>(DEFAULT_PERMISSIONS);
   const [loading, setLoading] = useState(true);
+  const prevPermsRef = useRef<SectionPerm[] | null>(null);
+  const initialLoadRef = useRef(true);
 
   useEffect(() => {
     const unsub = onSnapshot(PERMISOS_DOC(), snap => {
+      let newPerms: SectionPerm[];
       if (!snap.exists()) {
-        setPerms(DEFAULT_PERMISSIONS);
+        newPerms = DEFAULT_PERMISSIONS;
       } else {
         const stored: SectionPerm[] = snap.data().secciones ?? [];
-        setPerms(DEFAULT_PERMISSIONS.map(def => {
+        newPerms = DEFAULT_PERMISSIONS.map(def => {
           const found = stored.find(s => s.id === def.id);
           return found ?? def;
-        }));
+        });
       }
+
+      // ── Detección de cambios y auto-logout ────────────────────
+      // Solo verificar después de la carga inicial
+      if (!initialLoadRef.current && prevPermsRef.current) {
+        const user = auth.currentUser;
+        if (user) {
+          // Obtener rol del JWT cacheado
+          user.getIdTokenResult(false).then(token => {
+            const role = token.claims.role as UserRole;
+            if (role && role !== 'admin') {
+              // Verificar si algún permiso cambió para este rol
+              const hasChanges = newPerms.some((newPerm, i) => {
+                const oldPerm = prevPermsRef.current![i];
+                if (!oldPerm) return true;
+                return newPerm[role as 'dm' | 'pj'] !== oldPerm[role as 'dm' | 'pj'];
+              });
+
+              if (hasChanges) {
+                console.log(`[permissions] Permisos cambiados para rol "${role}" — forzando re-login`);
+                signOut(auth).catch(() => {});
+              }
+            }
+          }).catch(() => {});
+        }
+      }
+
+      prevPermsRef.current = newPerms;
+      initialLoadRef.current = false;
+      setPerms(newPerms);
       setLoading(false);
     });
     return unsub;
