@@ -1,6 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
-//  auth-roles.ts — Lee el Custom Claim 'role' del JWT de Firebase
-//  y lo sincroniza con el store de Zustand.
+//  auth-roles.ts — Lee el rol del usuario desde:
+//  1. Email hardcodeado (admin bootstrap)
+//  2. Custom Claim 'role' del JWT
+//  3. Colección roles/ de Firestore (fallback)
 //
 //  Uso: llamar useAuthRole() UNA vez en AuthGate (ya autenticado).
 //  El resto de la app lee userRole desde useAppStore().
@@ -10,17 +12,35 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { useAppStore, type UserRole } from '@/lib/store';
+import { getRoles } from '@/lib/role-service';
 
-// Emails hardcodeados (solo admin bootstrap — el resto se gestiona via RolesPanel)
+// Admin bootstrap (único email hardcodeado)
 const HARDCODED_ADMIN = 'marcosfenollar@gmail.com';
 
-function resolveRole(email: string | undefined, claimRole: string | undefined): UserRole {
+async function resolveRole(email: string | undefined): Promise<UserRole> {
   if (!email) return null;
   const e = email.toLowerCase();
-  // Admin hardcoded tiene prioridad (bootstrap)
+
+  // 1. Admin hardcoded (bootstrap)
   if (e === HARDCODED_ADMIN) return 'admin';
-  // Fallback a Custom Claim (gestionado via RolesPanel + Cloud Function)
-  if (claimRole === 'admin' || claimRole === 'dm' || claimRole === 'pj') return claimRole;
+
+  // 2. Custom Claim del JWT
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdTokenResult(false);
+      const claim = token.claims.role;
+      if (claim === 'admin' || claim === 'dm' || claim === 'pj') return claim;
+    }
+  } catch { /* ignore */ }
+
+  // 3. Firestore roles/ collection (fallback)
+  try {
+    const roles = await getRoles();
+    const found = roles.find(r => r.email?.toLowerCase() === e);
+    if (found?.role) return found.role;
+  } catch { /* ignore */ }
+
   return null;
 }
 
@@ -33,8 +53,7 @@ export function useAuthRole() {
         setUserRole(null);
         return;
       }
-      const token = await user.getIdTokenResult(false);
-      const role = resolveRole(user.email ?? undefined, token.claims.role as string | undefined);
+      const role = await resolveRole(user.email ?? undefined);
       setUserRole(role);
     });
     return unsub;
