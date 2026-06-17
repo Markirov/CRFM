@@ -1,7 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
-import { auth, googleProvider, ALLOWED_EMAILS } from '@/lib/firebase-config';
+import { auth, googleProvider } from '@/lib/firebase-config';
 import { useAuthRole } from '@/lib/auth-roles';
+import { getRoles } from '@/lib/role-service';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 
 interface Props { children: ReactNode }
@@ -15,7 +16,6 @@ export function AuthGate({ children }: Props) {
   useAuthRole();
 
   useEffect(() => {
-    // Escucha activa del estado de la autenticación
     const unsub = onAuthStateChanged(auth, u => {
       setUser(u);
       setLoading(false);
@@ -27,22 +27,19 @@ export function AuthGate({ children }: Props) {
     setError('');
     try {
       const res = await signInWithPopup(auth, googleProvider);
-      
       if (res?.user) {
         const email = res.user.email?.toLowerCase() ?? '';
-        
-        // Verificación inmediata del correo tras el login por Popup
-        if (!ALLOWED_EMAILS.includes(email as any)) {
+        // Verificar contra Firestore roles/ collection
+        const roles = await getRoles();
+        const authorized = roles.some(r => r.email?.toLowerCase() === email);
+        if (!authorized) {
           await signOut(auth);
-          setError(`Acceso denegado para ${email}`);
+          setError(`Acceso denegado para ${email}. Pide al admin que te añada en Settings → Roles.`);
         }
       }
     } catch (e: any) {
       console.error('=== ERROR EN LOGIN ===', e);
-      // Evita machacar el error de acceso denegado si el flujo ya pasó por ahí
-      if (!error) {
-        setError(e?.message ?? 'Error de login');
-      }
+      if (!error) setError(e?.message ?? 'Error de login');
     }
   };
 
@@ -54,8 +51,26 @@ export function AuthGate({ children }: Props) {
     );
   }
 
+  // authorized = tiene rol en Firestore (Custom Claim o documento roles/)
   const email = user?.email?.toLowerCase() ?? '';
-  const authorized = !!user && ALLOWED_EMAILS.includes(email as any);
+  const [authorized, setAuthorized] = useState<boolean | null>(null);
+
+  // Verificar autorización contra Firestore cuando hay usuario
+  useEffect(() => {
+    if (!user) { setAuthorized(false); return; }
+    getRoles().then(roles => {
+      const found = roles.some(r => r.email?.toLowerCase() === email);
+      setAuthorized(found);
+    }).catch(() => setAuthorized(false));
+  }, [user, email]);
+
+  if (authorized === null && user) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-background text-on-surface">
+        <Loader size={32} className="animate-spin text-primary-container" />
+      </div>
+    );
+  }
 
   if (!authorized) {
     return (

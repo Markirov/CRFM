@@ -41,11 +41,12 @@ function RouteSpinner() {
 
 export function App() {
   const location = useLocation();
-  const { setActivePalette, setCampaign, useLegacyDesigns, setRoster, setRosterLoading, userRole, setPerms } = useAppStore();
+  const { setActivePalette, setCampaign, useLegacyDesigns, setRoster, setRosterLoading, userRole, setPerms, setPermsLoading } = useAppStore();
 
   // Permisos reactivos desde Firestore (onSnapshot)
-  const { perms } = usePermissions();
+  const { perms, loading: permsLoading } = usePermissions();
   useEffect(() => { setPerms(perms); }, [perms, setPerms]);
+  useEffect(() => { setPermsLoading(permsLoading); }, [permsLoading, setPermsLoading]);
 
   // Cargar config de campaña desde Firestore al iniciar.
   useEffect(() => {

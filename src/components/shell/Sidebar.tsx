@@ -6,12 +6,11 @@ import { VERSION_DISPLAY } from '@/version';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { LogOut } from 'lucide-react';
-import { usePermissions, canRead } from '@/lib/permissions-service';
+import { canRead } from '@/lib/permissions-service';
 
 export function Sidebar() {
   const location = useLocation();
-  const { sidebarOpen, setSidebarOpen, setSimuladorPortada, setBarraconesPortada, userRole } = useAppStore();
-  const { perms, loading: permsLoading } = usePermissions();
+  const { sidebarOpen, setSidebarOpen, setSimuladorPortada, setBarraconesPortada, userRole, perms, permsLoading } = useAppStore();
 
   return (
     <>
@@ -49,7 +48,7 @@ export function Sidebar() {
         {/* Nav sections */}
         {NAV_SECTIONS.map((section) => {
           const visibleItems = section.items.filter(item =>
-  permsLoading || !userRole || canRead(perms, item.id, userRole)
+            permsLoading || !userRole || canRead(perms, item.id, userRole)
           );
           if (visibleItems.length === 0) return null;
           return (

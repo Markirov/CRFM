@@ -16,29 +16,13 @@ service cloud.firestore {
         && request.auth.token.email == 'marcosfenollar@gmail.com';
     }
 
-    function isHardcodedPJ() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email in [
-          'jdelamotasanchis@gmail.com',
-          'j.sevabernabeu@gmail.com',
-          'inquisidordelamente@gmail.com',
-        ];
-    }
-
-    function isHardcodedDM() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email == 'torrifm@gmail.com';
-    }
-
     function claimRole() {
       return request.auth != null && request.auth.token.role;
     }
 
     function isAdmin()    { return isHardcodedAdmin() || claimRole() == 'admin'; }
-    function isDM()       { return isHardcodedDM()    || claimRole() == 'dm'; }
-    function isPJ()       { return isHardcodedPJ()    || claimRole() == 'pj'; }
+    function isDM()       { return claimRole() == 'dm'; }
+    function isPJ()       { return claimRole() == 'pj'; }
     function isStaff()    { return isAdmin() || isDM(); }
     function hasAnyRole() { return isAdmin() || isDM() || isPJ(); }
 
@@ -87,9 +71,10 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
-    // ── Roles: solo admin ─────────────────────────────────────
+    // ── Roles: admin escribe, autenticados leen (para AuthGate) ──
     match /roles/{doc} {
-      allow read, write: if isAdmin();
+      allow read:  if request.auth != null;
+      allow write: if isAdmin();
     }
 
     // ── Fuerzas / Simulador: todos R+W ───────────────────────

@@ -50,6 +50,8 @@ interface AppState {
   /** Matriz de permisos cargada desde Firestore (reactiva via onSnapshot). */
   perms: SectionPerm[];
   setPerms: (p: SectionPerm[]) => void;
+  permsLoading: boolean;
+  setPermsLoading: (v: boolean) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -109,5 +111,7 @@ export const useAppStore = create<AppState>((set) => ({
 
   perms: DEFAULT_PERMISSIONS,
   setPerms: (p) => set({ perms: p }),
+  permsLoading: true,
+  setPermsLoading: (v) => set({ permsLoading: v }),
 }));
 
