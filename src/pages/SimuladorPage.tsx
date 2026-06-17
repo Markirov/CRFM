@@ -54,19 +54,6 @@ export function SimuladorPage() {
   const sim = useSimulador();
   const { readable, writable, loading: permLoading } = usePerm('simulador');
   const [allowClan, setAllowClan] = useState(false);
-
-  // Bloqueo de lectura
-  if (!permLoading && !readable) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="text-4xl mb-4">🔒</div>
-          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
-          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Simulador</div>
-        </div>
-      </div>
-    );
-  }
   const [limitToYear, setLimitToYear] = useState(true);
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
@@ -191,6 +178,19 @@ export function SimuladorPage() {
     if (!campaignMode) return Array(hangarBySlot.length).fill(false);
     return hangarBySlot.map(it => !!it);
   }, [campaignMode, hangarBySlot]);
+
+  // Bloqueo de lectura (después de TODOS los hooks para no violar Rules of Hooks)
+  if (!permLoading && !readable) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🔒</div>
+          <div className="font-headline text-lg text-primary-container uppercase tracking-widest">Acceso restringido</div>
+          <div className="font-mono text-[11px] text-secondary/60 mt-2">No tienes permisos para ver el Simulador</div>
+        </div>
+      </div>
+    );
+  }
 
   const handleToggleCampaign = async () => {
     if (campaignMode) {
