@@ -5,8 +5,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { useEffect, useState } from 'react';
-import { Loader, RefreshCw, Save } from 'lucide-react';
-import { getRoles, setRole, type RoleEntry } from '@/lib/role-service';
+import { Loader, RefreshCw, Save, X } from 'lucide-react';
+import { getRoles, setRole, removeRole, type RoleEntry } from '@/lib/role-service';
 import { loadPermissions, savePermissions, DEFAULT_PERMISSIONS, type SectionPerm, type PermLevel } from '@/lib/permissions-service';
 import type { UserRole } from '@/lib/store';
 
@@ -72,6 +72,16 @@ export function RolesPanel() {
     try {
       await setRole(entry.email, role);
       setRoles(prev => prev.map(r => r.uid === entry.uid ? { ...r, role } : r));
+    } catch (e: any) { setUsersError(e?.message ?? 'Error'); }
+    setSaving(null);
+  };
+
+  const handleDelete = async (entry: RoleEntry) => {
+    if (!confirm(`¿Eliminar a ${entry.email}?`)) return;
+    setSaving(entry.email); setUsersError(null);
+    try {
+      await removeRole(entry.email);
+      setRoles(prev => prev.filter(r => r.uid !== entry.uid));
     } catch (e: any) { setUsersError(e?.message ?? 'Error'); }
     setSaving(null);
   };
@@ -192,6 +202,11 @@ export function RolesPanel() {
                       {saving === entry.email && entry.role !== r ? <Loader size={9} className="animate-spin inline" /> : ROLE_LABELS[r]}
                     </button>
                   ))}
+                  <button disabled={saving === entry.email} onClick={() => handleDelete(entry)}
+                    className="h-6 w-6 flex items-center justify-center text-outline hover:text-error border border-outline-variant/20 hover:border-error/40 transition-all disabled:opacity-40"
+                    title="Eliminar usuario">
+                    <X size={11} />
+                  </button>
                 </div>
               </div>
             ))}
