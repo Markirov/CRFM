@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, signInWithRedirect, signOut, getRedirectResult, type User } from 'firebase/auth';
 import { auth, googleProvider, ALLOWED_EMAILS } from '@/lib/firebase-config';
+import { useAuthRole } from '@/lib/auth-roles';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 
 interface Props { children: ReactNode }
@@ -10,27 +11,41 @@ export function AuthGate({ children }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string>('');
 
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, u => {
-      setUser(u);
-      setLoading(false);
-    });
-    return unsub;
-  }, []);
+  // Carga el Custom Claim 'role' en el store en cuanto hay sesión.
+  useAuthRole();
 
-  const handleLogin = async () => {
-    setError('');
-    try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const email = res.user.email?.toLowerCase() ?? '';
-      if (!ALLOWED_EMAILS.includes(email as any)) {
-        await signOut(auth);
-        setError(`Acceso denegado para ${email}`);
-      }
-    } catch (e: any) {
-      setError(e?.message ?? 'Error de login');
+  useEffect(() => {
+  // Recoger resultado del redirect al volver de Google
+  getRedirectResult(auth).then(async (res) => {
+  console.log('=== REDIRECT RESULT ===', res);
+  if (res?.user) {
+    const email = res.user.email?.toLowerCase() ?? '';
+    console.log('=== EMAIL ===', email);
+    console.log('=== ALLOWED ===', ALLOWED_EMAILS);
+    console.log('=== MATCH ===', ALLOWED_EMAILS.includes(email as any));
+    if (!ALLOWED_EMAILS.includes(email as any)) {
+      await signOut(auth);
+      setError(`Acceso denegado para ${email}`);
     }
-  };
+  } else {
+    console.log('=== NO USER EN REDIRECT RESULT ===');
+  }
+}).catch((e) => {
+  console.error('=== ERROR EN REDIRECT RESULT ===', e);
+  setError(e?.message ?? 'Error de login');
+});
+
+  const unsub = onAuthStateChanged(auth, u => {
+    setUser(u);
+    setLoading(false);
+  });
+  return unsub;
+}, []);
+
+const handleLogin = async () => {
+  setError('');
+  await signInWithRedirect(auth, googleProvider);
+};
 
   if (loading) {
     return (
