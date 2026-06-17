@@ -8,11 +8,11 @@ import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 interface Props { children: ReactNode }
 
 export function AuthGate({ children }: Props) {
-  const [user, setUser]       = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState<string>('');
+  const [user, setUser]               = useState<User | null>(null);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState<string>('');
+  const [authorized, setAuthorized]   = useState<boolean | null>(null);
 
-  // Carga el Custom Claim 'role' en el store en cuanto hay sesión.
   useAuthRole();
 
   useEffect(() => {
@@ -23,16 +23,26 @@ export function AuthGate({ children }: Props) {
     return unsub;
   }, []);
 
+  // Verificar autorización contra Firestore cuando hay usuario
+  useEffect(() => {
+    if (loading) return;
+    if (!user) { setAuthorized(false); return; }
+    const email = user.email?.toLowerCase() ?? '';
+    getRoles().then(roles => {
+      const found = roles.some(r => r.email?.toLowerCase() === email);
+      setAuthorized(found);
+    }).catch(() => setAuthorized(false));
+  }, [user, loading]);
+
   const handleLogin = async () => {
     setError('');
     try {
       const res = await signInWithPopup(auth, googleProvider);
       if (res?.user) {
         const email = res.user.email?.toLowerCase() ?? '';
-        // Verificar contra Firestore roles/ collection
         const roles = await getRoles();
-        const authorized = roles.some(r => r.email?.toLowerCase() === email);
-        if (!authorized) {
+        const found = roles.some(r => r.email?.toLowerCase() === email);
+        if (!found) {
           await signOut(auth);
           setError(`Acceso denegado para ${email}. Pide al admin que te añada en Settings → Roles.`);
         }
@@ -43,6 +53,7 @@ export function AuthGate({ children }: Props) {
     }
   };
 
+  // Loading inicial (auth state)
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-background text-on-surface">
@@ -51,26 +62,16 @@ export function AuthGate({ children }: Props) {
     );
   }
 
-  // authorized = tiene rol en Firestore (Custom Claim o documento roles/)
-  const email = user?.email?.toLowerCase() ?? '';
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
-
-  // Verificar autorización contra Firestore cuando hay usuario
-  useEffect(() => {
-    if (!user) { setAuthorized(false); return; }
-    getRoles().then(roles => {
-      const found = roles.some(r => r.email?.toLowerCase() === email);
-      setAuthorized(found);
-    }).catch(() => setAuthorized(false));
-  }, [user, email]);
-
-  if (authorized === null && user) {
+  // Loading verificación roles
+  if (user && authorized === null) {
     return (
       <div className="h-screen flex items-center justify-center bg-background text-on-surface">
         <Loader size={32} className="animate-spin text-primary-container" />
       </div>
     );
   }
+
+  const email = user?.email?.toLowerCase() ?? '';
 
   if (!authorized) {
     return (
@@ -83,7 +84,7 @@ export function AuthGate({ children }: Props) {
             Acceso restringido · autenticación requerida
           </p>
 
-          {user && !authorized && (
+          {user && (
             <div className="w-full border border-error/50 bg-error/10 px-3 py-2 flex items-start gap-2 font-mono text-[10px] text-error">
               <ShieldAlert size={14} className="shrink-0 mt-0.5" />
               <span>Cuenta {email} no autorizada. Pide acceso al administrador.</span>
