@@ -20,6 +20,10 @@ import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type Per
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
+import { loadHangar } from '@/lib/firebase-service';
+import type { HangarItem } from '@/lib/hangar-types';
+import { buildMechSources, type MechSource } from '@/lib/taller-sources';
+import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
 import {
   deriveDamageFromSession, configFromCatalog,
   type MechRepairConfig, type RepairSystem,
@@ -113,18 +117,31 @@ function TallerInlineWrapper({ campaignDate }: { campaignDate: string }) {
 // ══════════════════════════════════════════════════════════
 
 function PrioridadesTab() {
-  const { campaign } = useAppStore();
+  const { campaign, roster } = useAppStore();
 
-  // ── Selector de mech (del simulador) ──
-  const [simSlotIdx, setSimSlotIdx] = useState<number | null>(null);
-  const simSlots = useMemo(() => {
+  // ── Selector unificado mech: hangar (campaña) + sim slots ──
+  const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
+  const [snapVersion, setSnapVersion] = useState(0); // fuerza rebuild sources si sim cambia
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadHangar().then(res => {
+      if (res?.success && Array.isArray((res.data as any)?.items)) {
+        setHangarItems((res.data as any).items as HangarItem[]);
+      }
+    }).catch(() => {});
+  }, []);
+
+  const sources = useMemo<MechSource[]>(() => {
     const snap = loadLocalSnapshot();
-    if (!snap) return [];
-    return snap.mechSlots
-      .map((s, i) => ({ slot: s, idx: i }))
-      .filter(({ slot }) => slot?.state && slot?.session);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [simSlotIdx]);
+    return buildMechSources(hangarItems, snap, roster);
+    // snapVersion para refrescar tras cambios externos
+  }, [hangarItems, snapVersion, roster]);
+
+  const selectedSource = useMemo(
+    () => sources.find(s => s.key === selectedKey) ?? null,
+    [sources, selectedKey],
+  );
 
   // ── Tiempo disponible ──
   const [valor, setValor] = useState(3);
@@ -191,28 +208,14 @@ function PrioridadesTab() {
 
   // ── Mech seleccionado: nombre + config + damage (compartido) ──
   const mechCtx = useMemo(() => {
-    if (simSlotIdx === null) return null;
-    const snap = loadLocalSnapshot();
-    const slot = snap?.mechSlots[simSlotIdx];
-    if (!slot?.state || !slot?.session) return null;
-    const st = slot.state;
-    const { damage } = deriveDamageFromSession(st, slot.session);
-    const mant = loadMechMaintenance(simSlotIdx);
-    const merged = mant.extraDamage ? mergeDamage(damage, mant.extraDamage) : damage;
-    const config: MechRepairConfig = configFromCatalog({
-      tons:   st.tonnage,
-      walkMP: st.walkMP,
-      armor:  { type: st.armorType || 'Standard' },
-      engine: { type: 'Fusion', rating: st.walkMP * st.tonnage },
-      heatSinks: { type: st.hsDouble ? 'Double' : 'Single' },
-    });
+    if (!selectedSource) return null;
     return {
-      mechName: `${st.chassis} ${st.model}`,
-      tons:     st.tonnage,
-      config,
-      damage:   merged,
+      mechName: selectedSource.mechName,
+      tons:     selectedSource.tons,
+      config:   selectedSource.config,
+      damage:   selectedSource.damage,
     };
-  }, [simSlotIdx]);
+  }, [selectedSource]);
 
   // ── Construir items desde mech seleccionado (con coste) ──
   const baseItems = useMemo<RepairItem[]>(() => {
@@ -235,7 +238,7 @@ function PrioridadesTab() {
   const [manualOrder, setManualOrder] = useState<string[]>([]);
 
   // Reset manual order al cambiar mech.
-  useEffect(() => { setManualOrder([]); }, [simSlotIdx]);
+  useEffect(() => { setManualOrder([]); }, [selectedKey]);
 
   // Si user cambia preset a otro distinto de manual, limpiar orden manual.
   const setPresetIdSafe = (id: string) => {
@@ -306,28 +309,16 @@ function PrioridadesTab() {
         Prioridades de reparación
       </h1>
 
-      {/* Selector mech del simulador */}
+      {/* Selector unificado: hangar (campaña) + sim slots */}
       <section className="mb-4 bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
         <label className="block font-mono text-[10px] uppercase tracking-widest text-secondary/60 mb-2">
-          Mech del simulador
+          Mech a reparar
         </label>
-        <select
-          value={simSlotIdx ?? ''}
-          onChange={e => setSimSlotIdx(e.target.value === '' ? null : Number(e.target.value))}
-          className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-        >
-          <option value="">— Seleccionar —</option>
-          {simSlots.map(({ slot, idx }) => (
-            <option key={idx} value={idx}>
-              SLOT {idx + 1}: {slot.state!.chassis} {slot.state!.model}
-            </option>
-          ))}
-        </select>
-        {simSlots.length === 0 && (
-          <p className="font-mono text-[9px] text-secondary/50 mt-2 italic">
-            No hay mechs cargados en simulador. Carga uno primero.
-          </p>
-        )}
+        <MechSourcePicker
+          sources={sources}
+          selectedKey={selectedKey}
+          onSelect={key => { setSelectedKey(key); setSnapVersion(v => v + 1); }}
+        />
       </section>
 
       <div className="grid md:grid-cols-4 gap-4">
