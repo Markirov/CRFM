@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { getVeterancy } from '@/lib/barracones-data';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
-import { registerMissionFull, registerXPExpense, commitLibroEntryAndTreasury } from '@/lib/firebase-service';
+import { registerMissionFull, registerXPExpense, commitLibroEntryAndTreasury, savePilot } from '@/lib/firebase-service';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { sendTelegramNotif, getTelegramToggle } from '@/lib/telegram-service';
 import { TelegramToggle } from '@/components/ui/TelegramToggle';
@@ -260,8 +260,11 @@ interface PaperPilotRowProps {
 function PaperPilotRow({ player, index, isLast, onUpdate }: PaperPilotRowProps) {
   const rc = REROLL_CONFIG[player.nivel] ?? REROLL_CONFIG.Novato;
   const spent = calcSpent(player);
-  const sessionNet = player.xpGanado + player.chequeos - spent;
-  const xpFinal = sessionNet >= 0 ? player.xpTotal + sessionNet : player.xpTotal;
+  // XP ganado en la sesión va INTEGRO a xpTotal (puntos ganados).
+  // Los rerolls solo restan de xpDisponible. spent = rerolls × cost.
+  const xpEarned = player.xpGanado + player.chequeos;
+  const sessionNet = xpEarned - spent;             // delta de xpDisponible
+  const xpFinal = player.xpTotal + xpEarned;       // xpTotal nuevo (sin restar rerolls)
   const accent = player.accent;
 
   const inputBase: React.CSSProperties = {
@@ -621,11 +624,23 @@ export function HojaServicioPage() {
 
       for (const p of players) {
         const spent = calcSpent(p);
+        const xpEarned = p.xpGanado + p.chequeos;
+
         if (spent > 0 && p.rerolls > 0) {
           const rc = REROLL_CONFIG[p.nivel] ?? REROLL_CONFIG.Novato;
           for (let r = 0; r < p.rerolls; r++) {
             await registerXPExpense(p.name, rc.cost, `${p.name}: Repetir Tirada (${p.nivel})`);
           }
+        }
+
+        // Actualiza personaje: xpTotal += xpEarned (sin restar rerolls),
+        // xpDisponible += xpEarned − spent (rerolls solo restan aqui).
+        if (xpEarned > 0 || spent > 0) {
+          await savePilot({
+            jugador: p.name,
+            xpTotal:      p.xpTotal + xpEarned,
+            xpDisponible: Math.max(0, p.xpDisponible + xpEarned - spent),
+          });
         }
       }
 

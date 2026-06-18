@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User, Loader, CheckCircle, AlertCircle, RotateCcw } from 'lucide-react';
 import { getVeterancy } from '@/lib/barracones-data';
-import { loadPlayer, registerMission, registerXPExpense } from '@/lib/firebase-service';
+import { loadPlayer, registerMission, registerXPExpense, savePilot } from '@/lib/firebase-service';
 import { usePerm } from '@/hooks/usePerm';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -132,9 +132,11 @@ export function HojaServicioPageLegacy() {
       const res = await registerMission(xpMap, pago + salvamento, reparacion + municion);
       if (!res.success) throw new Error(res.error ?? 'Error de red');
 
-      // Register individual XP expenses
+      // Register individual XP expenses + actualiza personaje.
+      // Rerolls solo restan de xpDisponible, no de xpTotal (ganado).
       for (const p of players) {
         const spent = calcSpent(p);
+        const xpEarned = p.xpGanado + p.chequeos;
         if (spent > 0) {
           const rc = REROLL_CONFIG[p.nivel] ?? REROLL_CONFIG.Novato;
           if (p.rerolls > 0) {
@@ -142,6 +144,13 @@ export function HojaServicioPageLegacy() {
               await registerXPExpense(p.name, rc.cost, `${p.name}: Repetir Tirada (${p.nivel})`);
             }
           }
+        }
+        if (xpEarned > 0 || spent > 0) {
+          await savePilot({
+            jugador: p.name,
+            xpTotal:      p.xpTotal + xpEarned,
+            xpDisponible: Math.max(0, p.xpDisponible + xpEarned - spent),
+          });
         }
       }
 
@@ -245,10 +254,11 @@ export function HojaServicioPageLegacy() {
           {/* ── Player rows ── */}
           {players.map((p, i) => {
             const spent = calcSpent(p);
-            const sessionNet = p.xpGanado + p.chequeos - spent;
-            // Positive: adds to total (and disponible). Negative: only subtracts from disponible.
-            const xpTotalFinal = sessionNet >= 0 ? p.xpTotal + sessionNet : p.xpTotal;
-            const xpDispFinal  = p.xpDisponible + sessionNet;
+            // XP ganado entero a xpTotal. Rerolls solo restan de xpDisponible.
+            const xpEarned = p.xpGanado + p.chequeos;
+            const sessionNet = xpEarned - spent;             // delta xpDisponible
+            const xpTotalFinal = p.xpTotal + xpEarned;       // ignora rerolls
+            const xpDispFinal  = Math.max(0, p.xpDisponible + sessionNet);
             return (
               <div key={p.name}
                 className="grid grid-cols-[32px_1fr_100px_90px_100px_80px_90px_100px] items-center px-6 py-4 border-b border-outline-variant/6 transition-colors hover:bg-surface-container/30">
