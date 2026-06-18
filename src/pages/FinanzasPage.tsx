@@ -1586,7 +1586,11 @@ function AcquisitionModal({ campaignDate, onClose, onCommit }: {
     if (!catalog || mechQuery.trim().length < 2) return [];
     const q = mechQuery.trim().toLowerCase();
     return catalog.mechs
-      .filter(m => m.cost > 0 && m.fullName.toLowerCase().includes(q))
+      .filter(m => {
+        if (!m.cost || m.cost <= 0) return false;
+        const label = m.fullName || m.name || `${m.chassis ?? ''} ${m.model ?? ''}`;
+        return label.toLowerCase().includes(q);
+      })
       .slice(0, 12);
   }, [catalog, mechQuery]);
 
@@ -1604,8 +1608,10 @@ function AcquisitionModal({ campaignDate, onClose, onCommit }: {
   const subtotal = unitPrice * qty;
   const discount = Math.round(subtotal * (discountPct / 100));
   const total = subtotal - discount;
+  const mechLabel = (m: typeof selectedMech) =>
+    m ? (m.fullName || m.name || `${m.chassis ?? ''} ${m.model ?? ''}`.trim()) : '';
   const label = selectedMech
-    ? `${selectedMech.fullName}${isSalvaged ? ' (recuperado)' : ''}`
+    ? `${mechLabel(selectedMech)}${isSalvaged ? ' (recuperado)' : ''}`
     : getPriceLabel(kind, needsWeight ? weight : undefined);
 
   return (
@@ -1634,7 +1640,7 @@ function AcquisitionModal({ campaignDate, onClose, onCommit }: {
           <div style={{ marginBottom: 14, position: 'relative' }}>
             <FieldLabel>Buscar modelo específico (catálogo SSW) — opcional</FieldLabel>
             <input type="text"
-              value={selectedMech ? selectedMech.fullName : mechQuery}
+              value={selectedMech ? mechLabel(selectedMech) : mechQuery}
               onChange={e => {
                 setMechQuery(e.target.value);
                 setSelectedMech(null);
@@ -1663,7 +1669,7 @@ function AcquisitionModal({ campaignDate, onClose, onCommit }: {
                   <button key={i}
                     onClick={() => {
                       setSelectedMech(m);
-                      setMechQuery(m.fullName);
+                      setMechQuery(mechLabel(m));
                       setShowSuggestions(false);
                       // Auto-update weight class según peso real
                       setWeight(classifyMechWeight(m.tons));
@@ -1679,7 +1685,7 @@ function AcquisitionModal({ campaignDate, onClose, onCommit }: {
                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = `${T.gold}15`}
                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}
                   >
-                    <span style={{ fontWeight: 700 }}>{m.fullName}</span>
+                    <span style={{ fontWeight: 700 }}>{mechLabel(m)}</span>
                     <span style={{ color: T.outline, marginLeft: 8, fontFamily: '"Share Tech Mono", monospace', fontSize: 10 }}>
                       {m.tons}t · {m.categoria} · BV{m.bv2} · {fmtMoney(m.cost)}
                     </span>
@@ -1885,7 +1891,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, i
     setConfig(derivedConfig);
     setDamage(derivedDmg);
     setPctDañoTotal(pct);
-    setMechQuery(catMatch ? catMatch.fullName : `${st.chassis} ${st.model}`);
+    setMechQuery(catMatch ? (catMatch.fullName || catMatch.name || `${catMatch.chassis ?? ''} ${catMatch.model ?? ''}`.trim()) : `${st.chassis} ${st.model}`);
     setSelected(catMatch ?? null);
     setShowSimPicker(false);
     setSimSlotIdx(slotIdx);
@@ -1908,13 +1914,18 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, i
     if (!catalog || mechQuery.trim().length < 2) return [];
     const q = mechQuery.trim().toLowerCase();
     return catalog.mechs
-      .filter(m => m.fullName.toLowerCase().includes(q))
+      .filter(m => {
+        const label = m.fullName || m.name || `${m.chassis ?? ''} ${m.model ?? ''}`;
+        return label.toLowerCase().includes(q);
+      })
       .slice(0, 12);
   }, [catalog, mechQuery]);
 
+  const mechLabelT = (m: CatalogMech | null) =>
+    m ? (m.fullName || m.name || `${m.chassis ?? ''} ${m.model ?? ''}`.trim()) : '';
   const handleSelectMech = (m: CatalogMech) => {
     setSelected(m);
-    setMechQuery(m.fullName);
+    setMechQuery(mechLabelT(m));
     setShowSugg(false);
     setConfig(configFromCatalog(m));
     setDamage(emptyDamage());
@@ -1998,7 +2009,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, i
                   onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = `${T.gold}15`}
                   onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}
                 >
-                  <span style={{ fontWeight: 700 }}>{m.fullName}</span>
+                  <span style={{ fontWeight: 700 }}>{mechLabelT(m)}</span>
                   <span style={{ color: T.outline, marginLeft: 8, fontFamily: '"Share Tech Mono", monospace', fontSize: 10 }}>
                     {m.tons}t · {m.categoria} · {m.armor.type} · {m.heatSinks.type} HS
                   </span>
@@ -2375,7 +2386,7 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, i
                     disabled={!factura || committing}
                     onClick={async () => {
                       if (!factura) return;
-                      const mechName = selected?.fullName || mechQuery.trim() || 'Mech';
+                      const mechName = mechLabelT(selected) || mechQuery.trim() || 'Mech';
                       const sysTag   = system === 'canon' ? 'CamOps' : `propio · ${factura.estadoFacturaPct}%`;
                       const restoreTag = simSlotIdx !== null ? ' · sim restaurado' : '';
                       const concepto = `Reparación ${mechName} [${sysTag}]${restoreTag}`;
