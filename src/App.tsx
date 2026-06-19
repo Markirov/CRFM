@@ -10,6 +10,7 @@ import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 import { usePermissions } from '@/lib/permissions-service';
+import { AuthGate } from '@/components/shell/AuthGate';
 
 import { pageLoaders } from '@/lib/page-loaders';
 
@@ -128,24 +129,29 @@ export function App() {
         <RouteErrorBoundary key={location.pathname}>
         <Suspense fallback={<RouteSpinner />}>
           <Routes>
+            {/* Rutas Públicas */}
             <Route path="/"               element={<Navigate to="/portada" replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
-            <Route path="/comision"       element={<ComisionPage />} />
-            <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
-            <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
-            <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
-            <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
-            <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
-            <Route path="/simulador"      element={<SimuladorPage />} />
-            <Route path="/finanzas"       element={<FinanzasPage />} />
-            <Route path="/hangar"         element={<HangarPage />} />
-            <Route path="/taller"         element={<TallerPage />} />
-            <Route path="/hud"            element={<HudTacticoPage />} />
-            <Route path="/ayudas"         element={<AyudasPage />} />
             <Route path="/tro"            element={<TROPage />} />
             <Route path="/mapa"           element={<MapaEstelarPage />} />
             <Route path="/cronicas"       element={<CronicasPage />} />
-            <Route path="/logros"         element={<LogrosPage />} />
+            <Route path="/simulador"      element={<SimuladorPage />} />
+
+            {/* Rutas Privadas (Requieren Auth y Roles) */}
+            <Route element={<AuthGate />}>
+              <Route path="/comision"       element={<ComisionPage />} />
+              <Route path="/reclutamiento"  element={<ReclutamientoPage />} />
+              <Route path="/barracones"     element={useLegacyDesigns ? <BarraconesPageLegacy /> : <BarraconesPage />} />
+              <Route path="/barracones-legacy" element={<BarraconesPageLegacy />} />
+              <Route path="/hoja-servicio"  element={useLegacyDesigns ? <HojaServicioPageLegacy /> : <HojaServicioPage />} />
+              <Route path="/hoja-servicio-legacy" element={<HojaServicioPageLegacy />} />
+              <Route path="/finanzas"       element={<FinanzasPage />} />
+              <Route path="/hangar"         element={<HangarPage />} />
+              <Route path="/taller"         element={<TallerPage />} />
+              <Route path="/hud"            element={<HudTacticoPage />} />
+              <Route path="/ayudas"         element={<AyudasPage />} />
+              <Route path="/logros"         element={<LogrosPage />} />
+            </Route>
           </Routes>
         </Suspense>
         </RouteErrorBoundary>

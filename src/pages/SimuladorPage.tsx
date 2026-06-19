@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Crosshair } from 'lucide-react';
+import { Shield, Crosshair, Cpu, Users, Eye, Target, Map as MapIcon, RotateCcw, Save, Search, Settings, AlertTriangle, AlertCircle, FileDigit, Plus } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, loadHangar, type FuerzaSlot } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
-import { useSimulador } from '@/hooks/useSimulador';
+import { useSimulador, type AdjustModTarget } from '@/hooks/useSimulador';
 import { usePerm } from '@/hooks/usePerm';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
@@ -25,6 +25,8 @@ import { FuerzaSyncBar } from '@/components/simulador/FuerzaSyncBar';
 import { SubtabRightPortal } from '@/components/shell/SubtabRightPortal';
 import { useAppStore } from '@/lib/store';
 import type { FireTarget } from '@/lib/combat-types';
+import { useLiveSession } from '@/hooks/useLiveSession';
+import { CombatRadar, IncomingAttacks } from '@/components/simulador/CombatRadar';
 
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
@@ -52,6 +54,7 @@ function gateCampaignWrite(actionLabel: string): boolean {
 export function SimuladorPage() {
   const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
   const sim = useSimulador();
+  const live = useLiveSession(sim);
   const { readable, writable, loading: permLoading } = usePerm('simulador');
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
@@ -385,6 +388,21 @@ export function SimuladorPage() {
   const lockedSlotsForView = isMech ? lockedSlots.slice(0, slotCount) : Array(slotCount).fill(false);
   const activeLocked = lockedSlotsForView[activeIdx] === true;
 
+  const visibleIndices = useMemo(() => {
+    const indices: number[] = [];
+    if (campaignMode && isMech) {
+      // En campaña, mostrar solo los slots que tienen asignado un piloto con mech (según hangarBySlot)
+      // O si el slot tiene un mech cargado pero no hangar (fallback por si acaso)
+      for (let i = 0; i < slotCount; i++) {
+        if (hangarBySlot[i] || sim.mechSlots[i].state) indices.push(i);
+      }
+    } else {
+      // En modo libre (o vehículos), mostrar todos los slots
+      for (let i = 0; i < slotCount; i++) indices.push(i);
+    }
+    return indices;
+  }, [campaignMode, isMech, slotCount, hangarBySlot, sim.mechSlots]);
+
   const blockMsg = (i: number) => {
     const h = hangarBySlot[i];
     return `Slot ${i + 1} bloqueado en modo campaña.\n\nEl hangar asigna "${h?.chassis} ${h?.model}" a este PJ.\nPara cambiarlo edita la asignación en /hangar (Inventario) o desactiva modo campaña.`;
@@ -409,8 +427,12 @@ export function SimuladorPage() {
 
   return (
     <div className="p-6 animate-[fadeInUp_0.3s_ease]">
+      {/* Componentes Live / Radar */}
+      <IncomingAttacks sim={sim} live={live} />
+
       {/* Subtab right-slot: flags + search + slot picker + sync */}
       <SubtabRightPortal>
+        <CombatRadar sim={sim} live={live} />
         {flagToggles}
         <CatalogSearch
           onLoad={guardedLoadUnitText}
@@ -430,6 +452,9 @@ export function SimuladorPage() {
           onFileUpload={guardedFileUpload}
           shortLabels={campaignPilots ?? undefined}
           lockedSlots={lockedSlotsForView}
+          visibleIndices={visibleIndices}
+          onAddSlot={!campaignMode ? (isMech ? sim.addMechSlot : sim.addVehicleSlot) : undefined}
+          maxSlots={12}
         />
         <FuerzaSyncBar
           dirty={sim.dirty}

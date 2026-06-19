@@ -160,6 +160,18 @@ const [damageAmount, setDamageAmount] = useState(0);
     }
   }, [activeTab, currentMechIdx, currentVehicleIdx]);
 
+  /** Añade un nuevo slot de mech. */
+  const addMechSlot = useCallback(() => {
+    setMechSlots(prev => [...prev, emptyMechSlot()]);
+    setCurrentMechIdx(mechSlots.length);
+  }, [mechSlots.length]);
+
+  /** Añade un nuevo slot de vehículo. */
+  const addVehicleSlot = useCallback(() => {
+    setVehicleSlots(prev => [...prev, emptyVehicleSlot()]);
+    setCurrentVehicleIdx(vehicleSlots.length);
+  }, [vehicleSlots.length]);
+
   // ── Current slot accessors ──
   const currentSlot = activeTab === 'mechs' ? mechSlots[currentMechIdx] : vehicleSlots[currentVehicleIdx];
   const mechState = activeTab === 'mechs' ? mechSlots[currentMechIdx].state : null;
@@ -771,5 +783,8 @@ const [damageAmount, setDamageAmount] = useState(0);
     // Persistence
     dirty, lastLocalSave,
     getSnapshot, hydrateFromSnapshot, resetSession, clearCurrentUnit, markSynced,
+    
+    // Dynamic slots
+    addMechSlot, addVehicleSlot,
   };
 }

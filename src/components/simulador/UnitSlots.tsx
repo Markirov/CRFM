@@ -11,15 +11,22 @@ interface Props {
   shortLabels?: (string | undefined)[];
   /** Slots bloqueados (modo campaña con mech del hangar fijado). */
   lockedSlots?: boolean[];
+  /** Índices específicos a mostrar (para ocultar slots vacíos) */
+  visibleIndices?: number[];
+  /** Acción para añadir un slot (modo libre) */
+  onAddSlot?: () => void;
+  /** Límite de slots para ocultar el botón + */
+  maxSlots?: number;
 }
 
-export function UnitSlots({ slotNames, slotCount, activeIndex, onSelectIndex, onFileUpload, shortLabels, lockedSlots }: Props) {
+export function UnitSlots({ slotNames, slotCount, activeIndex, onSelectIndex, onFileUpload, shortLabels, lockedSlots, visibleIndices, onAddSlot, maxSlots }: Props) {
   const activeLocked = lockedSlots?.[activeIndex] === true;
+  
+  const indices = visibleIndices ?? Array.from({ length: slotCount }, (_, i) => i);
   // Dividir slots en 2 grupos para wrap controlado en tablet portrait
-  // Grupo A: 1..mitad ; Grupo B: mitad+1..N
-  const half = Math.ceil(slotCount / 2);
-  const groupA = Array.from({ length: half }, (_, i) => i);
-  const groupB = Array.from({ length: slotCount - half }, (_, i) => i + half);
+  const half = Math.ceil(indices.length / 2);
+  const groupA = indices.slice(0, half);
+  const groupB = indices.slice(half);
 
   const slotBtn = (idx: number) => {
     const locked = lockedSlots?.[idx] === true;
@@ -43,16 +50,29 @@ export function UnitSlots({ slotNames, slotCount, activeIndex, onSelectIndex, on
   return (
     <div className="flex items-center gap-1.5 sm:gap-3 flex-wrap">
 
-      {/* Grupo A: slots 1..half */}
-      <div className="flex bg-surface-container-low p-0.5 sm:p-1 clip-chamfer gap-0.5 sm:gap-1 shrink-0">
-        {groupA.map(slotBtn)}
-      </div>
+      {/* Grupo A */}
+      {groupA.length > 0 && (
+        <div className="flex bg-surface-container-low p-0.5 sm:p-1 clip-chamfer gap-0.5 sm:gap-1 shrink-0">
+          {groupA.map(slotBtn)}
+        </div>
+      )}
 
-      {/* Grupo B: slots half+1..N */}
+      {/* Grupo B */}
       {groupB.length > 0 && (
         <div className="flex bg-surface-container-low p-0.5 sm:p-1 clip-chamfer gap-0.5 sm:gap-1 shrink-0">
           {groupB.map(slotBtn)}
         </div>
+      )}
+
+      {/* Botón Añadir */}
+      {onAddSlot && (!maxSlots || slotCount < maxSlots) && (
+        <button
+          onClick={onAddSlot}
+          className="w-6 h-6 sm:w-8 sm:h-8 bg-surface-container-low hover:bg-surface-container-high text-primary-container clip-chamfer flex items-center justify-center font-mono transition-all shrink-0"
+          title="Añadir Slot"
+        >
+          +
+        </button>
       )}
 
       {/* Upload */}

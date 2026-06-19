@@ -4,8 +4,9 @@ import { auth, googleProvider } from '@/lib/firebase-config';
 import { useAuthRole } from '@/lib/auth-roles';
 import { getRoles } from '@/lib/role-service';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
+import { Outlet } from 'react-router-dom';
 
-interface Props { children: ReactNode }
+interface Props { children?: ReactNode }
 
 export function AuthGate({ children }: Props) {
   const [user, setUser]               = useState<User | null>(null);
@@ -56,7 +57,7 @@ export function AuthGate({ children }: Props) {
   // Loading inicial (auth state)
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background text-on-surface">
+      <div className="h-full w-full flex items-center justify-center bg-background text-on-surface">
         <Loader size={32} className="animate-spin text-primary-container" />
       </div>
     );
@@ -65,7 +66,7 @@ export function AuthGate({ children }: Props) {
   // Loading verificación roles
   if (user && authorized === null) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background text-on-surface">
+      <div className="h-full w-full flex items-center justify-center bg-background text-on-surface">
         <Loader size={32} className="animate-spin text-primary-container" />
       </div>
     );
@@ -75,7 +76,7 @@ export function AuthGate({ children }: Props) {
 
   if (!authorized) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background text-on-surface p-4">
+      <div className="h-full w-full flex items-center justify-center bg-background text-on-surface p-4">
         <div className="bg-surface-container-high border-2 border-primary-container/40 p-8 max-w-md w-full clip-chamfer flex flex-col items-center gap-5">
           <h1 className="font-headline text-2xl font-black tracking-tighter uppercase text-primary-container text-center">
             Comisión de Revisión y Fianza de Mercenarios
@@ -117,5 +118,5 @@ export function AuthGate({ children }: Props) {
     );
   }
 
-  return <>{children}</>;
+  return children ? <>{children}</> : <Outlet />;
 }

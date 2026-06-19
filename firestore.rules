@@ -82,6 +82,11 @@ service cloud.firestore {
       allow read, write: if hasAnyRole();
     }
 
+    // ── Live Sessions (Simulador Radar): público R+W ────────
+    match /live_sessions/{doc} {
+      allow read, write: if true;
+    }
+
     // ── Resto: staff R+W, PJ solo R ──────────────────────────
     match /{collection}/{doc} {
       allow read:  if hasAnyRole();

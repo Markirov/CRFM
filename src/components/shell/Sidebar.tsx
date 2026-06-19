@@ -47,9 +47,11 @@ export function Sidebar() {
 
         {/* Nav sections */}
         {NAV_SECTIONS.map((section) => {
-          const visibleItems = section.items.filter(item =>
-            permsLoading || !userRole || canRead(perms, item.id, userRole)
-          );
+          const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador'];
+          const visibleItems = section.items.filter(item => {
+            if (!userRole) return PUBLIC_ROUTES.includes(item.id);
+            return permsLoading || canRead(perms, item.id, userRole);
+          });
           if (visibleItems.length === 0) return null;
           return (
             <div key={section.label}>
@@ -90,18 +92,33 @@ export function Sidebar() {
           );
         })}
 
-        {/* Logout */}
-        <button
-          onClick={() => signOut(auth)}
-          className="flex items-center gap-2.5 w-full px-3.5 py-2.5 mt-2
-            font-headline text-[12px] tracking-wider uppercase
-            border-l-[3px] border-l-transparent
-            text-error/60 hover:text-error hover:bg-error/10
-            transition-all duration-200"
-        >
-          <LogOut size={16} className="w-5 flex-shrink-0" />
-          Cerrar sesión
-        </button>
+        {/* Login / Logout */}
+        {userRole ? (
+          <button
+            onClick={() => signOut(auth)}
+            className="flex items-center gap-2.5 w-full px-3.5 py-2.5 mt-2
+              font-headline text-[12px] tracking-wider uppercase
+              border-l-[3px] border-l-transparent
+              text-error/60 hover:text-error hover:bg-error/10
+              transition-all duration-200"
+          >
+            <LogOut size={16} className="w-5 flex-shrink-0" />
+            Cerrar sesión
+          </button>
+        ) : (
+          <Link
+            to="/comision"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-2.5 w-full px-3.5 py-2.5 mt-2
+              font-headline text-[12px] tracking-wider uppercase
+              border-l-[3px] border-l-transparent
+              text-primary-container/60 hover:text-primary-container hover:bg-primary-container/10
+              transition-all duration-200 no-underline"
+          >
+            <LogOut size={16} className="w-5 flex-shrink-0 rotate-180" />
+            Acceso Campaña
+          </Link>
+        )}
 
         {/* Footer */}
         <div className="mt-auto pt-4 px-3 border-t border-outline-variant">
