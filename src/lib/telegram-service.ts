@@ -12,14 +12,15 @@
 //   - parte_nuevo
 // ═══════════════════════════════════════════════════════════════
 
-import { sheetsPost } from './firebase-service';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export type TelegramEvent =
   | 'mision_cerrada'
   | 'libro_mayor_relevante'
   | 'tesoreria_grande'
   | 'cronica_nueva'
-  | 'parte_nuevo';
+  | 'parte_nuevo'
+  | 'test';
 
 export interface TelegramSendResult {
   success: boolean;
@@ -27,9 +28,11 @@ export interface TelegramSendResult {
 }
 
 /**
- * Envía notificación a Telegram. Drop silencioso si falla.
- * Llamar SIEMPRE awaited (es async) pero NUNCA bloquear UX por respuesta.
+ * Envía notificación a Telegram vía Cloud Function `sendTelegramNotif`.
+ * Drop silencioso si falla. Llamar awaited pero NUNCA bloquear UX.
  * Respeta toggle global TELEGRAM_ENABLED (localStorage).
+ *
+ * Backend: functions/src/index.ts. Secrets: TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID.
  */
 export async function sendTelegramNotif(
   event: TelegramEvent,
@@ -39,16 +42,14 @@ export async function sendTelegramNotif(
     return { success: false, error: 'telegram disabled (global toggle)' };
   }
   try {
-    const res = await sheetsPost({
-      action: 'tgSend',
-      event,
-      data: JSON.stringify(data),
-    });
-    if (res?.success) return { success: true };
-    return { success: false, error: String((res as any)?.error || 'unknown') };
-  } catch (e) {
-    console.warn('[telegram] send failed (silent drop):', event, e);
-    return { success: false, error: String(e) };
+    const fn = httpsCallable(getFunctions(), 'sendTelegramNotif');
+    const res = await fn({ event, data });
+    const out = res.data as { success?: boolean; messageId?: number };
+    if (out?.success) return { success: true };
+    return { success: false, error: 'unknown' };
+  } catch (e: any) {
+    console.warn('[telegram] send failed (silent drop):', event, e?.message ?? e);
+    return { success: false, error: String(e?.message ?? e) };
   }
 }
 

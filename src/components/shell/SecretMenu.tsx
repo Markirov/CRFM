@@ -13,6 +13,7 @@ import {
   getTelegramEnabled, setTelegramEnabled,
   getUmbralTesoreria, setUmbralTesoreria,
   getUmbralLibroMayor, setUmbralLibroMayor,
+  sendTelegramNotif,
 } from '@/lib/telegram-service';
 import { RolesPanel } from './RolesPanel';
 
@@ -468,6 +469,17 @@ function PanelTelegram(p: {
   umbralTes: number; setUmbralTes: (n: number) => void;
   umbralLib: number; setUmbralLib: (n: number) => void;
 }) {
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string>('');
+  const sendTest = async () => {
+    setTesting(true); setTestResult('');
+    // Asegura que el toggle local refleja el estado actual (sin pulsar Guardar)
+    setTelegramEnabled(p.tgEnabled);
+    const res = await sendTelegramNotif('test', { msg: 'Test desde SecretMenu · ' + new Date().toISOString() });
+    setTesting(false);
+    setTestResult(res.success ? '✓ Enviado correctamente' : `✗ ${res.error}`);
+    setTimeout(() => setTestResult(''), 6000);
+  };
   return (
     <div className="space-y-3">
       <div className="bg-amber-400/5 border border-amber-400/30 p-3 space-y-3">
@@ -485,7 +497,22 @@ function PanelTelegram(p: {
           </span>
         </label>
         <div className="font-mono text-[8px] text-outline italic">
-          Toggle global cliente. Backend valida además TOKEN + CHAT_ID. Sin marca → drop silencioso.
+          Toggle global cliente. Backend valida además TOKEN + CHAT_ID (Cloud Function secrets). Sin marca → drop silencioso.
+        </div>
+        <div className="flex items-center gap-2 pt-1">
+          <button
+            onClick={sendTest}
+            disabled={testing}
+            className="flex items-center gap-1.5 px-2 h-7 bg-amber-400/10 border border-amber-400/60 text-amber-400 font-mono text-[9px] uppercase tracking-widest hover:bg-amber-400/20 disabled:opacity-30 transition-all"
+          >
+            {testing ? <Loader size={10} className="animate-spin" /> : <Bell size={10} />}
+            Enviar test
+          </button>
+          {testResult && (
+            <span className={`font-mono text-[9px] ${testResult.startsWith('✓') ? 'text-green-400' : 'text-error'}`}>
+              {testResult}
+            </span>
+          )}
         </div>
       </div>
 
