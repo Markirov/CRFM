@@ -253,6 +253,8 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   const [chassis, setChassis] = useState('');
   const [model, setModel] = useState('');
   const [tons, setTons] = useState(0);
+  const [hasJumpJets, setHasJumpJets] = useState(false);
+  const [hasAmmo, setHasAmmo] = useState(false);
 
   const suggestions = useMemo(() => {
     if (!catalog || query.trim().length < 2) return [];
@@ -288,12 +290,16 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
       setModel(p.model || fallback.split(' ').slice(1).join(' '));
       setTons(p.tons ?? m.tons ?? 0);
       setPrecio(p.cost ?? m.cost ?? 0);
+      setHasJumpJets(p.hasJumpJets);
+      setHasAmmo(p.hasAmmo);
     } catch {
       // Fallback: solo lo que viene del index
       setChassis(m.chassis ?? m.name?.split(' ')[0] ?? '');
       setModel(m.model ?? m.name?.split(' ').slice(1).join(' ') ?? '');
       setTons(m.tons ?? 0);
       setPrecio(m.cost ?? 0);
+      setHasJumpJets(false);
+      setHasAmmo(false);
     } finally {
       setLoadingSsw(false);
     }
@@ -308,6 +314,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   const handleClear = () => {
     setSelected(null); setQuery(''); setPrecio(0); setPilotoIdx(''); setNotas('');
     setChassis(''); setModel(''); setTons(0); setFactorPct(100);
+    setHasJumpJets(false); setHasAmmo(false);
   };
 
   // ── Prefill desde TRO: ?buy=<file.ssw> ──
@@ -335,6 +342,8 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
         bv:          selected.bv2,
         era:         selected.year ? String(selected.year) : (selected.era ? String(selected.era) : ''),
         sourceFile:  selected.file,
+        hasJumpJets,
+        hasAmmo,
         precioBase:  precioFinal,
         fechaCompra: campaignDate,
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,

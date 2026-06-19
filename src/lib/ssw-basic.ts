@@ -19,6 +19,8 @@ export interface ParsedSSWBasic {
   heatSinkType: string | null;
   weapons:      string[];
   cost:         number | null;
+  hasJumpJets:  boolean;
+  hasAmmo:      boolean;
 }
 
 export function parseSSWBasic(text: string): ParsedSSWBasic {
@@ -51,6 +53,12 @@ export function parseSSWBasic(text: string): ParsedSSWBasic {
     weapons.push(`${m[1]}${loc}`);
   }
 
+  // Detectar munición: tags <ammo> en el .ssw o weapons que usan ammo.
+  // Patrones comunes: LRM, SRM, AC/, MG, Gauss, NARC, ATM, MML, Streak,
+  // Arrow IV, RAC, LB-X, UAC, iNarc, Thunderbolt.
+  const ammoRegex = /<ammo\b|\b(LRM|SRM|AC\/|MG|Gauss|NARC|iNarc|ATM|MML|Streak|RAC|LB[-\s]?X|UAC|Arrow|Thunderbolt|Rocket|Mortar)\b/i;
+  const hasAmmo = ammoRegex.test(text);
+
   return {
     chassis:      get('chassis') || getAttr('name'),
     model:        get('model')   || getAttr('model'),
@@ -66,5 +74,7 @@ export function parseSSWBasic(text: string): ParsedSSWBasic {
     heatSinkType: get('heatsinktype') || get('hstype'),
     weapons:      weapons.slice(0, 40),
     cost:         getNum('cost'),
+    hasJumpJets:  (getNum('jumpmp') ?? getNum('jump') ?? 0) > 0,
+    hasAmmo,
   };
 }

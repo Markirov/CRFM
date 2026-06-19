@@ -22,6 +22,7 @@ import { usePerm } from '@/hooks/usePerm';
 import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
 import { loadHangar, saveHangarItem } from '@/lib/firebase-service';
 import { DEFAULT_MAINTENANCE_STATE } from '@/lib/maintenance-engine';
+import { parseSSWBasic } from '@/lib/ssw-basic';
 import type { HangarItem } from '@/lib/hangar-types';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
@@ -981,19 +982,42 @@ function MantenimientoTab() {
       qualityRating:     selectedHangarItem.qualityRating ?? DEFAULT_MAINTENANCE_STATE.qualityRating,
       techRating:        selectedHangarItem.techRating    ?? DEFAULT_MAINTENANCE_STATE.techRating,
       experienciaEquipo: DEFAULT_MAINTENANCE_STATE.experienciaEquipo,
-      historial:         [],
+      historial:         selectedHangarItem.maintenanceHistory ?? [],
       extraDamage:       selectedHangarItem.damagePersist,
     });
   }, [selectedHangarItem]);
 
-  // ── Datos del mech (tons; jumpJets/ammo desconocidos sin sim → defaults) ──
+  // ── Lazy detect hasJumpJets/hasAmmo en items antiguos (pre-feature) ──
+  useEffect(() => {
+    if (!selectedHangarItem) return;
+    if (selectedHangarItem.hasJumpJets !== undefined && selectedHangarItem.hasAmmo !== undefined) return;
+    if (!selectedHangarItem.sourceFile) return;
+    const base = import.meta.env.BASE_URL;
+    const itemId = selectedHangarItem.id;
+    fetch(`${base}assets/mechs/${encodeURIComponent(selectedHangarItem.sourceFile)}`)
+      .then(r => r.ok ? r.text() : null)
+      .then(text => {
+        if (!text) return;
+        const p = parseSSWBasic(text);
+        const updated: HangarItem = {
+          ...selectedHangarItem,
+          hasJumpJets: p.hasJumpJets,
+          hasAmmo:     p.hasAmmo,
+        };
+        void saveHangarItem(updated);
+        setHangarItems(prev => prev.map(it => it.id === itemId ? updated : it));
+      })
+      .catch(() => {});
+  }, [selectedHangarItem]);
+
+  // ── Datos del mech ──
   const mechInfo = useMemo(() => {
     if (!selectedHangarItem) return null;
     return {
       mechName:    `${selectedHangarItem.chassis} ${selectedHangarItem.model}`,
       tons:        selectedHangarItem.tons,
-      hayJumpJets: false, // TODO: extraer del .ssw al comprar
-      hayMunicion: false, // TODO: idem
+      hayJumpJets: selectedHangarItem.hasJumpJets ?? false,
+      hayMunicion: selectedHangarItem.hasAmmo ?? false,
     };
   }, [selectedHangarItem]);
 
@@ -1021,17 +1045,18 @@ function MantenimientoTab() {
   const tiempo = mechInfo ? TIEMPO_MANTENIMIENTO[clasePorTonelaje(mechInfo.tons)] : 0;
 
   // ── Persistir cambios ──
-  // qualityRating/techRating/extraDamage → HangarItem (Firestore).
-  // experienciaEquipo/historial → session-only.
+  // qualityRating/techRating/extraDamage/historial → HangarItem (Firestore).
+  // experienciaEquipo → session-only.
   const updateMant = async (patch: Partial<MechMaintenanceState>) => {
     if (!mant || !selectedHangarItem) return;
     const next = { ...mant, ...patch };
     setMantState(next);
     // Persistir solo los campos que viven en HangarItem
     const itemPatch: Partial<HangarItem> = {};
-    if ('qualityRating' in patch) itemPatch.qualityRating = patch.qualityRating;
-    if ('techRating'    in patch) itemPatch.techRating    = patch.techRating;
-    if ('extraDamage'   in patch) itemPatch.damagePersist = patch.extraDamage;
+    if ('qualityRating' in patch) itemPatch.qualityRating      = patch.qualityRating;
+    if ('techRating'    in patch) itemPatch.techRating         = patch.techRating;
+    if ('extraDamage'   in patch) itemPatch.damagePersist      = patch.extraDamage;
+    if ('historial'     in patch) itemPatch.maintenanceHistory = patch.historial;
     if (Object.keys(itemPatch).length > 0) {
       const updated = { ...selectedHangarItem, ...itemPatch };
       await saveHangarItem(updated);

@@ -8,7 +8,7 @@
 //  Manipulación: src/lib/firebase-service.ts (load/save/delete).
 // ══════════════════════════════════════════════════════════════
 
-import type { QualityRating } from './maintenance-engine';
+import type { QualityRating, MaintenanceLogEntry } from './maintenance-engine';
 import type { MechRepairDamage } from './repair-engine';
 
 /** Un mech físico del hangar. */
@@ -25,6 +25,10 @@ export interface HangarItem {
   techRating?:  string;   // 'A'..'F' (alimenta MechMaintenanceState)
   /** Nombre del .ssw en public/assets/mechs/ (clave para fetch en Simulador). */
   sourceFile?:  string;
+  /** True si el mech tiene jump jets (afecta 'Mech Damage Status Table). */
+  hasJumpJets?: boolean;
+  /** True si el mech tiene armas con munición (afecta 'Mech Damage Status Table). */
+  hasAmmo?:     boolean;
 
   // ── Económico ──
   /** Precio canon/TRO del mech nuevo (referencia). */
@@ -46,6 +50,8 @@ export interface HangarItem {
   /** Daño acumulado que persiste fuera del simulador
    *  (por mantenimiento fallido, combate offline narrativo, etc.). */
   damagePersist?: MechRepairDamage;
+  /** Historial de chequeos de mantenimiento (más reciente primero, cap 50). */
+  maintenanceHistory?: MaintenanceLogEntry[];
 
   // ── Meta ──
   notas?:       string;
@@ -65,6 +71,8 @@ export function newHangarItem(input: {
   techRating?: string;
   pilotoIdx?:  number;
   sourceFile?: string;
+  hasJumpJets?: boolean;
+  hasAmmo?:     boolean;
 }): HangarItem {
   const now = new Date().toISOString();
   return {
@@ -76,6 +84,8 @@ export function newHangarItem(input: {
     era:         input.era,
     techRating:  input.techRating,
     sourceFile:  input.sourceFile,
+    hasJumpJets: input.hasJumpJets,
+    hasAmmo:     input.hasAmmo,
     precioBase:  input.precioBase,
     valorActual: input.precioBase,
     fechaCompra: input.fechaCompra,
