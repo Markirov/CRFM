@@ -94,21 +94,6 @@ function Th({ children, align = 'left' }: { children: React.ReactNode; align?: '
   );
 }
 
-/** Mapea year canon → era de BattleTech. */
-function eraLabel(year: number): string {
-  if (year >= 3151)             return 'IlClan';
-  if (year >= 3132)             return 'Oscuro';
-  if (year >= 3081)             return 'Republica';
-  if (year >= 3068)             return 'Jihad';
-  if (year >= 3050)             return 'Invasion Clan';
-  if (year >= 3020)             return 'Sucesion 3';
-  if (year >= 2860)             return 'Sucesion 2';
-  if (year >= 2786)             return 'Sucesion 1';
-  if (year >= 2570)             return 'Edad Estrella';
-  if (year >= 2350)             return 'Edad Guerra';
-  return 'Antiguo';
-}
-
 function InventarioTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
@@ -171,7 +156,7 @@ function InventarioTab({ items, loading, refresh }: {
                 <Th align="right">Tons</Th>
                 <Th align="right">BV</Th>
                 <Th align="right">Año</Th>
-                <Th align="left">Era</Th>
+                <Th align="center">Estado</Th>
                 <Th align="right">Valor</Th>
                 <Th align="left">Asignado</Th>
                 <Th align="left">Compra</Th>
@@ -196,8 +181,18 @@ function InventarioTab({ items, loading, refresh }: {
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-secondary">
                       {it.era || '—'}
                     </td>
-                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-secondary/70">
-                      {(it.era && /^\d+$/.test(it.era)) ? eraLabel(parseInt(it.era)) : '—'}
+                    <td className="px-2 py-1.5 border-b border-outline-variant/20 text-center">
+                      {(() => {
+                        const pct = it.estadoPct ?? 100;
+                        const color = pct >= 75 ? 'text-green-400 border-green-400/40 bg-green-400/5'
+                                     : pct >= 40 ? 'text-amber-400 border-amber-400/40 bg-amber-400/5'
+                                     :             'text-error border-error/40 bg-error/5';
+                        return (
+                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest ${color}`}>
+                            <span className="font-bold">{pct}%</span>
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-primary-container">{fmt(it.valorActual)}</td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20">
