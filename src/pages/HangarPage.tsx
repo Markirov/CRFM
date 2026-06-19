@@ -327,7 +327,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
   }, [catalog, searchParams]);
 
   const handleComprar = async () => {
-    if (!selected || precioFinal <= 0 || !chassis || tons <= 0) return;
+    if (!selected || precioFinal < 0 || !chassis || tons <= 0) return;
     setCommitState('sending');
     try {
       const item = newHangarItem({
@@ -538,7 +538,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
 
           <button
             onClick={handleComprar}
-            disabled={precioFinal <= 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
+            disabled={precioFinal < 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
             className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
               precioFinal <= 0 || tons <= 0 || !chassis
                 ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
