@@ -20,7 +20,8 @@ import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type Per
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
-import { loadHangar } from '@/lib/firebase-service';
+import { loadHangar, saveHangarItem } from '@/lib/firebase-service';
+import { DEFAULT_MAINTENANCE_STATE } from '@/lib/maintenance-engine';
 import type { HangarItem } from '@/lib/hangar-types';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
@@ -938,42 +939,63 @@ const QUALITY_COLOR: Record<QualityRating, string> = {
 };
 
 function MantenimientoTab() {
-  const { campaign } = useAppStore();
+  const { campaign, roster } = useAppStore();
 
-  // ── Selector mech ──
-  const [simSlotIdx, setSimSlotIdx] = useState<number | null>(null);
-  const simSlots = useMemo(() => {
-    const snap = loadLocalSnapshot();
-    if (!snap) return [];
-    return snap.mechSlots
-      .map((s, i) => ({ slot: s, idx: i }))
-      .filter(({ slot }) => slot?.state && slot?.session);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [simSlotIdx]);
+  // ── Selector mech: solo unidades de campaña (hangar + piloto asignado) ──
+  const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
-  // ── Estado mantenimiento del mech (persistido) ──
+  const reloadHangar = () => {
+    loadHangar().then(res => {
+      if (res?.success && Array.isArray((res.data as any)?.items)) {
+        setHangarItems((res.data as any).items as HangarItem[]);
+      }
+    }).catch(() => {});
+  };
+  useEffect(() => { reloadHangar(); }, []);
+
+  // Fuentes filtradas: solo hangar con pilotoIdx (mechs de la campaña)
+  const sources = useMemo<MechSource[]>(() => {
+    const onlyCampaign = hangarItems.filter(it => it.pilotoIdx !== undefined);
+    return buildMechSources(onlyCampaign, null, roster);
+  }, [hangarItems, roster]);
+
+  const selectedSource = useMemo(
+    () => sources.find(s => s.key === selectedKey) ?? null,
+    [sources, selectedKey],
+  );
+
+  const selectedHangarItem = useMemo(
+    () => selectedSource ? hangarItems.find(it => it.id === selectedSource.hangarId) ?? null : null,
+    [selectedSource, hangarItems],
+  );
+
+  // ── Estado mantenimiento del mech ──
+  // qualityRating + techRating viven en HangarItem (persistente Firestore).
+  // experienciaEquipo + historial son session-only por ahora (TODO: extender HangarItem).
   const [mant, setMantState] = useState<MechMaintenanceState | null>(null);
 
   useEffect(() => {
-    if (simSlotIdx === null) { setMantState(null); return; }
-    setMantState(loadMechMaintenance(simSlotIdx));
-  }, [simSlotIdx]);
+    if (!selectedHangarItem) { setMantState(null); return; }
+    setMantState({
+      qualityRating:     selectedHangarItem.qualityRating ?? DEFAULT_MAINTENANCE_STATE.qualityRating,
+      techRating:        selectedHangarItem.techRating    ?? DEFAULT_MAINTENANCE_STATE.techRating,
+      experienciaEquipo: DEFAULT_MAINTENANCE_STATE.experienciaEquipo,
+      historial:         [],
+      extraDamage:       selectedHangarItem.damagePersist,
+    });
+  }, [selectedHangarItem]);
 
-  // ── Datos del mech (tons, jump jets, ammo) ──
+  // ── Datos del mech (tons; jumpJets/ammo desconocidos sin sim → defaults) ──
   const mechInfo = useMemo(() => {
-    if (simSlotIdx === null) return null;
-    const snap = loadLocalSnapshot();
-    const slot = snap?.mechSlots[simSlotIdx];
-    if (!slot?.state) return null;
-    const st = slot.state;
+    if (!selectedHangarItem) return null;
     return {
-      mechName: `${st.chassis} ${st.model}`,
-      tons:     st.tonnage,
-      hayJumpJets: (st.jumpMP ?? 0) > 0,
-      hayMunicion: (st.weapons ?? []).some(w => /ammo|mun/i.test(w.name || '')) ||
-                   ((slot.session?.ammoBins ?? []).length > 0),
+      mechName:    `${selectedHangarItem.chassis} ${selectedHangarItem.model}`,
+      tons:        selectedHangarItem.tons,
+      hayJumpJets: false, // TODO: extraer del .ssw al comprar
+      hayMunicion: false, // TODO: idem
     };
-  }, [simSlotIdx]);
+  }, [selectedHangarItem]);
 
   // ── Inputs flow ──
   const [modCondiciones, setModCondiciones] = useState(0);
@@ -987,7 +1009,7 @@ function MantenimientoTab() {
   useEffect(() => {
     setLastRoll(null); setResultado(null); setPatchesPendientes([]); setTiradasRestantes(0);
     setRollManual(''); setModCondiciones(0);
-  }, [simSlotIdx]);
+  }, [selectedKey]);
 
   // ── Calcs ──
   const tn = useMemo(() => {
@@ -996,15 +1018,26 @@ function MantenimientoTab() {
   }, [mant, modCondiciones]);
 
   // Mantenimiento rutinario: 0 ₡ canon (los daños fallidos van a Prioridades).
-  const costo = 0;
   const tiempo = mechInfo ? TIEMPO_MANTENIMIENTO[clasePorTonelaje(mechInfo.tons)] : 0;
 
-  // ── Persistir cambios al state ──
-  const updateMant = (patch: Partial<MechMaintenanceState>) => {
-    if (simSlotIdx === null || !mant) return;
+  // ── Persistir cambios ──
+  // qualityRating/techRating/extraDamage → HangarItem (Firestore).
+  // experienciaEquipo/historial → session-only.
+  const updateMant = async (patch: Partial<MechMaintenanceState>) => {
+    if (!mant || !selectedHangarItem) return;
     const next = { ...mant, ...patch };
     setMantState(next);
-    saveMechMaintenance(simSlotIdx, next);
+    // Persistir solo los campos que viven en HangarItem
+    const itemPatch: Partial<HangarItem> = {};
+    if ('qualityRating' in patch) itemPatch.qualityRating = patch.qualityRating;
+    if ('techRating'    in patch) itemPatch.techRating    = patch.techRating;
+    if ('extraDamage'   in patch) itemPatch.damagePersist = patch.extraDamage;
+    if (Object.keys(itemPatch).length > 0) {
+      const updated = { ...selectedHangarItem, ...itemPatch };
+      await saveHangarItem(updated);
+      // Refresca lista local
+      setHangarItems(prev => prev.map(it => it.id === updated.id ? updated : it));
+    }
   };
 
   // ── Acciones flow ──
@@ -1036,8 +1069,8 @@ function MantenimientoTab() {
     [campaign?.campaignYear, campaign?.campaignMonth],
   );
 
-  const handleAplicarTodo = () => {
-    if (!mant || !resultado || simSlotIdx === null) return;
+  const handleAplicarTodo = async () => {
+    if (!mant || !resultado || !selectedHangarItem) return;
     const baseExtra = mant.extraDamage ?? emptyDamage();
     const nuevoExtra = aplicarDamagePatches(baseExtra, patchesPendientes);
     const entry: MaintenanceLogEntry = {
@@ -1048,9 +1081,9 @@ function MantenimientoTab() {
       margen:         resultado.mos > 0 ? resultado.mos : resultado.mof,
       cambioQuality:  resultado.cambioQuality,
       danosGenerados: patchesPendientes.map(describirDamagePatch),
-      costo,
+      costo:          0,
     };
-    updateMant({
+    await updateMant({
       qualityRating: resultado.cambioQuality ?? mant.qualityRating,
       extraDamage:   nuevoExtra,
       historial:     [entry, ...mant.historial].slice(0, 50),
@@ -1066,28 +1099,16 @@ function MantenimientoTab() {
         Mantenimiento rutinario
       </h1>
 
-      {/* Selector mech */}
+      {/* Selector mech: solo unidades de campaña (hangar + piloto) */}
       <section className="mb-4 bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
         <label className="block font-mono text-[10px] uppercase tracking-widest text-secondary/60 mb-2">
-          Mech del simulador
+          Mech de campaña
         </label>
-        <select
-          value={simSlotIdx ?? ''}
-          onChange={e => setSimSlotIdx(e.target.value === '' ? null : Number(e.target.value))}
-          className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-        >
-          <option value="">— Seleccionar —</option>
-          {simSlots.map(({ slot, idx }) => (
-            <option key={idx} value={idx}>
-              SLOT {idx + 1}: {slot.state!.chassis} {slot.state!.model}
-            </option>
-          ))}
-        </select>
-        {simSlots.length === 0 && (
-          <p className="font-mono text-[9px] text-secondary/50 mt-2 italic">
-            No hay mechs cargados en simulador.
-          </p>
-        )}
+        <MechSourcePicker
+          sources={sources}
+          selectedKey={selectedKey}
+          onSelect={setSelectedKey}
+        />
       </section>
 
       {mant && mechInfo && (
