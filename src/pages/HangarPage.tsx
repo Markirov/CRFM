@@ -98,7 +98,7 @@ function InventarioTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
   const { roster } = useAppStore();
-  const fmt = (n: number) => n.toLocaleString('es-ES') + ' ₡';
+  const fmt = (n: number) => Math.round(n).toLocaleString('es-ES') + ' ₡';
 
   const handleAssign = async (item: HangarItem, pilotoIdx: number | undefined) => {
     // Caso: desasignar
@@ -284,7 +284,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
       setChassis(p.chassis || (fallback.split(' ')[0] ?? ''));
       setModel(p.model || fallback.split(' ').slice(1).join(' '));
       setTons(p.tons ?? m.tons ?? 0);
-      setPrecio(p.cost ?? m.cost ?? 0);
+      setPrecio(Math.round(p.cost ?? m.cost ?? 0));
       setHasJumpJets(p.hasJumpJets);
       setHasAmmo(p.hasAmmo);
     } catch {
@@ -292,7 +292,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
       setChassis(m.chassis ?? m.name?.split(' ')[0] ?? '');
       setModel(m.model ?? m.name?.split(' ').slice(1).join(' ') ?? '');
       setTons(m.tons ?? 0);
-      setPrecio(m.cost ?? 0);
+      setPrecio(Math.round(m.cost ?? 0));
       setHasJumpJets(false);
       setHasAmmo(false);
     } finally {
@@ -512,7 +512,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
           <div className="border border-primary-container/40 bg-primary-container/5 p-2 font-mono text-[10px] grid grid-cols-3 gap-2">
             <div>
               <div className="text-secondary/60 uppercase tracking-widest text-[8px]">Canon</div>
-              <div className="text-secondary">{precio.toLocaleString('es-ES')} ₡</div>
+              <div className="text-secondary">{Math.round(precio).toLocaleString('es-ES')} ₡</div>
             </div>
             <div>
               <div className="text-secondary/60 uppercase tracking-widest text-[8px]">× Factor</div>
@@ -640,7 +640,7 @@ function VenderTab({ items, loading, refresh }: {
               >
                 <span className="text-on-surface flex-1">{it.chassis} {it.model}</span>
                 <span className="text-secondary/60">{it.tons}t</span>
-                <span className="text-primary-container">{(it.valorActual ?? it.precioBase).toLocaleString('es-ES')} ₡</span>
+                <span className="text-primary-container">{Math.round(it.valorActual ?? it.precioBase).toLocaleString('es-ES')} ₡</span>
               </button>
             </li>
           ))}
@@ -664,7 +664,7 @@ function VenderTab({ items, loading, refresh }: {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[10px] text-secondary/70">
         <div>Tons: <span className="text-secondary">{selected.tons}</span></div>
         <div>BV: <span className="text-secondary">{selected.bv ?? '—'}</span></div>
-        <div>Valor ref: <span className="text-secondary">{(selected.valorActual ?? selected.precioBase).toLocaleString('es-ES')} ₡</span></div>
+        <div>Valor ref: <span className="text-secondary">{Math.round(selected.valorActual ?? selected.precioBase).toLocaleString('es-ES')} ₡</span></div>
         <div>Piloto: <span className="text-secondary">{selected.pilotoIdx !== undefined ? pilotLabel(roster, selected.pilotoIdx) : 'Reserva'}</span></div>
       </div>
 
