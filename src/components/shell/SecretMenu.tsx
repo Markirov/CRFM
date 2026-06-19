@@ -3,8 +3,9 @@ import { X, Save, Loader, LogOut } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { useAppStore } from '@/lib/store';
-import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
+import { loadConfig, saveConfigBatch, savePilot } from '@/lib/firebase-service';
 import { formatCzar, parseCurrencyValue } from '@/lib/currency-utils';
+import { isActivo } from '@/lib/roster';
 import { RolesPanel } from './RolesPanel';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -23,9 +24,13 @@ const COMBAT_DEFAULTS = {
 interface Props { open: boolean; onClose: () => void }
 
 export function SecretMenu({ open, onClose }: Props) {
-  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns, userRole } = useAppStore();
+  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns, userRole, roster } = useAppStore();
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // XP editor por piloto: clave jugador → { xpTotal, xpDisponible }
+  const [pilotXP, setPilotXP] = useState<Record<string, { xpTotal: number; xpDisponible: number }>>({});
+  const [pilotXPDirty, setPilotXPDirty] = useState<Set<string>>(new Set());
 
   // Form state
   const [month, setMonth]       = useState(1);
@@ -59,6 +64,15 @@ export function SecretMenu({ open, onClose }: Props) {
       let cc = COMBAT_DEFAULTS;
       try { cc = { ...COMBAT_DEFAULTS, ...JSON.parse(localStorage.getItem('combatConfig') || '{}') }; } catch {}
       setCombat(cc);
+
+      // Init pilotXP desde roster activo
+      const xpMap: Record<string, { xpTotal: number; xpDisponible: number }> = {};
+      for (const r of roster) {
+        if (!r.jugador || !isActivo(r)) continue;
+        xpMap[r.jugador] = { xpTotal: r.xpTotal || 0, xpDisponible: r.xpDisponible || 0 };
+      }
+      setPilotXP(xpMap);
+      setPilotXPDirty(new Set());
     } catch {}
     setLoading(false);
   };
@@ -89,8 +103,27 @@ export function SecretMenu({ open, onClose }: Props) {
     localStorage.setItem('CAMPAIGN_YEAR', String(year));
     localStorage.setItem('CAMPAIGN_MONTH', String(month));
 
+    // Persistir XP solo de pilotos editados
+    for (const jugador of pilotXPDirty) {
+      const v = pilotXP[jugador];
+      if (!v) continue;
+      try {
+        await savePilot({
+          jugador,
+          xpTotal:      v.xpTotal,
+          xpDisponible: v.xpDisponible,
+        });
+      } catch {}
+    }
+    setPilotXPDirty(new Set());
+
     setSaving(false);
     onClose();
+  };
+
+  const updatePilotXP = (jugador: string, patch: Partial<{ xpTotal: number; xpDisponible: number }>) => {
+    setPilotXP(prev => ({ ...prev, [jugador]: { ...prev[jugador], ...patch } }));
+    setPilotXPDirty(prev => new Set(prev).add(jugador));
   };
 
   const updateCombat = (key: string, val: string) => {
@@ -209,6 +242,46 @@ export function SecretMenu({ open, onClose }: Props) {
                   </label>
                   <div className="font-mono text-[9px] text-outline">
                     Off → diseños nuevos (P2 Medallón / P3 Two-Tone). On → versiones P1 originales.
+                  </div>
+                </div>
+
+                {/* XP Pilotos */}
+                <div className="lg:col-span-2 bg-green-400/5 border border-green-400/30 p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="font-mono text-[10px] font-bold text-green-400 uppercase tracking-[2px]">
+                      XP Pilotos · Override directo
+                    </div>
+                    <div className="font-mono text-[8px] text-green-400/60 uppercase tracking-widest">
+                      {pilotXPDirty.size > 0 ? `${pilotXPDirty.size} sin guardar` : 'Sincronizado'}
+                    </div>
+                  </div>
+                  {Object.keys(pilotXP).length === 0 ? (
+                    <div className="font-mono text-[9px] text-outline italic">Sin pilotos activos en roster.</div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {Object.entries(pilotXP).map(([jugador, v]) => (
+                        <div key={jugador} className="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant/20 px-2 py-1.5">
+                          <span className="font-mono text-[10px] text-on-surface flex-1 truncate" title={jugador}>{jugador}</span>
+                          <label className="font-mono text-[8px] text-outline/60 uppercase tracking-widest">XP</label>
+                          <input
+                            type="number" min={0} value={v.xpTotal}
+                            onFocus={e => e.target.select()}
+                            onChange={e => updatePilotXP(jugador, { xpTotal: Math.max(0, parseInt(e.target.value) || 0) })}
+                            className="w-20 h-7 bg-surface-container-lowest border border-outline-variant/30 px-1 font-mono text-[10px] text-on-surface text-right focus:outline-none focus:border-green-400/60"
+                          />
+                          <label className="font-mono text-[8px] text-outline/60 uppercase tracking-widest">Disp</label>
+                          <input
+                            type="number" min={0} value={v.xpDisponible}
+                            onFocus={e => e.target.select()}
+                            onChange={e => updatePilotXP(jugador, { xpDisponible: Math.max(0, parseInt(e.target.value) || 0) })}
+                            className="w-20 h-7 bg-surface-container-lowest border border-green-400/20 px-1 font-mono text-[10px] text-green-400 text-right focus:outline-none focus:border-green-400/60"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="font-mono text-[8px] text-outline/50 italic">
+                    Guarda con el botón Guardar de arriba. No crea asiento ni log.
                   </div>
                 </div>
 
