@@ -113,25 +113,6 @@ export function HojaServicioPageLegacy() {
     setPlayers(prev => prev.map((p, i) => i === idx ? { ...p, ...patch } : p));
   }, []);
 
-  // Edita XP base del PJ y persiste a personajes/{jugador} (independiente de "Registrar misión").
-  const saveBaseXP = useCallback(async (idx: number, patch: { xpTotal?: number; xpDisponible?: number }) => {
-    let target: PlayerRow | null = null;
-    setPlayers(prev => prev.map((p, i) => {
-      if (i !== idx) return p;
-      const next = { ...p, ...patch };
-      target = next;
-      return next;
-    }));
-    if (!target) return;
-    try {
-      await savePilot({
-        jugador:      (target as PlayerRow).name,
-        xpTotal:      (target as PlayerRow).xpTotal,
-        xpDisponible: (target as PlayerRow).xpDisponible,
-      });
-    } catch {}
-  }, []);
-
   // ── Finance ───────────────────────────────────────────────────────────────
   const balance = pago + salvamento - reparacion - municion;
 
@@ -290,28 +271,11 @@ export function HojaServicioPageLegacy() {
                   {PLAYER_DISPLAY[p.name]}
                 </span>
 
-                {/* Current XP (editable) */}
-                <span className="font-mono text-[12px] text-on-surface-variant/70 flex items-center gap-1">
+                {/* Current XP */}
+                <span className="font-mono text-[12px] text-on-surface-variant/70">
                   {p.loading
                     ? <Loader size={11} className="animate-spin text-outline/40" />
-                    : (
-                      <>
-                        <input
-                          type="number"
-                          defaultValue={p.xpTotal}
-                          key={`tot-${i}-${p.xpTotal}`}
-                          onFocus={e => e.target.select()}
-                          onBlur={e => {
-                            const v = Math.max(0, parseInt(e.target.value) || 0);
-                            if (v !== p.xpTotal) saveBaseXP(i, { xpTotal: v });
-                          }}
-                          onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-                          title="Editar XP total"
-                          className="w-16 h-6 bg-transparent border border-outline-variant/20 px-1 font-mono text-[11px] text-on-surface-variant/90 text-right focus:outline-none focus:border-primary-container/40"
-                        />
-                        <span className="text-[9px] text-outline/40">PX</span>
-                      </>
-                    )
+                    : <>{fmtNum(p.xpTotal)} <span className="text-[9px] text-outline/40">PX</span></>
                   }
                 </span>
 
@@ -391,26 +355,12 @@ export function HojaServicioPageLegacy() {
                       <span className="font-mono text-[8px] text-outline/40">{p.nivel}</span>
                     </div>
 
-                    {/* XP Disponible (editable) */}
+                    {/* XP Disponible */}
                     <div className="flex items-center justify-between bg-green-400/3 border border-green-400/10 px-2 py-1">
                       <span className="font-mono text-[8px] text-outline/40">XP Disponible</span>
-                      {p.loading ? (
-                        <span className="font-mono text-[11px] text-green-400 font-bold">…</span>
-                      ) : (
-                        <input
-                          type="number"
-                          defaultValue={p.xpDisponible}
-                          key={`dis-${i}-${p.xpDisponible}`}
-                          onFocus={e => e.target.select()}
-                          onBlur={e => {
-                            const v = Math.max(0, parseInt(e.target.value) || 0);
-                            if (v !== p.xpDisponible) saveBaseXP(i, { xpDisponible: v });
-                          }}
-                          onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-                          title="Editar XP disponible"
-                          className="w-16 h-6 bg-transparent border border-green-400/20 px-1 font-mono text-[11px] text-green-400 font-bold text-right focus:outline-none focus:border-green-400/60"
-                        />
-                      )}
+                      <span className="font-mono text-[11px] text-green-400 font-bold">
+                        {p.loading ? '…' : fmtNum(p.xpDisponible)}
+                      </span>
                     </div>
 
                     {/* Reroll buttons */}

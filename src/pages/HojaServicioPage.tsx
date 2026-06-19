@@ -256,9 +256,8 @@ interface PaperPilotRowProps {
   index:  number;
   isLast: boolean;
   onUpdate: (idx: number, patch: Partial<PlayerRow>) => void;
-  onSaveBaseXP: (idx: number, patch: { xpTotal?: number; xpDisponible?: number }) => void;
 }
-function PaperPilotRow({ player, index, isLast, onUpdate, onSaveBaseXP }: PaperPilotRowProps) {
+function PaperPilotRow({ player, index, isLast, onUpdate }: PaperPilotRowProps) {
   const rc = REROLL_CONFIG[player.nivel] ?? REROLL_CONFIG.Novato;
   const spent = calcSpent(player);
   // XP ganado en la sesión va INTEGRO a xpTotal (puntos ganados).
@@ -310,46 +309,10 @@ function PaperPilotRow({ player, index, isLast, onUpdate, onSaveBaseXP }: PaperP
         <span style={{ fontSize: 10, color: C.inkSoft, fontStyle: 'italic', fontFamily: '"Special Elite", monospace' }}>
           «{player.callsign || '—'}» · {player.nivel}
         </span>
-        <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: C.goldDeep }}>
-          EXP
-          <input
-            type="number"
-            defaultValue={player.xpTotal}
-            key={`tot-${index}-${player.xpTotal}`}
-            onFocus={e => e.target.select()}
-            onBlur={e => {
-              const v = Math.max(0, parseInt(e.target.value) || 0);
-              if (v !== player.xpTotal) onSaveBaseXP(index, { xpTotal: v });
-            }}
-            onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-            title="Editar XP total"
-            style={{
-              width: 56, height: 18, padding: '0 4px',
-              background: C.paperHi + 'cc', border: `1px solid ${C.goldDeep}44`,
-              color: C.ink, fontFamily: '"Share Tech Mono", monospace',
-              fontSize: 10, textAlign: 'right', outline: 'none',
-            }}
-          />
-          <span style={{ color: C.goldDim }}>·</span>
-          DISP
-          <input
-            type="number"
-            defaultValue={player.xpDisponible}
-            key={`dis-${index}-${player.xpDisponible}`}
-            onFocus={e => e.target.select()}
-            onBlur={e => {
-              const v = Math.max(0, parseInt(e.target.value) || 0);
-              if (v !== player.xpDisponible) onSaveBaseXP(index, { xpDisponible: v });
-            }}
-            onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
-            title="Editar XP disponible"
-            style={{
-              width: 56, height: 18, padding: '0 4px',
-              background: C.paperHi + 'cc', border: `1px solid ${C.goldDeep}44`,
-              color: C.greenDeep, fontFamily: '"Share Tech Mono", monospace',
-              fontSize: 10, textAlign: 'right', outline: 'none',
-            }}
-          />
+        <span style={{ marginLeft: 'auto', fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: C.goldDeep }}>
+          EXP <span style={{ color: C.ink }}>{fmt(player.xpTotal)}</span>
+          <span style={{ margin: '0 5px', color: C.goldDim }}>·</span>
+          DISP <span style={{ color: C.greenDeep }}>{fmt(player.xpDisponible)}</span>
         </span>
       </div>
 
@@ -578,26 +541,6 @@ export function HojaServicioPage() {
 
   const upd = useCallback((idx: number, patch: Partial<PlayerRow>) => {
     setPlayers(prev => prev.map((p, i) => i === idx ? { ...p, ...patch } : p));
-  }, []);
-
-  // Edita XP base del PJ (xpTotal/xpDisponible) y persiste a personajes/{jugador}.
-  // Independiente del flujo de "Registrar misión" — esto es ajuste directo.
-  const saveBaseXP = useCallback(async (idx: number, patch: { xpTotal?: number; xpDisponible?: number }) => {
-    let target: PlayerRow | null = null;
-    setPlayers(prev => prev.map((p, i) => {
-      if (i !== idx) return p;
-      const next = { ...p, ...patch };
-      target = next;
-      return next;
-    }));
-    if (!target) return;
-    try {
-      await savePilot({
-        jugador:      (target as PlayerRow).name,
-        xpTotal:      (target as PlayerRow).xpTotal,
-        xpDisponible: (target as PlayerRow).xpDisponible,
-      });
-    } catch {}
   }, []);
 
   // Computed
@@ -951,8 +894,7 @@ export function HojaServicioPage() {
                 <PaperPilotRow key={p.name}
                   player={p} index={i}
                   isLast={i === players.length - 1}
-                  onUpdate={upd}
-                  onSaveBaseXP={saveBaseXP} />
+                  onUpdate={upd} />
               ))}
             </div>
             <div style={{
