@@ -29,11 +29,15 @@ export interface TelegramSendResult {
 /**
  * Envía notificación a Telegram. Drop silencioso si falla.
  * Llamar SIEMPRE awaited (es async) pero NUNCA bloquear UX por respuesta.
+ * Respeta toggle global TELEGRAM_ENABLED (localStorage).
  */
 export async function sendTelegramNotif(
   event: TelegramEvent,
   data: Record<string, any>,
 ): Promise<TelegramSendResult> {
+  if (!getTelegramEnabled()) {
+    return { success: false, error: 'telegram disabled (global toggle)' };
+  }
   try {
     const res = await sheetsPost({
       action: 'tgSend',
@@ -70,11 +74,56 @@ export function setTelegramToggle(context: string, on: boolean): void {
   } catch { /* ignore */ }
 }
 
-// ── Umbral check ─────────────────────────────────────────────────
+// ── Toggle global + umbrales (localStorage, editables desde SecretMenu) ──
 
-const UMBRAL_DEFAULT = 100_000;
+const ENABLED_KEY    = 'kk_tg_enabled';
+const UMBRAL_TES_KEY = 'kk_tg_umbral_tesoreria';
+const UMBRAL_LIB_KEY = 'kk_tg_umbral_libro';
+const UMBRAL_TES_DEFAULT = 100_000;
+const UMBRAL_LIB_DEFAULT = 10_000;
+
+export function getTelegramEnabled(): boolean {
+  try {
+    const raw = localStorage.getItem(ENABLED_KEY);
+    if (raw === null) return true; // default ON (compat con comportamiento previo)
+    return raw === '1';
+  } catch { return true; }
+}
+
+export function setTelegramEnabled(on: boolean): void {
+  try { localStorage.setItem(ENABLED_KEY, on ? '1' : '0'); } catch {}
+}
+
+export function getUmbralTesoreria(): number {
+  try {
+    const raw = localStorage.getItem(UMBRAL_TES_KEY);
+    const n = raw === null ? UMBRAL_TES_DEFAULT : parseInt(raw);
+    return Number.isFinite(n) && n > 0 ? n : UMBRAL_TES_DEFAULT;
+  } catch { return UMBRAL_TES_DEFAULT; }
+}
+
+export function setUmbralTesoreria(n: number): void {
+  try { localStorage.setItem(UMBRAL_TES_KEY, String(Math.max(0, Math.round(n)))); } catch {}
+}
+
+export function getUmbralLibroMayor(): number {
+  try {
+    const raw = localStorage.getItem(UMBRAL_LIB_KEY);
+    const n = raw === null ? UMBRAL_LIB_DEFAULT : parseInt(raw);
+    return Number.isFinite(n) && n > 0 ? n : UMBRAL_LIB_DEFAULT;
+  } catch { return UMBRAL_LIB_DEFAULT; }
+}
+
+export function setUmbralLibroMayor(n: number): void {
+  try { localStorage.setItem(UMBRAL_LIB_KEY, String(Math.max(0, Math.round(n)))); } catch {}
+}
 
 /** Devuelve true si la cantidad supera el umbral para notif "tesoreria_grande". */
-export function exceedsTesoreriaUmbral(cantidad: number, umbral = UMBRAL_DEFAULT): boolean {
-  return Math.abs(cantidad) >= umbral;
+export function exceedsTesoreriaUmbral(cantidad: number, umbral?: number): boolean {
+  return Math.abs(cantidad) >= (umbral ?? getUmbralTesoreria());
+}
+
+/** Devuelve true si la cantidad supera el umbral para notif "libro_mayor_relevante". */
+export function exceedsLibroMayorUmbral(cantidad: number, umbral?: number): boolean {
+  return Math.abs(cantidad) >= (umbral ?? getUmbralLibroMayor());
 }
