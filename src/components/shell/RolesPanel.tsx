@@ -70,7 +70,8 @@ export function RolesPanel() {
   const handleChangeRole = async (entry: RoleEntry, role: NonNullable<UserRole>) => {
     setSaving(entry.email); setUsersError(null);
     try {
-      await setRole(entry.email, role);
+      // entry.uid = doc.id real → updates al mismo doc, sin duplicar
+      await setRole(entry.email, role, entry.uid);
       setRoles(prev => prev.map(r => r.uid === entry.uid ? { ...r, role } : r));
     } catch (e: any) { setUsersError(e?.message ?? 'Error'); }
     setSaving(null);
@@ -80,7 +81,8 @@ export function RolesPanel() {
     if (!confirm(`¿Eliminar a ${entry.email}?`)) return;
     setSaving(entry.email); setUsersError(null);
     try {
-      await removeRole(entry.email);
+      // entry.uid = doc.id real → borra el doc correcto aunque no coincida con emailKey
+      await removeRole(entry.email, entry.uid);
       setRoles(prev => prev.filter(r => r.uid !== entry.uid));
     } catch (e: any) { setUsersError(e?.message ?? 'Error'); }
     setSaving(null);
@@ -90,7 +92,14 @@ export function RolesPanel() {
     const email = newEmail.trim().toLowerCase();
     if (!email) return;
     setAddBusy(true); setAddError(null);
-    try { await setRole(email, newRole); setNewEmail(''); await loadUsers(); }
+    try {
+      // Si ya existe entry con este email (con docId legacy distinto al emailKey),
+      // reutiliza su docId para no crear duplicado.
+      const existing = roles.find(r => r.email?.toLowerCase() === email);
+      await setRole(email, newRole, existing?.uid);
+      setNewEmail('');
+      await loadUsers();
+    }
     catch (e: any) { setAddError(e?.message ?? 'Error'); }
     setAddBusy(false);
   };

@@ -23,19 +23,36 @@ export async function getRoles(): Promise<RoleEntry[]> {
   return snap.docs.map(d => ({ uid: d.id, ...d.data() } as RoleEntry));
 }
 
+/** Calcula docId estable desde email (legacy: docs antiguos pueden tener
+ *  otros id formats — siempre que sea posible, pasar `docId` explícito
+ *  del doc existente para evitar duplicados). */
+function emailToDocId(email: string): string {
+  return email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+}
+
 // ── Cambiar rol ─────────────────────────────────────────────
 // 1. Escribe en Firestore roles/ (inmediato, siempre funciona)
 // 2. Intenta Cloud Function para Custom Claim (puede fallar si usuario no existe en Auth)
-export async function setRole(email: string, role: NonNullable<UserRole>): Promise<void> {
-  const emailKey = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+// Si docId se pasa, actualiza el doc existente (compat con docs legacy
+// cuyo id no coincide con emailKey). Si no, usa emailKey.
+export async function setRole(
+  email: string,
+  role: NonNullable<UserRole>,
+  docId?: string,
+): Promise<void> {
+  const targetId = docId ?? emailToDocId(email);
 
-  // 1. Escribir directamente en Firestore (garantiza que AuthGate lo vea)
-  await setDoc(doc(db, 'roles', emailKey), {
-    uid: emailKey,
-    email: email.toLowerCase(),
-    role,
-    updatedAt: new Date().toISOString(),
-  });
+  try {
+    await setDoc(doc(db, 'roles', targetId), {
+      uid:       targetId,
+      email:     email.toLowerCase(),
+      role,
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error('[role-service] setDoc roles/', targetId, 'falló:', e);
+    throw e;
+  }
 
   // 2. Intentar Cloud Function para Custom Claim (no bloqueante)
   try {
@@ -43,12 +60,19 @@ export async function setRole(email: string, role: NonNullable<UserRole>): Promi
     await fn({ email, role });
   } catch (e) {
     console.warn('[role-service] Cloud Function setUserRole falló (usuario puede no existir en Auth aún):', e);
-    // No lanzar error — el rol ya está en Firestore
+    // No lanzar — rol ya está en Firestore
   }
 }
 
 // ── Eliminar rol ────────────────────────────────────────────
-export async function removeRole(email: string): Promise<void> {
-  const emailKey = email.toLowerCase().replace(/[^a-z0-9]/g, '_');
-  await deleteDoc(doc(db, 'roles', emailKey));
+// Si docId se pasa, borra ese doc. Si no, asume emailKey (puede no
+// match docs legacy → caller debería pasar entry.uid del listado).
+export async function removeRole(email: string, docId?: string): Promise<void> {
+  const targetId = docId ?? emailToDocId(email);
+  try {
+    await deleteDoc(doc(db, 'roles', targetId));
+  } catch (e) {
+    console.error('[role-service] deleteDoc roles/', targetId, 'falló:', e);
+    throw e;
+  }
 }
