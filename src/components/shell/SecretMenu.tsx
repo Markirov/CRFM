@@ -126,6 +126,29 @@ export function SecretMenu({ open, onClose }: Props) {
     setPilotXPDirty(prev => new Set(prev).add(jugador));
   };
 
+  // Guardado solo de XP — no cierra modal, no toca config.
+  const [savingXP, setSavingXP] = useState(false);
+  const [savedXPFlash, setSavedXPFlash] = useState(false);
+  const saveXPOnly = async () => {
+    if (pilotXPDirty.size === 0) return;
+    setSavingXP(true);
+    for (const jugador of pilotXPDirty) {
+      const v = pilotXP[jugador];
+      if (!v) continue;
+      try {
+        await savePilot({
+          jugador,
+          xpTotal:      v.xpTotal,
+          xpDisponible: v.xpDisponible,
+        });
+      } catch {}
+    }
+    setPilotXPDirty(new Set());
+    setSavingXP(false);
+    setSavedXPFlash(true);
+    setTimeout(() => setSavedXPFlash(false), 1800);
+  };
+
   const updateCombat = (key: string, val: string) => {
     setCombat(prev => ({ ...prev, [key]: parseInt(val) || 0 }));
   };
@@ -251,8 +274,18 @@ export function SecretMenu({ open, onClose }: Props) {
                     <div className="font-mono text-[10px] font-bold text-green-400 uppercase tracking-[2px]">
                       XP Pilotos · Override directo
                     </div>
-                    <div className="font-mono text-[8px] text-green-400/60 uppercase tracking-widest">
-                      {pilotXPDirty.size > 0 ? `${pilotXPDirty.size} sin guardar` : 'Sincronizado'}
+                    <div className="flex items-center gap-2">
+                      <div className="font-mono text-[8px] text-green-400/60 uppercase tracking-widest">
+                        {savedXPFlash ? '✓ Guardado' : pilotXPDirty.size > 0 ? `${pilotXPDirty.size} sin guardar` : 'Sincronizado'}
+                      </div>
+                      <button
+                        onClick={saveXPOnly}
+                        disabled={savingXP || pilotXPDirty.size === 0}
+                        className="flex items-center gap-1.5 px-2 h-7 bg-green-400/10 border border-green-400/60 text-green-400 font-mono text-[9px] uppercase tracking-widest hover:bg-green-400/20 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      >
+                        {savingXP ? <Loader size={10} className="animate-spin" /> : <Save size={10} />}
+                        Guardar XP
+                      </button>
                     </div>
                   </div>
                   {Object.keys(pilotXP).length === 0 ? (
@@ -281,7 +314,7 @@ export function SecretMenu({ open, onClose }: Props) {
                     </div>
                   )}
                   <div className="font-mono text-[8px] text-outline/50 italic">
-                    Guarda con el botón Guardar de arriba. No crea asiento ni log.
+                    Botón "Guardar XP" persiste sin cerrar modal. No crea asiento ni log.
                   </div>
                 </div>
 
