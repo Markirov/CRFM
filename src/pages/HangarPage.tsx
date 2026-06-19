@@ -540,7 +540,7 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
             onClick={handleComprar}
             disabled={precioFinal < 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
             className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-              precioFinal <= 0 || tons <= 0 || !chassis
+              precioFinal < 0 || tons <= 0 || !chassis
                 ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
                 : commitState === 'done'
                   ? 'border-primary bg-primary/20 text-primary'
@@ -593,7 +593,7 @@ function VenderTab({ items, loading, refresh }: {
   }, [estadoPct, selected]);
 
   const handleVender = async () => {
-    if (!selected || precio <= 0) return;
+    if (!selected || precio < 0) return;
     setCommitState('sending');
     try {
       await commitLibroEntryAndTreasury({
@@ -708,9 +708,9 @@ function VenderTab({ items, loading, refresh }: {
 
       <button
         onClick={handleVender}
-        disabled={precio <= 0 || commitState === 'sending'}
+        disabled={precio < 0 || commitState === 'sending'}
         className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-          precio <= 0
+          precio < 0
             ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
             : commitState === 'done'
               ? 'border-primary bg-primary/20 text-primary'
