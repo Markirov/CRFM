@@ -27,6 +27,7 @@ import { useAppStore } from '@/lib/store';
 import type { FireTarget } from '@/lib/combat-types';
 import { useLiveSession } from '@/hooks/useLiveSession';
 import { CombatRadar, IncomingAttacks } from '@/components/simulador/CombatRadar';
+import { FireControlModal } from '@/components/simulador/FireControlModal';
 
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
@@ -58,6 +59,7 @@ export function SimuladorPage() {
   const { readable, writable, loading: permLoading } = usePerm('simulador');
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
+  const [isFireModalOpen, setIsFireModalOpen] = useState(false);
   const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
   const [destroyedBusy, setDestroyedBusy] = useState(false);
@@ -430,6 +432,13 @@ export function SimuladorPage() {
       {/* Componentes Live / Radar */}
       <IncomingAttacks sim={sim} live={live} />
 
+      <FireControlModal 
+        isOpen={isFireModalOpen} 
+        onClose={() => setIsFireModalOpen(false)} 
+        sim={sim} 
+        live={live} 
+      />
+
       {/* Subtab right-slot: flags + search + slot picker + sync */}
       <SubtabRightPortal>
         <CombatRadar sim={sim} live={live} />
@@ -504,11 +513,19 @@ export function SimuladorPage() {
             />
 
             <button
+              onClick={() => setIsFireModalOpen(true)}
+              disabled={ss.destroyed || !writable || Object.keys(ss.activeShots).length === 0}
+              className="w-full bg-error hover:bg-error/80 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-on-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2"
+            >
+              <Crosshair size={20} /> Fijar Blancos y Disparar
+            </button>
+
+            <button
               onClick={sim.handleFire}
               disabled={!sim.canMechFire || ss.destroyed || !writable}
               className="w-full bg-error/20 hover:bg-error/40 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2"
             >
-              <Crosshair size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin de Turno'}
+              <RotateCcw size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin de Turno'}
             </button>
 
             <HeatMonitor state={ms} session={ss} onAdjustHeat={sim.adjustHeat} />

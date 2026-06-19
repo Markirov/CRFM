@@ -9,40 +9,8 @@ interface Props {
 }
 
 export function CombatRadar({ sim, live }: Props) {
-  const [targetSession, setTargetSession] = useState<LiveSession | null>(null);
-  const [targetUnit, setTargetUnit] = useState<LiveUnit | null>(null);
-  const [selectedWeapon, setSelectedWeapon] = useState<{name: string, dmg: number} | null>(null);
-  const [dmgOverride, setDmgOverride] = useState<number>(0);
-  const [customWeaponName, setCustomWeaponName] = useState<string>('');
-
   const handleOpenAttack = (session: LiveSession, unit: LiveUnit) => {
-    setTargetSession(session);
-    setTargetUnit(unit);
-    setSelectedWeapon(null);
-    setDmgOverride(0);
-    setCustomWeaponName('');
-  };
-
-  const handleSendAttack = () => {
-    if (!targetSession || !targetUnit) return;
-    const wName = selectedWeapon ? selectedWeapon.name : (customWeaponName || 'Ataque Genérico');
-    const dmg = selectedWeapon ? (dmgOverride > 0 ? dmgOverride : selectedWeapon.dmg) : dmgOverride;
-    
-    if (dmg <= 0) return;
-
-    // Obtener nombre de la unidad atacante actual
-    let sourceName = 'Unidad Local';
-    if (sim.activeTab === 'mechs' && sim.mechState) {
-      sourceName = `${sim.mechState.chassis} ${sim.mechState.model}`;
-    } else if (sim.activeTab === 'vehicles' && sim.vehicleState) {
-      sourceName = sim.vehicleState.name;
-    }
-
-    live.sendAttack(targetSession.id, targetUnit.id, sourceName, wName, dmg);
-    
-    // Feedback visual simple
-    setTargetSession(null);
-    setTargetUnit(null);
+    // Ya no se usa el modal interno, ahora el ataque se hace desde el FireControlModal
   };
 
   if (!live.isLive) {
@@ -97,13 +65,6 @@ export function CombatRadar({ sim, live }: Props) {
                       <span className={`text-[9px] ${u.hpPercent < 30 ? 'text-error' : u.hpPercent < 70 ? 'text-amber-400' : 'text-primary-container'}`}>
                         {u.hpPercent}%
                       </span>
-                      <button 
-                        onClick={() => handleOpenAttack(sess, u)}
-                        className="text-error hover:text-on-error hover:bg-error p-1 transition-colors"
-                        title="Fijar Blanco"
-                      >
-                        <Crosshair size={12} />
-                      </button>
                     </div>
                   )}
                 </div>
@@ -113,84 +74,7 @@ export function CombatRadar({ sim, live }: Props) {
         </div>
       </div>
 
-      {/* Modal de Ataque */}
-      {targetSession && targetUnit && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="bg-surface-container border border-error/60 clip-chamfer p-5 max-w-sm w-full shadow-2xl">
-            <h3 className="font-headline text-sm text-error font-bold uppercase tracking-widest mb-1 flex items-center gap-2">
-              <Crosshair size={16} /> Fijar Blanco
-            </h3>
-            <div className="font-mono text-[11px] text-secondary mb-4 border-b border-outline-variant/40 pb-2">
-              Atacando a <span className="text-primary-container">{targetUnit.name}</span> ({targetSession.playerName})
-            </div>
 
-            <div className="space-y-4 mb-5">
-              <div>
-                <label className="block font-mono text-[9px] text-secondary/60 uppercase mb-1">Arma Seleccionada</label>
-                <div className="max-h-32 overflow-y-auto border border-outline-variant/40 bg-surface-container-low">
-                  {myWeapons.map((w: any) => {
-                    // Parse damage to number for base dmg
-                    const baseDmg = parseInt(w.dmg) || 0;
-                    return (
-                      <button
-                        key={w.id}
-                        onClick={() => { setSelectedWeapon({ name: w.name, dmg: baseDmg }); setDmgOverride(baseDmg); setCustomWeaponName(''); }}
-                        className={`w-full text-left p-2 font-mono text-[10px] flex justify-between hover:bg-error/10 ${selectedWeapon?.name === w.name ? 'bg-error/20 text-error' : 'text-secondary'}`}
-                      >
-                        <span>{w.name}</span>
-                        <span>{w.dmg} dmg</span>
-                      </button>
-                    );
-                  })}
-                  <button
-                    onClick={() => { setSelectedWeapon(null); setDmgOverride(0); }}
-                    className={`w-full text-left p-2 font-mono text-[10px] flex justify-between hover:bg-error/10 ${!selectedWeapon ? 'bg-error/20 text-error' : 'text-secondary'}`}
-                  >
-                    <span className="italic">Ataque Físico / Otro</span>
-                  </button>
-                </div>
-              </div>
-
-              {!selectedWeapon && (
-                <div>
-                  <label className="block font-mono text-[9px] text-secondary/60 uppercase mb-1">Nombre Arma / Ataque</label>
-                  <input
-                    type="text"
-                    value={customWeaponName}
-                    onChange={(e) => setCustomWeaponName(e.target.value)}
-                    className="w-full bg-surface-container-low border border-outline-variant/40 px-2 py-1.5 font-mono text-[11px] text-primary-container focus:outline-none focus:border-primary"
-                    placeholder="Ej. Patada, Caída, Campo minado..."
-                  />
-                </div>
-              )}
-
-              <div>
-                <label className="block font-mono text-[9px] text-secondary/60 uppercase mb-1">Daño a infligir</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={dmgOverride || ''}
-                  onChange={(e) => setDmgOverride(parseInt(e.target.value) || 0)}
-                  className="w-full bg-surface-container-low border border-outline-variant/40 px-2 py-1.5 font-mono text-[14px] text-error font-bold text-center focus:outline-none focus:border-error"
-                />
-                <p className="font-mono text-[8px] text-secondary/40 text-center mt-1">Ajusta si es ataque en racimo (misiles) o parcial</p>
-              </div>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => setTargetSession(null)}
-                className="flex-1 px-3 py-2 border border-outline-variant/40 hover:border-outline-variant text-secondary/60 hover:text-secondary font-mono text-[10px] uppercase tracking-widest transition-colors"
-              >Cancelar</button>
-              <button
-                onClick={handleSendAttack}
-                disabled={dmgOverride <= 0}
-                className="flex-1 px-3 py-2 border border-error bg-error/20 hover:bg-error/40 text-error font-mono text-[10px] uppercase tracking-widest font-bold transition-colors disabled:opacity-30 flex items-center justify-center gap-2"
-              ><Crosshair size={12} /> Disparar</button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

@@ -33,11 +33,11 @@ export interface LiveSession {
 const LIVE_COL = 'live_sessions';
 
 export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(() => sessionStorage.getItem('liveSessionId'));
   const [playerName, setPlayerName] = useState<string>('');
   const [sessions, setSessions] = useState<LiveSession[]>([]);
   const [mySession, setMySession] = useState<LiveSession | null>(null);
-  const [isLive, setIsLive] = useState(false);
+  const [isLive, setIsLive] = useState<boolean>(!!sessionStorage.getItem('liveSessionId'));
 
   const { roster } = useAppStore();
 
@@ -116,7 +116,6 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
     }
   }, [isLive, sessionId, playerName, buildUnits]);
 
-  // Iniciar / Detener
   const toggleLive = useCallback(async () => {
     if (isLive) {
       if (sessionId) {
@@ -124,9 +123,11 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
       }
       setIsLive(false);
       setSessionId(null);
+      sessionStorage.removeItem('liveSessionId');
     } else {
       const newId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
       setSessionId(newId);
+      sessionStorage.setItem('liveSessionId', newId);
       setIsLive(true);
     }
   }, [isLive, sessionId]);
