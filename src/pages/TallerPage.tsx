@@ -39,9 +39,9 @@ import {
 import {
   PRESETS, calcularMinutosDisponibles, aplicarPreset, calcularReparaciones,
   mapearDamageARepairItemsConCoste, MINUTOS_POR_PUNTO_BLINDAJE, costoFinal,
-  agregarPersonal, bayMultiplier, aplicarMultiplierBay, listarBays,
+  agregarPersonal, bayMultiplier, teamMultiplier, aplicarMultiplierBay,
   type Preset, type OrdenSecundario, type RepairItem, type ResultadoItem,
-  type UnidadTiempo,
+  type UnidadTiempo, type BayTeam,
 } from '@/lib/repair-priority';
 
 export function TallerPage() {
@@ -169,41 +169,66 @@ function PrioridadesTab() {
   }, []);
 
   const personalAgg = useMemo(() => agregarPersonal(personal), [personal]);
-  const baysDisponibles = useMemo(() => listarBays(personal), [personal]);
 
-  // Bay del mech actual: Techs asignados por nivel (varios a la vez) + AsTechs.
-  const [bayTechsAssigned, setBayTechsAssigned] = useState<Record<PersonalNivel, number>>({
-    green: 0, regular: 0, veteran: 0, elite: 0,
-  });
-  const [bayAstechs, setBayAstechs] = useState(6);
+  // Bay: hasta 3 equipos (cada uno con skill + astechs propios).
+  const MAX_TEAMS = 3;
+  const [bayTeams, setBayTeams] = useState<BayTeam[]>([]);
 
   useEffect(() => {
-    // Por defecto: 1 tech del mejor skill disponible.
-    const next: Record<PersonalNivel, number> = { green: 0, regular: 0, veteran: 0, elite: 0 };
-    if (baysDisponibles.length > 0) {
-      next[baysDisponibles[0].skill] = 1;
-    }
-    setBayTechsAssigned(next);
-    setBayAstechs(Math.min(6, personalAgg.totalAstechs));
-  }, [baysDisponibles, personalAgg.totalAstechs]);
+    // Por defecto: 1 equipo del mejor skill disponible con hasta 6 astechs.
+    const bestSkill: PersonalNivel = (['elite', 'veteran', 'regular', 'green'] as PersonalNivel[])
+      .find(s => personalAgg.techsBySkill[s] > 0) ?? 'regular';
+    const astechs = Math.min(6, personalAgg.totalAstechs);
+    setBayTeams([{ skill: bestSkill, astechs }]);
+  }, [personalAgg.techsBySkill, personalAgg.totalAstechs]);
 
-  // Skill efectivo del bay = el MEJOR nivel con al menos 1 tech asignado (elite > veteran > regular > green).
+  // Skill efectivo (mejor del equipo) — solo para etiqueta informativa.
   const bayTechSkill = useMemo<PersonalNivel>(() => {
     for (const skill of ['elite', 'veteran', 'regular', 'green'] as PersonalNivel[]) {
-      if ((bayTechsAssigned[skill] ?? 0) > 0) return skill;
+      if (bayTeams.some(t => t.skill === skill)) return skill;
     }
     return 'regular';
-  }, [bayTechsAssigned]);
+  }, [bayTeams]);
 
-  const bayTechsTotal = useMemo(
-    () => (Object.values(bayTechsAssigned) as number[]).reduce((a, b) => a + b, 0),
-    [bayTechsAssigned]
-  );
+  const bayTechsTotal = bayTeams.length;
+  const bayAstechsTotal = bayTeams.reduce((s, t) => s + t.astechs, 0);
 
-  const bayMult = useMemo(
-    () => bayMultiplier(bayTechSkill, bayAstechs, bayTechsTotal),
-    [bayTechSkill, bayAstechs, bayTechsTotal],
-  );
+  const bayMult = useMemo(() => bayMultiplier(bayTeams), [bayTeams]);
+
+  // ── Mutadores de equipos ──
+  const techsRestantes = (skill: PersonalNivel, excludeIdx?: number) => {
+    const usados = bayTeams.reduce((n, t, i) => (i !== excludeIdx && t.skill === skill ? n + 1 : n), 0);
+    return Math.max(0, (personalAgg.techsBySkill[skill] ?? 0) - usados);
+  };
+  const astechsRestantes = (excludeIdx?: number) => {
+    const usados = bayTeams.reduce((n, t, i) => (i !== excludeIdx ? n + t.astechs : n), 0);
+    return Math.max(0, personalAgg.totalAstechs - usados);
+  };
+
+  const updateTeam = (idx: number, patch: Partial<BayTeam>) => {
+    setBayTeams(prev => prev.map((t, i) => {
+      if (i !== idx) return t;
+      const next: BayTeam = { ...t, ...patch };
+      // Clamp astechs al disponible (resto + el que ya tenía este team)
+      const cap = astechsRestantes(idx) + t.astechs;
+      next.astechs = Math.min(cap, Math.max(0, next.astechs));
+      return next;
+    }));
+  };
+
+  const addTeam = () => {
+    if (bayTeams.length >= MAX_TEAMS) return;
+    // Mejor skill con disponibles
+    const skill: PersonalNivel = (['elite', 'veteran', 'regular', 'green'] as PersonalNivel[])
+      .find(s => techsRestantes(s) > 0) ?? 'regular';
+    if (techsRestantes(skill) === 0) return;
+    const astechs = Math.min(6, astechsRestantes());
+    setBayTeams(prev => [...prev, { skill, astechs }]);
+  };
+
+  const removeTeam = (idx: number) => {
+    setBayTeams(prev => prev.filter((_, i) => i !== idx));
+  };
 
   // ── Sistema de coste + factor estado factura ──
   const [system, setSystem] = useState<RepairSystem>('canon');
@@ -336,16 +361,22 @@ function PrioridadesTab() {
           minutosDisponibles={tiempoCalc.minutosDisponibles}
         />
 
-        {/* Bay (equipo reparacion) */}
+        {/* Bay (hasta 3 equipos paralelos) */}
         <BayPanel
           totalTechs={personalAgg.totalTechs}
           totalAstechs={personalAgg.totalAstechs}
           techsBySkill={personalAgg.techsBySkill}
-          bayTechsAssigned={bayTechsAssigned} setBayTechsAssigned={setBayTechsAssigned}
+          bayTeams={bayTeams}
+          updateTeam={updateTeam}
+          addTeam={addTeam}
+          removeTeam={removeTeam}
           bayTechsTotal={bayTechsTotal}
+          bayAstechsTotal={bayAstechsTotal}
           bayTechSkill={bayTechSkill}
-          bayAstechs={bayAstechs} setBayAstechs={setBayAstechs}
           bayMult={bayMult}
+          techsRestantes={techsRestantes}
+          astechsRestantes={astechsRestantes}
+          maxTeams={MAX_TEAMS}
         />
 
         {/* Preset Selector */}
@@ -487,30 +518,28 @@ function PresetSelector(p: {
 // ── BayPanel ──
 
 function BayPanel(p: {
-  totalTechs: number;
-  totalAstechs: number;
-  techsBySkill: Record<PersonalNivel, number>;
-  bayTechsAssigned: Record<PersonalNivel, number>;
-  setBayTechsAssigned: (v: Record<PersonalNivel, number>) => void;
+  totalTechs:    number;
+  totalAstechs:  number;
+  techsBySkill:  Record<PersonalNivel, number>;
+  bayTeams:      BayTeam[];
+  updateTeam:    (idx: number, patch: Partial<BayTeam>) => void;
+  addTeam:       () => void;
+  removeTeam:    (idx: number) => void;
   bayTechsTotal: number;
-  bayTechSkill: PersonalNivel;
-  bayAstechs: number;
-  setBayAstechs: (n: number) => void;
-  bayMult: number;
+  bayAstechsTotal: number;
+  bayTechSkill:  PersonalNivel;
+  bayMult:       number;
+  techsRestantes:   (skill: PersonalNivel, excludeIdx?: number) => number;
+  astechsRestantes: (excludeIdx?: number) => number;
+  maxTeams:      number;
 }) {
   const noViable = p.totalTechs === 0;
   const multPct = Math.round((p.bayMult - 1) * 100);
 
-  const setSkillQty = (skill: PersonalNivel, qty: number) => {
-    const max = p.techsBySkill[skill] ?? 0;
-    const clamped = Math.min(max, Math.max(0, qty));
-    p.setBayTechsAssigned({ ...p.bayTechsAssigned, [skill]: clamped });
-  };
-
   return (
     <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
       <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3">
-        Equipo Reparación
+        Equipos Reparación
       </h2>
       {noViable ? (
         <p className="font-mono text-[10px] text-error italic">
@@ -518,48 +547,88 @@ function BayPanel(p: {
         </p>
       ) : (
         <>
-          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-            Techs asignados ({p.bayTechsTotal} de {p.totalTechs})
-          </label>
-          <div className="grid grid-cols-2 gap-1.5 mb-2">
-            {(['green', 'regular', 'veteran', 'elite'] as PersonalNivel[]).map(n => {
-              const disp = p.techsBySkill[n] ?? 0;
+          <div className="font-mono text-[9px] text-secondary/60 mb-2">
+            Asignados {p.bayTechsTotal}/{Math.min(p.maxTeams, p.totalTechs)} equipos · {p.bayAstechsTotal}/{p.totalAstechs} astechs
+          </div>
+
+          {/* Lista de equipos */}
+          <div className="space-y-2 mb-3">
+            {p.bayTeams.map((team, idx) => {
+              const teamMult = teamMultiplier(team);
               return (
-                <div key={n} className={disp === 0 ? 'opacity-30' : ''}>
-                  <label className="block font-mono text-[8px] uppercase tracking-widest text-secondary/50 mb-0.5">
-                    {n} ({disp} disp)
-                  </label>
-                  <input
-                    type="number" min={0} max={disp}
-                    value={p.bayTechsAssigned[n] || ''}
-                    placeholder="0"
-                    disabled={disp === 0}
-                    onFocus={e => e.target.select()}
-                    onChange={e => setSkillQty(n, parseInt(e.target.value) || 0)}
-                    className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary disabled:opacity-40"
-                  />
+                <div key={idx} className="border border-outline-variant/30 bg-surface-container p-2">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-primary-container font-bold">
+                      Team {idx + 1}
+                    </span>
+                    <span className="font-mono text-[9px] text-secondary/60 ml-auto">
+                      ×{teamMult.toFixed(2)}
+                    </span>
+                    <button
+                      onClick={() => p.removeTeam(idx)}
+                      className="font-mono text-[9px] text-error/70 hover:text-error border border-error/30 hover:border-error px-1.5 py-0.5"
+                      title="Quitar equipo"
+                    >✕</button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block font-mono text-[8px] uppercase tracking-widest text-secondary/50 mb-0.5">
+                        Skill
+                      </label>
+                      <select
+                        value={team.skill}
+                        onChange={e => p.updateTeam(idx, { skill: e.target.value as PersonalNivel })}
+                        className="w-full bg-surface-container-high border border-outline-variant/40 px-1.5 py-1 font-mono text-[11px] text-secondary"
+                      >
+                        {(['green', 'regular', 'veteran', 'elite'] as PersonalNivel[]).map(s => {
+                          const disp = p.techsRestantes(s, idx);
+                          const isCurrent = s === team.skill;
+                          return (
+                            <option
+                              key={s}
+                              value={s}
+                              disabled={!isCurrent && disp === 0}
+                            >
+                              {s} ({isCurrent ? p.techsRestantes(s, idx) + 1 : disp} disp)
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block font-mono text-[8px] uppercase tracking-widest text-secondary/50 mb-0.5">
+                        AsTechs ({p.astechsRestantes(idx) + team.astechs} cap)
+                      </label>
+                      <input
+                        type="number" min={0}
+                        max={p.astechsRestantes(idx) + team.astechs}
+                        value={team.astechs}
+                        onFocus={e => e.target.select()}
+                        onChange={e => p.updateTeam(idx, { astechs: parseInt(e.target.value) || 0 })}
+                        className="w-full bg-surface-container-high border border-outline-variant/40 px-1.5 py-1 font-mono text-[11px] text-secondary"
+                      />
+                    </div>
+                  </div>
                 </div>
               );
             })}
           </div>
-          <div className="font-mono text-[9px] text-secondary/50 mb-2">
-            Skill efectivo del bay: <span className="text-primary-container font-bold">{p.bayTechSkill}</span> (el mejor asignado)
-          </div>
 
-          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-            AsTechs asignados (de {p.totalAstechs})
-          </label>
-          <input
-            type="number" min={0} max={p.totalAstechs}
-            value={p.bayAstechs || ''}
-            onFocus={e => e.target.select()}
-            onChange={e => p.setBayAstechs(Math.min(p.totalAstechs, Math.max(0, parseInt(e.target.value) || 0)))}
-            className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-sm text-secondary mb-2"
-          />
+          {/* Botón añadir */}
+          {p.bayTeams.length < p.maxTeams && p.bayTeams.length < p.totalTechs && (
+            <button
+              onClick={p.addTeam}
+              className="w-full mb-3 py-1.5 border border-dashed border-primary-container/40 text-primary-container font-mono text-[10px] uppercase tracking-widest hover:bg-primary-container/10"
+            >
+              + Añadir equipo (max {p.maxTeams})
+            </button>
+          )}
 
-          <div className="font-mono text-[10px] text-secondary/70 space-y-1">
+          {/* Resumen multiplier global */}
+          <div className="font-mono text-[10px] text-secondary/70 space-y-1 border-t border-outline-variant/30 pt-2">
             <div>
-              Multiplier:{' '}
+              Multiplier total:{' '}
               <span className={p.bayMult < 1 ? 'text-primary font-bold' : p.bayMult > 1.25 ? 'text-error font-bold' : 'text-amber-400'}>
                 ×{p.bayMult.toFixed(2)}
               </span>
@@ -569,11 +638,11 @@ function BayPanel(p: {
             </div>
             {p.bayTechsTotal > 1 && (
               <div className="text-primary text-[9px]">
-                {p.bayTechsTotal} equipos en paralelo · {Math.floor(p.bayAstechs / p.bayTechsTotal)} astechs/team
+                {p.bayTechsTotal} equipos paralelos · throughput sumado
               </div>
             )}
             <div className="text-secondary/50 text-[9px]">
-              Canon: 1 Tech + 6 AsTech = ×1.00 · cada equipo extra divide tiempo
+              Canon: 1 Reg + 6 AsTech = ×1.00 · CamOps p.148
             </div>
           </div>
         </>

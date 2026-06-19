@@ -652,23 +652,48 @@ export const TECH_SKILL_FACTOR: Record<PersonalNivel, number> = {
   elite:   0.70,
 };
 
-/** Multiplier total para el tiempo de un bay (astech × skill).
- *  Si numTeams > 1: equipos completos trabajan en paralelo.
- *  Astechs se distribuyen equitativamente entre teams (clamp 0-8).
- *  Skill del bay = mejor tech asignado (asume líder del equipo).
- *  Tiempo total se divide entre numTeams (CamOps p.148 — equipos
- *  paralelos reducen wall-clock).
- *  Ej: 2 techs + 12 astechs → 2 teams × (6 astechs c/u) → multiplier
- *  por equipo = 1.0 × skill, dividido entre 2 → tiempo /2. */
+/** Un equipo de reparación: 1 tech + N astechs. */
+export interface BayTeam {
+  skill:   PersonalNivel;
+  astechs: number;
+}
+
+/** Multiplier individual de un equipo (skill × astechs).
+ *  ×1.0 canon = 1 Tech Regular + 6 AsTechs. */
+export function teamMultiplier(team: BayTeam): number {
+  return astechFactor(team.astechs) * TECH_SKILL_FACTOR[team.skill];
+}
+
+/** Multiplier total cuando N equipos trabajan en paralelo (CamOps p.148).
+ *  Cada equipo aporta throughput = 1/multIndividual. Throughput total
+ *  es la suma; tiempo total = 1 / throughputTotal.
+ *  Ejemplos:
+ *  · 1 team (Reg 6 ast)    → ×1.00
+ *  · 1 team (Vet 6 ast)    → ×0.85
+ *  · 2 teams (Reg, Reg)    → ×0.50
+ *  · 2 teams (Vet, Reg)    → 1 / (1/0.85 + 1/1.00) = ×0.459
+ *  · 3 teams (Reg, Reg, Reg) → ×0.333
+ *  Compat: si se pasa skill+astechs+numTeams se construye una lista
+ *  homogénea (todos del mismo skill, astechs/numTeams cada uno). */
+export function bayMultiplier(teams: BayTeam[]): number;
+export function bayMultiplier(skill: PersonalNivel, astechs: number, numTeams?: number): number;
 export function bayMultiplier(
-  techSkill: PersonalNivel,
-  astechs: number,
+  arg1: BayTeam[] | PersonalNivel,
+  astechs?: number,
   numTeams: number = 1,
 ): number {
-  const teams = Math.max(1, Math.floor(numTeams));
-  const astechsPerTeam = Math.floor(astechs / teams);
-  const perTeamFactor = astechFactor(astechsPerTeam) * TECH_SKILL_FACTOR[techSkill];
-  return perTeamFactor / teams;
+  let list: BayTeam[];
+  if (Array.isArray(arg1)) {
+    list = arg1;
+  } else {
+    const teams = Math.max(1, Math.floor(numTeams));
+    const perTeam = Math.floor((astechs ?? 0) / teams);
+    list = Array.from({ length: teams }, () => ({ skill: arg1, astechs: perTeam }));
+  }
+  if (list.length === 0) return 1;
+  const throughput = list.reduce((sum, t) => sum + 1 / teamMultiplier(t), 0);
+  if (throughput <= 0) return 1;
+  return 1 / throughput;
 }
 
 /** Resumen agregado de personal de reparacion activo. */
