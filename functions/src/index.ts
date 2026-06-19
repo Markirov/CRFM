@@ -30,7 +30,17 @@ type Role = typeof VALID_ROLES[number];
 // Input:  { email: string, role: 'admin' | 'dm' | 'pj' }
 // Output: { uid: string, email: string, role: string }
 
-export const setUserRole = onCall(async (request) => {
+export const setUserRole = onCall(
+  {
+    cors: [
+      'https://battletechalicante.es',
+      'https://legadometalico.com',
+      'https://crfm-dc873.web.app',
+      'https://crfm-dc873.firebaseapp.com',
+      /localhost:\d+$/,
+    ],
+  },
+  async (request) => {
   const callerRole = request.auth?.token?.role;
   if (callerRole !== 'admin') {
     throw new HttpsError('permission-denied', 'Solo administradores pueden cambiar roles.');
@@ -64,7 +74,8 @@ export const setUserRole = onCall(async (request) => {
   });
 
   return { uid, email, role };
-});
+},
+);
 
 // ── sendTelegramNotif ────────────────────────────────────────
 // Callable. Requiere caller autenticado con rol asignado.
@@ -143,7 +154,16 @@ function formatMessage(event: TelegramEvent, data: Record<string, any>): string 
 }
 
 export const sendTelegramNotif = onCall(
-  { secrets: [TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID] },
+  {
+    secrets: [TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID],
+    cors: [
+      'https://battletechalicante.es',
+      'https://legadometalico.com',
+      'https://crfm-dc873.web.app',
+      'https://crfm-dc873.firebaseapp.com',
+      /localhost:\d+$/,
+    ],
+  },
   async (request) => {
     const callerRole = request.auth?.token?.role;
     if (callerRole !== 'admin' && callerRole !== 'dm' && callerRole !== 'pj') {
