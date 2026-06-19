@@ -200,7 +200,10 @@ function PrioridadesTab() {
     [bayTechsAssigned]
   );
 
-  const bayMult = useMemo(() => bayMultiplier(bayTechSkill, bayAstechs), [bayTechSkill, bayAstechs]);
+  const bayMult = useMemo(
+    () => bayMultiplier(bayTechSkill, bayAstechs, bayTechsTotal),
+    [bayTechSkill, bayAstechs, bayTechsTotal],
+  );
 
   // ── Sistema de coste + factor estado factura ──
   const [system, setSystem] = useState<RepairSystem>('canon');
@@ -564,8 +567,13 @@ function BayPanel(p: {
                 ({multPct > 0 ? `+${multPct}` : multPct}% tiempo)
               </span>
             </div>
+            {p.bayTechsTotal > 1 && (
+              <div className="text-primary text-[9px]">
+                {p.bayTechsTotal} equipos en paralelo · {Math.floor(p.bayAstechs / p.bayTechsTotal)} astechs/team
+              </div>
+            )}
             <div className="text-secondary/50 text-[9px]">
-              Canon: 1 Tech + 6 AsTech = ×1.00
+              Canon: 1 Tech + 6 AsTech = ×1.00 · cada equipo extra divide tiempo
             </div>
           </div>
         </>
@@ -905,12 +913,11 @@ function MantenimientoTab() {
   const [resultado, setResultado] = useState<ResultadoMaintenanceCheck | null>(null);
   const [patchesPendientes, setPatchesPendientes] = useState<DamagePatch[]>([]);
   const [tiradasRestantes, setTiradasRestantes] = useState(0);
-  const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
 
   // Reset flow al cambiar mech
   useEffect(() => {
     setLastRoll(null); setResultado(null); setPatchesPendientes([]); setTiradasRestantes(0);
-    setRollManual(''); setModCondiciones(0); setCommitState('idle');
+    setRollManual(''); setModCondiciones(0);
   }, [simSlotIdx]);
 
   // ── Calcs ──
@@ -919,11 +926,8 @@ function MantenimientoTab() {
     return calcularTNMantenimiento(mant.experienciaEquipo, mant.techRating, mant.qualityRating, modCondiciones);
   }, [mant, modCondiciones]);
 
-  const costo = useMemo(() => {
-    if (!mant || !mechInfo) return 0;
-    return calcularCosteMantenimiento(mechInfo.tons, mant.qualityRating);
-  }, [mant, mechInfo]);
-
+  // Mantenimiento rutinario: 0 ₡ canon (los daños fallidos van a Prioridades).
+  const costo = 0;
   const tiempo = mechInfo ? TIEMPO_MANTENIMIENTO[clasePorTonelaje(mechInfo.tons)] : 0;
 
   // ── Persistir cambios al state ──
@@ -987,28 +991,6 @@ function MantenimientoTab() {
     setTiradasRestantes(0); setRollManual('');
   };
 
-  const handleRegistrarGasto = async () => {
-    if (!mant || !mechInfo || costo <= 0) return;
-    setCommitState('sending');
-    try {
-      await commitLibroEntryAndTreasury({
-        id:        genId('lm'),
-        fecha:     campaignDate,
-        concepto:  `Mantenimiento rutinario · ${mechInfo.mechName} · Quality ${mant.qualityRating}`,
-        cantidad:  costo,
-        tipo:      'gasto',
-        categoria: 'mantenimiento_mensual',
-        nota:      `Equipo ${mant.experienciaEquipo} · TR ${mant.techRating}`,
-        jugador:   '',
-      });
-      setCommitState('done');
-      setTimeout(() => setCommitState('idle'), 2500);
-    } catch {
-      setCommitState('error');
-      setTimeout(() => setCommitState('idle'), 3000);
-    }
-  };
-
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease] max-w-6xl mx-auto">
       <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase mb-4">
@@ -1052,8 +1034,10 @@ function MantenimientoTab() {
               </div>
               <div className="font-mono text-[10px] text-secondary/70 space-y-0.5">
                 <div>Clase: <span className="text-primary-container">{clasePorTonelaje(mechInfo.tons)}</span></div>
-                <div>Coste/ciclo: <span className="text-primary-container">{costo.toLocaleString('es-ES')} ₡</span></div>
                 <div>Tiempo: <span className="text-secondary">{tiempo} min</span> (informativo)</div>
+                <div className="text-secondary/50 text-[9px] italic">
+                  Sin coste directo · daños se reparan en Prioridades
+                </div>
               </div>
             </div>
 
@@ -1093,25 +1077,6 @@ function MantenimientoTab() {
               />
             </div>
 
-            {/* Bloque coste + tesorería */}
-            <div className="border-t border-outline-variant/30 pt-3">
-              <button
-                onClick={handleRegistrarGasto}
-                disabled={costo <= 0 || commitState === 'sending'}
-                className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-                  commitState === 'done'
-                    ? 'border-primary bg-primary/20 text-primary'
-                    : commitState === 'error'
-                      ? 'border-error bg-error/20 text-error'
-                      : 'border-primary-container bg-primary-container/15 text-primary-container hover:bg-primary-container/25'
-                }`}
-              >
-                {commitState === 'sending' ? 'Registrando…'
-                  : commitState === 'done'  ? '✓ Gasto registrado'
-                  : commitState === 'error' ? '✗ Error — reintenta'
-                  : `Registrar gasto (${costo.toLocaleString('es-ES')} ₡)`}
-              </button>
-            </div>
           </section>
 
           {/* Flujo chequeo */}

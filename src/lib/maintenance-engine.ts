@@ -43,19 +43,28 @@ export function clasePorTonelaje(tons: number): ClaseMech {
   return 'Asalto';
 }
 
-/** Tiempo de mantenimiento rutinario (informativo; NO compite con Prioridades). */
+/** Tiempo de mantenimiento rutinario (informativo; NO compite con Prioridades).
+ *  Minutos por ciclo. Aproximación canon: ~(40 + tons/5) horas-hombre/semana.
+ *  Aquí lo simplificamos a minutos/ciclo mensual por clase. */
 export const TIEMPO_MANTENIMIENTO: Record<ClaseMech, number> = {
   UltraLigero: 30, Ligero: 45, Medio: 60, Pesado: 75, Asalto: 90,
 };
 
-/** Coste base de mantenimiento por ciclo, antes de aplicar QUALITY_COST_MOD. */
+/** Mantenimiento rutinario canon: NO tiene coste económico directo.
+ *  · El upkeep que aparece en FM Mercs Revised p.149 (75 ₡/sem BattleMech)
+ *    es coste del personal técnico (salarios), ya cubierto en Personal.
+ *  · Las reparaciones DERIVADAS de un chequeo fallido (DamagePatch) sí
+ *    tienen coste, pero se canalizan por el tab Prioridades / Factura.
+ *  · El check en sí (Maintenance Check Table) = 0 ₡.
+ *
+ *  Por eso COSTE_MANTENIMIENTO_BASE = 0 para todas las clases.
+ *  Mantenemos la firma para compat con UI. */
 export const COSTE_MANTENIMIENTO_BASE: Record<ClaseMech, number> = {
-  UltraLigero: 5_000, Ligero: 10_000, Medio: 20_000, Pesado: 35_000, Asalto: 50_000,
+  UltraLigero: 0, Ligero: 0, Medio: 0, Pesado: 0, Asalto: 0,
 };
 
-export function calcularCosteMantenimiento(tons: number, quality: QualityRating): number {
-  const clase = clasePorTonelaje(tons);
-  return Math.round(COSTE_MANTENIMIENTO_BASE[clase] * QUALITY_COST_MOD[quality]);
+export function calcularCosteMantenimiento(_tons: number, _quality: QualityRating): number {
+  return 0;
 }
 
 export function calcularTNMantenimiento(

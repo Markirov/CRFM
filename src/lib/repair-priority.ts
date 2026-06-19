@@ -652,9 +652,23 @@ export const TECH_SKILL_FACTOR: Record<PersonalNivel, number> = {
   elite:   0.70,
 };
 
-/** Multiplier total para el tiempo de un bay (astech × skill). */
-export function bayMultiplier(techSkill: PersonalNivel, astechs: number): number {
-  return astechFactor(astechs) * TECH_SKILL_FACTOR[techSkill];
+/** Multiplier total para el tiempo de un bay (astech × skill).
+ *  Si numTeams > 1: equipos completos trabajan en paralelo.
+ *  Astechs se distribuyen equitativamente entre teams (clamp 0-8).
+ *  Skill del bay = mejor tech asignado (asume líder del equipo).
+ *  Tiempo total se divide entre numTeams (CamOps p.148 — equipos
+ *  paralelos reducen wall-clock).
+ *  Ej: 2 techs + 12 astechs → 2 teams × (6 astechs c/u) → multiplier
+ *  por equipo = 1.0 × skill, dividido entre 2 → tiempo /2. */
+export function bayMultiplier(
+  techSkill: PersonalNivel,
+  astechs: number,
+  numTeams: number = 1,
+): number {
+  const teams = Math.max(1, Math.floor(numTeams));
+  const astechsPerTeam = Math.floor(astechs / teams);
+  const perTeamFactor = astechFactor(astechsPerTeam) * TECH_SKILL_FACTOR[techSkill];
+  return perTeamFactor / teams;
 }
 
 /** Resumen agregado de personal de reparacion activo. */
