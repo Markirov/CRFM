@@ -36,7 +36,12 @@ Alternativa rápida (skip Action): `firebase deploy --only hosting` (Launcher op
 
 ## Auth
 
-Google sign-in. Whitelist en `src/lib/firebase-config.ts` (`ALLOWED_EMAILS`) Y en `firestore.rules`. Cambiar emails = actualizar AMBOS sitios + `firebase deploy --only firestore:rules`.
+Google sign-in. Whitelist vive en colección Firestore `roles/{docId}` (manejada desde SecretMenu → RolesPanel). `AuthGate` verifica con `getRoles()` que el email esté presente.
+
+- `ALLOWED_EMAILS` en `firebase-config.ts` es legado (no usado por AuthGate actual)
+- `marcosfenollar@gmail.com` es admin hardcoded en `firestore.rules` y en `auth-roles.ts`
+- Roles: `admin | dm | pj`. Custom claim opcional via Cloud Function `setUserRole` (no bloqueante)
+- `role-service.ts`: `setRole(email, role, docId?)` / `removeRole(email, docId?)` — pasar `docId` (=doc.id real) al editar entries existentes evita duplicar docs legacy con id ≠ emailKey
 
 Gate: `src/components/shell/AuthGate.tsx` envuelve App en `main.tsx`.
 Logout: botón en SecretMenu.
@@ -69,7 +74,8 @@ src/
 │   │   ├── SectionTabs.tsx
 │   │   ├── AuthGate.tsx
 │   │   ├── RouteErrorBoundary.tsx
-│   │   └── SecretMenu.tsx      ← Settings + treasury override + reset legacy mechs
+│   │   ├── SecretMenu.tsx      ← Settings + treasury override + editor XP pilotos + reset legacy mechs
+│   │   └── RolesPanel.tsx      ← Gestión usuarios + permisos por sección (admin)
 │   ├── simulador/              ← ArmorDiagram, PilotPanel, HeatMonitor, CriticalMatrix, UnitSlots (con lock), CombatLog, FuerzaSyncBar, CatalogSearch...
 │   ├── barracones/             ← FichaHeraldica, MechAssignmentBar (NEW), SheetsPanel, CombatePanel
 │   └── ui/
@@ -85,7 +91,10 @@ src/
 │   ├── combat-types.ts         ← MechSlot ahora con maintenance? opcional
 │   ├── combat-data.ts          ← Tablas BT + transferencias + calor
 │   ├── parsers.ts              ← Parsers SSW/MTF/SAW completos
-│   ├── ssw-basic.ts            ← Parser ligero (chassis/model/tons/cost)
+│   ├── ssw-basic.ts            ← Parser ligero (chassis/model/tons/cost/hasJumpJets/hasAmmo)
+│   ├── taller-sources.ts       ← MechSource unificado (hangar + sim slots) para Taller
+│   ├── role-service.ts         ← setRole/removeRole con docId opcional
+│   ├── auth-roles.ts           ← resolveRole (hardcoded admin → custom claim → Firestore)
 │   ├── weapons.ts
 │   ├── repair-engine.ts        ← Coste reparación per-componente (propio + canon)
 │   ├── repair-priority.ts      ← Sistema priorización + drag&drop
@@ -225,8 +234,8 @@ Arquitectura unificada en `/taller`:
 - `mergeDamage(a, b)` para combinar damage del sim + extraDamage del mantenimiento
 
 UI: 3 tabs en `/taller`:
-- **Prioridades**: drag&drop items + flechas ▲▼ + sistema canon/propio + slider estadoFactPct + botón Registrar gasto
-- **Mantenimiento**: badge Quality + TN calcs + flow tirar 2D6 → resolver → tirar daño → aplicar todo (persiste qualityRating + extraDamage + historial)
+- **Prioridades**: `MechSourcePicker` (hangar campaña + sim slots) + drag&drop items + flechas ▲▼ + sistema canon/propio + slider estadoFactPct + botón Registrar gasto. Bay: hasta 3 equipos paralelos con calidad mixta (CamOps p.148 throughput sumado vía `bayMultiplier(BayTeam[])`).
+- **Mantenimiento**: `MechSourcePicker` filtrado a hangar con `pilotoIdx` (solo unidades campaña). Badge Quality + TN calcs + flow tirar 2D6 → resolver → tirar daño → aplicar todo. Persistencia split: `qualityRating`/`techRating`/`damagePersist`/`maintenanceHistory` → HangarItem (Firestore); `experienciaEquipo` → session-only. `hasJumpJets`/`hasAmmo` lazy-detect para items pre-feature. Coste 0 ₡ canon (upkeep = salarios Personal).
 - **Factura**: TallerModal manual ad-hoc
 
 Specs históricas: `herramientas/MD/spec_sistema_prioridades_reparacion.md` (DONE), `spec_unificado_y_mantenimiento.md` (DONE).
@@ -239,9 +248,11 @@ Specs históricas: `herramientas/MD/spec_sistema_prioridades_reparacion.md` (DON
 ```typescript
 interface HangarItem {
   id, chassis, model, tons, bv?, era?, techRating?, sourceFile?,
-  precioBase, valorActual, fechaCompra,
-  pilotoIdx?,            // 0..roster.length-1
+  hasJumpJets?, hasAmmo?,                    // detectados al comprar (ssw-basic)
+  precioBase, valorActual, fechaCompra,     // precioBase = canon, no precio pagado
+  pilotoIdx?,                                // 0..roster.length-1
   estadoPct?, qualityRating?, damagePersist?,
+  maintenanceHistory?,                       // log chequeos mantenimiento (cap 50)
   notas?, createdAt, updatedAt
 }
 ```
@@ -253,9 +264,9 @@ interface HangarItem {
 
 ### UI (`/hangar` — Cuartel General)
 3 sub-tabs:
-- **Inventario**: tabla tipo TRO (Nombre · Tipo · Tons · BV · Año · Era · Valor · Asignado · Compra) con dropdown piloto inline + conflict prompt bidireccional
-- **Comprar**: search catálogo TRO → fetch `.ssw` → autorrellena chassis/model/tons/cost → slider factor compra 0-200% (descuento/markup) → asiento `compra_mech` libro mayor
-- **Vender**: lista hangar → slider estado 0-150% → asiento `venta_mech` + delete
+- **Inventario**: tabla tipo TRO (Nombre · Tipo · Tons · BV · Año · **Estado %** · Valor · Asignado · Compra). Estado con badge color (verde ≥75 / amber ≥40 / rojo <40). Dropdown piloto inline + conflict prompt bidireccional. Valores sin decimales (Math.round).
+- **Comprar**: search catálogo TRO → fetch `.ssw` → autorrellena chassis/model/tons/cost/hasJumpJets/hasAmmo → slider factor compra 0-200% (descuento/markup) → asiento `compra_mech` libro mayor. `precioBase` persistido = canon detectado (descuento solo en cantidad de tesorería). Permite 0 ₡.
+- **Vender**: lista hangar → slider estado 0-150% → asiento `venta_mech` + delete. Permite 0 ₡.
 
 ### Botón Comprar desde TRO
 TRO DetailPanel (mechs only) → navega `/hangar?buy=<file>` + setActiveSubTab('comprar') → auto-selecciona en ComprarTab.
@@ -380,5 +391,5 @@ Carpeta `manuales/` (gitignored). PDFs comerciales BattleTech.
 
 - `.gitignore`: `credenciales*.json`, `*service-account*.json`, `secrets.*`, `manuales/`, `.env*`, `backups/`, `herramientas/`, `AutoMover.py`
 - Firebase service account NUNCA en repo
-- Whitelist emails en `firebase-config.ts` Y `firestore.rules` (actualizar AMBOS + redeploy rules)
+- Whitelist gestionada desde SecretMenu → RolesPanel (collection `roles/`). `firestore.rules` requiere redeploy si cambian las funciones de rol.
 - Apps Script TOKEN Telegram revoked en sesiones anteriores — usar SecretMenu Treasury override en lugar de asientos sintéticos

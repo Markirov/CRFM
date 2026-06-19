@@ -1,20 +1,18 @@
 # Pendientes Activos
 
-Última actualización: 2026-06-16
+Última actualización: 2026-06-19
 
 ---
 
 ## 🔴 Alto — Integración Hangar (ciclo Sim ↔ Taller ↔ Hangar)
 
-Spec corto: `herramientas/MD/spec_hangar_integracion.md`.
+Spec: `herramientas/MD/spec_hangar_integracion.md`. Paso 3 DONE.
 
-### Taller ↔ Hangar
-Taller hoy usa sim slots. Debería identificar HangarItem por chassis/model (o pilotoIdx en modo campaña) y persistir:
-- `damagePersist` (resta lo reparado)
-- `estadoPct` (recalc por % daño total)
-- `qualityRating` (sincronizado con MechSlot.maintenance)
-
-Al pagar reparación total: `damagePersist` resetea, `estadoPct = 100`.
+### Pasos restantes
+- **Paso 1**: `applyDamageToSession()` helper + aplicar `damagePersist` al cargar mech del hangar en modo campaña
+- **Paso 2**: `persistMechSlotToHangar()` + auto-save sim→hangar al salir de modo campaña
+- **Paso 4**: UI estado (operativo/destruido) en Hangar — botones vender restos / reparación total / desguace
+- **Paso 5**: Centralizar mantenimiento en `HangarItem` (qualityRating, techRating, maintenanceHistory ya viven aquí; falta migrar experienciaEquipo desde session)
 
 ### Combate destruye → Hangar
 Si mech termina destruido en sim:
@@ -35,7 +33,8 @@ Si mech termina destruido en sim:
 - Notas editables inline
 - Histórico compra/venta (tabla filtrada por `compra_mech` / `venta_mech` del libroMayor)
 - Ficha piloto: `pilot.mech` display vivo desde hangar (no cache stale)
-- `qualityRating` editable en hangar (alimenta MantenimientoTab)
+- `qualityRating` editable en hangar (alimenta MantenimientoTab — actualmente solo editable en Taller)
+- Migración mechs comprados con descuento previo: `valorActual` = precio pagado erróneo, no canon
 
 ---
 
@@ -114,6 +113,20 @@ Status: parked. GUI manual SSW o parser+BV calculator Node (~500 líneas).
 
 ## ✅ Completado reciente (2026-06)
 
+### Mantenimiento + Hangar (2026-06-19)
+- **MechSourcePicker** en Prioridades (hangar + sim) y Mantenimiento (solo campaña)
+- **BayTeam[]** hasta 3 equipos paralelos calidad mixta (CamOps p.148 throughput sumado)
+- **Mantenimiento canon 0 ₡** — upkeep = salarios Personal, daños fallidos → Prioridades
+- **`hasJumpJets` / `hasAmmo` persisted** en HangarItem desde parse .ssw (compra) + lazy detect items legacy
+- **`maintenanceHistory` persisted** en HangarItem (antes session-only)
+- **Hangar columna Estado** % daños con badge color (sustituye Era)
+- **`precioBase` = canon** (no precio pagado con descuento)
+- **Compras/ventas por 0 ₡** permitidas (premio, regalo, salvage)
+- **Valores mech sin decimales** (Math.round en displays)
+- **SecretMenu editor XP pilotos** + botón "Guardar XP" sin cerrar modal
+- **Fix roles**: setRole/removeRole respetan `docId` real del listado (docs legacy con id ≠ emailKey ahora actualizables/borrables)
+
+### Anteriores
 - **Migración Sheets → Firebase** (auth, Firestore, hosting custom domain)
 - **Sistema Prioridades Reparación** (spec DONE)
 - **Pestaña Mantenimiento + Quality Rating** (spec DONE)
