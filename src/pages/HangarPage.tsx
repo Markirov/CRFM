@@ -339,7 +339,9 @@ function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
         sourceFile:  selected.file,
         hasJumpJets,
         hasAmmo,
-        precioBase:  precioFinal,
+        // precioBase = canon del mech (sin descuento). El precio pagado
+        // (precioFinal con factorPct) solo afecta a la transacción de tesorería.
+        precioBase:  precio,
         fechaCompra: campaignDate,
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,
       });
