@@ -5,7 +5,7 @@ import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loa
 import type { HangarItem } from '@/lib/hangar-types';
 import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
-import { useSimulador, type AdjustModTarget } from '@/hooks/useSimulador';
+import { useSimulador } from '@/hooks/useSimulador';
 import { usePerm } from '@/hooks/usePerm';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
@@ -799,12 +799,12 @@ export function SimuladorPage() {
           onChangeHeat={(v) => {
             if (adjustTarget.kind === 'weapon') sim.setWeaponMod(adjustTarget.id, 'heat', v);
             else sim.setCritMod(adjustTarget.loc, adjustTarget.slotIdx, 'heat', v);
-            setAdjustTarget(t => t ? { ...t, heat: v } : t);
+            setAdjustTarget((t: any) => t ? { ...t, heat: v } : t);
           }}
           onChangeAtk={(v) => {
             if (adjustTarget.kind === 'weapon') sim.setWeaponMod(adjustTarget.id, 'atk', v);
             else sim.setCritMod(adjustTarget.loc, adjustTarget.slotIdx, 'atk', v);
-            setAdjustTarget(t => t ? { ...t, atk: v } : t);
+            setAdjustTarget((t: any) => t ? { ...t, atk: v } : t);
           }}
         />
       )}

@@ -101,31 +101,41 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                 </div>
 
                 <div className="flex-1 w-full">
-                  <select 
-                    value={`${t.targetSessionId}|${t.targetUnitId}`}
-                    onChange={(e) => {
-                      const [sessId, unitId] = e.target.value.split('|');
-                      setTargets(prev => ({
-                        ...prev,
-                        [w.id]: { ...prev[w.id], targetSessionId: sessId || '', targetUnitId: unitId || '' }
-                      }));
-                    }}
-                    className="w-full bg-surface-container-high border border-error/40 text-primary-container px-2 py-1.5 font-mono text-[10px] focus:outline-none focus:border-error"
-                  >
-                    <option value="|">-- Seleccionar Objetivo --</option>
-                    {live.sessions.map(sess => (
-                      <optgroup key={sess.id} label={sess.playerName}>
-                        {sess.units.map(u => {
+                  {live.sessions.length === 0 ? (
+                    <div className="text-[10px] font-mono text-secondary/40 italic p-2 border border-outline-variant/20">Sin contactos en radar</div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {live.sessions.flatMap(sess => 
+                        sess.units.map(u => {
                           if (u.isDestroyed) return null;
+                          const isSelected = t.targetSessionId === sess.id && t.targetUnitId === u.id;
                           return (
-                            <option key={u.id} value={`${sess.id}|${u.id}`}>
-                              {u.name} ({sess.playerName})
-                            </option>
+                            <button
+                              key={`${sess.id}-${u.id}`}
+                              onClick={() => {
+                                setTargets(prev => ({
+                                  ...prev,
+                                  [w.id]: { 
+                                    ...prev[w.id], 
+                                    targetSessionId: isSelected ? '' : sess.id, 
+                                    targetUnitId: isSelected ? '' : u.id 
+                                  }
+                                }));
+                              }}
+                              className={`px-3 py-1.5 font-mono text-[9px] uppercase border clip-chamfer transition-all text-left ${
+                                isSelected 
+                                  ? 'bg-error/20 border-error text-error shadow-[0_0_10px_-2px_rgba(255,0,0,0.3)]' 
+                                  : 'bg-surface-container-high border-outline-variant/40 text-secondary hover:border-error/40 hover:text-error'
+                              }`}
+                            >
+                              <div className="font-bold">{u.name}</div>
+                              <div className="text-[7px] opacity-60 mt-0.5">{sess.playerName}</div>
+                            </button>
                           );
-                        })}
-                      </optgroup>
-                    ))}
-                  </select>
+                        })
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="w-full md:w-24">

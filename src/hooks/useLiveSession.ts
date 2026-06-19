@@ -45,7 +45,7 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
   useEffect(() => {
     if (!playerName) {
       const email = auth.currentUser?.email;
-      const pj = roster.find(r => r.email === email || (email && r.jugador?.toLowerCase() === email.split('@')[0].toLowerCase()));
+      const pj = roster.find(r => r.jugador && email && r.jugador.toLowerCase() === email.split('@')[0].toLowerCase());
       if (pj) setPlayerName(pj.nombre || pj.jugador || 'Comandante');
       else setPlayerName(auth.currentUser?.displayName || 'Piloto Local');
     }
@@ -59,10 +59,10 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
         const ms = s.state; const ss = s.session;
         const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
         const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
-        const armorMax = armorLocs.reduce((acc,k) => acc + ((ms.armor || {})[k] ?? 0), 0);
-        const armorCur = armorLocs.reduce((acc,k) => acc + ((ss.armor || {})[k] ?? 0), 0);
-        const isMax    = isLocs.reduce((acc,k) => acc + ((ms.is || {})[k] ?? 0), 0);
-        const isCur    = isLocs.reduce((acc,k) => acc + ((ss.is || {})[k] ?? 0), 0);
+        const armorMax = armorLocs.reduce((acc,k) => acc + (((ms.armor as Record<string, number>) || {})[k] ?? 0), 0);
+        const armorCur = armorLocs.reduce((acc,k) => acc + (((ss.armor as Record<string, number>) || {})[k] ?? 0), 0);
+        const isMax    = isLocs.reduce((acc,k) => acc + (((ms.is as Record<string, number>) || {})[k] ?? 0), 0);
+        const isCur    = isLocs.reduce((acc,k) => acc + (((ss.is as Record<string, number>) || {})[k] ?? 0), 0);
         const total = armorMax + isMax;
         const pct = ss.destroyed || total <= 0 ? 0 : Math.round(((armorCur + isCur) / total) * 100);
 
