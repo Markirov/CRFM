@@ -61,7 +61,7 @@ export function CriticalMatrix({ state, session, onToggleCrit, sysHits, onAdjust
     const isEngineCrit = nLower.includes('engine') || nLower.includes('fusion');
     const isGyroCrit   = nLower.includes('gyro');
     if (isEngineCrit || isGyroCrit) {
-      const hits = countSystemCritHits(session.crits);
+      const hits = countSystemCritHits(session.crits, state);
       if (isEngineCrit && hits.engine === 2) {
         setConfirmFatal({ loc, idx, type: 'engine', hitsAfter: 3 });
         return;

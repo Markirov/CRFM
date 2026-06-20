@@ -28,6 +28,7 @@ import type { FireTarget } from '@/lib/combat-types';
 import { useLiveSession } from '@/hooks/useLiveSession';
 import { CombatRadar, IncomingAttacks } from '@/components/simulador/CombatRadar';
 import { FireControlModal } from '@/components/simulador/FireControlModal';
+import { SaveSlotModal } from '@/components/simulador/SaveSlotModal';
 
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
@@ -117,19 +118,7 @@ export function SimuladorPage() {
     }
   };
 
-  // Auto-save FUERZACAMPAÑA cada 5 minutos si modo campaña y hay cambios.
-  useEffect(() => {
-    if (!campaignMode) return;
-    const id = setInterval(async () => {
-      if (!sim.dirty) return;
-      if (!isCampaignUnlocked()) return; // sin clave -> skip
-      const ok = await saveCampaignProgress('Campaña');
-      if (ok) console.log('[Campaign] auto-save FUERZA5 OK', new Date().toLocaleTimeString());
-      else console.warn('[Campaign] auto-save fallo');
-    }, 5 * 60 * 1000); // 5 min
-    return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaignMode]);
+  // Auto-save eliminado a petición del usuario.
 
   useEffect(() => {
     // Hide portada only when activeSubTab changes after initial mount
@@ -197,6 +186,14 @@ export function SimuladorPage() {
     );
   }
 
+  const [saveSlotPromiseResolver, setSaveSlotPromiseResolver] = useState<(val: FuerzaSlot | null | 'CANCEL') => void>();
+
+  const requestSaveSlot = async (message?: string): Promise<FuerzaSlot | null | 'CANCEL'> => {
+    return new Promise((resolve) => {
+      setSaveSlotPromiseResolver(() => resolve);
+    });
+  };
+
   const handleToggleCampaign = async () => {
     if (campaignMode) {
       // Salir: pregunta si guardar a FUERZACAMPAÑA
@@ -217,20 +214,16 @@ export function SimuladorPage() {
       // Si hay una partida suelta en curso, respaldarla antes de sobrescribir
       const currentSnap = loadLocalSnapshot();
       if (currentSnap && snapshotHasUnits(currentSnap)) {
-        const slots = await loadAllFuerzaConfigSlots();
-        const freeSlot = ([5, 4, 3, 2, 1] as FuerzaSlot[]).find(s => !slots[s]?.snapshot);
-        const bv = (currentSnap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
-                 + (currentSnap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
-        let targetSlot: FuerzaSlot | null = freeSlot ?? null;
-        if (!targetSlot) {
-          const overwrite = confirm('Los 5 slots de Fuerzas están ocupados.\n\n¿Sobrescribir FUERZA5 con la partida suelta actual antes de cargar la campaña?\n\nOK = Sobrescribir FUERZA5\nCancelar = Descartar partida suelta sin guardar');
-          if (overwrite) targetSlot = 5;
-        }
-        if (targetSlot) {
-          const res = await saveFuerzaConfigSlot(targetSlot, { nombre: 'Partida suelta', bv, snapshot: currentSnap });
+        const targetSlot = await requestSaveSlot();
+        if (targetSlot === 'CANCEL') return;
+        if (targetSlot !== null) {
+          const bv = (currentSnap.mechSlots ?? []).reduce((a: number, s: any) => a + (s?.state?.bv ?? 0), 0)
+                   + (currentSnap.vehicleSlots ?? []).reduce((a: number, s: any) => a + ((s?.state as any)?.bv ?? 0), 0);
+          const res = await saveFuerzaConfigSlot(targetSlot as FuerzaSlot, { nombre: 'Partida suelta (Auto)', bv, snapshot: currentSnap });
           if (!res?.success) {
-            alert('Error guardando partida suelta en FUERZA' + targetSlot + ': ' + ((res as any)?.error || 'no_response'));
-            // continúa igualmente con la carga de campaña
+            alert(`Error guardando partida suelta en FUERZA${targetSlot}: ` + ((res as any)?.error || 'no_response'));
+          } else {
+            alert(`Partida suelta guardada correctamente en FUERZA${targetSlot}.`);
           }
         }
       }
@@ -475,6 +468,7 @@ export function SimuladorPage() {
           campaignMode={campaignMode}
           onToggleCampaignMode={handleToggleCampaign}
           onSaveCampaign={campaignMode ? () => saveCampaignProgress('Campaña') : undefined}
+          onRequestSaveSlot={requestSaveSlot}
           bvTotal={
             sim.mechSlots.reduce((acc, s) => acc + (s.state?.bv ?? 0), 0) +
             sim.vehicleSlots.reduce((acc, s) => acc + ((s.state as any)?.bv ?? 0), 0)
@@ -502,6 +496,7 @@ export function SimuladorPage() {
               sysHits={sim.sysHits}
               effectiveWalkMP={sim.effectiveWalkMP}
               effectiveRunMP={sim.effectiveRunMP}
+              effectiveJumpMP={sim.effectiveJumpMP}
               availablePilots={availablePilots}
               onSetPilot={sim.setPilot}
               onSetWounds={sim.setWounds}
@@ -808,6 +803,19 @@ export function SimuladorPage() {
           }}
         />
       )}
+
+      {/* Modal para elegir dónde guardar antes de salir/cargar */}
+      <SaveSlotModal
+        isOpen={!!saveSlotPromiseResolver}
+        onClose={() => {
+          saveSlotPromiseResolver?.('CANCEL');
+          setSaveSlotPromiseResolver(undefined);
+        }}
+        onSelectSlot={(slot) => {
+          saveSlotPromiseResolver?.(slot);
+          setSaveSlotPromiseResolver(undefined);
+        }}
+      />
     </div>
   );
 }

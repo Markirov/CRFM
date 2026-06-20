@@ -23,13 +23,15 @@ interface Props {
   onToggleCampaignMode?: () => void | Promise<void>;
   /** Guardado manual a FUERZACAMPAÑA + ESTADOMECHS (solo visible si campaignMode). */
   onSaveCampaign?: () => Promise<boolean> | void;
+  /** Pide al usuario que elija un slot (o cancele/descarte) mediante un modal */
+  onRequestSaveSlot?: () => Promise<FuerzaSlot | null | 'CANCEL'>;
 }
 
 type PushState = 'idle' | 'pushing' | 'ok' | 'error';
 
 export function FuerzaSyncBar({
   dirty, lastLocalSave, getSnapshot, hydrateFromSnapshot, clearCurrentUnit, markSynced, bvTotal,
-  campaignMode, onToggleCampaignMode, onSaveCampaign,
+  campaignMode, onToggleCampaignMode, onSaveCampaign, onRequestSaveSlot
 }: Props) {
   const [pushState, setPushState] = useState<PushState>('idle');
   const [pushError, setPushError] = useState<string | null>(null);
@@ -129,7 +131,24 @@ export function FuerzaSyncBar({
     }
   };
 
-  const handleLoadSlot = (slot: FuerzaSlot) => {
+  const handleLoadSlot = async (slot: FuerzaSlot) => {
+    if (dirty && onRequestSaveSlot) {
+      const targetSlot = await onRequestSaveSlot();
+      if (targetSlot === 'CANCEL') return;
+      if (targetSlot !== null) {
+        const snap: SimuladorSnapshot = {
+          schemaVersion: 1,
+          updatedAt: new Date().toISOString(),
+          ...getSnapshot(),
+        };
+        const nombre = slotNombre.trim() || `Fuerza ${targetSlot}`;
+        const res = await saveFuerzaConfigSlot(targetSlot as FuerzaSlot, { nombre, bv: bvTotal, snapshot: snap });
+        if (!res?.success) {
+          alert('Error guardando la partida: ' + ((res as any)?.error || 'no_response'));
+        }
+      }
+    }
+
     const entry = slots[slot];
     if (!entry?.snapshot?.schemaVersion) return;
     hydrateFromSnapshot(entry.snapshot);

@@ -522,7 +522,7 @@ const [damageAmount, setDamageAmount] = useState(0);
   };
 
   // ── Computed values ──
-  const sysHits = mechSession ? countSystemCritHits(mechSession.crits) : { engine: 0, gyro: 0, sensors: 0, lifeSupport: 0, heatsinks: 0 };
+  const sysHits = mechSession ? countSystemCritHits(mechSession.crits, mechState || undefined) : { engine: 0, gyro: 0, sensors: 0, lifeSupport: 0, heatsinks: 0, jumpJets: 0 };
 
   const legEffects = mechSession ? getLegActuatorEffects(mechSession.crits) : { pilotingMod: 0, mpPenalty: 0, hipHits: 0 };
 
@@ -550,6 +550,10 @@ const [damageAmount, setDamageAmount] = useState(0);
   effectiveWalkMP = Math.max(0, effectiveWalkMP - legEffects.mpPenalty);
 
   const effectiveRunMP = Math.ceil(effectiveWalkMP * 1.5);
+
+  const effectiveJumpMP = mechState && mechSession
+    ? Math.max(0, mechState.jumpMP - sysHits.jumpJets)
+    : 0;
 
   // ── Infantry / BA actions ──
   const assignInfantry = useCallback((slotIdx: number, catalogId: string) => {
@@ -768,9 +772,8 @@ const [damageAmount, setDamageAmount] = useState(0);
     vehicleAdjustPendingCrit,
 
     // Computed
-    sysHits, gunneryTotal, pilotingTotal, critModsAtkTotal,
-    canMechFire, effectiveWalkMP, effectiveRunMP,
-    armActuatorMod,
+    sysHits, gunneryTotal, pilotingTotal, critModsAtkTotal, armActuatorMod,
+    canMechFire, effectiveWalkMP, effectiveRunMP, effectiveJumpMP,
 
     // Infantry / BA slots
     infantrySlots, activeInfantryIdx, setActiveInfantryIdx,

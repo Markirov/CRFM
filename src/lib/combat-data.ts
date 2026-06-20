@@ -149,20 +149,45 @@ export function getMoveHeat(mode: MoveMode, jumpUsed: number): number {
 }
 
 /** Count system critical hits from session crits */
-export function countSystemCritHits(crits: Record<string, CritSlot[]>): {
-  engine: number; gyro: number; sensors: number; lifeSupport: number; heatsinks: number;
+export function countSystemCritHits(crits: Record<string, CritSlot[]>, state?: MechState): {
+  engine: number; gyro: number; sensors: number; lifeSupport: number; heatsinks: number; jumpJets: number;
 } {
-  const result = { engine: 0, gyro: 0, sensors: 0, lifeSupport: 0, heatsinks: 0 };
-  const allSlots = Object.values(crits).flat();
-  allSlots.forEach(s => {
-    if (!s.hit) return;
-    const n = s.name.toLowerCase();
-    if (n.includes('engine') || n.includes('fusion')) result.engine++;
-    else if (n.includes('gyro')) result.gyro++;
-    else if (n.includes('sensor')) result.sensors++;
-    else if (n.includes('life support') || n.includes('soporte')) result.lifeSupport++;
-    else if (n.includes('heat sink') || n.includes('radiador')) result.heatsinks++;
-  });
+  const result = { engine: 0, gyro: 0, sensors: 0, lifeSupport: 0, heatsinks: 0, jumpJets: 0 };
+  
+  for (const [loc, slots] of Object.entries(crits)) {
+    const hsSize = state?.hsDouble ? (state?.tech === 'Clan' ? 2 : 3) : 1;
+    
+    for (let i = 0; i < slots.length; i++) {
+      const s = slots[i];
+      if (!s || s.name === '-') continue;
+      const n = s.name.toLowerCase();
+      
+      if (n.includes('heat sink') || n.includes('radiador')) {
+        let isHit = false;
+        let count = 0;
+        for (let j = 0; j < hsSize && (i + j) < slots.length; j++) {
+          const ahead = slots[i + j];
+          if (ahead && (ahead.name.toLowerCase().includes('heat sink') || ahead.name.toLowerCase().includes('radiador'))) {
+            count++;
+            if (ahead.hit) isHit = true;
+          } else {
+            break;
+          }
+        }
+        if (isHit) result.heatsinks++;
+        i += Math.max(0, count - 1);
+        continue;
+      }
+      
+      if (!s.hit) continue;
+      
+      if (n.includes('engine') || n.includes('fusion')) result.engine++;
+      else if (n.includes('gyro')) result.gyro++;
+      else if (n.includes('sensor')) result.sensors++;
+      else if (n.includes('life support') || n.includes('soporte')) result.lifeSupport++;
+      else if (n.includes('jump jet') || n.includes('salto')) result.jumpJets++;
+    }
+  }
   return result;
 }
 
@@ -211,8 +236,8 @@ export function getArmActuatorMod(crits: Record<string, CritSlot[]>, loc: string
   let mod = 0;
   for (const slot of crits[loc] || []) {
     if (!slot.hit) continue;
-    if (/\bshoulder\b/i.test(slot.name)) mod += 3;
-    else if (/\b(upper arm actuator|lower arm actuator|hand actuator)\b/i.test(slot.name)) mod += 1;
+    if (/\b(shoulder|hombro)\b/i.test(slot.name)) mod += 4;
+    else if (/\b(upper arm actuator|lower arm actuator|hand actuator|actuador superior|actuador inferior|actuador de mano|actuador del brazo|mano)\b/i.test(slot.name)) mod += 1;
   }
   return mod;
 }
@@ -622,7 +647,7 @@ export interface HeatDelta {
 }
 
 export function mechCalcHeatDelta(state: MechState, session: MechSession): HeatDelta {
-  const sysHits = countSystemCritHits(session.crits);
+  const sysHits = countSystemCritHits(session.crits, state);
 
   const move = getMoveHeat(session.moveMode, session.jumpUsed);
   // Para cada arma activa: heat base + weaponMods + critMods en SUS slots.
@@ -652,7 +677,8 @@ export function mechCalcHeatDelta(state: MechState, session: MechSession): HeatD
   }
 
   const generated = move + weapons + engineHeat + jumpCritHeat;
-  const dissipated = Math.max(0, state.diss - sysHits.heatsinks);
+  const lostDissipation = sysHits.heatsinks * (state.hsDouble ? 2 : 1);
+  const dissipated = Math.max(0, state.diss - lostDissipation);
   const delta = generated - dissipated;
 
   return { move, weapons, engineHeat, generated, dissipated, delta };
@@ -665,6 +691,25 @@ export function mechNextTurn(state: MechState, session: MechSession): MechSessio
   const hd = mechCalcHeatDelta(state, s);
 
   s.heat = Math.max(0, s.heat + hd.delta);
+
+  // Life Support Effects
+  const sysHits = countSystemCritHits(s.crits, state);
+  if (sysHits.lifeSupport > 0) {
+    if (s.heat >= 26) {
+      s.wounds += 2;
+      s.logs = [`> DAÑO PILOTO (Soporte Vital): +2 Heridas (Calor ${s.heat})`, ...s.logs];
+    } else if (s.heat >= 15) {
+      s.wounds += 1;
+      s.logs = [`> DAÑO PILOTO (Soporte Vital): +1 Herida (Calor ${s.heat})`, ...s.logs];
+    }
+    
+    if (s.wounds >= 6 && !s.destroyed) {
+      s.destroyed = true;
+      s.destroyedReason = 'PILOTO MUERTO (Heridas)';
+      s.logs = ['> MECH DESTRUIDO: Piloto Muerto por daño', ...s.logs];
+    }
+  }
+
   s.activeShots = {};
   s.shotSpend = {};
   s.moveMode = 'walk';
@@ -781,6 +826,33 @@ export function mechToggleCrit(
   s.logs = [`> ${loc}/${slot.name}: ${status}`, ...s.logs].slice(0, 30);
 
   if (slot.hit) {
+    const n = slot.name.toLowerCase();
+    
+    // ── Descriptive Logs & Instant Effects ──
+    if (n.includes('cockpit') || n.includes('cabina')) {
+      s.wounds = 6;
+      s.destroyed = true;
+      s.destroyedReason = 'PILOTO MUERTO (Cabina Destruida)';
+      s.logs = ['> MECH DESTRUIDO: Piloto Muerto en la cabina', ...s.logs].slice(0, 30);
+      return s;
+    } else if (n.includes('engine') || n.includes('fusion')) {
+      s.logs = ['> EFECTO: +5 Calor/turno (Reactor)', ...s.logs].slice(0, 30);
+    } else if (n.includes('gyro')) {
+      const gHits = countSystemCritHits(s.crits, state).gyro;
+      if (gHits === 1) s.logs = ['> EFECTO: +3 Pilotaje (Giroscopio)', ...s.logs].slice(0, 30);
+      else if (gHits >= 2) s.logs = ['> EFECTO: CAÍDA AUTOMÁTICA (Giroscopio Destruido)', ...s.logs].slice(0, 30);
+    } else if (n.includes('hip') || n.includes('cadera')) {
+      s.logs = ['> EFECTO: PM Caminar a la mitad, +2 Pilotaje (Cadera)', ...s.logs].slice(0, 30);
+    } else if (n.includes('leg actuator') || n.includes('foot') || n.includes('pierna') || n.includes('pie')) {
+      s.logs = ['> EFECTO: -1 PM Caminar, +1 Pilotaje (Actuador Pierna)', ...s.logs].slice(0, 30);
+    } else if (n.includes('jump jet') || n.includes('salto')) {
+      s.logs = ['> EFECTO: -1 PM Salto (Saltador)', ...s.logs].slice(0, 30);
+    } else if (n.includes('shoulder') || n.includes('hombro')) {
+      s.logs = ['> EFECTO: +4 Disparo, sin ataques físicos (Hombro)', ...s.logs].slice(0, 30);
+    } else if (n.includes('arm actuator') || n.includes('hand') || n.includes('brazo') || n.includes('mano')) {
+      s.logs = ['> EFECTO: +1 Disparo, +2 Ataque Físico (Actuador Brazo)', ...s.logs].slice(0, 30);
+    }
+
     // ── Ammo explosion ──
     if (isAmmoCrit(slot.name)) {
       const bin = s.ammoBins.find(b => b.loc === loc && b.slotIdx === slotIdx);

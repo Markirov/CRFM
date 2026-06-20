@@ -9,73 +9,80 @@ interface Props {
 }
 
 export function CombatRadar({ sim, live }: Props) {
-  const handleOpenAttack = (session: LiveSession, unit: LiveUnit) => {
-    // Ya no se usa el modal interno, ahora el ataque se hace desde el FireControlModal
-  };
-
-  if (!live.isLive) {
-    return (
-      <button 
-        onClick={live.toggleLive}
-        className="flex items-center gap-2 px-3 py-1.5 border border-outline-variant/40 hover:border-primary-container text-secondary/60 hover:text-primary-container transition-all font-mono text-[10px] uppercase tracking-widest bg-surface-container-low clip-chamfer"
-      >
-        <Radio size={14} /> Radar OFF
-      </button>
-    );
-  }
-
-  const myWeapons = (sim.activeTab === 'mechs' && sim.mechState) ? sim.mechState.weapons : 
-                    (sim.activeTab === 'vehicles' && sim.vehicleState) ? sim.vehicleState.weapons : [];
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      {/* Botón Radar Activo */}
-      <div className="relative group">
-        <button 
-          onClick={live.toggleLive}
-          className="flex items-center gap-2 px-3 py-1.5 border border-error/60 bg-error/10 text-error hover:bg-error/20 transition-all font-mono text-[10px] uppercase tracking-widest clip-chamfer"
-        >
-          <Radio size={14} className="animate-pulse" /> Radar ON
-        </button>
-      </div>
+    <div className="relative group">
+      {/* Botón Radar (siempre visible, indica estado) */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center gap-2 px-3 py-1.5 border transition-all font-mono text-[10px] uppercase tracking-widest clip-chamfer ${
+          live.isLive 
+            ? 'border-error/60 bg-error/10 text-error hover:bg-error/20' 
+            : 'border-outline-variant/40 hover:border-primary-container text-secondary/60 hover:text-primary-container bg-surface-container-low'
+        }`}
+      >
+        <Radio size={14} className={live.isLive ? 'animate-pulse' : ''} /> 
+        Radar {live.isLive ? 'Activo' : 'Inactivo'}
+      </button>
 
-      {/* Lista de Radares (Contactos) */}
-      <div className="fixed top-20 right-6 w-64 bg-surface-container/95 backdrop-blur-md border border-error/30 shadow-2xl z-40 clip-chamfer hidden md:block">
-        <div className="bg-error/10 p-2 border-b border-error/30 flex items-center justify-between">
-          <span className="font-headline text-[10px] uppercase tracking-widest text-error">Contactos Radar</span>
-          <span className="font-mono text-[9px] text-error/60">{live.sessions.length} señales</span>
-        </div>
-        <div className="max-h-64 overflow-y-auto p-2 space-y-3">
-          {live.sessions.length === 0 && (
-            <div className="text-center font-mono text-[10px] text-secondary/40 py-4 italic">Buscando señales...</div>
-          )}
-          {live.sessions.map(sess => (
-            <div key={sess.id} className="space-y-1">
-              <div className="font-mono text-[9px] text-primary-container uppercase border-b border-outline-variant/20 pb-0.5">
-                {sess.playerName}
+      {/* Panel Desplegable */}
+      {isOpen && (
+        <div className="absolute top-full right-0 mt-2 w-64 md:w-72 bg-surface-container/95 backdrop-blur-md border border-outline-variant/30 shadow-2xl z-50 clip-chamfer">
+          
+          {/* Header del Panel con el Switch On/Off */}
+          <div className="p-3 border-b border-outline-variant/30 flex items-center justify-between bg-surface-container-low">
+            <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2">
+              <Crosshair size={12} /> Contactos
+            </span>
+            <button 
+              onClick={live.toggleLive}
+              className={`px-3 py-1 font-mono text-[9px] uppercase tracking-widest clip-chamfer transition-colors border ${
+                live.isLive 
+                  ? 'bg-error/20 border-error/50 text-error hover:bg-error/40' 
+                  : 'bg-primary/20 border-primary/50 text-primary hover:bg-primary/40'
+              }`}
+            >
+              {live.isLive ? 'Apagar Radar' : 'Encender Radar'}
+            </button>
+          </div>
+
+          <div className="max-h-64 overflow-y-auto p-2 space-y-3 custom-scrollbar">
+            {!live.isLive ? (
+              <div className="text-center font-mono text-[10px] text-secondary/40 py-6 italic">
+                Radar desconectado.<br/><br/>Enciéndelo para compartir telemetría y ver unidades enemigas en red.
               </div>
-              {sess.units.map(u => (
-                <div key={u.id} className={`flex items-center justify-between p-1.5 text-[10px] font-mono border-l-2 ${u.isDestroyed ? 'opacity-30 border-secondary' : 'border-error/40 hover:bg-surface-container-high'}`}>
-                  <div className="flex-1 truncate pr-2">
-                    <span className={u.isDestroyed ? 'line-through' : ''}>{u.name}</span>
-                    <span className="block text-[8px] text-secondary/60">{u.pilot}</span>
+            ) : live.sessions.length === 0 ? (
+              <div className="text-center font-mono text-[10px] text-secondary/40 py-4 italic">Buscando señales...</div>
+            ) : (
+              live.sessions.map(sess => (
+                <div key={sess.id} className="space-y-1">
+                  <div className="font-mono text-[9px] text-primary-container uppercase border-b border-outline-variant/20 pb-0.5">
+                    {sess.playerName}
                   </div>
-                  {!u.isDestroyed && (
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[9px] ${u.hpPercent < 30 ? 'text-error' : u.hpPercent < 70 ? 'text-amber-400' : 'text-primary-container'}`}>
-                        {u.hpPercent}%
-                      </span>
+                  {sess.units.map(u => (
+                    <div key={u.id} className={`flex items-center justify-between p-1.5 text-[10px] font-mono border-l-2 ${u.isDestroyed ? 'opacity-30 border-secondary' : 'border-error/40 hover:bg-surface-container-high'}`}>
+                      <div className="flex-1 truncate pr-2">
+                        <span className={u.isDestroyed ? 'line-through' : ''}>{u.name}</span>
+                        <span className="block text-[8px] text-secondary/60">{u.pilot}</span>
+                      </div>
+                      {!u.isDestroyed && (
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[9px] ${u.hpPercent < 30 ? 'text-error' : u.hpPercent < 70 ? 'text-amber-400' : 'text-primary-container'}`}>
+                            {u.hpPercent}%
+                          </span>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-          ))}
+              ))
+            )}
+          </div>
+
         </div>
-      </div>
-
-
-    </>
+      )}
+    </div>
   );
 }
 

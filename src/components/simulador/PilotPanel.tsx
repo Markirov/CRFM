@@ -16,6 +16,7 @@ interface Props {
   sysHits: { engine: number; gyro: number; sensors: number; lifeSupport: number; heatsinks: number };
   effectiveWalkMP: number;
   effectiveRunMP: number;
+  effectiveJumpMP: number;
   availablePilots: AvailablePilot[];
   onSetPilot: (field: 'gunnery' | 'piloting', value: number) => void;
   onSetWounds: (w: number) => void;
@@ -26,7 +27,7 @@ interface Props {
   onHandleDestruction?: () => void;
 }
 
-export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller, onHandleDestruction }: Props) {
+export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, effectiveJumpMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller, onHandleDestruction }: Props) {
   return (
     <section className="bg-surface-container-low p-4 relative clip-chamfer border-l-2 border-primary-container/30">
       {/* Identity */}
@@ -130,7 +131,7 @@ export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHit
         <div className="pt-3 border-t border-outline-variant">
           <div className="flex justify-between items-center mb-2">
             <span className="text-[10px] font-mono text-secondary/60 uppercase">Movimiento</span>
-            <span className="text-[9px] font-mono text-secondary/40">W:{effectiveWalkMP} R:{effectiveRunMP} J:{state.jumpMP}</span>
+            <span className="text-[9px] font-mono text-secondary/40">W:{effectiveWalkMP} R:{effectiveRunMP} J:{effectiveJumpMP}</span>
           </div>
           <div className="grid grid-cols-2 gap-2 text-[10px] font-mono uppercase">
             {([
@@ -142,7 +143,7 @@ export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHit
                 className={`py-1.5 border transition-colors ${session.moveMode === mode ? 'bg-primary/20 border-primary text-primary' : 'border-outline-variant text-secondary hover:border-secondary'}`}
               >{label}</button>
             ))}
-            {state.jumpMP > 0 && (
+            {effectiveJumpMP > 0 && (
               <div className={`col-span-2 border transition-colors ${session.moveMode === 'jump' ? 'border-primary' : 'border-outline-variant'}`}>
                 <div className={`text-center py-1 text-[9px] font-mono uppercase ${session.moveMode === 'jump' ? 'text-primary' : 'text-secondary/60'}`}>
                   Saltar (+3) — {session.moveMode === 'jump' ? `${session.jumpUsed} hex` : 'hex:'}
