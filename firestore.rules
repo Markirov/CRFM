@@ -101,10 +101,38 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
-    // ── Resto: staff R+W, PJ solo R ──────────────────────────
-    match /{collection}/{doc} {
+    // ── Colecciones varias: staff R+W, PJ solo R ─────────────
+    // (cada una explícita para que el catch-all no fugue write en
+    // docs específicos como config/main)
+    match /personal/{doc} {
       allow read:  if hasAnyRole();
       allow write: if isStaff();
     }
+    match /historial/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+    match /logros/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+    match /mejoras/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+    match /gastosXP/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+    match /ordenDia/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+    match /parteDiario/{doc} {
+      allow read:  if hasAnyRole();
+      allow write: if isStaff();
+    }
+
+    // Cualquier doc no listado → denied (closed-by-default).
   }
 }

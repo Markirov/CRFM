@@ -104,11 +104,17 @@ const CONFIG_SIM_REF  = () => doc(db, 'config', 'sim');
 // (apunta a main; SOLO usar para datos admin).
 const CONFIG_REF = CONFIG_MAIN_REF;
 
-/** Prefijos / nombres exactos de keys que viven en config/sim. */
-const SIM_KEY_PREFIXES = ['FUERZA_', 'FUERZACAMPAÑA', 'FUERZACAMPANA', 'ENEMIGO', 'ESTADOMECHS', 'PILOTO_'] as const;
-
+/** Whitelist exacta de keys SIM. Resto va a config/main.
+ *  Atención: `PILOTO_*_MECH` solo (asignación de mech). `PILOTO_*_NOMBRE`
+ *  y `PILOTO_*_APODO` son datos editables solo por admin → config/main. */
 function isSimKey(key: string): boolean {
-  return SIM_KEY_PREFIXES.some(p => key.startsWith(p) || key === p);
+  if (key.startsWith('FUERZA_'))      return true;   // FUERZA_<safeEmail>_<slot>
+  if (key === 'FUERZACAMPAÑA')        return true;
+  if (key === 'FUERZACAMPANA')        return true;   // sin-ñ defensivo
+  if (/^ENEMIGO\d+$/.test(key))       return true;   // ENEMIGO1..N
+  if (key === 'ESTADOMECHS')          return true;
+  if (/^PILOTO_\d+_MECH$/.test(key))  return true;   // solo _MECH, no _NOMBRE/_APODO
+  return false;
 }
 
 export const loadConfig = async (): Promise<{ success: boolean; data?: { config: Record<string, any> }; error?: string }> => {
@@ -116,8 +122,12 @@ export const loadConfig = async (): Promise<{ success: boolean; data?: { config:
     const [mainSnap, simSnap] = await Promise.all([getDoc(CONFIG_MAIN_REF()), getDoc(CONFIG_SIM_REF())]);
     const main: Record<string, any> = mainSnap.exists() ? (mainSnap.data() as any) : {};
     const sim:  Record<string, any> = simSnap.exists()  ? (simSnap.data()  as any) : {};
-    // sim wins en colisión (keys SIM_*)
-    const config = { ...main, ...sim };
+    // Defensa en profundidad: del doc sim solo aceptamos keys SIM_* o las
+    // FUERZA_<email>_<slot> que matchean por prefijo. Si alguien escribe
+    // CONTRATO_VALOR en config/sim por error/maliciosamente, lo ignoramos.
+    const simFiltered: Record<string, any> = {};
+    for (const [k, v] of Object.entries(sim)) if (isSimKey(k)) simFiltered[k] = v;
+    const config = { ...main, ...simFiltered };
     return { success: true, data: { config } };
   } catch (e: any) {
     console.error('[firebase] loadConfig:', e);
@@ -175,11 +185,12 @@ export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data)
 export const resetLegacyMechAssignments = () =>
   safe(async () => {
     // 1) Borra PILOTO_1_MECH..PILOTO_6_MECH (SIM keys → config/sim).
-    //    saveConfigBatch enruta automáticamente por prefijo.
+    //    saveConfigBatch enruta automáticamente.
+    //    Esta función solo la invoca admin desde SecretMenu, por lo que
+    //    además podemos limpiar la copia legacy en config/main.
     const cfgPatch: Record<string, string> = {};
     for (let i = 1; i <= 6; i++) cfgPatch[`PILOTO_${i}_MECH`] = '';
     await saveConfigBatch(cfgPatch);
-    // También limpia legacy en config/main por compat con instalaciones viejas
     await setDoc(CONFIG_MAIN_REF(), cfgPatch, { merge: true }).catch(() => {});
 
     // 2) Borra `mech` de todos los personajes
