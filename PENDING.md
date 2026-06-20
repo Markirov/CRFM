@@ -1,6 +1,6 @@
 # Pendientes Activos
 
-Última actualización: 2026-06-19
+Última actualización: 2026-06-20
 
 ---
 
@@ -43,9 +43,12 @@ Si mech termina destruido en sim:
 ### Enriquecer `rebuild-indexes.cjs`
 Añadir `tons/cost/era/techbase/categoria` al `index.json` para evitar fetch del `.ssw` en cada selección (TRO + Hangar Comprar).
 
-### Telegram setup manual
-Cliente + backend listos. Pendiente setup bot + deploy editor + webhook.
-Spec: `herramientas/MD/TELEGRAM_SPEC.md`.
+### Telegram — ampliaciones
+Outbound + inbound + 6 comandos básicos DONE. Pendiente:
+- Comandos admin: `/backup`, `/anuncio <texto>`, `/resetcampana`
+- Mapping `PJ_TG_<NOMBRE> = user_id` (Firestore) para que `/parte` use nombre PJ canónico
+- UI gestión `TG_AUTHORIZED_IDS` desde SecretMenu (en lugar de secret CSV)
+- Telemetría: log de comandos ejecutados en Firestore (auditoría)
 
 ### Verificación E2E prod
 Recorrer flujos: registro, compra-venta hangar, reparación prioridades, mantenimiento check, hoja servicio + reroll, asignación piloto-mech, modo campaña sim.
@@ -111,7 +114,41 @@ Status: parked. GUI manual SSW o parser+BV calculator Node (~500 líneas).
 
 ---
 
+## 🔴 Alto — Seguridad rules
+
+### Granularidad config/{doc}
+Estado actual: `config/{doc}` ahora `read, write: if hasAnyRole()` (relajado para que PJ pueda escribir FUERZA*/ESTADOMECHS desde simulador).
+
+Riesgo: cualquier PJ puede tocar `CONTRATO_VALOR`, `AÑO/MES_CAMPANA`, `PROMPT_*`, `public_roles` directamente vía consola Firestore.
+
+Soluciones (orden preferencia):
+1. **Split en sub-docs**: `config/sim` (PJ R+W) vs `config/main` (admin write, staff read). Migrar FuerzaSyncBar, SimuladorPage al sub-doc nuevo.
+2. **Rules per-field**: validar `request.resource.data.diff(resource.data).affectedKeys()` está dentro de whitelist PJ.
+3. **Cloud Function intermedia**: PJ llama callable `setSimSlot(slot, payload)` con validación server-side; config Firestore solo admin-writable directo.
+
+Opción 1 es más limpia y rápida.
+
+---
+
 ## ✅ Completado reciente (2026-06)
+
+### Telegram + Wiki + Seguridad (2026-06-20)
+- **Telegram outbound**: Cloud Function `sendTelegramNotif` callable con role gate. Secrets en Firebase Secret Manager. 6 eventos (`mision_cerrada`, `libro_mayor_relevante`, `tesoreria_grande`, `cronica_nueva`, `parte_nuevo`, `test`). Reemplaza shim no-op `sheetsPost` (motivo: Telegram nunca funcionó post-migración Sheets→Firebase)
+- **Telegram inbound**: Cloud Function HTTPS `tgWebhook` con secret_token validation. Comandos: `/whoami` (libre), `/roster`, `/tesoreria`, `/cronica`, `/parte <texto>`, `/help`. Whitelist user_ids vía secret `TG_AUTHORIZED_IDS`
+- **CORS whitelist** Cloud Functions: battletechalicante.es + legadometalico.com + web.app + firebaseapp.com + localhost
+- **SecretMenu 8 tabs sidebar**: Campaña, Tesorería, Pilotos XP, Prompts IA (4 prompts), Telegram (toggle + umbrales + test), Combate, Diseño, Roles
+- **telegram-service**: getters/setters localStorage para toggle + umbrales tesorería/libro mayor
+- **Alias system**: `RoleEntry.alias` + `getPublicRoles()` desde `config/main.public_roles` (espejo ofuscado con `safeEmail`). Permite PJ ver lista usuarios sin exponer emails. `syncPublicRoles()` auto-ejecuta tras setRole/removeRole
+- **RolesPanel**: input alias en add + botón "Cambiar alias" inline
+- **FuerzaSyncBar**: usa `getPublicRoles()` + `safeEmail`. Selector muestra alias
+- **SimuladorPage refactor hooks**: useMemo `visibleIndices`/`lockedSlotsForView` antes de early returns (fix React error #310 latente)
+- **firestore.rules**: `claimRole()` hardened con `'role' in token` check; `config/{doc}` abierto a `hasAnyRole()` (ver pendiente seguridad arriba)
+
+### Wiki BattleTech reglas (en progreso — 2026-06-20)
+- **AI rule extractor** Python (`scripts/ai_rule_extractor/build_rulebase.py`): pipeline Gemini API con `Total Warfare Nuevo.pdf` → extrae crunch sin fluff por tema → markdown + JSON
+- **wiki-tree.json**: 14+ categorías (mecánicas, movimiento terrestre/aeroespacial, combate distancia/físico, calor, construcción, entorno, equipo RPG, escenarios, gestión campaña, organización, personajes, unidades, armas)
+- **VitePress sidebar dinámico**: `docs/.vitepress/config.mts` lee `wiki-tree.json` + filtra carpetas existentes
+- **docs/index.md** rebrandeado "CFRM Rulebase · Enciclopedia de Reglas"
 
 ### Mantenimiento + Hangar (2026-06-19)
 - **MechSourcePicker** en Prioridades (hangar + sim) y Mantenimiento (solo campaña)

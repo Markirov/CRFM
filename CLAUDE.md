@@ -392,4 +392,43 @@ Carpeta `manuales/` (gitignored). PDFs comerciales BattleTech.
 - `.gitignore`: `credenciales*.json`, `*service-account*.json`, `secrets.*`, `manuales/`, `.env*`, `backups/`, `herramientas/`, `AutoMover.py`
 - Firebase service account NUNCA en repo
 - Whitelist gestionada desde SecretMenu → RolesPanel (collection `roles/`). `firestore.rules` requiere redeploy si cambian las funciones de rol.
-- Apps Script TOKEN Telegram revoked en sesiones anteriores — usar SecretMenu Treasury override en lugar de asientos sintéticos
+- `config/{doc}` rules: `read, write: if hasAnyRole()`. Permite PJ tocar FUERZA*/ESTADOMECHS desde simulador, pero también CONTRATO_VALOR y prompts. Pendiente split `config/sim` vs `config/main` (ver PENDING).
+- Telegram secrets: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET`, `TG_AUTHORIZED_IDS` en Firebase Secret Manager. Nunca commitear.
+
+---
+
+## Cloud Functions (`functions/`)
+
+| Función | Tipo | Rol caller | Descripción |
+|---|---|---|---|
+| `setUserRole` | callable | admin | Asigna custom claim role a usuario Auth + espejo Firestore |
+| `sendTelegramNotif` | callable | admin/dm/pj | Manda mensaje al grupo Telegram. 6 eventos con templates HTML |
+| `tgWebhook` | HTTPS | (Telegram) | Recibe updates Telegram. Comandos: `/whoami` (libre), `/roster` `/tesoreria` `/cronica` `/parte <texto>` `/help` (whitelist) |
+
+Deploy: `firebase deploy --only functions`. CORS whitelist en cada callable: battletechalicante.es + legadometalico.com + web.app + firebaseapp.com + localhost.
+
+## Telegram (`src/lib/telegram-service.ts`)
+
+- `sendTelegramNotif(event, data)` → `httpsCallable('sendTelegramNotif')`
+- Toggle global + umbrales en localStorage (`kk_tg_enabled`, `kk_tg_umbral_tesoreria`, `kk_tg_umbral_libro`)
+- `getTelegramEnabled()` → early-return en `sendTelegramNotif` si OFF
+- `exceedsTesoreriaUmbral(n)` / `exceedsLibroMayorUmbral(n)` leen umbral dinámico desde localStorage
+- Editor: SecretMenu → Telegram (toggle + 2 umbrales + botón Test)
+
+## Roles (alias + lista pública)
+
+`src/lib/role-service.ts`:
+- `RoleEntry { uid, email, alias?, role, updatedAt }` — collection `roles/{docId}` (admin-only read)
+- `PublicRoleEntry { safeEmail, alias, role }` — espejo en `config/main.public_roles` (PJ-readable, sin emails)
+- `getPublicRoles()` para selectors visibles a PJ (ej. FuerzaSyncBar)
+- `setRole(email, role, docId?, alias?)` + `removeRole(email, docId?)` auto-sincronizan espejo público
+- `safeEmail = emailToDocId(email)` (= `[^a-z0-9]→_`)
+
+## Wiki BattleTech (`docs/`, `scripts/ai_rule_extractor/`)
+
+VitePress wiki auto-generada con reglas extraídas de PDFs vía Gemini API.
+
+- `scripts/ai_rule_extractor/build_rulebase.py` — pipeline Gemini, extrae crunch (no fluff) por tema, genera markdown + JSON
+- `wiki-tree.json` — 14+ categorías con subcategorías (mecánicas, movimiento, combate, calor, construcción, entorno, equipo RPG, escenarios, gestión campaña, organización, personajes, unidades, armas)
+- `docs/.vitepress/config.mts` — sidebar auto-generado leyendo `wiki-tree.json` + filtrando carpetas existentes
+- Build/dev VitePress estándar. Wiki separada de la app principal CRFM
