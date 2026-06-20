@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import type { MechState, MechSession } from '@/lib/combat-types';
-import { ARMOR_SLOTS } from '@/lib/combat-data';
+import { ARMOR_SLOTS, mechApplyDamage } from '@/lib/combat-data';
 import { useDismissable } from '@/hooks/useDismissable';
 
 interface Props {
@@ -69,6 +69,15 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
       document.body.style.touchAction = prevTouchAction;
     };
   }, [selectedSection]);
+
+  let previewSession = session;
+  if (session.pendingDamage && session.pendingDamage.length > 0) {
+    previewSession = structuredClone(session);
+    for (const pd of session.pendingDamage) {
+      previewSession = mechApplyDamage(state, previewSession, pd.locKey, pd.amount).session;
+    }
+  }
+
   return (
     <div className="bg-surface-container p-4 relative clip-chamfer border-t-2 border-primary-container/40 h-full flex flex-col">
       <div className="flex items-center justify-between mb-2 z-10">
@@ -86,11 +95,13 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
 
           {MECH_ZONES.map(zone => {
             const armorCurrent = session.armor[zone.armorKey] ?? 0;
+            const armorPreview = previewSession.armor[zone.armorKey] ?? 0;
             const armorMax = state.armor[zone.armorKey as keyof typeof state.armor] ?? 0;
             if (armorMax === 0) return null;
 
             const isRear = zone.armorKey.endsWith('r');
             const isCurrent = !isRear ? (session.is[zone.isKey] ?? 0) : 0;
+            const isPreview = !isRear ? (previewSession.is[zone.isKey] ?? 0) : 0;
             const isMax = !isRear ? (state.is[zone.isKey as keyof typeof state.is] ?? 0) : 0;
 
             const isSelected = selectedSection === zone.armorKey;
@@ -122,9 +133,11 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
                   <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: `${armorCols * (DOT + GAP) - GAP}px`, gap: `${GAP}px` }}>
                     {Array.from({ length: armorMax }).map((_, i) => (
                       <div key={i} className={`transition-all ${
-                        i < armorCurrent
+                        i < armorPreview
                           ? 'bg-white'
-                          : 'bg-outline-variant/20 border border-outline-variant/40'
+                          : i < armorCurrent
+                            ? 'bg-amber-500' // Daño pendiente
+                            : 'bg-outline-variant/20 border border-outline-variant/40'
                       }`} style={{ width: DOT, height: DOT, flexShrink: 0 }} />
                     ))}
                   </div>
@@ -136,9 +149,11 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
                       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', width: `${isCols * (DOT + GAP) - GAP}px`, gap: `${GAP}px` }}>
                         {Array.from({ length: isMax }).map((_, i) => (
                           <div key={i} className={`transition-all ${
-                            i < isCurrent
+                            i < isPreview
                               ? 'bg-red-500'
-                              : 'bg-outline-variant/20 border border-outline-variant/40'
+                              : i < isCurrent
+                                ? 'bg-amber-500' // Daño pendiente
+                                : 'bg-outline-variant/20 border border-outline-variant/40'
                           }`} style={{ width: DOT, height: DOT, flexShrink: 0 }} />
                         ))}
                       </div>
@@ -159,14 +174,14 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
               <div className="space-y-2 font-mono text-[9px]">
                 <div className="flex justify-between">
                   <span className="text-secondary/60">BLINDAJE:</span>
-                  <span>{session.armor[selectedSection] ?? '—'} / {(state.armor as any)[selectedSection] ?? '—'}</span>
+                  <span>{previewSession.armor[selectedSection] ?? '—'} / {(state.armor as any)[selectedSection] ?? '—'}</span>
                 </div>
                 {(() => {
                   const slotDef = ARMOR_SLOTS.find(a => a.k === selectedSection);
                   if (slotDef && !slotDef.rear) return (
                     <div className="flex justify-between">
                       <span className="text-secondary/60">ESTRUCTURA:</span>
-                      <span>{session.is[slotDef.ik] ?? '—'} / {(state.is as any)[slotDef.ik] ?? '—'}</span>
+                      <span>{previewSession.is[slotDef.ik] ?? '—'} / {(state.is as any)[slotDef.ik] ?? '—'}</span>
                     </div>
                   );
                   return null;

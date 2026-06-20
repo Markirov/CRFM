@@ -30,7 +30,7 @@ import {
   deleteField,
   query, orderBy, limit as fsLimit,
 } from 'firebase/firestore';
-import { db } from './firebase-config';
+import { db, auth } from './firebase-config';
 import type { SimuladorSnapshot } from './simulador-persistence';
 
 // ── Helpers envelope ────────────────────────────────────────────
@@ -365,7 +365,12 @@ export interface FuerzaEntry {
   snapshot: SimuladorSnapshot;
 }
 
-const fuerzaKey = (slot: FuerzaSlot) => `FUERZA${slot}` as const;
+export function getSafeEmail(email?: string | null): string {
+  if (!email) return 'anonymous';
+  return email.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
+}
+
+const fuerzaKey = (slot: FuerzaSlot) => `FUERZA_${getSafeEmail(auth?.currentUser?.email)}_${slot}`;
 const FUERZA_CAMPANA_KEY = 'FUERZACAMPAÑA';
 
 async function readConfigField(key: string): Promise<string | null> {
@@ -399,6 +404,23 @@ export async function loadFuerzaConfigSlot(slot: FuerzaSlot): Promise<FuerzaConf
   const raw = await readConfigField(fuerzaKey(slot));
   if (!raw) return null;
   try { return JSON.parse(raw) as FuerzaConfigEntry; } catch { return null; }
+}
+
+export async function sendFuerzaToUser(
+  targetEmail: string,
+  payload: { nombre: string; bv: number; snapshot: SimuladorSnapshot }
+) {
+  return safe(async () => {
+    const entry: FuerzaConfigEntry = {
+      nombre:    payload.nombre,
+      bv:        payload.bv,
+      updatedAt: new Date().toISOString(),
+      snapshot:  payload.snapshot,
+    };
+    const targetKey = `FUERZA_${getSafeEmail(targetEmail)}_5`;
+    await writeConfigField(targetKey, JSON.stringify(entry));
+    return true;
+  });
 }
 
 export async function loadAllFuerzaConfigSlots(): Promise<Record<FuerzaSlot, FuerzaConfigEntry | null>> {

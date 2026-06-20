@@ -6,6 +6,8 @@ import type { HangarItem } from '@/lib/hangar-types';
 import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
+import { EndTurnSummaryModal } from '@/components/simulador/EndTurnSummaryModal';
+import { GlobalEndTurnSummaryModal } from '@/components/simulador/GlobalEndTurnSummaryModal';
 import { usePerm } from '@/hooks/usePerm';
 import { UnitSlots } from '@/components/simulador/UnitSlots';
 import { InfantrySlots } from '@/components/simulador/infantry/InfantrySlots';
@@ -26,7 +28,7 @@ import { SubtabRightPortal } from '@/components/shell/SubtabRightPortal';
 import { useAppStore } from '@/lib/store';
 import type { FireTarget } from '@/lib/combat-types';
 import { useLiveSession } from '@/hooks/useLiveSession';
-import { CombatRadar, IncomingAttacks } from '@/components/simulador/CombatRadar';
+import { ComputadoraCombate, IncomingAttacks } from '@/components/simulador/CombatRadar';
 import { FireControlModal } from '@/components/simulador/FireControlModal';
 import { SaveSlotModal } from '@/components/simulador/SaveSlotModal';
 
@@ -425,6 +427,21 @@ export function SimuladorPage() {
       {/* Componentes Live / Radar */}
       <IncomingAttacks sim={sim} live={live} />
 
+      {sim.endTurnSummary && (
+        <EndTurnSummaryModal
+          summary={sim.endTurnSummary.summary}
+          onConfirm={sim.confirmNextTurn}
+        />
+      )}
+
+      {sim.globalEndTurnSummary && (
+        <GlobalEndTurnSummaryModal
+          mechUpdates={sim.globalEndTurnSummary.mechUpdates}
+          vehicleUpdates={sim.globalEndTurnSummary.vehicleUpdates}
+          onConfirm={sim.confirmGlobalNextTurn}
+        />
+      )}
+
       <FireControlModal 
         isOpen={isFireModalOpen} 
         onClose={() => setIsFireModalOpen(false)} 
@@ -434,7 +451,7 @@ export function SimuladorPage() {
 
       {/* Subtab right-slot: flags + search + slot picker + sync */}
       <SubtabRightPortal>
-        <CombatRadar sim={sim} live={live} />
+        <ComputadoraCombate sim={sim} live={live} />
         {flagToggles}
         <CatalogSearch
           onLoad={guardedLoadUnitText}
@@ -509,19 +526,28 @@ export function SimuladorPage() {
 
             <button
               onClick={() => setIsFireModalOpen(true)}
-              disabled={ss.destroyed || !writable || Object.keys(ss.activeShots).length === 0}
+              disabled={ss.destroyed || Object.keys(ss.activeShots).length === 0}
               className="w-full bg-error hover:bg-error/80 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-on-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2"
             >
               <Crosshair size={20} /> Fijar Blancos y Disparar
             </button>
 
-            <button
-              onClick={sim.handleFire}
-              disabled={!sim.canMechFire || ss.destroyed || !writable}
-              className="w-full bg-error/20 hover:bg-error/40 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2"
-            >
-              <RotateCcw size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin de Turno'}
-            </button>
+            {sim.isSimultaneousCombat ? (
+              <button
+                onClick={sim.handleGlobalFire}
+                className="w-full bg-amber-500/20 hover:bg-amber-500/40 disabled:opacity-30 disabled:cursor-not-allowed border border-amber-500 text-amber-500 font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2"
+              >
+                <RotateCcw size={20} /> Fin de Turno Global
+              </button>
+            ) : (
+              <button
+                onClick={sim.handleFire}
+                disabled={!sim.canMechFire || ss.destroyed}
+                className="w-full bg-error/20 hover:bg-error/40 disabled:opacity-30 disabled:cursor-not-allowed border border-error text-error font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2"
+              >
+                <RotateCcw size={20} /> {ss.destroyed ? 'DESTRUIDO' : 'Fin Turno (Éste)'}
+              </button>
+            )}
 
             <HeatMonitor state={ms} session={ss} onAdjustHeat={sim.adjustHeat} />
           </div>
@@ -539,7 +565,6 @@ export function SimuladorPage() {
               setSelectedSection={sim.setSelectedSection}
               onForceRevive={sim.forceReviveMech}
               onAdjustAmmo={sim.adjustAmmo}
-              readOnly={!writable}
             />
           </div>
 
@@ -664,7 +689,8 @@ export function SimuladorPage() {
           setSelectedSection={sim.setSelectedSection}
           onApplyDamage={sim.vehicleApplyDamageToSelected}
           onToggleWeapon={sim.vehicleToggleWeapon}
-          onNextTurn={sim.vehicleHandleFire}
+          onNextTurn={sim.isSimultaneousCombat ? sim.handleGlobalFire : sim.vehicleHandleFire}
+          isSimultaneousCombat={sim.isSimultaneousCombat}
           onToggleCrit={sim.vehicleToggleCrit}
           onSetMoveMode={sim.vehicleSetMoveMode}
           onSetMotive={sim.vehicleSetMotive}

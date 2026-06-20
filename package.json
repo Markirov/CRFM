@@ -5,10 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=5000",
-    "build": "vite build",
+    "build": "vite build && npm run docs:build",
     "preview": "vite preview",
     "lint": "tsc --noEmit",
-    "build:data": "tsx scripts/build-systems-data.ts"
+    "build:data": "tsx scripts/build-systems-data.ts",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -35,6 +38,8 @@
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.38",
     "xlsx": "^0.18.5"
   }
 }

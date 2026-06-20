@@ -8,12 +8,12 @@ interface Props {
   live: ReturnType<typeof useLiveSession>;
 }
 
-export function CombatRadar({ sim, live }: Props) {
+export function ComputadoraCombate({ sim, live }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="relative group">
-      {/* Botón Radar (siempre visible, indica estado) */}
+      {/* Botón Principal */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-2 px-3 py-1.5 border transition-all font-mono text-[10px] uppercase tracking-widest clip-chamfer ${
@@ -23,28 +23,41 @@ export function CombatRadar({ sim, live }: Props) {
         }`}
       >
         <Radio size={14} className={live.isLive ? 'animate-pulse' : ''} /> 
-        Radar {live.isLive ? 'Activo' : 'Inactivo'}
+        Computadora de Combate
       </button>
 
       {/* Panel Desplegable */}
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-64 md:w-72 bg-surface-container/95 backdrop-blur-md border border-outline-variant/30 shadow-2xl z-50 clip-chamfer">
+        <div className="absolute top-full right-0 mt-2 w-64 md:w-80 bg-surface-container/95 backdrop-blur-md border border-outline-variant/30 shadow-2xl z-50 clip-chamfer">
           
-          {/* Header del Panel con el Switch On/Off */}
-          <div className="p-3 border-b border-outline-variant/30 flex items-center justify-between bg-surface-container-low">
-            <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2">
-              <Crosshair size={12} /> Contactos
+          {/* Header del Panel con los Switches */}
+          <div className="p-3 border-b border-outline-variant/30 flex flex-col gap-2 bg-surface-container-low">
+            <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2 mb-1">
+              <Crosshair size={12} /> Ajustes
             </span>
-            <button 
-              onClick={live.toggleLive}
-              className={`px-3 py-1 font-mono text-[9px] uppercase tracking-widest clip-chamfer transition-colors border ${
-                live.isLive 
-                  ? 'bg-error/20 border-error/50 text-error hover:bg-error/40' 
-                  : 'bg-primary/20 border-primary/50 text-primary hover:bg-primary/40'
-              }`}
-            >
-              {live.isLive ? 'Apagar Radar' : 'Encender Radar'}
-            </button>
+            <div className="flex gap-2">
+              <button 
+                onClick={live.toggleLive}
+                className={`flex-1 px-2 py-1.5 font-mono text-[9px] uppercase tracking-widest clip-chamfer transition-colors border ${
+                  live.isLive 
+                    ? 'bg-error/20 border-error/50 text-error hover:bg-error/40' 
+                    : 'bg-primary/20 border-primary/50 text-primary hover:bg-primary/40'
+                }`}
+              >
+                {live.isLive ? 'Radar: ON' : 'Radar: OFF'}
+              </button>
+              <button
+                onClick={() => sim.setIsSimultaneousCombat(!sim.isSimultaneousCombat)}
+                className={`flex-1 px-2 py-1.5 font-mono text-[9px] uppercase tracking-widest clip-chamfer transition-colors border flex items-center justify-center gap-1 ${
+                  sim.isSimultaneousCombat 
+                    ? 'bg-primary/20 text-primary border-primary hover:bg-primary/30' 
+                    : 'bg-outline-variant/20 text-secondary border-outline-variant hover:bg-outline-variant/30'
+                }`}
+                title={sim.isSimultaneousCombat ? "Combate Simultáneo Activado (Daño diferido)" : "Combate Clásico (Daño instantáneo)"}
+              >
+                {sim.isSimultaneousCombat ? 'Simultáneo: ON' : 'Simultáneo: OFF'}
+              </button>
+            </div>
           </div>
 
           <div className="max-h-64 overflow-y-auto p-2 space-y-3 custom-scrollbar">
@@ -123,10 +136,6 @@ export function IncomingAttacks({ sim, live }: Props) {
 
             <div className="mt-3 flex gap-2">
               <button 
-                onClick={() => live.resolveAttack(atk)}
-                className="flex-1 py-1.5 border border-outline-variant/40 hover:bg-surface-container-highest text-secondary/60 hover:text-secondary font-mono text-[9px] uppercase transition-colors"
-              >Ignorar / Fallo</button>
-              <button 
                 onClick={() => {
                   // Pre-seleccionar el slot correcto y fijar el amount de daño, para que el usuario solo clique en ArmorDiagram
                   if (mechIdx >= 0) {
@@ -137,10 +146,11 @@ export function IncomingAttacks({ sim, live }: Props) {
                     sim.setCurrentVehicleIdx(vehIdx);
                   }
                   sim.setDamageAmount(atk.damage);
+                  sim.setDamageSource(atk.sourceSessionName);
                   live.resolveAttack(atk);
                 }}
-                className="flex-1 py-1.5 border border-error bg-error/20 hover:bg-error/40 text-error font-mono text-[9px] uppercase font-bold transition-colors"
-              >Asignar Daño</button>
+                className="w-full py-2 border border-error bg-error/20 hover:bg-error/40 text-error font-mono text-[10px] uppercase font-bold transition-colors"
+              >Aplicar Impacto</button>
             </div>
           </div>
         );

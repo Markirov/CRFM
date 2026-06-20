@@ -105,6 +105,27 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                     <div className="text-[10px] font-mono text-secondary/40 italic p-2 border border-outline-variant/20">Sin contactos en radar</div>
                   ) : (
                     <div className="flex flex-wrap gap-2">
+                      {/* Botón de Fallo / Descarte (actúa como el objetivo nulo) */}
+                      <button
+                        onClick={() => {
+                          setTargets(prev => ({
+                            ...prev,
+                            [w.id]: { 
+                              ...prev[w.id], 
+                              targetSessionId: '', 
+                              targetUnitId: '' 
+                            }
+                          }));
+                        }}
+                        className={`px-3 py-1.5 font-mono text-[9px] uppercase border clip-chamfer transition-all text-left ${
+                          (!t.targetSessionId && !t.targetUnitId)
+                            ? 'bg-outline-variant/30 border-outline-variant text-secondary shadow-[0_0_10px_-2px_rgba(255,255,255,0.1)]' 
+                            : 'bg-surface-container-high border-outline-variant/40 text-secondary/60 hover:border-secondary/60 hover:text-secondary'
+                        }`}
+                      >
+                        <div className="font-bold">✕ Fallo / Nada</div>
+                      </button>
+
                       {live.sessions.flatMap(sess => 
                         sess.units.map(u => {
                           if (u.isDestroyed) return null;

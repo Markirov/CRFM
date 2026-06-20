@@ -41,6 +41,7 @@ interface Props {
   onSetPilot:      (field: 'gunnery' | 'piloting' | 'name', v: number | string) => void;
   onApplyCritEffect?: (effectId: string, locKey?: string) => void;
   onAdjustPendingCrit?: (locKey: string, type: 'damage' | 'motive', delta: number) => void;
+  isSimultaneousCombat?: boolean;
 }
 
 // ─── LocZone ─────────────────────────────────────────────────────────────────
@@ -177,7 +178,7 @@ export function VehiclePanel({
   onSectionClick, setSelectedSection, onApplyDamage,
   onToggleWeapon, onNextTurn,
   onToggleCrit, onSetMoveMode, onSetMotive, onSetPilot,
-  onApplyCritEffect, onAdjustPendingCrit,
+  onApplyCritEffect, onAdjustPendingCrit, isSimultaneousCombat,
 }: Props) {
   const [showCrits, setShowCrits] = useState(false);
   // Modal state: which table to show, and chained steps
@@ -393,15 +394,27 @@ export function VehiclePanel({
         </section>
 
         {/* End of turn */}
-        <button onClick={handleEndTurn} disabled={session.destroyed}
-          className={`w-full disabled:opacity-30 disabled:cursor-not-allowed border font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 ${
-            totalPending > 0
-              ? 'bg-amber-400/20 hover:bg-amber-400/40 border-amber-400 text-amber-400'
-              : 'bg-error/20 hover:bg-error/40 border-error text-error'
-          }`}>
-          <Crosshair size={20} />
-          {session.destroyed ? 'DESTRUIDO' : totalPending > 0 ? `Resolver críticos (${totalPending})` : 'Fin de Turno'}
-        </button>
+        {isSimultaneousCombat ? (
+          <button onClick={handleEndTurn} disabled={session.destroyed}
+            className={`w-full disabled:opacity-30 disabled:cursor-not-allowed border font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2 ${
+              totalPending > 0
+                ? 'bg-amber-400/20 hover:bg-amber-400/40 border-amber-400 text-amber-400'
+                : 'bg-amber-500/20 hover:bg-amber-500/40 border-amber-500 text-amber-500'
+            }`}>
+            <Crosshair size={20} />
+            {session.destroyed ? 'DESTRUIDO' : totalPending > 0 ? `Resolver críticos (${totalPending})` : 'Fin de Turno Global'}
+          </button>
+        ) : (
+          <button onClick={handleEndTurn} disabled={session.destroyed}
+            className={`w-full disabled:opacity-30 disabled:cursor-not-allowed border font-headline font-bold uppercase tracking-widest py-4 clip-chamfer transition-all flex items-center justify-center gap-2 mb-2 ${
+              totalPending > 0
+                ? 'bg-amber-400/20 hover:bg-amber-400/40 border-amber-400 text-amber-400'
+                : 'bg-error/20 hover:bg-error/40 border-error text-error'
+            }`}>
+            <Crosshair size={20} />
+            {session.destroyed ? 'DESTRUIDO' : totalPending > 0 ? `Resolver críticos (${totalPending})` : 'Fin Turno (Éste)'}
+          </button>
+        )}
       </div>
 
       {/* ── CENTER: Armor diagram ── */}

@@ -1,12 +1,14 @@
 // FuerzaSyncBar — indicador estado + Slots/Reset fuerza
 import { useEffect, useRef, useState } from 'react';
-import { CloudUpload, AlertCircle, Trash2, Archive, Lock, LockOpen, Save } from 'lucide-react';
+import { CloudUpload, AlertCircle, Trash2, Archive, Lock, LockOpen, Save, Send } from 'lucide-react';
 import {
-  loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, clearFuerzaConfigSlot,
+  loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, clearFuerzaConfigSlot, sendFuerzaToUser,
   type FuerzaSlot, type FuerzaConfigEntry,
 } from '@/lib/firebase-service';
+import { getRoles, type RoleEntry } from '@/lib/role-service';
 import type { SimuladorSnapshot } from '@/lib/simulador-persistence';
 import { useDismissable } from '@/hooks/useDismissable';
+import { auth } from '@/lib/firebase-config';
 
 interface Props {
   dirty: boolean;
@@ -44,6 +46,11 @@ export function FuerzaSyncBar({
   const [slots, setSlots] = useState<Record<FuerzaSlot, FuerzaConfigEntry | null>>({ 1: null, 2: null, 3: null, 4: null, 5: null });
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotNombre, setSlotNombre] = useState('');
+
+  const [users, setUsers] = useState<RoleEntry[]>([]);
+  const [selectedUserEmail, setSelectedUserEmail] = useState('');
+  const [sendingFuerza, setSendingFuerza] = useState(false);
+  const [sendSuccess, setSendSuccess] = useState('');
 
   const slotsPanelRef = useRef<HTMLDivElement>(null);
   useDismissable(slotsPanelRef, slotsPanelOpen, () => setSlotsPanelOpen(false));
@@ -93,14 +100,42 @@ export function FuerzaSyncBar({
     return false;
   };
 
-  // ── Slots fijos en Configuracion ──
-
   const openSlotsPanel = async () => {
     setSlotsPanelOpen(true);
+    await reloadSlots();
+  };
+
+  const reloadSlots = async () => {
     setLoadingSlots(true);
-    const all = await loadAllFuerzaConfigSlots();
+    const [all, roleList] = await Promise.all([
+      loadAllFuerzaConfigSlots(),
+      getRoles()
+    ]);
     setSlots(all);
+    setUsers(roleList);
     setLoadingSlots(false);
+  };
+
+  const handleSendFuerza = async () => {
+    if (!selectedUserEmail) return;
+    setSendingFuerza(true);
+    setSendSuccess('');
+    const snap: SimuladorSnapshot = {
+      schemaVersion: 1,
+      updatedAt: new Date().toISOString(),
+      ...getSnapshot(),
+    };
+    const nombre = slotNombre.trim() || `Enviado ${new Date().toLocaleDateString()}`;
+    const res = await sendFuerzaToUser(selectedUserEmail, { nombre, bv: bvTotal, snapshot: snap });
+    if (res?.success) {
+      setSendSuccess('¡Fuerza enviada con éxito!');
+      setTimeout(() => setSendSuccess(''), 3000);
+      setSlotNombre('');
+    } else {
+      setSendSuccess('Error al enviar.');
+      setTimeout(() => setSendSuccess(''), 3000);
+    }
+    setSendingFuerza(false);
   };
 
   const handleSaveSlot = async (slot: FuerzaSlot) => {
@@ -239,6 +274,13 @@ export function FuerzaSyncBar({
             </div>
           ) : (<>
 
+          <div className="flex justify-between items-center mb-2">
+            <span className="font-mono text-[8px] text-secondary/40">Cuenta: {auth.currentUser?.email || 'Desconocida'}</span>
+            <button onClick={reloadSlots} className="text-[9px] font-mono uppercase tracking-widest text-primary hover:underline">
+              ↻ Recargar Slots
+            </button>
+          </div>
+
           {/* Nombre opcional al guardar */}
           <input
             type="text"
@@ -247,6 +289,36 @@ export function FuerzaSyncBar({
             placeholder="Nombre (opcional, default: Fuerza N)"
             className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[10px] text-secondary placeholder:text-outline-variant/50 focus:border-amber-400/60 focus:outline-none mb-3"
           />
+
+          {/* Enviar a jugador */}
+          <div className="mb-3 border border-primary/30 bg-primary/5 p-2 clip-chamfer">
+            <h4 className="font-headline text-[10px] font-bold text-primary tracking-widest mb-1.5 flex items-center gap-1">
+              <Send size={10} /> Enviar Fuerza
+            </h4>
+            <div className="flex gap-1 mb-1">
+              <select
+                value={selectedUserEmail}
+                onChange={(e) => setSelectedUserEmail(e.target.value)}
+                className="flex-1 bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[10px] text-secondary focus:border-primary/60 focus:outline-none"
+              >
+                <option value="">-- Seleccionar jugador --</option>
+                {users.map(u => (
+                  <option key={u.email} value={u.email}>{u.email} ({u.role})</option>
+                ))}
+              </select>
+              <button
+                onClick={handleSendFuerza}
+                disabled={!selectedUserEmail || sendingFuerza}
+                className="bg-primary/20 hover:bg-primary/40 disabled:opacity-30 disabled:cursor-not-allowed text-primary border border-primary/50 px-2 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors"
+              >
+                {sendingFuerza ? 'Enviando...' : 'Enviar'}
+              </button>
+            </div>
+            {sendSuccess && <div className="font-mono text-[9px] text-emerald-400 mt-1">{sendSuccess}</div>}
+            <div className="font-mono text-[9px] text-secondary/50">
+              Se guardará en la Bandeja de Entrada (Slot 5) del destino.
+            </div>
+          </div>
 
           {loadingSlots && <p className="font-mono text-[10px] text-secondary/50 italic">Cargando slots…</p>}
 
@@ -259,7 +331,7 @@ export function FuerzaSyncBar({
                   <li key={s} className="border border-outline-variant/30 bg-surface-container p-2">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-headline text-[10px] font-bold text-amber-400 tracking-widest">
-                        FUERZA{s}
+                        {s === 5 ? 'SLOT 5 (INBOX)' : `FUERZA${s}`}
                       </span>
                       {occupied ? (
                         <span className="font-mono text-[9px] text-secondary/70">

@@ -58,7 +58,21 @@ export function useSimulador() {
   const [currentMechIdx, setCurrentMechIdx] = useState(() => initial?.currentMechIdx ?? 0);
   const [currentVehicleIdx, setCurrentVehicleIdx] = useState(() => initial?.currentVehicleIdx ?? 0);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
-const [damageAmount, setDamageAmount] = useState(0);
+  const [damageAmount, setDamageAmount] = useState(0);
+  const [damageSource, setDamageSource] = useState<string | null>(null);
+  const [isSimultaneousCombat, setIsSimultaneousCombat] = useState(true);
+
+  // Individual mech end turn summary (legacy)
+  const [endTurnSummary, setEndTurnSummary] = useState<{
+    summary: import('@/lib/combat-types').TurnSummary;
+    nextSession: import('@/lib/combat-types').MechSession;
+  } | null>(null);
+
+  // Global end turn summary
+  const [globalEndTurnSummary, setGlobalEndTurnSummary] = useState<{
+    mechUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').MechSession }[];
+    vehicleUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').VehicleSession }[];
+  } | null>(null);
 
   // dirty flag: hay cambios locales sin push a Fuerzas
   const [dirty, setDirty] = useState(false);
@@ -329,28 +343,298 @@ const [damageAmount, setDamageAmount] = useState(0);
 
   const handleFire = () => {
     if (!mechState || !mechSession) return;
-    updateMechSession(s => mechNextTurn(mechState, s));
+    
+    // Si no hay daño pendiente o el combate simultáneo está apagado, avanzar turno directamente
+    if (!isSimultaneousCombat || !mechSession.pendingDamage || mechSession.pendingDamage.length === 0) {
+      updateMechSession(s => mechNextTurn(mechState, s));
+      return;
+    }
+    
+    // Computar daño pendiente y generar resumen
+    let s = structuredClone(mechSession);
+    const logs: string[] = [];
+    let totalDamageThisTurn = 0;
+    const critRolls: Record<string, number> = {};
+    const preDestroyed = s.destroyed;
+    
+    const isDamagingSources: Record<string, Set<string>> = {};
+    
+    for (const pd of s.pendingDamage) {
+      totalDamageThisTurn += pd.amount;
+      const res = mechApplyDamage(mechState, s, pd.locKey, pd.amount);
+      s = res.session;
+      logs.push(...res.logs);
+      
+      // Contar críticos: agrupar por atacante (source) si entra a interna
+      for (const log of res.logs) {
+        const match = log.match(/> IS ([A-Z]+): -/);
+        if (match) {
+          const loc = match[1];
+          if (!isDamagingSources[loc]) isDamagingSources[loc] = new Set();
+          isDamagingSources[loc].add(pd.source || 'Manual');
+        }
+      }
+    }
+    s.pendingDamage = [];
+    
+    // Asignar los críticos sumando los atacantes únicos por localización, 
+    // ignorando localizaciones destruidas
+    for (const loc in isDamagingSources) {
+      if (s.is[loc] > 0 && !s.destroyedLocs?.includes(loc)) {
+        critRolls[loc] = isDamagingSources[loc].size;
+      }
+    }
+    
+    if (totalDamageThisTurn >= 20) {
+      logs.push(`> CHEQUEO DE PILOTAJE: +20 Daños en un turno (${totalDamageThisTurn} total)`);
+    }
+    
+    const destroyedLocs: string[] = [];
+    for (const log of logs) {
+      if (log.includes('DESTROYED') || log.includes('DESTRUIDO')) {
+        destroyedLocs.push(log);
+      }
+    }
+    
+    // Aplicar el resto del turno (calor, etc) en una sesión final pero preservar los logs del daño
+    const finalSession = mechNextTurn(mechState, s);
+    finalSession.logs = [...logs, ...finalSession.logs].slice(0, 30);
+    
+    setEndTurnSummary({
+      summary: {
+        unitName: mechState.model || 'Mech',
+        totalDamage: totalDamageThisTurn,
+        pilotingCheck: totalDamageThisTurn >= 20,
+        critRolls,
+        destroyedLocs,
+        heatDelta: finalSession.heat - mechSession.heat,
+        heat: finalSession.heat
+      },
+      nextSession: finalSession
+    });
   };
 
-  const handleDamage = (armorKey: string, amount: number) => {
+  const confirmNextTurn = () => {
+    if (endTurnSummary) {
+      updateMechSession(() => endTurnSummary.nextSession);
+      setEndTurnSummary(null);
+    }
+  };
+
+  const handleGlobalFire = () => {
+    const mechUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').MechSession }[] = [];
+    const vehicleUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').VehicleSession }[] = [];
+
+    // Process Mechs
+    mechSlots.forEach((slot, idx) => {
+      const ms = slot.state;
+      let s = slot.session;
+      if (!ms || !s) return;
+
+      if (!isSimultaneousCombat || !s.pendingDamage || s.pendingDamage.length === 0) {
+        mechUpdates.push({
+          idx,
+          summary: { unitName: ms.model || 'Mech', totalDamage: 0, pilotingCheck: false, critRolls: {}, destroyedLocs: [], heatDelta: 0, heat: s.heat },
+          nextSession: mechNextTurn(ms, s)
+        });
+        return;
+      }
+
+      s = structuredClone(s);
+      const logs: string[] = [];
+      let totalDamageThisTurn = 0;
+      const critRolls: Record<string, number> = {};
+      const isDamagingSources: Record<string, Set<string>> = {};
+
+      for (const pd of s.pendingDamage) {
+        totalDamageThisTurn += pd.amount;
+        const res = mechApplyDamage(ms, s, pd.locKey, pd.amount);
+        s = res.session;
+        logs.push(...res.logs);
+
+        for (const log of res.logs) {
+          const match = log.match(/> IS ([A-Z]+): -/);
+          if (match) {
+            const loc = match[1];
+            if (!isDamagingSources[loc]) isDamagingSources[loc] = new Set();
+            isDamagingSources[loc].add(pd.source || 'Manual');
+          }
+        }
+      }
+      s.pendingDamage = [];
+
+      for (const loc in isDamagingSources) {
+        if (s.is[loc] > 0 && !s.destroyedLocs?.includes(loc)) {
+          critRolls[loc] = isDamagingSources[loc].size;
+        }
+      }
+
+      if (totalDamageThisTurn >= 20) {
+        logs.push(`> CHEQUEO DE PILOTAJE: +20 Daños en un turno (${totalDamageThisTurn} total)`);
+      }
+
+      const destroyedLocs: string[] = [];
+      for (const log of logs) {
+        if (log.includes('DESTROYED') || log.includes('DESTRUIDO')) {
+          destroyedLocs.push(log);
+        }
+      }
+
+      const finalSession = mechNextTurn(ms, s);
+      finalSession.logs = [...logs, ...finalSession.logs].slice(0, 30);
+
+      mechUpdates.push({
+        idx,
+        summary: {
+          unitName: ms.model || 'Mech',
+          totalDamage: totalDamageThisTurn,
+          pilotingCheck: totalDamageThisTurn >= 20,
+          critRolls,
+          destroyedLocs,
+          heatDelta: finalSession.heat - slot.session.heat,
+          heat: finalSession.heat
+        },
+        nextSession: finalSession
+      });
+    });
+
+    // Process Vehicles
+    vehicleSlots.forEach((slot, idx) => {
+      const vs = slot.state;
+      let s = slot.session;
+      if (!vs || !s) return;
+
+      if (!isSimultaneousCombat || !s.pendingDamage || s.pendingDamage.length === 0) {
+        vehicleUpdates.push({
+          idx,
+          summary: { unitName: vs.name || 'Vehículo', totalDamage: 0, pilotingCheck: false, critRolls: {}, destroyedLocs: [], heatDelta: 0, heat: 0 },
+          nextSession: vehicleNextTurn(vs, s)
+        });
+        return;
+      }
+
+      s = structuredClone(s);
+      const logs: string[] = [];
+      let totalDamageThisTurn = 0;
+      
+      for (const pd of s.pendingDamage) {
+        totalDamageThisTurn += pd.amount;
+        const res = vehicleApplyDamage(vs, s, pd.locKey, pd.amount);
+        s = res.session;
+        logs.push(...res.logs);
+      }
+      s.pendingDamage = [];
+
+      const destroyedLocs: string[] = [];
+      for (const log of logs) {
+        if (log.includes('DESTROYED') || log.includes('DESTRUIDO')) {
+          destroyedLocs.push(log);
+        }
+      }
+
+      const finalSession = vehicleNextTurn(vs, s);
+      finalSession.logs = [...logs, ...finalSession.logs].slice(0, 30);
+
+      vehicleUpdates.push({
+        idx,
+        summary: {
+          unitName: vs.name || 'Vehículo',
+          totalDamage: totalDamageThisTurn,
+          pilotingCheck: false,
+          critRolls: {}, // Vehicles have motive crits handled elsewhere, or we could add them
+          destroyedLocs,
+          heatDelta: 0,
+          heat: 0
+        },
+        nextSession: finalSession
+      });
+    });
+
+    if (mechUpdates.length > 0 || vehicleUpdates.length > 0) {
+      if (isSimultaneousCombat) {
+        setGlobalEndTurnSummary({ mechUpdates, vehicleUpdates });
+      } else {
+        // If not simultaneous, just apply everything silently (damage is already instant)
+        setMechSlots(prev => {
+          const n = [...prev];
+          for (const u of mechUpdates) n[u.idx] = { ...n[u.idx], session: u.nextSession };
+          return n;
+        });
+        setVehicleSlots(prev => {
+          const n = [...prev];
+          for (const u of vehicleUpdates) n[u.idx] = { ...n[u.idx], session: u.nextSession };
+          return n;
+        });
+      }
+    }
+  };
+
+  const confirmGlobalNextTurn = () => {
+    if (!globalEndTurnSummary) return;
+    setMechSlots(prev => {
+      const n = [...prev];
+      for (const u of globalEndTurnSummary.mechUpdates) {
+        n[u.idx] = { ...n[u.idx], session: u.nextSession };
+      }
+      return n;
+    });
+    setVehicleSlots(prev => {
+      const n = [...prev];
+      for (const u of globalEndTurnSummary.vehicleUpdates) {
+        n[u.idx] = { ...n[u.idx], session: u.nextSession };
+      }
+      return n;
+    });
+    setGlobalEndTurnSummary(null);
+  };
+
+  const handleDamage = (armorKey: string, amount: number, source?: string) => {
     if (!mechState || !mechSession) return;
     if (amount > 0) {
+      if (!isSimultaneousCombat) {
+        updateMechSession(s => {
+          const res = mechApplyDamage(mechState, s, armorKey, amount);
+          return { ...res.session, logs: [...res.logs, ...res.session.logs].slice(0, 30) };
+        });
+        return;
+      }
       updateMechSession(s => {
-        const result = mechApplyDamage(mechState, s, armorKey, amount);
-        return { ...result.session, logs: [...result.logs, ...result.session.logs].slice(0, 30) };
+        const pending = s.pendingDamage ? [...s.pendingDamage] : [];
+        pending.push({ locKey: armorKey, amount, source });
+        return { ...s, pendingDamage: pending };
       });
     } else if (amount < 0) {
       updateMechSession(s => {
-        const result = mechApplyHeal(mechState, s, armorKey, Math.abs(amount));
-        return { ...result.session, logs: [...result.logs, ...result.session.logs].slice(0, 30) };
+        let toHeal = Math.abs(amount);
+        let pending = s.pendingDamage ? [...s.pendingDamage] : [];
+        
+        for (let i = pending.length - 1; i >= 0 && toHeal > 0; i--) {
+          if (pending[i].locKey === armorKey) {
+            if (pending[i].amount <= toHeal) {
+              toHeal -= pending[i].amount;
+              pending.splice(i, 1);
+            } else {
+              pending[i].amount -= toHeal;
+              toHeal = 0;
+            }
+          }
+        }
+        
+        let newState = { ...s, pendingDamage: pending };
+        if (toHeal > 0) {
+          const result = mechApplyHeal(mechState, newState, armorKey, toHeal);
+          newState = { ...result.session, logs: [...result.logs, ...result.session.logs].slice(0, 30) };
+        }
+        return newState;
       });
     }
   };
 
   const applyDamageToSelected = () => {
     if (!selectedSection || damageAmount === 0) return;
-    handleDamage(selectedSection, damageAmount);
+    handleDamage(selectedSection, damageAmount, damageSource || undefined);
     setDamageAmount(0);
+    setDamageSource(null);
   };
 
   const toggleCrit = (loc: string, slotIdx: number) => {
@@ -461,28 +745,71 @@ const [damageAmount, setDamageAmount] = useState(0);
 
   const vehicleHandleFire = () => {
     if (!vehicleState || !vehicleSession) return;
-    updateVehicleSession(s => vehicleNextTurn(vehicleState, s));
+    
+    updateVehicleSession(s => {
+      let temp = structuredClone(s);
+      let logs: string[] = [];
+      if (temp.pendingDamage && temp.pendingDamage.length > 0) {
+        for (const pd of temp.pendingDamage) {
+          const res = vehicleApplyDamage(vehicleState, temp, pd.locKey, pd.amount);
+          temp = res.session;
+          logs.push(...res.logs);
+        }
+        temp.pendingDamage = [];
+      }
+      const next = vehicleNextTurn(vehicleState, temp);
+      next.logs = [...logs, ...next.logs].slice(0, 30);
+      return next;
+    });
   };
 
-  const vehicleHandleDamage = (locKey: string, amount: number) => {
+  const vehicleHandleDamage = (locKey: string, amount: number, source?: string) => {
     if (!vehicleState || !vehicleSession) return;
     if (amount > 0) {
+      if (!isSimultaneousCombat) {
+        updateVehicleSession(s => {
+          const res = vehicleApplyDamage(vehicleState, s, locKey, amount);
+          return { ...res.session, logs: [...res.logs, ...res.session.logs].slice(0, 30) };
+        });
+        return;
+      }
       updateVehicleSession(s => {
-        const r = vehicleApplyDamage(vehicleState, s, locKey, amount);
-        return r.session;
+        const pending = s.pendingDamage ? [...s.pendingDamage] : [];
+        pending.push({ locKey, amount, source });
+        return { ...s, pendingDamage: pending };
       });
     } else if (amount < 0) {
       updateVehicleSession(s => {
-        const r = vehicleApplyHeal(vehicleState, s, locKey, Math.abs(amount));
-        return r.session;
+        let toHeal = Math.abs(amount);
+        let pending = s.pendingDamage ? [...s.pendingDamage] : [];
+        
+        for (let i = pending.length - 1; i >= 0 && toHeal > 0; i--) {
+          if (pending[i].locKey === locKey) {
+            if (pending[i].amount <= toHeal) {
+              toHeal -= pending[i].amount;
+              pending.splice(i, 1);
+            } else {
+              pending[i].amount -= toHeal;
+              toHeal = 0;
+            }
+          }
+        }
+        
+        let newState = { ...s, pendingDamage: pending };
+        if (toHeal > 0) {
+          const r = vehicleApplyHeal(vehicleState, newState, locKey, toHeal);
+          newState = r.session;
+        }
+        return newState;
       });
     }
   };
 
   const vehicleApplyDamageToSelected = () => {
     if (!selectedSection || damageAmount === 0) return;
-    vehicleHandleDamage(selectedSection, damageAmount);
+    vehicleHandleDamage(selectedSection, damageAmount, damageSource || undefined);
     setDamageAmount(0);
+    setDamageSource(null);
   };
 
   const vehicleToggleCritAction = (locKey: string, slotIdx: number) => {
@@ -749,10 +1076,13 @@ const [damageAmount, setDamageAmount] = useState(0);
     // UI state
     selectedSection, setSelectedSection,
     damageAmount, setDamageAmount,
+    damageSource, setDamageSource,
+    isSimultaneousCombat, setIsSimultaneousCombat,
 
     // Mech actions
     handleFileUpload, loadUnitText,
-    toggleWeapon, handleFire,
+    toggleWeapon, handleFire, confirmNextTurn, endTurnSummary,
+    handleGlobalFire, confirmGlobalNextTurn, globalEndTurnSummary, setGlobalEndTurnSummary,
     handleDamage, applyDamageToSelected,
     toggleCrit, setWeaponMod, setCritMod,
     forceReviveMech, adjustAmmo, adjustHeat,

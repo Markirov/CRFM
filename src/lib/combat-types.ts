@@ -68,6 +68,16 @@ export interface AmmoBin {
 }
 
 // ── Mech Session (mutable combat state) ──
+export interface TurnSummary {
+  unitName: string;
+  totalDamage: number;
+  pilotingCheck: boolean;
+  critRolls: Record<string, number>; // Loc -> number of rolls needed
+  destroyedLocs: string[];
+  heatDelta: number;
+  heat: number;
+}
+
 export interface MechSession {
   armor: Record<string, number>;     // HD, CTf, CTr, LTf, LTr, RTf, RTr, LA, RA, LL, RL
   is: Record<string, number>;        // HD, CT, LT, RT, LA, RA, LL, RL
@@ -96,6 +106,9 @@ export interface MechSession {
    * Clave = "LOC:slotIdx" (ej. "RT:5"). heat = extra de calor por turno; atk = extra a la tirada de disparo.
    */
   critMods?: Record<string, { heat: number; atk: number }>;
+
+  /** Daño recibido en el turno actual, pendiente de aplicarse al final de la fase. */
+  pendingDamage?: { locKey: string; amount: number; source?: string }[];
 }
 
 export interface CritSlot {
@@ -171,6 +184,8 @@ export interface VehicleSession {
   weaponDestroyedIds: number[];
   weaponMalfunctionIds: number[];
   pendingCrits: Record<string, { damage: number; motive: number }>; // locKey → counts
+  /** Daño recibido en el turno actual, pendiente de aplicarse al final de la fase. */
+  pendingDamage?: { locKey: string; amount: number; source?: string }[];
 }
 
 // ── Armor Slot definition ──
