@@ -402,7 +402,7 @@ Carpeta `manuales/` (gitignored). PDFs comerciales BattleTech.
 - `.gitignore`: `credenciales*.json`, `*service-account*.json`, `secrets.*`, `manuales/`, `.env*`, `backups/`, `herramientas/`, `AutoMover.py`
 - Firebase service account NUNCA en repo
 - Whitelist gestionada desde SecretMenu → RolesPanel (collection `roles/`). `firestore.rules` requiere redeploy si cambian las funciones de rol.
-- `config/{doc}` rules: `read, write: if hasAnyRole()`. Permite PJ tocar FUERZA*/ESTADOMECHS desde simulador, pero también CONTRATO_VALOR y prompts. Pendiente split `config/sim` vs `config/main` (ver PENDING).
+- **Config split**: `config/main` (admin write, hasAnyRole read) — datos sensibles (CONTRATO_VALOR, prompts IA, year/month, public_roles). `config/sim` (hasAnyRole R+W) — datos combate (FUERZA_*, ENEMIGO*, ESTADOMECHS, PILOTO_*_MECH). `loadConfig` mergea ambos. `saveConfigBatch` enruta por prefijo (`isSimKey`).
 - Telegram secrets: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET`, `TG_AUTHORIZED_IDS` en Firebase Secret Manager. Nunca commitear.
 
 ---

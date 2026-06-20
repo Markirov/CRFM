@@ -17,7 +17,7 @@ service cloud.firestore {
     }
 
     function claimRole() {
-      return request.auth != null && request.auth.token.role;
+      return (request.auth != null && 'role' in request.auth.token) ? request.auth.token.role : null;
     }
 
     function isAdmin()    { return isHardcodedAdmin() || claimRole() == 'admin'; }
@@ -34,10 +34,24 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // ── Config campaña: solo admin ────────────────────────────
-    match /config/{doc} {
-      allow read:  if isStaff();
+    // ── Config split: main (admin) vs sim (PJ writable) ──────
+    //
+    // config/main = datos sensibles administración (CONTRATO_VALOR,
+    // AÑO/MES, prompts IA, public_roles). Cualquier rol lee, solo
+    // admin escribe.
+    //
+    // config/sim = datos de combate (FUERZA_*, ENEMIGO*, ESTADOMECHS,
+    // PILOTO_*_MECH). Cualquier rol con sesión puede leer/escribir
+    // porque flujo simulador (PJ) y HUD (DM) lo requieren.
+    //
+    // Cualquier otro doc bajo config/ está implícitamente denegado
+    // (Firestore closed-by-default) — añadir match explícito si hace falta.
+    match /config/main {
+      allow read:  if hasAnyRole();
       allow write: if isAdmin();
+    }
+    match /config/sim {
+      allow read, write: if hasAnyRole();
     }
 
     // ── Libro Mayor / Finanzas: admin R+W, DM solo R ─────────

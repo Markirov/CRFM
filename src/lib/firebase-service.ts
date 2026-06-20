@@ -83,15 +83,41 @@ export async function sheetsPost(_body: Record<string, any>) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CONFIG (doc único config/main)
+// CONFIG (split: config/main = admin-only; config/sim = PJ writable)
 // ═══════════════════════════════════════════════════════════════
+//
+// SEGURIDAD: config/main rules = staff read / admin write. Contiene
+// CONTRATO_VALOR, AÑO/MES, prompts IA, public_roles, etc. Datos
+// sensibles que solo admin debería tocar.
+//
+// config/sim rules = hasAnyRole read+write. Contiene FUERZA_*,
+// FUERZACAMPAÑA, ENEMIGO*, ESTADOMECHS, PILOTO_*_MECH. Necesario
+// que PJ (simulador) y DM puedan escribir en su flujo de combate.
+//
+// loadConfig() lee ambos y mergea (sim sobrescribe a main si colisión).
+// saveConfigBatch() reparte cada key a su doc según SIM_KEY_PREFIXES.
 
-const CONFIG_REF = () => doc(db, 'config', 'main');
+const CONFIG_MAIN_REF = () => doc(db, 'config', 'main');
+const CONFIG_SIM_REF  = () => doc(db, 'config', 'sim');
+
+// Mantener export por compat con código viejo que importe CONFIG_REF
+// (apunta a main; SOLO usar para datos admin).
+const CONFIG_REF = CONFIG_MAIN_REF;
+
+/** Prefijos / nombres exactos de keys que viven en config/sim. */
+const SIM_KEY_PREFIXES = ['FUERZA_', 'FUERZACAMPAÑA', 'FUERZACAMPANA', 'ENEMIGO', 'ESTADOMECHS', 'PILOTO_'] as const;
+
+function isSimKey(key: string): boolean {
+  return SIM_KEY_PREFIXES.some(p => key.startsWith(p) || key === p);
+}
 
 export const loadConfig = async (): Promise<{ success: boolean; data?: { config: Record<string, any> }; error?: string }> => {
   try {
-    const snap = await getDoc(CONFIG_REF());
-    const config: Record<string, any> = snap.exists() ? (snap.data() as any) : {};
+    const [mainSnap, simSnap] = await Promise.all([getDoc(CONFIG_MAIN_REF()), getDoc(CONFIG_SIM_REF())]);
+    const main: Record<string, any> = mainSnap.exists() ? (mainSnap.data() as any) : {};
+    const sim:  Record<string, any> = simSnap.exists()  ? (simSnap.data()  as any) : {};
+    // sim wins en colisión (keys SIM_*)
+    const config = { ...main, ...sim };
     return { success: true, data: { config } };
   } catch (e: any) {
     console.error('[firebase] loadConfig:', e);
@@ -101,7 +127,15 @@ export const loadConfig = async (): Promise<{ success: boolean; data?: { config:
 
 export const saveConfigBatch = (config: Record<string, string>) =>
   safe(async () => {
-    await setDoc(CONFIG_REF(), config, { merge: true });
+    const mainPatch: Record<string, string> = {};
+    const simPatch:  Record<string, string> = {};
+    for (const [k, v] of Object.entries(config)) {
+      (isSimKey(k) ? simPatch : mainPatch)[k] = v;
+    }
+    const ops: Promise<any>[] = [];
+    if (Object.keys(mainPatch).length) ops.push(setDoc(CONFIG_MAIN_REF(), mainPatch, { merge: true }));
+    if (Object.keys(simPatch).length)  ops.push(setDoc(CONFIG_SIM_REF(),  simPatch,  { merge: true }));
+    await Promise.all(ops);
     return { saved: Object.keys(config).length };
   });
 
@@ -140,10 +174,13 @@ export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data)
  *  Hangar ahora es la fuente única; legacy se purga. */
 export const resetLegacyMechAssignments = () =>
   safe(async () => {
-    // 1) Borra PILOTO_1_MECH..PILOTO_6_MECH del config
+    // 1) Borra PILOTO_1_MECH..PILOTO_6_MECH (SIM keys → config/sim).
+    //    saveConfigBatch enruta automáticamente por prefijo.
     const cfgPatch: Record<string, string> = {};
     for (let i = 1; i <= 6; i++) cfgPatch[`PILOTO_${i}_MECH`] = '';
-    await setDoc(CONFIG_REF(), cfgPatch, { merge: true });
+    await saveConfigBatch(cfgPatch);
+    // También limpia legacy en config/main por compat con instalaciones viejas
+    await setDoc(CONFIG_MAIN_REF(), cfgPatch, { merge: true }).catch(() => {});
 
     // 2) Borra `mech` de todos los personajes
     const snap = await getDocs(PERSONAJES_COL());
@@ -374,14 +411,21 @@ const fuerzaKey = (slot: FuerzaSlot) => `FUERZA_${getSafeEmail(auth?.currentUser
 const FUERZA_CAMPANA_KEY = 'FUERZACAMPAÑA';
 
 async function readConfigField(key: string): Promise<string | null> {
-  const snap = await getDoc(CONFIG_REF());
-  if (!snap.exists()) return null;
-  const v = (snap.data() as any)?.[key];
-  return typeof v === 'string' ? v : null;
+  // Lee del doc correcto según key (sim vs main). Fallback al otro si vacío.
+  const primary  = isSimKey(key) ? CONFIG_SIM_REF() : CONFIG_MAIN_REF();
+  const fallback = isSimKey(key) ? CONFIG_MAIN_REF() : CONFIG_SIM_REF();
+  const snap = await getDoc(primary);
+  const v = snap.exists() ? (snap.data() as any)?.[key] : undefined;
+  if (typeof v === 'string') return v;
+  // Fallback al otro doc (compat con datos legacy pre-split)
+  const fb = await getDoc(fallback);
+  const fv = fb.exists() ? (fb.data() as any)?.[key] : undefined;
+  return typeof fv === 'string' ? fv : null;
 }
 
 async function writeConfigField(key: string, value: string): Promise<void> {
-  await setDoc(CONFIG_REF(), { [key]: value }, { merge: true });
+  const ref = isSimKey(key) ? CONFIG_SIM_REF() : CONFIG_MAIN_REF();
+  await setDoc(ref, { [key]: value }, { merge: true });
 }
 
 export async function saveFuerzaConfigSlot(
@@ -425,9 +469,9 @@ export async function sendFuerzaToUser(
 
 export async function loadAllFuerzaConfigSlots(): Promise<Record<FuerzaSlot, FuerzaConfigEntry | null>> {
   const out: Record<FuerzaSlot, FuerzaConfigEntry | null> = { 1: null, 2: null, 3: null, 4: null, 5: null };
-  const snap = await getDoc(CONFIG_REF());
-  if (!snap.exists()) return out;
-  const cfg = snap.data() as any;
+  // FUERZA_* vive en config/sim. Fallback a config/main por compat legacy.
+  const [simSnap, mainSnap] = await Promise.all([getDoc(CONFIG_SIM_REF()), getDoc(CONFIG_MAIN_REF())]);
+  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as any : {}), ...(simSnap.exists() ? simSnap.data() as any : {}) };
   ([1, 2, 3, 4, 5] as FuerzaSlot[]).forEach(s => {
     const raw = cfg?.[fuerzaKey(s)];
     if (typeof raw === 'string' && raw) {
@@ -609,9 +653,9 @@ export async function saveEnemigoConfigSlot(
 
 export async function loadAllEnemigoConfigSlots(): Promise<Record<EnemigoSlot, EnemigoConfigEntry | null>> {
   const out: Record<EnemigoSlot, EnemigoConfigEntry | null> = { 1: null, 2: null, 3: null, 4: null, 5: null };
-  const snap = await getDoc(CONFIG_REF());
-  if (!snap.exists()) return out;
-  const cfg = snap.data() as any;
+  // ENEMIGO* vive en config/sim. Fallback a config/main por compat legacy.
+  const [simSnap, mainSnap] = await Promise.all([getDoc(CONFIG_SIM_REF()), getDoc(CONFIG_MAIN_REF())]);
+  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as any : {}), ...(simSnap.exists() ? simSnap.data() as any : {}) };
   ([1, 2, 3, 4, 5] as EnemigoSlot[]).forEach(s => {
     const raw = cfg?.[enemigoKey(s)];
     if (typeof raw === 'string' && raw) {

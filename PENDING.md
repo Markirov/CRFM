@@ -114,19 +114,18 @@ Status: parked. GUI manual SSW o parser+BV calculator Node (~500 líneas).
 
 ---
 
-## 🔴 Alto — Seguridad rules
+## 🔴 Alto — Seguridad rules · DONE (2026-06-20)
 
-### Granularidad config/{doc}
-Estado actual: `config/{doc}` ahora `read, write: if hasAnyRole()` (relajado para que PJ pueda escribir FUERZA*/ESTADOMECHS desde simulador).
+✅ **Config split implementado**:
+- `config/main` rules: `read if hasAnyRole, write if isAdmin`
+- `config/sim` rules: `read, write if hasAnyRole`
+- `firebase-service.saveConfigBatch` enruta por prefijo (`isSimKey`): FUERZA_*, FUERZACAMPAÑA, ENEMIGO*, ESTADOMECHS, PILOTO_*_MECH → `config/sim`. Resto → `config/main`.
+- `loadConfig` mergea ambos docs (sim wins en colisión)
+- Backward compat: `readConfigField` con fallback al otro doc, `loadAllFuerza/EnemigoConfigSlots` leen ambos y mergean
 
-Riesgo: cualquier PJ puede tocar `CONTRATO_VALOR`, `AÑO/MES_CAMPANA`, `PROMPT_*`, `public_roles` directamente vía consola Firestore.
+Pendiente: `firebase deploy --only firestore:rules` para activar en prod.
 
-Soluciones (orden preferencia):
-1. **Split en sub-docs**: `config/sim` (PJ R+W) vs `config/main` (admin write, staff read). Migrar FuerzaSyncBar, SimuladorPage al sub-doc nuevo.
-2. **Rules per-field**: validar `request.resource.data.diff(resource.data).affectedKeys()` está dentro de whitelist PJ.
-3. **Cloud Function intermedia**: PJ llama callable `setSimSlot(slot, payload)` con validación server-side; config Firestore solo admin-writable directo.
-
-Opción 1 es más limpia y rápida.
+Migración datos legacy (config/main → config/sim) opcional. Compat lectura ya cubre.
 
 ---
 
