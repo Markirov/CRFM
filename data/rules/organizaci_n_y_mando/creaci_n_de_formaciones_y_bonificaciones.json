@@ -1,0 +1,247 @@
+[
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Infantería",
+    "organization": "Squad (Battle Armor)",
+    "definition": "4 troopers",
+    "command_rank": "Sergeant*"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Infantería",
+    "organization": "Squad (Conventional)",
+    "definition": "2-8 troopers",
+    "command_rank": "Corporal"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Infantería",
+    "organization": "Platoon (Conventional)",
+    "definition": "3-4 squads",
+    "command_rank": "Sergeant*"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Cazas Aeroespaciales/Convencionales",
+    "organization": "Flight",
+    "definition": "2 fighters",
+    "command_rank": "Lieutenant"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Cazas Aeroespaciales/Convencionales",
+    "organization": "Squadron",
+    "definition": "3 flights",
+    "command_rank": "Captain"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones de Cazas Aeroespaciales/Convencionales",
+    "organization": "Wing",
+    "definition": "3-4 squadrons",
+    "command_rank": "Major"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones Terrestres",
+    "organization": "Lance",
+    "definition": "4 ground units",
+    "command_rank": "Lieutenant"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones Terrestres",
+    "organization": "Company",
+    "definition": "3-4 lances",
+    "command_rank": "Captain"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones Terrestres",
+    "organization": "Battalion",
+    "definition": "3-4 companies",
+    "command_rank": "Major"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones Terrestres",
+    "organization": "Regiment",
+    "definition": "3-4 battalions",
+    "command_rank": "Colonel"
+  },
+  {
+    "group": "Fuerzas de la Esfera Interior y Periferia",
+    "sub_group": "Formaciones Terrestres",
+    "organization": "Brigade",
+    "definition": "3-6 regiments",
+    "command_rank": "General"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Formaciones de Infantería",
+    "organization": "Level I (Battle Armor)",
+    "definition": "6 troopers",
+    "command_rank": "Acolyte*"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Formaciones de Infantería",
+    "organization": "Level I (Conventional)",
+    "definition": "30-36 troopers",
+    "command_rank": "Acolyte*"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Todas las Otras Formaciones",
+    "organization": "Level I",
+    "definition": "1 unit",
+    "command_rank": "Acolyte"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Todas las Otras Formaciones",
+    "organization": "Level II (Demi-Company)",
+    "definition": "6 Level Is",
+    "command_rank": "Adept"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Todas las Otras Formaciones",
+    "organization": "Level III (Battalion)",
+    "definition": "6 Level IIs",
+    "command_rank": "Adept (Demi-Precentor)"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Todas las Otras Formaciones",
+    "organization": "Level IV (Division)",
+    "definition": "6 Level IIIs",
+    "command_rank": "Precentor"
+  },
+  {
+    "group": "Fuerzas de ComStar y Palabra de Blake",
+    "sub_group": "Todas las Otras Formaciones",
+    "organization": "Level V (Army)",
+    "definition": "6 Level IVs",
+    "command_rank": "Precentor"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Infantería y ProtoMech",
+    "organization": "Point (Battle Armor)",
+    "definition": "5 troopers",
+    "command_rank": "Point Commander*"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Infantería y ProtoMech",
+    "organization": "Point (Conventional)",
+    "definition": "20-25 troopers",
+    "command_rank": "Point Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Infantería y ProtoMech",
+    "organization": "Point (ProtoMech)",
+    "definition": "5 ProtoMechs",
+    "command_rank": "Point Commander*"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Star",
+    "definition": "5 'Mechs",
+    "command_rank": "Star Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Nova",
+    "definition": "5 'Mechs, 5 infantry Points",
+    "command_rank": "Star Commander or Nova Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Binary",
+    "definition": "2 Stars",
+    "command_rank": "Star Captain or Nova Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Supernova Binary",
+    "definition": "2 Novas",
+    "command_rank": "Star Captain or Nova Captain"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Trinary",
+    "definition": "3 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Supernova Trinary",
+    "definition": "3 Novas",
+    "command_rank": "Star Captain or Nova Captain"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Cluster",
+    "definition": "3-5 Binaries or Trinaries",
+    "command_rank": "Star Colonel"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones 'Mech",
+    "organization": "Galaxy",
+    "definition": "3-5 Clusters",
+    "command_rank": "Galaxy Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Point",
+    "definition": "2 units",
+    "command_rank": "Point Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Star",
+    "definition": "5 Points",
+    "command_rank": "Star Commander"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Binary",
+    "definition": "2 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Trinary",
+    "definition": "3 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Cluster",
+    "definition": "3-5 Binaries or Trinaries",
+    "command_rank": "Star Colonel"
+  },
+  {
+    "group": "Fuerzas del Clan",
+    "sub_group": "Formaciones de Vehículos y Cazas",
+    "organization": "Galaxy",
+    "definition": "3-5 Clusters",
+    "command_rank": "Galaxy Commander"
+  }
+]

@@ -1,0 +1,52 @@
+.auto-link {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--vp-c-brand-1);
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.auto-link:hover {
+  text-decoration-style: solid;
+  color: var(--vp-c-brand-2);
+}
+
+/* ==========================================================================
+   INTEGRACIÓN PERFECTA CON LA WEB REACT CFRM
+   ========================================================================== */
+
+:root {
+  /* Forzar el fondo principal a coincidir con el background-color de Tailwind de la web React */
+  --vp-c-bg: #0a0e14 !important;
+  --vp-c-bg-alt: #10141a !important;
+  /* Para la barra superior, fondo transparente para que parezca que flota */
+  --vp-nav-bg-color: transparent !important;
+  /* Evitar bordes divisorios extraños en la barra de búsqueda */
+  --vp-c-divider: transparent !important;
+}
+
+/* Ocultar el título de la Wiki en la barra superior (ya tenemos título en la app) */
+.VPNavBarTitle {
+  display: none !important;
+}
+
+/* Ocultar los enlaces de menú (sólo dejamos la búsqueda) */
+.VPNavBarMenu {
+  display: none !important;
+}
+
+/* Ocultar el selector de apariencia (ya forzamos oscuro) */
+.VPNavBarAppearance {
+  display: none !important;
+}
+
+/* Quitar el borde inferior nativo de la barra superior */
+.VPNav {
+  border-bottom: none !important;
+}
+
+/* Quitar padding top del contenedor de contenido, 
+   para aprovechar mejor el espacio ahora que no hay título de navbar */
+.VPContent {
+  padding-top: 1rem !important;
+}

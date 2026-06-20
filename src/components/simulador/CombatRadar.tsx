@@ -137,6 +137,10 @@ export function IncomingAttacks({ sim, live }: Props) {
             <div className="mt-3 flex gap-2">
               <button 
                 onClick={() => {
+                  if (sim.pendingIncomingAttack && sim.pendingIncomingAttack.id !== atk.id) {
+                    alert('Debes aplicar el impacto pendiente en el diagrama de armadura antes de recibir otro.');
+                    return;
+                  }
                   // Pre-seleccionar el slot correcto y fijar el amount de daño, para que el usuario solo clique en ArmorDiagram
                   if (mechIdx >= 0) {
                     sim.setActiveTab('mechs');
@@ -147,10 +151,17 @@ export function IncomingAttacks({ sim, live }: Props) {
                   }
                   sim.setDamageAmount(atk.damage);
                   sim.setDamageSource(atk.sourceSessionName);
-                  live.resolveAttack(atk);
+                  sim.setPendingIncomingAttack(atk);
                 }}
-                className="w-full py-2 border border-error bg-error/20 hover:bg-error/40 text-error font-mono text-[10px] uppercase font-bold transition-colors"
-              >Aplicar Impacto</button>
+                disabled={sim.pendingIncomingAttack && sim.pendingIncomingAttack.id !== atk.id}
+                className={`w-full py-2 border font-mono text-[10px] uppercase font-bold transition-colors ${
+                  sim.pendingIncomingAttack?.id === atk.id
+                    ? 'border-amber-500 bg-amber-500/20 text-amber-500 hover:bg-amber-500/30'
+                    : 'border-error bg-error/20 hover:bg-error/40 text-error disabled:opacity-30 disabled:cursor-not-allowed'
+                }`}
+              >
+                {sim.pendingIncomingAttack?.id === atk.id ? 'Asignando en Diagrama...' : 'Aplicar Impacto'}
+              </button>
             </div>
           </div>
         );

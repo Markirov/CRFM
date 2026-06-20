@@ -1,0 +1,232 @@
+[
+  {
+    "table_name": "Support Personnel Experience",
+    "records": [
+      {
+        "Old Rating": "Green",
+        "New Rating": "Regular",
+        "Complete Scenarios Required": 5
+      },
+      {
+        "Old Rating": "Regular",
+        "New Rating": "Veteran",
+        "Complete Scenarios Required": 10
+      },
+      {
+        "Old Rating": "Veteran",
+        "New Rating": "Elite",
+        "Complete Scenarios Required": 20
+      }
+    ]
+  },
+  {
+    "table_name": "Skill Advancement Cost (Chaos Campaign)",
+    "records": [
+      {
+        "Skill Advancement": "MechWarrior Gunnery Skill",
+        "SP Cost": 200
+      },
+      {
+        "Skill Advancement": "ProtoMech Gunnery Skill",
+        "SP Cost": 400
+      },
+      {
+        "Skill Advancement": "MechWarrior Piloting Skill",
+        "SP Cost": 150
+      },
+      {
+        "Skill Advancement": "ProtoMech Piloting Skill",
+        "SP Cost": 400
+      },
+      {
+        "Skill Advancement": "Aerospace/Aircraft Pilot Gunnery Skill",
+        "SP Cost": 200
+      },
+      {
+        "Skill Advancement": "Aerospace/Aircraft Pilot Piloting Skill",
+        "SP Cost": 150
+      },
+      {
+        "Skill Advancement": "Vehicle/Support Vehicle Crew Gunnery Skill",
+        "SP Cost": 100
+      },
+      {
+        "Skill Advancement": "Vehicle/Support Vehicle Crew Driving Skill",
+        "SP Cost": 50
+      },
+      {
+        "Skill Advancement": "DropShip/JumpShip Crew Gunnery Skill",
+        "SP Cost": 1000
+      },
+      {
+        "Skill Advancement": "DropShip/JumpShip Crew Piloting Skill",
+        "SP Cost": 1500
+      },
+      {
+        "Skill Advancement": "Battle Armor Squad/Point Gunnery Skill",
+        "SP Cost": 800
+      },
+      {
+        "Skill Advancement": "Infantry Platoon Gunnery Skill",
+        "SP Cost": 500
+      },
+      {
+        "Skill Advancement": "New pilot Special Ability",
+        "SP Cost": 100
+      }
+    ]
+  },
+  {
+    "table_name": "Force Quality",
+    "records": [
+      {
+        "Average Piloting/Gunnery Skill Rating": "7-6",
+        "Force Quality": "Green"
+      },
+      {
+        "Average Piloting/Gunnery Skill Rating": "5-4",
+        "Force Quality": "Regular"
+      },
+      {
+        "Average Piloting/Gunnery Skill Rating": "3-2",
+        "Force Quality": "Veteran"
+      },
+      {
+        "Average Piloting/Gunnery Skill Rating": "1-0",
+        "Force Quality": "Elite"
+      }
+    ]
+  },
+  {
+    "table_name": "Generic Force Loyalty",
+    "records": [
+      {
+        "Equipment Rating": "A",
+        "Force Loyalty": "Fanatical"
+      },
+      {
+        "Equipment Rating": "B",
+        "Force Loyalty": "Fanatical/Reliable"
+      },
+      {
+        "Equipment Rating": "C",
+        "Force Loyalty": "Reliable"
+      },
+      {
+        "Equipment Rating": "D",
+        "Force Loyalty": "Reliable/Questionable"
+      },
+      {
+        "Equipment Rating": "F",
+        "Force Loyalty": "Questionable"
+      },
+      {
+        "Equipment Rating": "Clan Front Line",
+        "Force Loyalty": "A Rating"
+      },
+      {
+        "Equipment Rating": "Clan Second Line",
+        "Force Loyalty": "B Rating"
+      },
+      {
+        "Equipment Rating": "Clan Garrison/Solahma",
+        "Force Loyalty": "D Rating"
+      }
+    ]
+  },
+  {
+    "table_name": "Morale Ratings",
+    "records": [
+      {
+        "Morale Rating": "1 (Unbreakable)",
+        "Combat Modifiers": 1,
+        "Non-Combat Modifiers": 2,
+        "Desertion Check Target Number": 0,
+        "Mutiny Check Target Number": 0
+      },
+      {
+        "Morale Rating": "2 (Very High)",
+        "Combat Modifiers": 1,
+        "Non-Combat Modifiers": 1,
+        "Desertion Check Target Number": 0,
+        "Mutiny Check Target Number": 0
+      },
+      {
+        "Morale Rating": "3 (High)",
+        "Combat Modifiers": 0,
+        "Non-Combat Modifiers": 1,
+        "Desertion Check Target Number": 0,
+        "Mutiny Check Target Number": 0
+      },
+      {
+        "Morale Rating": "4 (Normal)",
+        "Combat Modifiers": 0,
+        "Non-Combat Modifiers": 0,
+        "Desertion Check Target Number": 2,
+        "Mutiny Check Target Number": 0
+      },
+      {
+        "Morale Rating": "5 (Low)",
+        "Combat Modifiers": 0,
+        "Non-Combat Modifiers": -1,
+        "Desertion Check Target Number": 5,
+        "Mutiny Check Target Number": 4
+      },
+      {
+        "Morale Rating": "6 (Very Low)",
+        "Combat Modifiers": -1,
+        "Non-Combat Modifiers": -1,
+        "Desertion Check Target Number": 5,
+        "Mutiny Check Target Number": 4
+      },
+      {
+        "Morale Rating": "7 (Broken)",
+        "Combat Modifiers": -2,
+        "Non-Combat Modifiers": -2,
+        "Desertion Check Target Number": 8,
+        "Mutiny Check Target Number": 7
+      }
+    ]
+  },
+  {
+    "table_name": "Fatigue Ratings",
+    "records": [
+      {
+        "Fatigue Points": "0",
+        "Combat Modifiers": 0,
+        "Non-Combat Modifiers": 1,
+        "Morale Check": "None"
+      },
+      {
+        "Fatigue Points": "1-4",
+        "Combat Modifiers": 0,
+        "Non-Combat Modifiers": 0,
+        "Morale Check": "None"
+      },
+      {
+        "Fatigue Points": "5-8",
+        "Combat Modifiers": -1,
+        "Non-Combat Modifiers": 0,
+        "Morale Check": "Yes"
+      },
+      {
+        "Fatigue Points": "9-12",
+        "Combat Modifiers": -2,
+        "Non-Combat Modifiers": -1,
+        "Morale Check": "Yes"
+      },
+      {
+        "Fatigue Points": "13-16",
+        "Combat Modifiers": -3,
+        "Non-Combat Modifiers": -2,
+        "Morale Check": "Yes"
+      },
+      {
+        "Fatigue Points": "17+",
+        "Combat Modifiers": -4,
+        "Non-Combat Modifiers": -3,
+        "Morale Check": "Yes"
+      }
+    ]
+  }
+]

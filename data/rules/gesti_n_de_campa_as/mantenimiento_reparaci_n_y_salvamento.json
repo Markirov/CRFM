@@ -1,0 +1,270 @@
+[
+  {
+    "table_name": "Quality Rating Table",
+    "records": [
+      {
+        "Quality Rating": "A",
+        "Description": "Salvage",
+        "Cost Modifier": 0.8
+      },
+      {
+        "Quality Rating": "B",
+        "Description": "Poor",
+        "Cost Modifier": 0.9
+      },
+      {
+        "Quality Rating": "C",
+        "Description": "Fair",
+        "Cost Modifier": 0.95
+      },
+      {
+        "Quality Rating": "D",
+        "Description": "Average",
+        "Cost Modifier": 1
+      },
+      {
+        "Quality Rating": "E",
+        "Description": "Good",
+        "Cost Modifier": 1.1
+      },
+      {
+        "Quality Rating": "F",
+        "Description": "Excellent",
+        "Cost Modifier": 1.3
+      }
+    ]
+  },
+  {
+    "table_name": "Support Personnel Experience Table",
+    "records": [
+      {
+        "Experience Rating": "Green",
+        "Base Skill Target Technical": 8,
+        "Base Skill Target Medical": 10,
+        "Gunnery": 7,
+        "Anti-'Mech": 8
+      },
+      {
+        "Experience Rating": "Regular",
+        "Base Skill Target Technical": 6,
+        "Base Skill Target Medical": 8,
+        "Gunnery": 7,
+        "Anti-'Mech": 7
+      },
+      {
+        "Experience Rating": "Veteran",
+        "Base Skill Target Technical": 5,
+        "Base Skill Target Medical": 7,
+        "Gunnery": 6,
+        "Anti-'Mech": 6
+      },
+      {
+        "Experience Rating": "Elite",
+        "Base Skill Target Technical": 3,
+        "Base Skill Target Medical": 6,
+        "Gunnery": 6,
+        "Anti-'Mech": 5
+      }
+    ]
+  },
+  {
+    "table_name": "Maintenance, Repair and Salvage Check Modifiers",
+    "records": [
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "A",
+        "modifier": -4
+      },
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "B",
+        "modifier": -2
+      },
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "C",
+        "modifier": 0
+      },
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "D",
+        "modifier": 1
+      },
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "E",
+        "modifier": 2
+      },
+      {
+        "modifier_type": "Tech Rating",
+        "rating": "F",
+        "modifier": 3
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "A",
+        "modifier": 3
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "B",
+        "modifier": 2
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "C",
+        "modifier": 1
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "D",
+        "modifier": 0
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "E",
+        "modifier": -1
+      },
+      {
+        "modifier_type": "Unit Quality Rating",
+        "rating": "F",
+        "modifier": -2
+      }
+    ]
+  },
+  {
+    "table_name": "Equipment Availability Modifier Table",
+    "records": [
+      {
+        "Availability Rating": "A",
+        "Modifier": -4
+      },
+      {
+        "Availability Rating": "B",
+        "Modifier": -3
+      },
+      {
+        "Availability Rating": "C",
+        "Modifier": -2
+      },
+      {
+        "Availability Rating": "D",
+        "Modifier": -1
+      },
+      {
+        "Availability Rating": "E",
+        "Modifier": 0
+      },
+      {
+        "Availability Rating": "F",
+        "Modifier": 2
+      },
+      {
+        "Availability Rating": "X*",
+        "Modifier": 5
+      }
+    ]
+  },
+  {
+    "table_name": "Rearm Time Table",
+    "records": [
+      {
+        "reloading_unit_type": "Technical Team",
+        "experience": "Green",
+        "base_reload_time_minutes": 15
+      },
+      {
+        "reloading_unit_type": "Technical Team",
+        "experience": "Regular",
+        "base_reload_time_minutes": 10
+      },
+      {
+        "reloading_unit_type": "Technical Team",
+        "experience": "Veteran",
+        "base_reload_time_minutes": 8
+      },
+      {
+        "reloading_unit_type": "Technical Team",
+        "experience": "Elite",
+        "base_reload_time_minutes": 6
+      },
+      {
+        "reloading_unit_type": "Unit Crew",
+        "experience": "Green",
+        "base_reload_time_minutes": 30
+      },
+      {
+        "reloading_unit_type": "Unit Crew",
+        "experience": "Regular",
+        "base_reload_time_minutes": 20
+      },
+      {
+        "reloading_unit_type": "Unit Crew",
+        "experience": "Veteran",
+        "base_reload_time_minutes": 15
+      },
+      {
+        "reloading_unit_type": "Unit Crew",
+        "experience": "Elite",
+        "base_reload_time_minutes": 10
+      }
+    ]
+  },
+  {
+    "table_name": "Unit Recovery Time Table",
+    "records": [
+      {
+        "Unit Type": "'Mech",
+        "Recovery Time (minutes)": 60
+      },
+      {
+        "Unit Type": "ProtoMech",
+        "Recovery Time (minutes)": 20
+      },
+      {
+        "Unit Type": "Battle Armor",
+        "Recovery Time (minutes)": 10
+      },
+      {
+        "Unit Type": "Light Combat Vehicle",
+        "Recovery Time (minutes)": 20
+      },
+      {
+        "Unit Type": "Medium Combat Vehicle",
+        "Recovery Time (minutes)": 40
+      },
+      {
+        "Unit Type": "Heavy Combat Vehicle",
+        "Recovery Time (minutes)": 60
+      },
+      {
+        "Unit Type": "Assault Combat Vehicle",
+        "Recovery Time (minutes)": 80
+      },
+      {
+        "Unit Type": "Conventional Fighter",
+        "Recovery Time (minutes)": 60
+      },
+      {
+        "Unit Type": "Aerospace Fighter",
+        "Recovery Time (minutes)": 60
+      },
+      {
+        "Unit Type": "Small Craft",
+        "Recovery Time (minutes)": 120
+      },
+      {
+        "Unit Type": "DropShip",
+        "Recovery Time (minutes)": 180
+      },
+      {
+        "Unit Type": "JumpShip",
+        "Recovery Time (minutes)": 360
+      },
+      {
+        "Unit Type": "WarShip",
+        "Recovery Time (minutes)": 480
+      }
+    ]
+  }
+]

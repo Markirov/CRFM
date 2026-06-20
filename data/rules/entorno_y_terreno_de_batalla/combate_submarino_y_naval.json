@@ -1,0 +1,397 @@
+[
+  {
+    "table_name": "Costes de Movimiento en Agua (Unidades no Navales)",
+    "headers": [
+      "Tipo de Terreno",
+      "Coste de MP por Hexágono",
+      "Unidades Prohibidas"
+    ],
+    "rows": [
+      {
+        "Tipo de Terreno": "Agua (Profundidad 1)",
+        "Coste de MP por Hexágono": "+1 (Coste de cambio de nivel no incluido)",
+        "Unidades Prohibidas": "Infantería, Vehículos"
+      },
+      {
+        "Tipo de Terreno": "Agua (Profundidad 2+)",
+        "Coste de MP por Hexágono": "+3 (Coste de cambio de nivel no incluido)",
+        "Unidades Prohibidas": "Infantería, Vehículos, IndustrialMechs"
+      }
+    ],
+    "source": "Movement Costs Table, p. 54"
+  },
+  {
+    "table_name": "Tabla de Línea de Visión Submarina",
+    "headers": [
+      "Atacante está:",
+      "Objetivo: Submarino",
+      "Objetivo: Naval de Superficie",
+      "Objetivo: Aerotransportado",
+      "Objetivo: Terrestre",
+      "Objetivo: 'Mech en Profundidad 1"
+    ],
+    "rows": [
+      {
+        "Atacante está:": "Submarino",
+        "Objetivo: Submarino": "Sí",
+        "Objetivo: Naval de Superficie": "Sí",
+        "Objetivo: Aerotransportado": "No",
+        "Objetivo: Terrestre": "No",
+        "Objetivo: 'Mech en Profundidad 1": "Sí"
+      },
+      {
+        "Atacante está:": "Naval de Superficie",
+        "Objetivo: Submarino": "Sí",
+        "Objetivo: Naval de Superficie": "Sí",
+        "Objetivo: Aerotransportado": "Sí",
+        "Objetivo: Terrestre": "Sí",
+        "Objetivo: 'Mech en Profundidad 1": "Sí"
+      },
+      {
+        "Atacante está:": "Aerotransportado",
+        "Objetivo: Submarino": "No",
+        "Objetivo: Naval de Superficie": "Sí",
+        "Objetivo: Aerotransportado": "Sí",
+        "Objetivo: Terrestre": "Sí",
+        "Objetivo: 'Mech en Profundidad 1": "Sí"
+      },
+      {
+        "Atacante está:": "Terrestre",
+        "Objetivo: Submarino": "No",
+        "Objetivo: Naval de Superficie": "Sí",
+        "Objetivo: Aerotransportado": "Sí",
+        "Objetivo: Terrestre": "Sí",
+        "Objetivo: 'Mech en Profundidad 1": "Sí"
+      },
+      {
+        "Atacante está:": "'Mech en Profundidad 1",
+        "Objetivo: Submarino": "Sí (solo armas de pierna)",
+        "Objetivo: Naval de Superficie": "Sí",
+        "Objetivo: Aerotransportado": "Sí (solo armas de torso/brazo/cabeza)",
+        "Objetivo: Terrestre": "Sí (solo armas de torso/brazo/cabeza)",
+        "Objetivo: 'Mech en Profundidad 1": "Sí"
+      }
+    ],
+    "source": "Underwater Line of Sight Table, p. 110. Notas simplificadas para mayor claridad."
+  },
+  {
+    "table_name": "Tabla de Rangos Submarinos (Armas de Energía)",
+    "headers": [
+      "Arma",
+      "Mín.",
+      "Corto",
+      "Medio",
+      "Largo"
+    ],
+    "rows": [
+      {
+        "Arma": "Láser Pequeño",
+        "Mín.": "0",
+        "Corto": "1",
+        "Medio": "2",
+        "Largo": "—"
+      },
+      {
+        "Arma": "Láser Mediano",
+        "Mín.": "0",
+        "Corto": "1–2",
+        "Medio": "3–4",
+        "Largo": "5–6"
+      },
+      {
+        "Arma": "Láser Grande",
+        "Mín.": "0",
+        "Corto": "1–3",
+        "Medio": "4–6",
+        "Largo": "7–9"
+      },
+      {
+        "Arma": "CPP Ligero",
+        "Mín.": "3",
+        "Corto": "1–4",
+        "Medio": "5–7",
+        "Largo": "8–10"
+      },
+      {
+        "Arma": "CPP",
+        "Mín.": "3",
+        "Corto": "1–4",
+        "Medio": "5–7",
+        "Largo": "8–10"
+      },
+      {
+        "Arma": "CPP Pesado",
+        "Mín.": "3",
+        "Corto": "1–4",
+        "Medio": "5–7",
+        "Largo": "8–10"
+      },
+      {
+        "Arma": "Láser de Pulso Pequeño (IS)",
+        "Mín.": "0",
+        "Corto": "1",
+        "Medio": "2",
+        "Largo": "—"
+      },
+      {
+        "Arma": "Láser de Pulso Mediano (IS)",
+        "Mín.": "0",
+        "Corto": "1–2",
+        "Medio": "3",
+        "Largo": "4"
+      },
+      {
+        "Arma": "Láser de Pulso Grande (IS)",
+        "Mín.": "0",
+        "Corto": "1–2",
+        "Medio": "3–5",
+        "Largo": "6–7"
+      }
+    ],
+    "source": "Underwater Range Table, p. 111. Se muestra una selección de armas comunes de la Esfera Interior."
+  },
+  {
+    "title": "Tabla de Profundidades Extremas",
+    "headers": [
+      "Profundidad",
+      "Modificador Marcha/Crucero",
+      "Modificador Ataque con Armas",
+      "Modificador Ataque Físico",
+      "Modificador Pilotaje BattleMech",
+      "Modificador Calor BattleMech",
+      "TN Brecha de Casco"
+    ],
+    "rows": [
+      [
+        "15 o menos",
+        "+3/+3/+0/+0",
+        "+0/+0/+0/+0",
+        "+0/+0/+0/+0",
+        "+1",
+        "-1†",
+        "10/10/10/10"
+      ],
+      [
+        "16–20‡",
+        "+4/+4/+0/+0",
+        "+1/+1/+0/+0",
+        "+1/+1/+0/+0",
+        "+2",
+        "-6",
+        "10/10/10/10"
+      ],
+      [
+        "21–25",
+        "+5/+5/+1/+0",
+        "+2/+2/+1/+0",
+        "+2/+3/+1/+0",
+        "+3",
+        "-7",
+        "9/9/10/10"
+      ],
+      [
+        "26–30",
+        "+6/+6/+2/+0",
+        "+3/+3/+2/+0",
+        "+3/NA/+2/+0",
+        "+4",
+        "-9",
+        "9/9/10/10"
+      ],
+      [
+        "31–35§",
+        "+7/+7/+2/+0",
+        "+4/+4/+3/+0",
+        "+5/NA/+3/+0",
+        "+5",
+        "-12",
+        "8/8/10/9"
+      ],
+      [
+        "36–50",
+        "—/+9/+3/+0",
+        "—/+6/+4/+0",
+        "NA/NA/+5/+0",
+        "+7",
+        "-15",
+        "8/8/9/9"
+      ],
+      [
+        "51–150††",
+        "—/—/+4/+0",
+        "—/—/+6/+0",
+        "—/—/NA/+0",
+        "—",
+        "—",
+        "—/—/8/9"
+      ],
+      [
+        "151 o más",
+        "—/—/—/+0",
+        "—/—/—/+0",
+        "—/—/—/+0",
+        "—",
+        "—",
+        "—/—/—/8"
+      ]
+    ],
+    "notes": "Valores mostrados como: BattleMechs / ProtoMechs y Vehículos no sumergibles / Battle Armor con UMU / Submarinos. NA significa que la acción no está permitida. †Por cada disipador de calor sumergido (máximo -6). ‡'Mechs, ProtoMechs y vehículos no sumergibles hacen Pruebas de Profundidad de Aplastamiento por cada hexágono por debajo de Profundidad 15. §Battle armor hace Pruebas de Profundidad de Aplastamiento por cada hexágono por debajo de Profundidad 30. ††Submarinos hacen Pruebas de Profundidad de Aplastamiento por cada hexágono por debajo de Profundidad 50."
+  },
+  {
+    "title": "Tabla de Tasa de Hundimiento de Naves Navales Grandes",
+    "headers": [
+      "Tamaño de Plantilla",
+      "Número de Profundidades por Turno"
+    ],
+    "rows": [
+      [
+        "Tamaño A",
+        "5"
+      ],
+      [
+        "Tamaño B",
+        "4"
+      ],
+      [
+        "Tamaño C",
+        "3"
+      ],
+      [
+        "Tamaño D",
+        "2"
+      ],
+      [
+        "Tamaño E",
+        "1"
+      ]
+    ]
+  },
+  {
+    "title": "Tabla de Alturas de Naves Navales Grandes",
+    "headers": [
+      "Plantilla",
+      "Alturas (Niveles) Sobre/Bajo la Superficie"
+    ],
+    "rows": [
+      [
+        "A",
+        "0/1"
+      ],
+      [
+        "B",
+        "1/1"
+      ],
+      [
+        "C",
+        "1/2"
+      ],
+      [
+        "D",
+        "2/2"
+      ],
+      [
+        "E",
+        "3/3"
+      ]
+    ],
+    "notes": "Las Naves Navales Grandes sumergibles no pueden sumergirse en agua que exceda la suma total de los valores de nivel sobre y bajo la superficie."
+  },
+  {
+    "title": "Tabla de Rangos Submarinos (Armas Avanzadas)",
+    "headers": [
+      "Arma",
+      "Rango Submarino"
+    ],
+    "rows": [
+      [
+        "Binary Laser (Blazer) Cannon",
+        "0/3/6/9"
+      ],
+      [
+        "Bombast Laser",
+        "0/3/6/9"
+      ],
+      [
+        "Chemical Laser, Pequeño",
+        "0/1/2/—"
+      ],
+      [
+        "Chemical Laser, Mediano",
+        "0/2/4/6"
+      ],
+      [
+        "Chemical Laser, Grande",
+        "0/3/6/9"
+      ],
+      [
+        "ER Pulse Laser, Pequeño",
+        "0/1/2/4"
+      ],
+      [
+        "ER Pulse Laser, Mediano",
+        "0/3/6/9"
+      ],
+      [
+        "ER Pulse Laser, Grande",
+        "0/4/10/16"
+      ],
+      [
+        "Improved Heavy Laser, Pequeño",
+        "0/1/2/—"
+      ],
+      [
+        "Improved Heavy Laser, Mediano",
+        "0/2/4/6"
+      ],
+      [
+        "Improved Heavy Laser, Grande",
+        "0/3/6/9"
+      ],
+      [
+        "Variable-Speed Laser, Pequeño",
+        "0/1/2/3"
+      ],
+      [
+        "Variable-Speed Laser, Mediano",
+        "0/1/3/6"
+      ],
+      [
+        "Variable-Speed Laser, Grande",
+        "0/2/5/9"
+      ],
+      [
+        "X-Pulse Laser, Pequeño",
+        "0/1/2/3"
+      ],
+      [
+        "X-Pulse Laser, Mediano",
+        "0/2/4/6"
+      ],
+      [
+        "X-Pulse Laser, Grande",
+        "0/3/6/9"
+      ],
+      [
+        "Laser Anti-Missile System (IS)",
+        "*"
+      ],
+      [
+        "Laser Anti-Missile System (Clan)",
+        "*"
+      ],
+      [
+        "Naval (Capital) Lasers",
+        "**"
+      ],
+      [
+        "Naval (Capital) PPCs",
+        "**"
+      ],
+      [
+        "Sub-Capital Lasers",
+        "**"
+      ]
+    ],
+    "notes": "*Los Sistemas Láser Anti-Misiles usados bajo el agua afectan a los torpedos de la misma manera que a los misiles. **Las armas de energía de escala capital no sufren efectos de rango cuando se disparan sumergidas, pero reciben un modificador de +1 para impactar por cada 12 profundidades por debajo de la superficie desde la que disparan."
+  }
+]

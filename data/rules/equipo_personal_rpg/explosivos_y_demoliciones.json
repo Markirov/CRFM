@@ -1,0 +1,411 @@
+[
+  {
+    "category": "Standard Explosives",
+    "skill": "Thrown Weapons",
+    "item": "Grenade, Micro",
+    "equipment_ratings": "C/B-C-C/E",
+    "ap_bd": "(A)",
+    "range": "STR x 1/2/3/4",
+    "shots": 1,
+    "cost_reload": "2",
+    "aff": null,
+    "mass": "200 G",
+    "notes": "Indirect"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Thrown Weapons",
+    "item": "Grenade, Mini",
+    "equipment_ratings": "C/B-B-B/E",
+    "ap_bd": "(B)",
+    "range": "STR x 1/2/3/4",
+    "shots": 1,
+    "cost_reload": "10",
+    "aff": null,
+    "mass": "450 G",
+    "notes": "Indirect"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Thrown Weapons",
+    "item": "Grenade",
+    "equipment_ratings": "C/A-A-A/E",
+    "ap_bd": "(C)",
+    "range": "STR x 1/2/3/4",
+    "shots": 1,
+    "cost_reload": "20",
+    "aff": null,
+    "mass": "600 G",
+    "notes": "Indirect"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Thrown Weapons",
+    "item": "Grenade, Rocket-Assisted",
+    "equipment_ratings": "C/X-X-D/E",
+    "ap_bd": "5X/10A",
+    "range": "STR x 1/2/3/4",
+    "shots": 1,
+    "cost_reload": "50",
+    "aff": null,
+    "mass": "600 G",
+    "notes": "Indirect; -2 to attack; Range x5 and BD -2 in rocket-assisted mode"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Demolitions",
+    "item": "Mine, Active",
+    "equipment_ratings": "E/X-X-D/E",
+    "ap_bd": "(D)",
+    "range": null,
+    "shots": null,
+    "cost_reload": "1,000",
+    "aff": "CC",
+    "mass": "5 KG",
+    "notes": "-4 to Detonation Check vs. jumping units or hovercraft immediately overhead"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Demolitions",
+    "item": "Mine, Command-Detonated",
+    "equipment_ratings": "C/B-B-B/E",
+    "ap_bd": "(E)",
+    "range": null,
+    "shots": null,
+    "cost_reload": "75",
+    "aff": null,
+    "mass": "600 G",
+    "notes": "Will not detonate unless triggered by friendly unit with working comms."
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Demolitions",
+    "item": "Mine, Standard",
+    "equipment_ratings": "B/A-A-A/E",
+    "ap_bd": "(E)",
+    "range": null,
+    "shots": null,
+    "cost_reload": "50",
+    "aff": null,
+    "mass": "500 G",
+    "notes": "+4 to Detonation Check vs. hovercraft; may not attack jumping units overhead"
+  },
+  {
+    "category": "Standard Explosives",
+    "skill": "Demolitions",
+    "item": "Mine, Vibrabomb",
+    "equipment_ratings": "D/B-D-C/E",
+    "ap_bd": "(E)",
+    "range": null,
+    "shots": null,
+    "cost_reload": "500",
+    "aff": null,
+    "mass": "1 KG",
+    "notes": "Triggered by tonnage setting (see p. 209, Tactical Operations)"
+  },
+  {
+    "category": "Demolitions",
+    "skill": "Demolitions",
+    "item": "C8, Blasting Block",
+    "equipment_ratings": "D/B-B-B/D",
+    "ap_bd": "7X/10A",
+    "range": null,
+    "shots": 1,
+    "cost_reload": "50",
+    "aff": null,
+    "mass": "1 KG",
+    "notes": "-4AP/-4BD per meter"
+  },
+  {
+    "category": "Demolitions",
+    "skill": "Demolitions",
+    "item": "C8, Satchel Charge",
+    "equipment_ratings": "D/B-D-C/E",
+    "ap_bd": "8X/12A",
+    "range": "STR x 0.5/1/1.5/2",
+    "shots": 1,
+    "cost_reload": "210",
+    "aff": null,
+    "mass": "4.5 KG",
+    "notes": "-2AP/-2BD per meter; Range applies when thrown as a grenade"
+  },
+  {
+    "category": "Demolitions",
+    "skill": "Demolitions",
+    "item": "Demolition Kit",
+    "equipment_ratings": "C/A-C-B/D",
+    "ap_bd": null,
+    "range": null,
+    "shots": 12,
+    "cost_reload": "200",
+    "aff": null,
+    "mass": "2 KG",
+    "notes": "Used to rig up to 12 explosives for remote or timed explosives; +1 to Demolitions roll to rig explosives"
+  },
+  {
+    "category": "Demolitions",
+    "skill": "Demolitions",
+    "item": "Pentaglycerine",
+    "equipment_ratings": "D/C-E-D/D",
+    "ap_bd": "7X/10A",
+    "range": null,
+    "shots": 1,
+    "cost_reload": "150",
+    "aff": null,
+    "mass": "200 G",
+    "notes": "-2AP/-2BD per meter"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Personnel",
+    "class": "A",
+    "ap_bd": "2X/8A",
+    "cost_reload": 2,
+    "mass": "200 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Personnel",
+    "class": "B",
+    "ap_bd": "3X/10A",
+    "cost_reload": 8,
+    "mass": "450 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Personnel",
+    "class": "C",
+    "ap_bd": "4X/12A",
+    "cost_reload": 16,
+    "mass": "600 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Personnel",
+    "class": "D",
+    "ap_bd": "4X/13A",
+    "cost_reload": 24,
+    "mass": "2 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Personnel",
+    "class": "E",
+    "ap_bd": "4X/14A",
+    "cost_reload": 32,
+    "mass": "4 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Air-Burst",
+    "class": "D",
+    "ap_bd": "5X/10A",
+    "cost_reload": 60,
+    "mass": "2 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Air-Burst",
+    "class": "E",
+    "ap_bd": "5X/11A",
+    "cost_reload": 80,
+    "mass": "4 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Vehicle",
+    "class": "C",
+    "ap_bd": "8X/10A",
+    "cost_reload": 100,
+    "mass": "1 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Vehicle",
+    "class": "D",
+    "ap_bd": "8X/11A",
+    "cost_reload": 250,
+    "mass": "3 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Anti-Vehicle",
+    "class": "E",
+    "ap_bd": "8X/12A",
+    "cost_reload": 400,
+    "mass": "5 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "FASCAM",
+    "class": "D",
+    "ap_bd": "**",
+    "cost_reload": 50,
+    "mass": "3 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "FASCAM",
+    "class": "E",
+    "ap_bd": "**",
+    "cost_reload": 100,
+    "mass": "5 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "High-Explosive",
+    "class": "A",
+    "ap_bd": "4X/6A",
+    "cost_reload": 2,
+    "mass": "200 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "High-Explosive",
+    "class": "B",
+    "ap_bd": "5X/8A",
+    "cost_reload": 10,
+    "mass": "450 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "High-Explosive",
+    "class": "C",
+    "ap_bd": "6X/10A",
+    "cost_reload": 20,
+    "mass": "600 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "High-Explosive",
+    "class": "D",
+    "ap_bd": "6X/11A",
+    "cost_reload": 30,
+    "mass": "2 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "High-Explosive",
+    "class": "E",
+    "ap_bd": "6X/12A",
+    "cost_reload": 40,
+    "mass": "4 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Inferno",
+    "class": "B",
+    "ap_bd": "3E/3ACS",
+    "cost_reload": 8,
+    "mass": "450 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Inferno",
+    "class": "C",
+    "ap_bd": "3E/5ACS",
+    "cost_reload": 16,
+    "mass": "600 G"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Inferno",
+    "class": "D",
+    "ap_bd": "3E/7ACS",
+    "cost_reload": 24,
+    "mass": "2 KG"
+  },
+  {
+    "category": "Ordnance",
+    "type": "Inferno",
+    "class": "E",
+    "ap_bd": "3E/9ACS",
+    "cost_reload": 32,
+    "mass": "4 KG"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Bow and Arrow",
+    "item": "Explosive",
+    "ap_bd_modifier": "-1X/+1S",
+    "cost_reload_modifier": "x3"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Bow and Arrow",
+    "item": "Incendiary",
+    "ap_bd_modifier": "-1B/-1CS",
+    "cost_reload_modifier": "x1.5"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "AET",
+    "ap_bd_modifier": "+0/+0",
+    "cost_reload_modifier": "x2"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Air-Burst",
+    "ap_bd_modifier": "-1X/-1S",
+    "cost_reload_modifier": "x8"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Armor-Piercing",
+    "ap_bd_modifier": "+2B/-1",
+    "cost_reload_modifier": "x3"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Explosive",
+    "ap_bd_modifier": "-1X/+1S",
+    "cost_reload_modifier": "x3"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Flechette",
+    "ap_bd_modifier": "-3B/+1S",
+    "cost_reload_modifier": "x1"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Frangible",
+    "ap_bd_modifier": "-1B/+0",
+    "cost_reload_modifier": "x2"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Incendiary",
+    "ap_bd_modifier": "-1B/-1CS",
+    "cost_reload_modifier": "x1.5"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Radioactive Tracker",
+    "ap_bd_modifier": "+0B/+0",
+    "cost_reload_modifier": "x3.5"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Subsonic",
+    "ap_bd_modifier": "-2B/-1",
+    "range_modifier": "Half Range",
+    "cost_reload_modifier": "x1"
+  },
+  {
+    "category": "Specialty Ammunition",
+    "type": "Slug-Thrower",
+    "item": "Tracer",
+    "ap_bd_modifier": null,
+    "cost_reload_modifier": "x1.5"
+  }
+]

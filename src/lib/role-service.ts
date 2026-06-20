@@ -6,13 +6,14 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from './firebase-config';
 import type { UserRole } from './store';
 
 export interface RoleEntry {
   uid:       string;
   email:     string;
+  alias?:    string;
   role:      UserRole;
   updatedAt: string;
 }
@@ -21,6 +22,41 @@ export interface RoleEntry {
 export async function getRoles(): Promise<RoleEntry[]> {
   const snap = await getDocs(collection(db, 'roles'));
   return snap.docs.map(d => ({ uid: d.id, ...d.data() } as RoleEntry));
+}
+
+// ── Lista Pública (visible para PJ) ──────────────────────────
+export interface PublicRoleEntry {
+  safeEmail: string; // ID ofuscado para enviar fuerzas
+  alias: string;
+  role: UserRole;
+}
+
+export async function getPublicRoles(): Promise<PublicRoleEntry[]> {
+  const snap = await getDoc(doc(db, 'config', 'main'));
+  if (!snap.exists()) return [];
+  const data = snap.data() as any;
+  if (!data?.public_roles) return [];
+  try {
+    return JSON.parse(data.public_roles) as PublicRoleEntry[];
+  } catch {
+    return [];
+  }
+}
+
+async function syncPublicRoles() {
+  try {
+    const allRoles = await getRoles();
+    const publicList: PublicRoleEntry[] = allRoles.map(r => ({
+      safeEmail: emailToDocId(r.email),
+      alias: r.alias || r.email.split('@')[0],
+      role: r.role
+    }));
+    await setDoc(doc(db, 'config', 'main'), {
+      public_roles: JSON.stringify(publicList)
+    }, { merge: true });
+  } catch (e) {
+    console.error('[role-service] Falló syncPublicRoles', e);
+  }
 }
 
 /** Calcula docId estable desde email (legacy: docs antiguos pueden tener
@@ -39,13 +75,15 @@ export async function setRole(
   email: string,
   role: NonNullable<UserRole>,
   docId?: string,
+  alias?: string,
 ): Promise<void> {
-  const targetId = docId ?? emailToDocId(email);
+  const targetId = (docId && !docId.startsWith('hardcoded-')) ? docId : emailToDocId(email);
 
   try {
     await setDoc(doc(db, 'roles', targetId), {
       uid:       targetId,
       email:     email.toLowerCase(),
+      alias:     alias,
       role,
       updatedAt: new Date().toISOString(),
     });
@@ -62,6 +100,9 @@ export async function setRole(
     console.warn('[role-service] Cloud Function setUserRole falló (usuario puede no existir en Auth aún):', e);
     // No lanzar — rol ya está en Firestore
   }
+
+  // 3. Sincronizar listado público para PJs
+  await syncPublicRoles();
 }
 
 // ── Eliminar rol ────────────────────────────────────────────
@@ -71,6 +112,7 @@ export async function removeRole(email: string, docId?: string): Promise<void> {
   const targetId = docId ?? emailToDocId(email);
   try {
     await deleteDoc(doc(db, 'roles', targetId));
+    await syncPublicRoles();
   } catch (e) {
     console.error('[role-service] deleteDoc roles/', targetId, 'falló:', e);
     throw e;

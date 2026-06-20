@@ -57,10 +57,13 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
     );
   }
 
-  const handleSendAttacks = () => {
+  const handleSendAttacks = async () => {
     let sourceName = 'Unidad Local';
     if (sim.activeTab === 'mechs' && sim.mechState) sourceName = `${sim.mechState.chassis} ${sim.mechState.model}`;
     else if (sim.activeTab === 'vehicles' && sim.vehicleState) sourceName = sim.vehicleState.name;
+
+    // Retiramos los envíos previos de esta unidad este turno para no duplicar si se editan y reenvían
+    await live.revokeMyAttacks(sourceName);
 
     activeWeapons.forEach((w: any) => {
       const t = targets[w.id];

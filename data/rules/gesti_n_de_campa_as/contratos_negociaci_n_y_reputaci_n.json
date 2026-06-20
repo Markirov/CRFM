@@ -1,0 +1,335 @@
+[
+  {
+    "table_name": "REPUTATION SCORE CALCULATION TABLE",
+    "records": [
+      {
+        "Category": "Average Experience Rating",
+        "Item": "Green, Very Green, Wet Behind the Ears",
+        "Value": 5
+      },
+      {
+        "Category": "Average Experience Rating",
+        "Item": "Regular",
+        "Value": 10
+      },
+      {
+        "Category": "Average Experience Rating",
+        "Item": "Veteran",
+        "Value": 20
+      },
+      {
+        "Category": "Average Experience Rating",
+        "Item": "Elite, Heroic, Legendary",
+        "Value": 40
+      },
+      {
+        "Category": "Commander Rating",
+        "Item": "Positive Trait (each)",
+        "Value": 1
+      },
+      {
+        "Category": "Commander Rating",
+        "Item": "Negative Trait (each)",
+        "Value": -1
+      },
+      {
+        "Category": "Combat Record",
+        "Item": "Each Successful Mission",
+        "Value": 5
+      },
+      {
+        "Category": "Combat Record",
+        "Item": "Each Partially Successful Mission",
+        "Value": 0
+      },
+      {
+        "Category": "Combat Record",
+        "Item": "Each Failed Mission",
+        "Value": -10
+      },
+      {
+        "Category": "Combat Record",
+        "Item": "Each Contract Breach",
+        "Value": -25
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Excess Transportation Capacity for Combatants (1 – 100% excess)",
+        "Value": 5
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Excess Transportation Capacity for Combatants (100%+ excess)",
+        "Value": 10
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Insufficient Transportation Capacity for Combatants (1 – 99%)",
+        "Value": -5
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Lacks any DropShips",
+        "Value": -5
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "(In)sufficient Transportation Capacity for Support Personnel",
+        "Value": "–3/+3"
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Possesses JumpShips",
+        "Value": 10
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Possesses WarShips",
+        "Value": "10 (+15 after 2800)"
+      },
+      {
+        "Category": "Transportation Rating",
+        "Item": "Sufficient KF transport capacity for all DropShips",
+        "Value": 5
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Insufficient Technical Support Personnel",
+        "Value": -5
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Insufficient Administrative Personnel",
+        "Value": -5
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Insufficient Large Spacecraft Crew",
+        "Value": -5
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Excess Technical Support Personnel (150-175%)",
+        "Value": 5
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Excess Technical Support Personnel (176-200%)",
+        "Value": 10
+      },
+      {
+        "Category": "Support Rating",
+        "Item": "Excess Technical Support Personnel (201%+)",
+        "Value": 15
+      },
+      {
+        "Category": "Financial Rating",
+        "Item": "Force is in Debt",
+        "Value": -10
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Robbery/Looting",
+        "Value": -5
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Slaughter",
+        "Value": -25
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Mass Murder",
+        "Value": -50
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Rape",
+        "Value": -25
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Kidnapping/Slavery",
+        "Value": -25
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Unauthorized Mission",
+        "Value": -5
+      },
+      {
+        "Category": "Crime Rating",
+        "Item": "Force is a Pirate Force",
+        "Value": -100
+      }
+    ]
+  },
+  {
+    "table_name": "FORCE EXPERIENCE RATING TABLE",
+    "records": [
+      {
+        "Average_of_All_Combatant_Skills": "7 or more",
+        "Force_Experience_Rating": "Wet Behind the Ears"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "6",
+        "Force_Experience_Rating": "Very Green"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "5",
+        "Force_Experience_Rating": "Green"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "4",
+        "Force_Experience_Rating": "Regular"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "3",
+        "Force_Experience_Rating": "Veteran"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "2",
+        "Force_Experience_Rating": "Elite"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "1",
+        "Force_Experience_Rating": "Heroic"
+      },
+      {
+        "Average_of_All_Combatant_Skills": "0 or less",
+        "Force_Experience_Rating": "Legendary"
+      }
+    ]
+  },
+  {
+    "table_name": "CONTRACT MODIFIERS TABLE",
+    "records": [
+      {
+        "Hiring_Hall": "Questionable Hall",
+        "Offers": 0,
+        "Employers": -2,
+        "Missions": -2
+      },
+      {
+        "Hiring_Hall": "Minor Hall",
+        "Offers": 1,
+        "Employers": 0,
+        "Missions": 0
+      },
+      {
+        "Hiring_Hall": "Standard Hall",
+        "Offers": 2,
+        "Employers": 1,
+        "Missions": 1
+      },
+      {
+        "Hiring_Hall": "Great Hall",
+        "Offers": 3,
+        "Employers": 2,
+        "Missions": 2
+      },
+      {
+        "Hiring_Hall": "No Hall",
+        "Offers": -3,
+        "Employers": -2,
+        "Missions": -2
+      }
+    ]
+  },
+  {
+    "table_name": "SUPPLEMENTAL CONTRACT TERMS TABLE",
+    "records": [
+      {
+        "2D6": "1 or less",
+        "Command_Rights": "Integrated",
+        "Salvage_Rights": "None",
+        "Support_Rights": "None",
+        "Transport_Terms": "None"
+      },
+      {
+        "2D6": "2",
+        "Command_Rights": "Integrated",
+        "Salvage_Rights": "Exchange",
+        "Support_Rights": "None",
+        "Transport_Terms": "20%"
+      },
+      {
+        "2D6": "3",
+        "Command_Rights": "House",
+        "Salvage_Rights": "Exchange",
+        "Support_Rights": "Straight/20%",
+        "Transport_Terms": "25%"
+      },
+      {
+        "2D6": "4",
+        "Command_Rights": "House",
+        "Salvage_Rights": "10%",
+        "Support_Rights": "Straight/40%",
+        "Transport_Terms": "30%"
+      },
+      {
+        "2D6": "5",
+        "Command_Rights": "House",
+        "Salvage_Rights": "20%",
+        "Support_Rights": "Straight/60%",
+        "Transport_Terms": "35%"
+      },
+      {
+        "2D6": "6",
+        "Command_Rights": "House",
+        "Salvage_Rights": "30%",
+        "Support_Rights": "Straight/80%",
+        "Transport_Terms": "45%"
+      },
+      {
+        "2D6": "7",
+        "Command_Rights": "House",
+        "Salvage_Rights": "40%",
+        "Support_Rights": "Straight/Full",
+        "Transport_Terms": "50%"
+      },
+      {
+        "2D6": "8",
+        "Command_Rights": "Liaison",
+        "Salvage_Rights": "50%",
+        "Support_Rights": "Battle/10%",
+        "Transport_Terms": "55%"
+      },
+      {
+        "2D6": "9",
+        "Command_Rights": "Liaison",
+        "Salvage_Rights": "60%",
+        "Support_Rights": "Battle/20%",
+        "Transport_Terms": "60%"
+      },
+      {
+        "2D6": "10",
+        "Command_Rights": "Liaison",
+        "Salvage_Rights": "70%",
+        "Support_Rights": "Battle/40%",
+        "Transport_Terms": "Full"
+      },
+      {
+        "2D6": "11",
+        "Command_Rights": "Liaison",
+        "Salvage_Rights": "80%",
+        "Support_Rights": "Battle/60%",
+        "Transport_Terms": "Full"
+      },
+      {
+        "2D6": "12",
+        "Command_Rights": "Independent",
+        "Salvage_Rights": "90%",
+        "Support_Rights": "Battle/80%",
+        "Transport_Terms": "Full"
+      },
+      {
+        "2D6": "13 or more",
+        "Command_Rights": "Independent",
+        "Salvage_Rights": "Full",
+        "Support_Rights": "Battle/100%",
+        "Transport_Terms": "Full"
+      }
+    ]
+  }
+]

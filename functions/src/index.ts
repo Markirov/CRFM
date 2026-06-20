@@ -47,7 +47,8 @@ export const setUserRole = onCall(
   },
   async (request) => {
   const callerRole = request.auth?.token?.role;
-  if (callerRole !== 'admin') {
+  const callerEmail = request.auth?.token?.email;
+  if (callerRole !== 'admin' && callerEmail !== 'marcosfenollar@gmail.com') {
     throw new HttpsError('permission-denied', 'Solo administradores pueden cambiar roles.');
   }
 
@@ -76,7 +77,7 @@ export const setUserRole = onCall(
     email,
     role,
     updatedAt: new Date().toISOString(),
-  });
+  }, { merge: true });
 
   return { uid, email, role };
 },

@@ -1,0 +1,175 @@
+[
+  {
+    "table_name": "zero_attribute_effects",
+    "records": [
+      {
+        "attribute": "STR",
+        "effect": "Críticamente debilitado (Requiere soporte vital y de movilidad completo)."
+      },
+      {
+        "attribute": "BOD",
+        "effect": "Personaje muerto."
+      },
+      {
+        "attribute": "DEX",
+        "effect": "Daño nervioso extenso (Sin acciones que involucren las manos)."
+      },
+      {
+        "attribute": "RFL",
+        "effect": "Paralizado del cuello para abajo (Requiere soporte de movilidad y vital)."
+      },
+      {
+        "attribute": "INT",
+        "effect": "Daño cerebral mayor (Todas las Habilidades se reducen a No Entrenado)."
+      },
+      {
+        "attribute": "WIL",
+        "effect": "Psicosis (El personaje recibe un Rasgo de Compulsión aleatorio a su valor máximo)."
+      },
+      {
+        "attribute": "CHA",
+        "effect": "Depresión paralizante (El personaje recibe el Rasgo de Parálisis de Combate; todas las Habilidades basadas en CHA se reducen a No Entrenado)."
+      },
+      {
+        "attribute": "EDG",
+        "effect": "Sin suerte (Debe recomprar 1 punto con Experiencia antes de que EDG pueda restaurarse normalmente)."
+      }
+    ]
+  },
+  {
+    "table_name": "opposed_traits",
+    "records": [
+      {
+        "positive_trait": "Animal Empathy",
+        "positive_tp": 1,
+        "negative_trait": "Animal Antipathy",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "Attractive",
+        "positive_tp": 2,
+        "negative_trait": "Unattractive",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "Combat Sense",
+        "positive_tp": 4,
+        "negative_trait": "Combat Paralysis",
+        "negative_tp": -4
+      },
+      {
+        "positive_trait": "Fast Learner",
+        "positive_tp": 3,
+        "negative_trait": "Slow Learner",
+        "negative_tp": -3
+      },
+      {
+        "positive_trait": "Fit",
+        "positive_tp": 2,
+        "negative_trait": "Handicap",
+        "negative_tp": "–[1 to 5]"
+      },
+      {
+        "positive_trait": "Good Hearing",
+        "positive_tp": 1,
+        "negative_trait": "Poor Hearing",
+        "negative_tp": "–[1 to 5]"
+      },
+      {
+        "positive_trait": "Good Vision",
+        "positive_tp": 1,
+        "negative_trait": "Poor Vision",
+        "negative_tp": "–[1 to 9]"
+      },
+      {
+        "positive_trait": "Gregarious",
+        "positive_tp": 1,
+        "negative_trait": "Introvert",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "4+ Levels in a Language Skill",
+        "positive_tp": null,
+        "negative_trait": "Illiterate",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "Patient",
+        "positive_tp": 1,
+        "negative_trait": "Impatient",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "Tech Empathy",
+        "positive_tp": 3,
+        "negative_trait": "Gremlins",
+        "negative_tp": -3
+      },
+      {
+        "positive_trait": "Thick-Skinned",
+        "positive_tp": 1,
+        "negative_trait": "Thin Skinned",
+        "negative_tp": -1
+      },
+      {
+        "positive_trait": "Toughness",
+        "positive_tp": 3,
+        "negative_trait": "Glass Jaw",
+        "negative_tp": -3
+      }
+    ]
+  },
+  {
+    "table_name": "phenotype_trait",
+    "records": [
+      {
+        "phenotype": "Normal Human",
+        "str_mod": "+0 (8)",
+        "bod_mod": "+0 (8)",
+        "dex_mod": "+0 (8)",
+        "rfl_mod": "+0 (8)",
+        "int_mod": "+0 (8)",
+        "wil_mod": "+0 (8)",
+        "cha_mod": "+0 (9)",
+        "edg_mod": "+0 (9)",
+        "bonus_traits": "None"
+      },
+      {
+        "phenotype": "Aerospace",
+        "str_mod": "–1 (7)",
+        "bod_mod": "–1 (7)",
+        "dex_mod": "+2 (9)",
+        "rfl_mod": "+2 (9)",
+        "int_mod": "+0 (9)",
+        "wil_mod": "+0 (8)",
+        "cha_mod": "+0 (8)",
+        "edg_mod": "+0 (8)",
+        "bonus_traits": "G-Tolerance, Glass Jaw, Field Aptitude: Clan Fighter Pilot"
+      },
+      {
+        "phenotype": "Elemental",
+        "str_mod": "+2 (9)",
+        "bod_mod": "+1 (9)",
+        "dex_mod": "–1 (7)",
+        "rfl_mod": "+0 (8)",
+        "int_mod": "+0 (8)",
+        "wil_mod": "+0 (9)",
+        "cha_mod": "+0 (8)",
+        "edg_mod": "+0 (8)",
+        "bonus_traits": "Toughness, Field Aptitude: Elemental"
+      },
+      {
+        "phenotype": "MechWarrior",
+        "str_mod": "+0 (8)",
+        "bod_mod": "+0 (8)",
+        "dex_mod": "+1 (9)",
+        "rfl_mod": "+1 (9)",
+        "int_mod": "+0 (8)",
+        "wil_mod": "+0 (8)",
+        "cha_mod": "+0 (9)",
+        "edg_mod": "+0 (8)",
+        "bonus_traits": "Field Aptitude: Clan MechWarrior"
+      }
+    ]
+  }
+]

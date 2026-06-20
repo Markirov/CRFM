@@ -253,10 +253,11 @@ function btnStyle(color: string, enabled: boolean): React.CSSProperties {
 
 interface EntryCardProps {
   entry:   CronicaEntry;
+  writable: boolean;
   onEdit:  () => void;
   onDelete: () => void;
 }
-function EntryCard({ entry, onEdit, onDelete }: EntryCardProps) {
+function EntryCard({ entry, writable, onEdit, onDelete }: EntryCardProps) {
   const am = AUTOR_META[entry.autor];
   const tm = TAG_META[entry.tag];
   const autorNombre = entry.autorNombre?.trim() || am.defaultName;
@@ -312,10 +313,12 @@ function EntryCard({ entry, onEdit, onDelete }: EntryCardProps) {
       />
 
       {/* Acciones */}
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
-        <button onClick={onEdit} style={iconBtn(T.gold)}>EDITAR</button>
-        <button onClick={onDelete} style={iconBtn(T.bloodLight)}>BORRAR</button>
-      </div>
+      {writable && (
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
+          <button onClick={onEdit} style={iconBtn(T.gold)}>EDITAR</button>
+          <button onClick={onDelete} style={iconBtn(T.bloodLight)}>BORRAR</button>
+        </div>
+      )}
     </article>
   );
 }
@@ -339,7 +342,7 @@ const PARTE_TONE_META: Record<ParteTone, { label: string; color: string }> = {
   status:    { label: 'STATUS',   color: T.cream      },
 };
 
-function ParteSection() {
+function ParteSection({ writable }: { writable: boolean }) {
   const [partes, setPartes] = useState<ParteEntry[]>([]);
   const [draftText, setDraftText] = useState('');
   const [draftTone, setDraftTone] = useState<ParteTone>('info');
@@ -404,42 +407,46 @@ function ParteSection() {
       </div>
 
       {/* Form */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, marginBottom: 12 }}>
-        <input type="text"
-          placeholder="Frase informativa…"
-          value={draftText}
-          onChange={e => setDraftText(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Enter') commit(); }}
-          style={inputStyle} />
-        <div style={{ display: 'flex', gap: 6 }}>
-          {(Object.keys(PARTE_TONE_META) as ParteTone[]).map(k => {
-            const meta = PARTE_TONE_META[k];
-            const active = draftTone === k;
-            return (
-              <button key={k} type="button"
-                onClick={() => setDraftTone(k)}
-                title={meta.label}
-                style={{
-                  background: active ? meta.color : 'transparent',
-                  color: active ? T.void : meta.color,
-                  border: `1px solid ${meta.color}`,
-                  padding: '6px 10px',
-                  fontFamily: '"Share Tech Mono", monospace', fontSize: 9, letterSpacing: 1.5,
-                  cursor: 'pointer',
-                }}>{meta.label}</button>
-            );
-          })}
-        </div>
-      </div>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 14 }}>
-        {editId && (
-          <button onClick={cancelEdit} style={btnStyle(T.outline, true)}>Cancelar</button>
-        )}
-        <button onClick={commit} disabled={!draftText.trim()}
-          style={btnStyle(T.ice, !!draftText.trim())}>
-          {editId ? 'Guardar cambios' : '+ Añadir'}
-        </button>
-      </div>
+      {writable && (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, marginBottom: 12 }}>
+            <input type="text"
+              placeholder="Frase informativa…"
+              value={draftText}
+              onChange={e => setDraftText(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') commit(); }}
+              style={inputStyle} />
+            <div style={{ display: 'flex', gap: 6 }}>
+              {(Object.keys(PARTE_TONE_META) as ParteTone[]).map(k => {
+                const meta = PARTE_TONE_META[k];
+                const active = draftTone === k;
+                return (
+                  <button key={k} type="button"
+                    onClick={() => setDraftTone(k)}
+                    title={meta.label}
+                    style={{
+                      background: active ? meta.color : 'transparent',
+                      color: active ? T.void : meta.color,
+                      border: `1px solid ${meta.color}`,
+                      padding: '6px 10px',
+                      fontFamily: '"Share Tech Mono", monospace', fontSize: 9, letterSpacing: 1.5,
+                      cursor: 'pointer',
+                    }}>{meta.label}</button>
+                );
+              })}
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginBottom: 14 }}>
+            {editId && (
+              <button onClick={cancelEdit} style={btnStyle(T.outline, true)}>Cancelar</button>
+            )}
+            <button onClick={commit} disabled={!draftText.trim()}
+              style={btnStyle(T.ice, !!draftText.trim())}>
+              {editId ? 'Guardar cambios' : '+ Añadir'}
+            </button>
+          </div>
+        </>
+      )}
 
       {/* Lista */}
       {partes.length === 0 ? (
@@ -454,24 +461,24 @@ function ParteSection() {
             const visible = i < 6;
             return (
               <div key={p.id} style={{
-                display: 'grid', gridTemplateColumns: '60px 1fr auto',
-                gap: 10, alignItems: 'center',
-                padding: '4px 0',
-                borderBottom: `1px solid ${T.outlineV}40`,
+                display: 'flex', alignItems: 'baseline', gap: 10,
+                padding: '6px 0', borderBottom: `1px dashed ${T.outlineV}`,
                 opacity: visible ? 1 : 0.5,
               }}>
                 <span style={{
-                  fontFamily: '"Share Tech Mono", monospace', fontSize: 9,
-                  color: meta.color, letterSpacing: 1.5,
+                  color: meta.color, fontFamily: '"Share Tech Mono", monospace', fontSize: 9,
+                  letterSpacing: 2, border: `1px solid ${meta.color}`, padding: '2px 6px',
+                  minWidth: 50, textAlign: 'center'
                 }}>{meta.label}</span>
                 <span style={{
-                  fontFamily: '"Share Tech Mono", monospace', fontSize: 11,
-                  color: meta.color, lineHeight: 1.3,
+                  color: T.cream, fontFamily: 'Inter, sans-serif', fontSize: 12, flex: 1
                 }}>{p.text}</span>
-                <span style={{ display: 'flex', gap: 6 }}>
-                  <button onClick={() => startEdit(p)} style={iconBtn(T.gold)}>EDIT</button>
-                  <button onClick={() => handleDelete(p.id)} style={iconBtn(T.bloodLight)}>×</button>
-                </span>
+                {writable && (
+                  <span style={{ display: 'flex', gap: 6 }}>
+                    <button onClick={() => startEdit(p)} style={iconBtn(T.gold)}>EDIT</button>
+                    <button onClick={() => handleDelete(p.id)} style={iconBtn(T.bloodLight)}>×</button>
+                  </span>
+                )}
               </div>
             );
           })}
@@ -600,7 +607,7 @@ export function CronicasPage() {
             color: T.creamHi, letterSpacing: -0.6,
           }}>HISTORIA DE LA UNIDAD</h1>
         </div>
-        {!editorOpen && (
+        {writable && !editorOpen && (
           <button onClick={openNew} style={{
             background: T.gold, color: T.void,
             border: 'none', padding: '10px 22px',
@@ -611,7 +618,7 @@ export function CronicasPage() {
       </div>
 
       {/* Parte del Día — frases rápidas para Comisión */}
-      <ParteSection />
+      <ParteSection writable={writable} />
 
       {/* Editor */}
       {editorOpen && (
@@ -658,6 +665,7 @@ export function CronicasPage() {
       ) : (
         visible.map(e => (
           <EntryCard key={e.id} entry={e}
+            writable={writable}
             onEdit={() => openEdit(e)}
             onDelete={() => handleDelete(e.id)} />
         ))

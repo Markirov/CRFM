@@ -207,7 +207,7 @@ export function useSimulador() {
   }, [currentMechIdx]);
 
   // ── Load unit from raw text (shared by file upload and catalog) ──
-  const loadUnitText = useCallback((text: string, filename: string, targetIdx?: number) => {
+  const loadUnitText = useCallback((text: string, filename: string, targetIdx?: number, initializer?: (state: any, session: any) => void) => {
     const ext = filename.toLowerCase().split('.').pop() || '';
 
     if (ext === 'saw') {
@@ -300,6 +300,7 @@ export function useSimulador() {
         };
 
         const session = mechInitSession(mechData);
+        initializer?.(mechData, session);
         const mIdx = targetIdx ?? currentMechIdx;
         setMechSlots(prev => {
           const next = [...prev];
@@ -343,6 +344,14 @@ export function useSimulador() {
 
   const handleFire = () => {
     if (!mechState || !mechSession) return;
+    
+    const hasWeapons = mechState.weapons.length > 0;
+    const hasFired = Object.keys(mechSession.activeShots || {}).length > 0;
+    if (hasWeapons && !hasFired) {
+      if (!window.confirm("No has disparado ninguna arma en este turno. ¿Seguro que quieres finalizar el turno de esta unidad?")) {
+        return;
+      }
+    }
     
     // Si no hay daño pendiente o el combate simultáneo está apagado, avanzar turno directamente
     if (!isSimultaneousCombat || !mechSession.pendingDamage || mechSession.pendingDamage.length === 0) {
@@ -422,6 +431,26 @@ export function useSimulador() {
   };
 
   const handleGlobalFire = () => {
+    let totalWeaponsAvailable = 0;
+    let totalWeaponsFired = 0;
+    
+    mechSlots.forEach(slot => {
+      if (!slot.state || !slot.session || slot.session.destroyed) return;
+      if (slot.state.weapons.length > 0) totalWeaponsAvailable++;
+      if (Object.keys(slot.session.activeShots || {}).length > 0) totalWeaponsFired++;
+    });
+    vehicleSlots.forEach(slot => {
+      if (!slot.state || !slot.session || slot.session.destroyed) return;
+      if (slot.state.weapons.length > 0) totalWeaponsAvailable++;
+      if (Object.keys(slot.session.activeShots || {}).length > 0) totalWeaponsFired++;
+    });
+    
+    if (totalWeaponsAvailable > 0 && totalWeaponsFired === 0) {
+      if (!window.confirm("Ninguna de tus unidades ha disparado armas en este turno. ¿Seguro que quieres finalizar el turno global?")) {
+        return;
+      }
+    }
+
     const mechUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').MechSession }[] = [];
     const vehicleUpdates: { idx: number; summary: import('@/lib/combat-types').TurnSummary; nextSession: import('@/lib/combat-types').VehicleSession }[] = [];
 
@@ -630,11 +659,18 @@ export function useSimulador() {
     }
   };
 
+  const [pendingIncomingAttack, setPendingIncomingAttack] = useState<any | null>(null);
+  const [justResolvedAttack, setJustResolvedAttack] = useState<any | null>(null);
+
   const applyDamageToSelected = () => {
     if (!selectedSection || damageAmount === 0) return;
     handleDamage(selectedSection, damageAmount, damageSource || undefined);
     setDamageAmount(0);
     setDamageSource(null);
+    if (pendingIncomingAttack) {
+      setJustResolvedAttack(pendingIncomingAttack);
+      setPendingIncomingAttack(null);
+    }
   };
 
   const toggleCrit = (loc: string, slotIdx: number) => {
@@ -746,6 +782,14 @@ export function useSimulador() {
   const vehicleHandleFire = () => {
     if (!vehicleState || !vehicleSession) return;
     
+    const hasWeapons = vehicleState.weapons.length > 0;
+    const hasFired = Object.keys(vehicleSession.activeShots || {}).length > 0;
+    if (hasWeapons && !hasFired) {
+      if (!window.confirm("No has disparado ninguna arma en este turno. ¿Seguro que quieres finalizar el turno de esta unidad?")) {
+        return;
+      }
+    }
+    
     updateVehicleSession(s => {
       let temp = structuredClone(s);
       let logs: string[] = [];
@@ -810,6 +854,10 @@ export function useSimulador() {
     vehicleHandleDamage(selectedSection, damageAmount, damageSource || undefined);
     setDamageAmount(0);
     setDamageSource(null);
+    if (pendingIncomingAttack) {
+      setJustResolvedAttack(pendingIncomingAttack);
+      setPendingIncomingAttack(null);
+    }
   };
 
   const vehicleToggleCritAction = (locKey: string, slotIdx: number) => {
@@ -1078,6 +1126,8 @@ export function useSimulador() {
     damageAmount, setDamageAmount,
     damageSource, setDamageSource,
     isSimultaneousCombat, setIsSimultaneousCombat,
+    pendingIncomingAttack, setPendingIncomingAttack,
+    justResolvedAttack, setJustResolvedAttack,
 
     // Mech actions
     handleFileUpload, loadUnitText,

@@ -112,6 +112,9 @@ export function usePermissions(): {
       initialLoadRef.current = false;
       setPerms(newPerms);
       setLoading(false);
+    }, (error) => {
+      console.warn('[permissions] Cannot read permissions (guest or error):', error.message);
+      setLoading(false);
     });
     return unsub;
   }, []);
@@ -122,7 +125,11 @@ export function usePermissions(): {
 // ── Helper: nivel de permiso para el rol actual ──────────────
 export function getPermLevel(perms: SectionPerm[], sectionId: string, role: UserRole): PermLevel {
   if (role === 'admin') return 'write';
-  if (!role) return 'none';
+  if (!role) {
+    const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador'];
+    if (PUBLIC_ROUTES.includes(sectionId)) return sectionId === 'simulador' ? 'write' : 'read';
+    return 'none';
+  }
   const section = perms.find(p => p.id === sectionId);
   if (!section) return 'none';
   return section[role as 'dm' | 'pj'];

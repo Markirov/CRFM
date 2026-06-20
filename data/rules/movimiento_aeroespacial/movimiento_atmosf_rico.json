@@ -1,0 +1,486 @@
+[
+  {
+    "table_name": "HIGH-ALTITUDE TABLE",
+    "table_data": [
+      {
+        "Hex Row": "Ground",
+        "Altitude (km)": "0–17",
+        "Max. Safe Velocity": 2
+      },
+      {
+        "Hex Row": "Row 1",
+        "Altitude (km)": "18–35",
+        "Max. Safe Velocity": 3
+      },
+      {
+        "Hex Row": "Row 2",
+        "Altitude (km)": "36–53",
+        "Max. Safe Velocity": 6
+      },
+      {
+        "Hex Row": "Row 3",
+        "Altitude (km)": "54–71",
+        "Max. Safe Velocity": 9
+      },
+      {
+        "Hex Row": "Row 4",
+        "Altitude (km)": "72–89",
+        "Max. Safe Velocity": 12
+      },
+      {
+        "Hex Row": "Interface",
+        "Altitude (km)": "90–107",
+        "Max. Safe Velocity": 15
+      }
+    ]
+  },
+  {
+    "table_name": "LOW-ALTITUDE TABLE",
+    "table_data": [
+      {
+        "Altitude": "High-Altitude Table",
+        "Minimum (in meters)": "18,000+",
+        "Maximum (in meters)": null
+      },
+      {
+        "Altitude": "10",
+        "Minimum (in meters)": "5,001",
+        "Maximum (in meters)": "18,000"
+      },
+      {
+        "Altitude": "9",
+        "Minimum (in meters)": "2,001",
+        "Maximum (in meters)": "5,000"
+      },
+      {
+        "Altitude": "8",
+        "Minimum (in meters)": "1,001",
+        "Maximum (in meters)": "2,000"
+      },
+      {
+        "Altitude": "7",
+        "Minimum (in meters)": "751",
+        "Maximum (in meters)": "1,000"
+      },
+      {
+        "Altitude": "6",
+        "Minimum (in meters)": "501",
+        "Maximum (in meters)": "750"
+      },
+      {
+        "Altitude": "5",
+        "Minimum (in meters)": "251",
+        "Maximum (in meters)": "500"
+      },
+      {
+        "Altitude": "4",
+        "Minimum (in meters)": "151",
+        "Maximum (in meters)": "250"
+      },
+      {
+        "Altitude": "3",
+        "Minimum (in meters)": "101",
+        "Maximum (in meters)": "150"
+      },
+      {
+        "Altitude": "2",
+        "Minimum (in meters)": "51",
+        "Maximum (in meters)": "100"
+      },
+      {
+        "Altitude": "1 (NOE)",
+        "Minimum (in meters)": "1",
+        "Maximum (in meters)": "50"
+      },
+      {
+        "Altitude": "0 (Ground)",
+        "Minimum (in meters)": "0",
+        "Maximum (in meters)": "0"
+      }
+    ]
+  },
+  {
+    "table_name": "STRAIGHT MOVEMENT TABLE",
+    "table_data": [
+      {
+        "Effective Velocity": "1–3",
+        "Aerospace Fighter": 1,
+        "Conventional Fighter": 1,
+        "Aerodyne DropShip": 1
+      },
+      {
+        "Effective Velocity": "4–6",
+        "Aerospace Fighter": 1,
+        "Conventional Fighter": 1,
+        "Aerodyne DropShip": 2
+      },
+      {
+        "Effective Velocity": "7–9",
+        "Aerospace Fighter": 2,
+        "Conventional Fighter": 1,
+        "Aerodyne DropShip": 3
+      },
+      {
+        "Effective Velocity": "10–12",
+        "Aerospace Fighter": 3,
+        "Conventional Fighter": 2,
+        "Aerodyne DropShip": 4
+      },
+      {
+        "Effective Velocity": "13–15",
+        "Aerospace Fighter": 4,
+        "Conventional Fighter": 3,
+        "Aerodyne DropShip": 5
+      },
+      {
+        "Effective Velocity": "16+",
+        "Aerospace Fighter": 5,
+        "Conventional Fighter": 4,
+        "Aerodyne DropShip": 6
+      }
+    ]
+  },
+  {
+    "table_name": "SPECIAL MANEUVERS TABLE",
+    "table_data": [
+      {
+        "Maneuver": "Loop",
+        "Min/Max Velocity": "Min 4",
+        "Thrust Cost": 4,
+        "Control Modifier": "+1"
+      },
+      {
+        "Maneuver": "Immelmann",
+        "Min/Max Velocity": "Min 3",
+        "Thrust Cost": 4,
+        "Control Modifier": "+1"
+      },
+      {
+        "Maneuver": "Split-S",
+        "Min/Max Velocity": "Any",
+        "Thrust Cost": 2,
+        "Control Modifier": "+2"
+      },
+      {
+        "Maneuver": "Hammerhead",
+        "Min/Max Velocity": "Any",
+        "Thrust Cost": "Velocity",
+        "Control Modifier": "+3"
+      },
+      {
+        "Maneuver": "Half-roll",
+        "Min/Max Velocity": "Any",
+        "Thrust Cost": 1,
+        "Control Modifier": "-1"
+      },
+      {
+        "Maneuver": "Barrel roll",
+        "Min/Max Velocity": "Min 2",
+        "Thrust Cost": 1,
+        "Control Modifier": "0"
+      },
+      {
+        "Maneuver": "Side-slip",
+        "Min/Max Velocity": "Any",
+        "Thrust Cost": 1,
+        "Control Modifier": "0/-1 (VSTOL units only)"
+      },
+      {
+        "Maneuver": "VIFF",
+        "Min/Max Velocity": "Any*",
+        "Thrust Cost": "Velocity +2",
+        "Control Modifier": "+2"
+      }
+    ]
+  },
+  {
+    "table_name": "LANDING MODIFIERS TABLE",
+    "table_data": [
+      {
+        "Condition": "Unit has damaged thrusters",
+        "Modifier": "+4"
+      },
+      {
+        "Condition": "Unit is out-of-control",
+        "Modifier": "Automatic failure (assume MoF of 10)"
+      },
+      {
+        "Condition": "Unit is attempting vertical landing",
+        "Modifier": "+1 per point of Velocity above 1"
+      },
+      {
+        "Condition": "Unit is attempting horizontal landing",
+        "Modifier": "+1 per point of Velocity above 2"
+      },
+      {
+        "Condition": "Landing gear damaged",
+        "Modifier": "+5"
+      },
+      {
+        "Condition": "Nose armor destroyed (fighters and aerodyne units)",
+        "Modifier": "+2"
+      },
+      {
+        "Condition": "Unit reduced to 50% or less of starting thrust",
+        "Modifier": "+2"
+      },
+      {
+        "Condition": "No thrust available (aerodyne)",
+        "Modifier": "+4"
+      },
+      {
+        "Condition": "No thrust available (spheroid)*",
+        "Modifier": "+8"
+      },
+      {
+        "Condition": "Runway too short for unit",
+        "Modifier": "+2"
+      },
+      {
+        "Condition": "Aerospace fighter making vertical landing",
+        "Modifier": "+2/+0†"
+      },
+      {
+        "Condition": "Conventional fighter making vertical landing",
+        "Modifier": "NA/NA†"
+      },
+      {
+        "Condition": "Conventional fighter with VSTOL making vertical landing",
+        "Modifier": "+0/NA†"
+      },
+      {
+        "Condition": "Fixed-Wing Support Vehicle making vertical landing",
+        "Modifier": "NA/NA†"
+      },
+      {
+        "Condition": "Fixed-Wing Support Vehicle w/VSTOL making vertical landing",
+        "Modifier": "+2/0†"
+      },
+      {
+        "Condition": "Aerodyne small craft and DropShips making vertical landing",
+        "Modifier": "+2/+0†"
+      },
+      {
+        "Condition": "Spheroid small craft and DropShips making vertical landing",
+        "Modifier": "+0/+0†"
+      },
+      {
+        "Condition": "Unit landing at manned, friendly airfield‡‡",
+        "Modifier": "-2"
+      },
+      {
+        "Condition": "Unit landing at unmanned, friendly airfield‡‡",
+        "Modifier": "-1"
+      },
+      {
+        "Condition": "Unit landing on road or paved hex",
+        "Modifier": "0"
+      },
+      {
+        "Condition": "Unit landing at unfriendly airfield‡‡",
+        "Modifier": "+1"
+      },
+      {
+        "Condition": "Unit landing in clear hex",
+        "Modifier": "+2"
+      },
+      {
+        "Condition": "Unit landing in water hex",
+        "Modifier": "+3"
+      },
+      {
+        "Condition": "Unit landing in rough or rubble hex",
+        "Modifier": "+3"
+      },
+      {
+        "Condition": "Unit landing in elevated hex (non-vertical landing)§",
+        "Modifier": "+3"
+      },
+      {
+        "Condition": "Unit landing in building hex (non-vertical landing)§§",
+        "Modifier": "+3"
+      },
+      {
+        "Condition": "Unit landing in light woods hex",
+        "Modifier": "+4"
+      },
+      {
+        "Condition": "Unit landing in heavy woods hex",
+        "Modifier": "+5"
+      }
+    ]
+  },
+  {
+    "table_name": "FAILED BRAKING MANEUVER TABLE",
+    "table_data": [
+      {
+        "Margin of Failure": "1–4",
+        "Effect": "Landing requires full distance. The pilot can attempt to land normally or abort the landing, circle and try again in a subsequent turn."
+      },
+      {
+        "Margin of Failure": "5",
+        "Effect": "The unit must land. However, the unit becomes harder to control, adding 1 to the landing Control Roll target number."
+      },
+      {
+        "Margin of Failure": "6+",
+        "Effect": "The unit must land and requires 20 hexes of runway to do so, regardless of unit type. The unit suffers 20 points of damage on the nose and the landing gear is destroyed. Add 2 to the landing Control Roll target number."
+      }
+    ]
+  },
+  {
+    "table_name": "VERTICAL LIFTOFF MODIFIERS TABLE",
+    "table_data": [
+      {
+        "Conditions": "Landing gear damaged",
+        "Modifier": "+1"
+      },
+      {
+        "Conditions": "Maneuvering thrusters damaged",
+        "Modifier": "+3"
+      },
+      {
+        "Conditions": "Unit lifting off from a crater",
+        "Modifier": "+3"
+      },
+      {
+        "Conditions": "Unit lifting off from an airfield or landing pad",
+        "Modifier": "-1"
+      },
+      {
+        "Conditions": "Non-spheroid making vertical liftoff",
+        "Modifier": "+2"
+      }
+    ]
+  },
+  {
+    "table_name": "FAILED LIFTOFF MANEUVER TABLE",
+    "table_data": [
+      {
+        "Margin of Failure": "1–2",
+        "Effect": "Unit lifts off. Landing gear damaged."
+      },
+      {
+        "Margin of Failure": "3–4",
+        "Effect": "Landing gear damaged. The pilot must make an additional Control Roll with no modifiers. If the roll is successful, the unit has lifted off. If the roll fails, the unit falls back to the ground, suffering 20 points of standard-scale damage on the aft side."
+      },
+      {
+        "Margin of Failure": "5",
+        "Effect": "The landing gear is damaged and the unit strikes the ground, causing 50 points of standard-scale damage to the aft side."
+      },
+      {
+        "Margin of Failure": "6+",
+        "Effect": "The landing gear is damaged and the unit strikes the ground, causing 100 points of standard-scale damage to the aft side."
+      }
+    ]
+  },
+  {
+    "table_name": "DROPSHIP EXHAUST DAMAGE TABLE",
+    "table_data": [
+      {
+        "Distance": "Same Hex",
+        "Damage": "Destroyed"
+      },
+      {
+        "Distance": "1 Hex",
+        "Damage": "12D6"
+      },
+      {
+        "Distance": "2 Hexes",
+        "Damage": "10D6"
+      },
+      {
+        "Distance": "3 Hexes",
+        "Damage": "8D6"
+      },
+      {
+        "Distance": "4 Hexes",
+        "Damage": "6D6"
+      },
+      {
+        "Distance": "5 Hexes",
+        "Damage": "4D6"
+      },
+      {
+        "Distance": "6 Hexes",
+        "Damage": "2D6"
+      }
+    ]
+  },
+  {
+    "table_name": "STRAIGHT MOVEMENT ON GROUND MAPS TABLE (AERODYNE CRAFT ONLY)",
+    "table_data": [
+      {
+        "Velocity": 1,
+        "Fighter": 8,
+        "Small Craft": 8,
+        "DropShip": 8
+      },
+      {
+        "Velocity": 2,
+        "Fighter": 12,
+        "Small Craft": 14,
+        "DropShip": 16
+      },
+      {
+        "Velocity": 3,
+        "Fighter": 16,
+        "Small Craft": 20,
+        "DropShip": 24
+      },
+      {
+        "Velocity": 4,
+        "Fighter": 20,
+        "Small Craft": 26,
+        "DropShip": 32
+      },
+      {
+        "Velocity": 5,
+        "Fighter": 24,
+        "Small Craft": 32,
+        "DropShip": 40
+      },
+      {
+        "Velocity": 6,
+        "Fighter": 28,
+        "Small Craft": 38,
+        "DropShip": 48
+      },
+      {
+        "Velocity": 7,
+        "Fighter": 32,
+        "Small Craft": 44,
+        "DropShip": 56
+      },
+      {
+        "Velocity": 8,
+        "Fighter": 36,
+        "Small Craft": 50,
+        "DropShip": 64
+      },
+      {
+        "Velocity": 9,
+        "Fighter": 40,
+        "Small Craft": 56,
+        "DropShip": 72
+      },
+      {
+        "Velocity": 10,
+        "Fighter": 44,
+        "Small Craft": 62,
+        "DropShip": 80
+      },
+      {
+        "Velocity": 11,
+        "Fighter": 48,
+        "Small Craft": 68,
+        "DropShip": 88
+      },
+      {
+        "Velocity": 12,
+        "Fighter": 52,
+        "Small Craft": 74,
+        "DropShip": 96
+      }
+    ]
+  }
+]

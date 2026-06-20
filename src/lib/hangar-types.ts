@@ -43,6 +43,8 @@ export interface HangarItem {
   pilotoIdx?:   number;
 
   // ── Estado persistente ──
+  /** Operativo, dañado, destruido, o desguazado. */
+  estado?:       'operativo' | 'danado' | 'destruido' | 'desguazado';
   /** 0..100. Espejo de campaign.estadoMechs para este mech. */
   estadoPct?:    number;
   /** Quality rating actual (sigue MechMaintenanceState). */
@@ -52,6 +54,15 @@ export interface HangarItem {
   damagePersist?: MechRepairDamage;
   /** Historial de chequeos de mantenimiento (más reciente primero, cap 50). */
   maintenanceHistory?: MaintenanceLogEntry[];
+  /** Snapshot ligero de la sesión de combate para conservar armadura/IS/críticos exactos. */
+  sessionActiva?: {
+    armor: Record<string, number>;
+    is: Record<string, number>;
+    crits: Record<string, any[]>;
+    ammoBins: any[];
+    destroyed: boolean;
+    destroyedReason?: string;
+  };
 
   // ── Meta ──
   notas?:       string;

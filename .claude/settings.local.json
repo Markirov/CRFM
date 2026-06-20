@@ -54,5 +54,17 @@
       "Bash(ssh*)"
     ],
     "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File .claude/hooks/auto-review-reminder.ps1"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -1,0 +1,194 @@
+[
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "Human",
+    "modifier_type": "base",
+    "value": 0.2,
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "Animal (Creature Size Large)",
+    "modifier_type": "base",
+    "value": 1,
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "Animal (Creature Size Very Large)",
+    "modifier_type": "base",
+    "value": 1.5,
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "Exoskeleton (including Battle Armor)",
+    "modifier_type": "base",
+    "value": 1,
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "ProtoMech",
+    "modifier_type": "formula",
+    "value": "Mass/15",
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "Vehicle",
+    "modifier_type": "formula",
+    "value": "Mass/60",
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Method",
+    "item": "'Mech",
+    "modifier_type": "formula",
+    "value": "Mass/30",
+    "unit": "Tons/Minute"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Lifter Type",
+    "item": "Cargo Manipulator",
+    "modifier_type": "multiplier",
+    "value": 1.2,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Lifter Type",
+    "item": "Lift Hoist",
+    "modifier_type": "multiplier",
+    "value": 1.2,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Lifter Type",
+    "item": "Zero-G Gear",
+    "modifier_type": "multiplier",
+    "value": 1.75,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Lifter Type",
+    "item": "Light Cargo Platform",
+    "modifier_type": "multiplier",
+    "value": 2,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Lifter Type",
+    "item": "Heavy Cargo Platform",
+    "modifier_type": "multiplier",
+    "value": 4,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Cargo Type",
+    "item": "Containerized",
+    "modifier_type": "multiplier",
+    "value": 5,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Cargo Type",
+    "item": "Liquid",
+    "modifier_type": "multiplier",
+    "value": 5,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Cargo Type",
+    "item": "Null-G Pack",
+    "modifier_type": "multiplier",
+    "value": 2.5,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Zero-G",
+    "modifier_type": "multiplier",
+    "value": 0.2,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Vacuum",
+    "modifier_type": "multiplier",
+    "value": 0.75,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Tainted Atmosphere",
+    "modifier_type": "multiplier",
+    "value": 0.8,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Trace or Very High Pressure Atmosphere",
+    "modifier_type": "multiplier",
+    "value": 0.9,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Extreme Temperatures",
+    "modifier_type": "multiplier",
+    "value": 0.8,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Heavy Snowfall/Ice Storm/Lightning Storm/Strong Gale/Torrential Downpour",
+    "modifier_type": "multiplier",
+    "value": 0.75,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Hurricane/Tornado",
+    "modifier_type": "multiplier",
+    "value": 0.5,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Moonless Night/Solar Flare",
+    "modifier_type": "multiplier",
+    "value": 0.75,
+    "unit": "Multiplier"
+  },
+  {
+    "table": "Cargo Transport",
+    "category": "Planetary Conditions",
+    "item": "Pitch Black",
+    "modifier_type": "multiplier",
+    "value": 0.5,
+    "unit": "Multiplier"
+  }
+]

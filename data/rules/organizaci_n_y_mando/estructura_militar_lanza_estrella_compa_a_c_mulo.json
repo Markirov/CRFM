@@ -1,0 +1,385 @@
+[
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Infantry Formations",
+    "unit_name": "Squad (Battle Armor)",
+    "definition": "4 troopers",
+    "command_rank": "Sergeant*"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Infantry Formations",
+    "unit_name": "Squad (Conventional)",
+    "definition": "2-8 troopers",
+    "command_rank": "Corporal"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Infantry Formations",
+    "unit_name": "Platoon (Conventional)",
+    "definition": "3-4 squads",
+    "command_rank": "Sergeant*"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Aerospace/Conventional Fighter Formations",
+    "unit_name": "Flight",
+    "definition": "2 fighters",
+    "command_rank": "Lieutenant"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Aerospace/Conventional Fighter Formations",
+    "unit_name": "Squadron",
+    "definition": "3 flights",
+    "command_rank": "Captain"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Aerospace/Conventional Fighter Formations",
+    "unit_name": "Wing",
+    "definition": "3-4 squadrons",
+    "command_rank": "Major"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Ground Formations",
+    "unit_name": "Lance",
+    "definition": "4 ground units",
+    "command_rank": "Lieutenant"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Ground Formations",
+    "unit_name": "Company",
+    "definition": "3-4 lances",
+    "command_rank": "Captain"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Ground Formations",
+    "unit_name": "Battalion",
+    "definition": "3-4 companies",
+    "command_rank": "Major"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Ground Formations",
+    "unit_name": "Regiment",
+    "definition": "3-4 battalions",
+    "command_rank": "Colonel"
+  },
+  {
+    "faction_group": "Inner Sphere / Periphery",
+    "organization_type": "Ground Formations",
+    "unit_name": "Brigade",
+    "definition": "3-6 regiments",
+    "command_rank": "General"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "Infantry Formations",
+    "unit_name": "Level I (Battle Armor)",
+    "definition": "6 troopers",
+    "command_rank": "Acolyte*"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "Infantry Formations",
+    "unit_name": "Level I (Conventional)",
+    "definition": "30-36 troopers",
+    "command_rank": "Acolyte*"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "All Other Formations",
+    "unit_name": "Level I",
+    "definition": "1 unit",
+    "command_rank": "Acolyte"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "All Other Formations",
+    "unit_name": "Level II (Demi-Company)",
+    "definition": "6 Level Is",
+    "command_rank": "Adept"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "All Other Formations",
+    "unit_name": "Level III (Battalion)",
+    "definition": "6 Level IIs",
+    "command_rank": "Adept (Demi-Precentor)"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "All Other Formations",
+    "unit_name": "Level IV (Division)",
+    "definition": "6 Level IIIs",
+    "command_rank": "Precentor"
+  },
+  {
+    "faction_group": "ComStar / Word of Blake",
+    "organization_type": "All Other Formations",
+    "unit_name": "Level V (Army)",
+    "definition": "6 Level IVs",
+    "command_rank": "Precentor"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Infantry and ProtoMech Formations",
+    "unit_name": "Point (Battle Armor)",
+    "definition": "5 troopers",
+    "command_rank": "Point Commander*"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Infantry and ProtoMech Formations",
+    "unit_name": "Point (Conventional)",
+    "definition": "20-25 troopers",
+    "command_rank": "Point Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Infantry and ProtoMech Formations",
+    "unit_name": "Point (ProtoMech)",
+    "definition": "5 ProtoMechs",
+    "command_rank": "Point Commander*"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Star",
+    "definition": "5 'Mechs",
+    "command_rank": "Star Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Nova",
+    "definition": "5 'Mechs, 5 infantry Points",
+    "command_rank": "Star Commander or Nova Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Binary",
+    "definition": "2 Stars",
+    "command_rank": "Star Captain or Nova Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Supernova Binary",
+    "definition": "2 Novas",
+    "command_rank": "Star Captain or Nova Captain"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Trinary",
+    "definition": "3 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Supernova Trinary",
+    "definition": "3 Novas",
+    "command_rank": "Star Captain or Nova Captain"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Cluster",
+    "definition": "3-5 Binaries or Trinaries",
+    "command_rank": "Star Colonel"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "'Mech Formations",
+    "unit_name": "Galaxy",
+    "definition": "3-5 Clusters",
+    "command_rank": "Galaxy Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Point",
+    "definition": "2 units",
+    "command_rank": "Point Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Star",
+    "definition": "5 Points",
+    "command_rank": "Star Commander"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Binary",
+    "definition": "2 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Trinary",
+    "definition": "3 Stars",
+    "command_rank": "Star Captain"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Cluster",
+    "definition": "3-5 Binaries or Trinaries",
+    "command_rank": "Star Colonel"
+  },
+  {
+    "faction_group": "Clan",
+    "organization_type": "Vehicle and Fighter Formations",
+    "unit_name": "Galaxy",
+    "definition": "3-5 Clusters",
+    "command_rank": "Galaxy Commander"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Core Ground Force",
+    "quantity": "0-1",
+    "unit_name": "Command Lance"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Core Ground Force",
+    "quantity": "0-2*",
+    "unit_name": "Support Lances"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Core Ground Force",
+    "quantity": "1-4",
+    "unit_name": "Battle/Assault/Striker/Fire/Recon/Pursuit Lances"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Detachments",
+    "quantity": "0-6",
+    "unit_name": "Conventional Infantry Platoons"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Detachments",
+    "quantity": "0-4",
+    "unit_name": "Battle Armor Squads"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Detachments",
+    "quantity": "0-3",
+    "unit_name": "Vehicle Lances**"
+  },
+  {
+    "formation_type": "Company",
+    "composition_type": "Detachments",
+    "quantity": "0-1",
+    "unit_name": "Aerospace Squadron"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Core Ground Force",
+    "quantity": "0-1",
+    "unit_name": "Command Star"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Core Ground Force",
+    "quantity": "0-1",
+    "unit_name": "Support Star"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Core Ground Force",
+    "quantity": "1-3",
+    "unit_name": "Battle/Assault/Striker/Fire/Recon/Pursuit Stars"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Detachments",
+    "quantity": "0-5",
+    "unit_name": "Battle Armor Points"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Detachments",
+    "quantity": "0-1",
+    "unit_name": "Vehicle Stars"
+  },
+  {
+    "formation_type": "Binary/Trinary",
+    "composition_type": "Detachments",
+    "quantity": "0-1",
+    "unit_name": "Aerospace Star"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Core Ground Force",
+    "quantity": "0-1",
+    "unit_name": "Command Lance"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Core Ground Force",
+    "quantity": "3-4",
+    "unit_name": "Ground Force Companies"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Detachments",
+    "quantity": "0-6",
+    "unit_name": "Conventional Infantry Companies"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Detachments",
+    "quantity": "0-4",
+    "unit_name": "Battle Armor Platoons"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Detachments",
+    "quantity": "0-3",
+    "unit_name": "Vehicle Companies*"
+  },
+  {
+    "formation_type": "Battalion",
+    "composition_type": "Detachments",
+    "quantity": "0-3",
+    "unit_name": "Aerospace Squadrons"
+  },
+  {
+    "formation_type": "Cluster",
+    "composition_type": "Core Ground Force",
+    "quantity": "3-5",
+    "unit_name": "Binaries and/or Trinaries"
+  },
+  {
+    "formation_type": "Cluster",
+    "composition_type": "Detachments",
+    "quantity": "0-2",
+    "unit_name": "Battle Armor Stars"
+  },
+  {
+    "formation_type": "Cluster",
+    "composition_type": "Detachments",
+    "quantity": "0-3",
+    "unit_name": "Vehicle Stars"
+  },
+  {
+    "formation_type": "Cluster",
+    "composition_type": "Detachments",
+    "quantity": "0-3",
+    "unit_name": "Aerospace Star"
+  }
+]

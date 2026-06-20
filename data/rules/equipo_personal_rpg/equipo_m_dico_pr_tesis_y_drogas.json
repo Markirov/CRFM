@@ -1,0 +1,500 @@
+[
+  {
+    "category": "Equipo Médico",
+    "item": "Kit Médico Avanzado",
+    "equipment_ratings": "C/A-C-B/B",
+    "cost": 250,
+    "mass": "2 kg",
+    "power_use": null,
+    "notes": "4 usos; +2 a las tiradas de habilidad MedTech"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Kit Quirúrgico de Campo",
+    "equipment_ratings": "D/A-B-A/B",
+    "cost": 800,
+    "mass": "11.5 kg",
+    "power_use": null,
+    "notes": "2 usos; +1 a las tiradas de habilidad Surgery; +2 a las tiradas de habilidad MedTech"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Kit Médico",
+    "equipment_ratings": "C/A-A-A/A",
+    "cost": 10,
+    "mass": "250 g",
+    "power_use": null,
+    "notes": "1 uso: +1 a las tiradas de habilidad MedTech"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Parche Médico (Medipatch)",
+    "equipment_ratings": "D/A-B-A/B",
+    "cost": 10,
+    "mass": "10 g",
+    "power_use": null,
+    "notes": "+1 a las tiradas de habilidad MedTech (máx., incluso si se usan múltiples parches)"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Venda de Plastiflesh",
+    "equipment_ratings": "D/B-D-C/A",
+    "cost": 5,
+    "mass": "5 g",
+    "power_use": null,
+    "notes": "Detiene 1 efecto de Sangrado; reduce el tiempo de curación en un 50% si se aplica con una tirada de habilidad MedTech exitosa"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Manga de Preservación",
+    "equipment_ratings": "D/A-B-A/B",
+    "cost": 25,
+    "mass": "500 g",
+    "power_use": null,
+    "notes": "+1 a las tiradas de habilidad MedTech o Surgery en la extremidad afectada; detiene cualquier efecto de daño continuo en la extremidad afectada hasta por 36 horas"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Parche Sedante",
+    "equipment_ratings": "D/A-B-B/B",
+    "cost": 30,
+    "mass": "12 g",
+    "power_use": null,
+    "notes": "Inflige 0S/4D de \"daño\" al objetivo; sin efecto si no se coloca contra la piel"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Parche Estimulante (Stimpatch)",
+    "equipment_ratings": "D/A-B-A/B",
+    "cost": 2,
+    "mass": "9 g",
+    "power_use": null,
+    "notes": "Elimina 2 de Fatiga (hasta un mínimo de 0); +1 a las tiradas de Knockout; Adictivo (Fuerza de Droga 3)*"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Stimpatch, Clan",
+    "equipment_ratings": "D/X-X-B/B",
+    "cost": 5,
+    "mass": "10g",
+    "power_use": null,
+    "notes": "Elimina 3 de Fatiga (hasta un mínimo de 0) y Aturdimiento; +2 a las tiradas de Knockout; Adictivo (Fuerza de Droga 4)*"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "LSSU Clan",
+    "equipment_ratings": "F/X-X-D/D",
+    "cost": 2200,
+    "mass": "325 g",
+    "power_use": null,
+    "notes": "Elimina 3 de Fatiga y anula Aturdimiento; Modificador de Herida +2 (durante 15 minutos después de cada uso); 24 dosis; Coste de recarga: 100; Adictivo (Fuerza de Droga 3)*†"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Medipack",
+    "equipment_ratings": "E/C-E-C/D",
+    "cost": 400,
+    "mass": "400 g",
+    "power_use": null,
+    "notes": "Elimina 2 de Fatiga y anula Aturdimiento; Modificador de Herida +1 (durante 15 minutos después de cada uso); 12 dosis; Coste de recarga: 75; Adictivo (Fuerza de Droga 2)*†"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Bisturí Láser",
+    "equipment_ratings": "D/A-B-A/C",
+    "cost": 50,
+    "mass": "100 g",
+    "power_use": "1 PPT",
+    "notes": "Alcance: 25 cm; inflige 0E/3 de daño si se usa ofensivamente"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Unidad de Soporte Vital",
+    "equipment_ratings": "E/B-C-B/B",
+    "cost": 8500,
+    "mass": "22.5 kg",
+    "power_use": "3 PPS",
+    "notes": "Detiene todos los efectos de daño continuo y permite mover a pacientes críticamente heridos; también reduce el tiempo de curación en un 20%; +2 a las tiradas de habilidad MedTech cuando se usa con un Monitor Médico Portátil"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Dispositivo de Implantación de Miómero",
+    "equipment_ratings": "E/D-X-F/C",
+    "cost": 175000,
+    "mass": "15 kg",
+    "power_use": "10 PPM",
+    "notes": "Malfuncionamiento en una pifia (Fumble)"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Monitor Médico Portátil",
+    "equipment_ratings": "E/B-C-B/B",
+    "cost": 2200,
+    "mass": "13.3 kg",
+    "power_use": "1 PPM",
+    "notes": "+1 a las tiradas de habilidad MedTech (+2 cuando se usa con Unidad de Soporte Vital)"
+  },
+  {
+    "category": "Equipo Médico",
+    "item": "Tubo de Estasis",
+    "equipment_ratings": "D/D-F-E/D",
+    "cost": 500000,
+    "mass": "1,200 kg",
+    "power_use": "10 PPD",
+    "notes": "Congelar/Descongelar 1 persona en 24 horas; Tirada de BOD –2 para congelar/descongelar; Tirada de BOD –1 por año (redondear hacia arriba) para almacenar (en cualquier fallo, –1 a BOD o INT, determinado aleatoriamente)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 1: Miembro Simple (Brazo/Pierna)",
+    "equipment_ratings": "A/A-A-A/A",
+    "cost": 75,
+    "notes": "Extraíble; BAR 2/2/1/2; STR –2"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 2: Miembro Útil (Brazo/Mano)",
+    "equipment_ratings": "B/A-B-A/A",
+    "cost": 750,
+    "notes": "Extraíble; BAR 2/3/2/2; STR –1"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 2: Miembro Útil (Pierna/Pie)",
+    "equipment_ratings": "B/A-B-A/A",
+    "cost": 250,
+    "notes": "Extraíble; BAR 2/3/2/2; STR –1"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 3: Prótesis Estándar (Brazo/Mano)",
+    "equipment_ratings": "C/B-C-B/A",
+    "cost": 7500,
+    "notes": "Extraíble; BAR 3/3/2/3"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 3: Prótesis Estándar (Pierna/Pie)",
+    "equipment_ratings": "C/B-C-B/A",
+    "cost": 10000,
+    "notes": "Extraíble; BAR 3/3/2/3"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 4: Prótesis Avanzada (Brazo/Mano)",
+    "equipment_ratings": "D/C-D-C/A",
+    "cost": 25000,
+    "notes": "Extraíble; BAR 3/4/3/3; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 4: Prótesis Avanzada (Pierna/Pie)",
+    "equipment_ratings": "D/C-D-C/A",
+    "cost": 17500,
+    "notes": "Extraíble; BAR 3/4/3/3; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 5: Reemplazo de Miómero (Brazo)",
+    "equipment_ratings": "E/D-F-E/A",
+    "cost": 200000,
+    "notes": "Extraíble; BAR 3/4/4/3; STR +1; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 5: Reemplazo de Miómero (Pie)",
+    "equipment_ratings": "E/D-F-E/A",
+    "cost": 50000,
+    "notes": "Extraíble; BAR 3/4/4/3; STR +1; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 5: Reemplazo de Miómero (Mano)",
+    "equipment_ratings": "E/D-F-E/A",
+    "cost": 100000,
+    "notes": "Extraíble; BAR 3/4/4/3; STR +1; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 5: Reemplazo de Miómero (Pierna)",
+    "equipment_ratings": "E/D-F-E/A",
+    "cost": 125000,
+    "notes": "Extraíble; BAR 3/4/4/3; STR +1; +1 AP de Melee (solo sin armas)"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 6: Reemplazo Clonado (Brazo)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 500000,
+    "notes": "Injertado; Anula el Rasgo de Miembro Perdido relacionado"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 6: Reemplazo Clonado (Pie)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 150000,
+    "notes": "Injertado; Anula el Rasgo de Miembro Perdido relacionado"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 6: Reemplazo Clonado (Mano)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 300000,
+    "notes": "Injertado; Anula el Rasgo de Miembro Perdido relacionado"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 6: Reemplazo Clonado (Pierna)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 350000,
+    "notes": "Injertado; Anula el Rasgo de Miembro Perdido relacionado"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 6: Reemplazo Clonado (Órgano)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 200000,
+    "notes": "Injertado; Anula el Rasgo de Miembro Perdido/Handicap/Mala Visión/Mal Oído relacionado"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 5: Reemplazo de Oído Biónico",
+    "equipment_ratings": "C/A-C-A/A",
+    "cost": 100000,
+    "notes": "Extraíble; Reduce los efectos del Rasgo de Mal Oído a –1 TP"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 4: Reemplazo de Ojo Biónico",
+    "equipment_ratings": "C/A-C-A/A",
+    "cost": 220000,
+    "notes": "Extraíble; Reduce los efectos del Rasgo de Mala Visión a –1 TP"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 3: Órgano Biónico (Corazón Artificial)",
+    "equipment_ratings": "C/B-C-B/A",
+    "cost": 500000,
+    "notes": "Extraíble con habilidad Surgery; Reduce los efectos del Rasgo de Handicap relacionado con el corazón a nivel de –1 TP"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 4: Órgano Biónico (Hígado/Riñón Artificial)",
+    "equipment_ratings": "C/B-C-C/A",
+    "cost": 750000,
+    "notes": "Extraíble con habilidad Surgery; Reduce los efectos del Rasgo de Handicap relacionado con el hígado o riñón a nivel de –1 TP"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Tipo 4: Órgano Biónico (Pulmón Artificial)",
+    "equipment_ratings": "C/C-D-C/A",
+    "cost": 800000,
+    "notes": "Extraíble con habilidad Surgery; Reduce los efectos del Rasgo de Handicap relacionado con el pulmón a nivel de –1 TP"
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante de Miómero Electivo (Brazo)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 300000,
+    "notes": "Injertado; STR +1 para todas las acciones con el brazo afectado, más beneficios del implante de mano."
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante de Miómero Electivo (Pies, ambos)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 150000,
+    "notes": "Injertado; Mitad de fatiga por usar movimiento de Sprint."
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante de Miómero Electivo (Mano)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 150000,
+    "notes": "Injertado; +1 a las habilidades Martial Arts y Climbing con la mano afectada."
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante de Miómero Electivo (Piernas, ambas)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 375000,
+    "notes": "Injertado; STR +1 y RFL +1 para propósitos de movimiento."
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante de Miómero Electivo (Cuerpo Completo)",
+    "equipment_ratings": "E/X-F-E/A",
+    "cost": 975000,
+    "notes": "Injertado; STR +2, RFL +1; CHA –1; El personaje gana el rasgo Toughness."
+  },
+  {
+    "category": "Prótesis",
+    "item": "Implante Neural de Imagen Mejorada (EI)",
+    "equipment_ratings": "F/X-X-D/F",
+    "cost": 1500000,
+    "notes": "Injertado; Ver reglas."
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Veneno de Serpiente de Cascabel",
+    "primary_vector": "Inyectado",
+    "drug_strength": 3,
+    "poison_ap": 0,
+    "duration": "3 Turnos",
+    "base_price": 5,
+    "equip_ratings": "A/A-B-B/C",
+    "notes": "Letal; Continuo"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Veneno de Azh",
+    "primary_vector": "Inyectado",
+    "drug_strength": 4,
+    "poison_ap": 0,
+    "duration": "1 Turno",
+    "base_price": 5,
+    "equip_ratings": "A/X-C-B/C",
+    "notes": "Letal"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Veneno de Escorpión Goliat*",
+    "primary_vector": "Inyectado",
+    "drug_strength": 5,
+    "poison_ap": 1,
+    "duration": "1 Turno",
+    "base_price": 10,
+    "equip_ratings": "B/X-D-B/D",
+    "notes": "Afiliación: HC; Alucinógeno; Letal"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Radio",
+    "primary_vector": "Inhalado/Inyectado",
+    "drug_strength": 7,
+    "poison_ap": 3,
+    "duration": "1 Turno",
+    "base_price": 50,
+    "equip_ratings": "B/C-E-D/D",
+    "notes": "Letal"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Talio",
+    "primary_vector": "Ingerido",
+    "drug_strength": 3,
+    "poison_ap": 0,
+    "duration": "4 Turnos",
+    "base_price": 10,
+    "equip_ratings": "B/A-B-C/D",
+    "notes": "Letal; Continuo"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Arsénico",
+    "primary_vector": "Ingerido",
+    "drug_strength": 4,
+    "poison_ap": 1,
+    "duration": "2 Turnos",
+    "base_price": 10,
+    "equip_ratings": "A/A-B-C/C",
+    "notes": "Letal; Continuo"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Cicuta",
+    "primary_vector": "Ingerido",
+    "drug_strength": 5,
+    "poison_ap": 0,
+    "duration": "1 Turno",
+    "base_price": 15,
+    "equip_ratings": "B/B-D-C/D",
+    "notes": "Letal"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Dioxinas (inyectadas)",
+    "primary_vector": "Inyectado",
+    "drug_strength": 4,
+    "poison_ap": 0,
+    "duration": "4 Turnos",
+    "base_price": 20,
+    "equip_ratings": "A/C-D-C/C",
+    "notes": "Letal; Continuo"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Dioxinas (ingeridas)",
+    "primary_vector": "Ingerido",
+    "drug_strength": 4,
+    "poison_ap": 0,
+    "duration": "8 Turnos",
+    "base_price": 20,
+    "equip_ratings": "A/C-D-C/C",
+    "notes": "Letal; Continuo"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Gas VX (inhalado)",
+    "primary_vector": "Inhalado",
+    "drug_strength": 30,
+    "poison_ap": 6,
+    "duration": "12 Turnos",
+    "base_price": 70,
+    "equip_ratings": "D/C-E-D/E",
+    "notes": "Letal; Retardado"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Gas VX (contacto)",
+    "primary_vector": "Contacto",
+    "drug_strength": 30,
+    "poison_ap": 6,
+    "duration": "24 Turnos",
+    "base_price": 70,
+    "equip_ratings": "D/C-E-D/E",
+    "notes": "Letal; Retardado"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "QwikStim",
+    "primary_vector": "Ingerido",
+    "drug_strength": 8,
+    "poison_ap": null,
+    "duration": "1D6x2 HR",
+    "base_price": 8,
+    "equip_ratings": "D/X-F-E/E",
+    "notes": "Afiliación: LA; Ignora Fatiga; DEX –1"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Rage",
+    "primary_vector": "Inyectado",
+    "drug_strength": 9,
+    "poison_ap": null,
+    "duration": "1D6x0.5 HR",
+    "base_price": 10,
+    "equip_ratings": "E/X-E-E/E",
+    "notes": "Afiliación: CC; Ignora Modificadores de Herida; STR +3, INT –1, WIL –1"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "LD-512",
+    "primary_vector": "Ingerido",
+    "drug_strength": 6,
+    "poison_ap": null,
+    "duration": "1D6x0.5 HR",
+    "base_price": 12,
+    "equip_ratings": "E/X-X-E/E",
+    "notes": "Afiliación: FS; INT +3, WIL +1; –3 a Percepción"
+  },
+  {
+    "category": "Drogas y Venenos",
+    "sample": "Spazz",
+    "primary_vector": "Ingerido",
+    "drug_strength": 10,
+    "poison_ap": null,
+    "duration": "1D6 HR",
+    "base_price": 10,
+    "equip_ratings": "D/X-X-E/E",
+    "notes": "RFL +2, DEX –1; Compulsión/Paranoia (–3 TP)"
+  }
+]

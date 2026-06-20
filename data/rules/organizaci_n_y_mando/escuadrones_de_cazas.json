@@ -1,0 +1,73 @@
+[
+  {
+    "faction_group": "General Inner Sphere and Periphery",
+    "formation_type": "Aerospace/Conventional Fighter",
+    "organization": "Flight",
+    "definition": "2 fighters",
+    "command_rank": "Lieutenant"
+  },
+  {
+    "faction_group": "General Inner Sphere and Periphery",
+    "formation_type": "Aerospace/Conventional Fighter",
+    "organization": "Squadron",
+    "definition": "3 flights",
+    "command_rank": "Captain"
+  },
+  {
+    "faction_group": "General Inner Sphere and Periphery",
+    "formation_type": "Aerospace/Conventional Fighter",
+    "organization": "Wing",
+    "definition": "3-4 squadrons",
+    "command_rank": "Major"
+  },
+  {
+    "faction_group": "General Clan",
+    "formation_type": "Vehicle and Fighter",
+    "organization": "Point",
+    "definition": "2 units",
+    "command_rank": "Point Commander"
+  },
+  {
+    "faction_group": "General Clan",
+    "formation_type": "Vehicle and Fighter",
+    "organization": "Star",
+    "definition": "5 Points",
+    "command_rank": "Star Commander"
+  },
+  {
+    "name": "Superiority Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% Interceptor or Fast Dogfighter",
+    "brief_bonus_ability_description": "Choose from multiple SPAs"
+  },
+  {
+    "name": "Electronic Warfare Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% must mount a probe, ECM or TAG",
+    "brief_bonus_ability_description": "Gain Communications Disruption SPA"
+  },
+  {
+    "name": "Fire Support Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% Fire Support; other 50% Dogfighter",
+    "brief_bonus_ability_description": "Choose from multiple SPAs"
+  },
+  {
+    "name": "Interceptor Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% Interceptor",
+    "brief_bonus_ability_description": "Choose from multiple SPAs"
+  },
+  {
+    "name": "Strike Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% Attack or Dogfighter",
+    "brief_bonus_ability_description": "Choose from multiple SPAs"
+  },
+  {
+    "name": "Transport Squadron",
+    "ideal_role": "None",
+    "brief_requirements": "50% Transport",
+    "brief_bonus_ability_description": "Choose from multiple SPAs"
+  }
+]

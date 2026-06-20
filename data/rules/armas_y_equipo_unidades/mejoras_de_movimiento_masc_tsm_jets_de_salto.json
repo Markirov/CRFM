@@ -1,0 +1,56 @@
+[
+  {
+    "enhancement": "Jump Jets (Standard)",
+    "attacker_to_hit_modifier": 3,
+    "heat_per_hex": 1,
+    "minimum_heat": 3
+  },
+  {
+    "enhancement": "Jump Jets (Improved)",
+    "attacker_to_hit_modifier": 3,
+    "heat_per_2_hexes": 1,
+    "minimum_heat": 3
+  },
+  {
+    "enhancement": "MASC",
+    "activation_roll_2d6": ">=3",
+    "failure_roll_2d6": 2,
+    "speed_effect": "Running MP = Walking MP * 2",
+    "consecutive_use_failure_chance": [
+      {
+        "turn": 1,
+        "failure_roll_2d6": "<=2"
+      },
+      {
+        "turn": 2,
+        "failure_roll_2d6": "<=4"
+      },
+      {
+        "turn": 3,
+        "failure_roll_2d6": "<=6"
+      },
+      {
+        "turn": 4,
+        "failure_roll_2d6": "<=10"
+      },
+      {
+        "turn": 5,
+        "failure_roll_2d6": "Automatic"
+      }
+    ]
+  },
+  {
+    "enhancement": "TSM (Standard)",
+    "activation_heat_level": ">=9",
+    "walking_mp_bonus": 2,
+    "lifting_capacity_multiplier": 2,
+    "physical_damage_multiplier": 2
+  },
+  {
+    "enhancement": "TSM (Industrial)",
+    "activation_heat_level": "Always on",
+    "walking_mp_bonus": 0,
+    "physical_attack_to_hit_modifier": 2,
+    "piloting_skill_roll_modifier": 1
+  }
+]

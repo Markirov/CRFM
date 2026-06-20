@@ -7,7 +7,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Trash2, Loader } from 'lucide-react';
+import { Search, Trash2, Loader, AlertTriangle } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
@@ -135,6 +135,42 @@ function InventarioTab({ items, loading, refresh }: {
     void refresh();
   };
 
+  const handleVenderRestos = async (item: HangarItem) => {
+    const amountStr = window.prompt(`Valor actual estimado: ${fmt(item.valorActual)}.\nIntroduzca el valor de venta de los restos (₡):`, Math.round(item.valorActual * 0.2).toString());
+    if (!amountStr) return;
+    const amount = parseInt(amountStr, 10);
+    if (isNaN(amount) || amount < 0) return;
+    
+    if (!window.confirm(`¿Vender los restos de ${item.chassis} ${item.model} por ${fmt(amount)}?`)) return;
+    
+    // Asiento
+    await commitLibroEntryAndTreasury({
+      type: 'ingreso',
+      amount,
+      concepto: `Venta restos: ${item.chassis} ${item.model}`,
+      tags: ['mech', 'restos'],
+      campaignDate: getCampaignDateISO(useAppStore.getState().campaign?.campaignYear, useAppStore.getState().campaign?.campaignMonth),
+      relatedMechId: item.id
+    });
+    
+    // Borrar hangar
+    await deleteHangarItem(item.id);
+    void refresh();
+  };
+
+  const handleReparar = async (item: HangarItem) => {
+    // Si queremos reparar todo, solo limpiamos el sessionActiva y resetamos damagePersist
+    if (!window.confirm(`¿Marcar el ${item.chassis} ${item.model} como reparado en el inventario? (Recuerda pagar la reparación en Taller)`)) return;
+    await saveHangarItem({
+      ...item,
+      estado: 'operativo',
+      estadoPct: 100,
+      damagePersist: undefined,
+      sessionActiva: undefined,
+    });
+    void refresh();
+  };
+
   return (
     <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
       <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3">
@@ -183,6 +219,14 @@ function InventarioTab({ items, loading, refresh }: {
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-center">
                       {(() => {
+                        if (it.estado === 'destruido' || it.estadoPct === 0) {
+                          return (
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest text-error border-error/40 bg-error/5">
+                              <AlertTriangle className="w-3 h-3" />
+                              <span className="font-bold">DESTRUIDO</span>
+                            </span>
+                          );
+                        }
                         const pct = it.estadoPct ?? 100;
                         const color = pct >= 75 ? 'text-green-400 border-green-400/40 bg-green-400/5'
                                      : pct >= 40 ? 'text-amber-400 border-amber-400/40 bg-amber-400/5'
@@ -196,22 +240,33 @@ function InventarioTab({ items, loading, refresh }: {
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-right text-primary-container">{fmt(it.valorActual)}</td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20">
-                      <div className="flex items-center gap-1.5">
-                        <span className={`inline-block w-1.5 h-1.5 rounded-full ${taken ? 'bg-green-400' : 'bg-outline-variant/40'}`} />
-                        <select
-                          value={it.pilotoIdx ?? ''}
-                          onChange={e => handleAssign(it, e.target.value === '' ? undefined : Number(e.target.value))}
-                          className={`bg-surface-container border px-1.5 py-0.5 font-mono text-[10px] ${
-                            taken ? 'border-green-400/40 text-green-400' : 'border-outline-variant/40 text-secondary/60'
-                          }`}
-                          title={taken ? `Asignado a ${pilotName}` : 'Sin asignar (reserva)'}
-                        >
-                          <option value="">— Reserva —</option>
-                          {roster.map((r, i) => (
-                            <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
-                          ))}
-                        </select>
-                      </div>
+                      {(it.estado === 'destruido' || it.estadoPct === 0) ? (
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => handleVenderRestos(it)} className="px-2 py-1 border border-outline-variant/40 bg-surface-container hover:bg-surface-container-high text-[9px] uppercase tracking-widest text-error transition-colors">
+                            Vender Restos
+                          </button>
+                          <button onClick={() => handleReparar(it)} className="px-2 py-1 border border-outline-variant/40 bg-surface-container hover:bg-surface-container-high text-[9px] uppercase tracking-widest text-green-400 transition-colors">
+                            Limpiar Daño
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5">
+                          <span className={`inline-block w-1.5 h-1.5 rounded-full ${taken ? 'bg-green-400' : 'bg-outline-variant/40'}`} />
+                          <select
+                            value={it.pilotoIdx ?? ''}
+                            onChange={e => handleAssign(it, e.target.value === '' ? undefined : Number(e.target.value))}
+                            className={`bg-surface-container border px-1.5 py-0.5 font-mono text-[10px] ${
+                              taken ? 'border-green-400/40 text-green-400' : 'border-outline-variant/40 text-secondary/60'
+                            }`}
+                            title={taken ? `Asignado a ${pilotName}` : 'Sin asignar (reserva)'}
+                          >
+                            <option value="">— Reserva —</option>
+                            {roster.map((r, i) => (
+                              <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-secondary/60 text-[9px]">{it.fechaCompra}</td>
                   </tr>

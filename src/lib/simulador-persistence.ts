@@ -180,3 +180,108 @@ export function syncStatusLabel(status: SyncStatus, lastSync?: string | null, er
     case 'offline': return 'Sin sesión activa';
   }
 }
+
+// ── Integración Hangar ──────────────────────────────────────────────────
+
+import type { MechSession, MechState } from './combat-types';
+import type { MechRepairDamage } from './repair-engine';
+import type { HangarItem } from './hangar-types';
+
+/** Extrae el daño actual de la sesión a un formato persistible en el hangar. */
+export function extractDamageFromSession(state: MechState, session: MechSession): {
+  estadoPct: number;
+  damagePersist: MechRepairDamage;
+  sessionActiva: NonNullable<HangarItem['sessionActiva']>;
+} {
+  const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+  const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+
+  let armorMax = 0, armorCur = 0;
+  for (const k of armorLocs) {
+    armorMax += (state.armor as any)[k] ?? 0;
+    armorCur += session.armor[k] ?? 0;
+  }
+
+  let isMax = 0, isCur = 0;
+  for (const k of isLocs) {
+    isMax += (state.is as any)[k] ?? 0;
+    isCur += session.is[k] ?? 0;
+  }
+
+  const total = armorMax + isMax;
+  const estadoPct = session.destroyed ? 0 : (total > 0 ? Math.round(((armorCur + isCur) / total) * 100) : 100);
+
+  // Contar críticos de reactor y gyro
+  let engineHits = 0;
+  let gyroHits = 0;
+  let cockpitHit = false;
+  let lifeSupportHits = 0;
+  let sensorsHits = 0;
+
+  for (const loc of Object.keys(session.crits || {})) {
+    for (const c of session.crits[loc]) {
+      if (c.hit) {
+        const n = c.name.toLowerCase();
+        if (n.includes('engine') || n.includes('reactor')) engineHits++;
+        if (n.includes('gyro')) gyroHits++;
+        if (n.includes('cockpit') || n.includes('cabina')) cockpitHit = true;
+        if (n.includes('life support') || n.includes('soporte vital')) lifeSupportHits++;
+        if (n.includes('sensors') || n.includes('sensores')) sensorsHits++;
+      }
+    }
+  }
+
+  const damagePersist: MechRepairDamage = {
+    reactor: Math.min(3, engineHits),
+    gyro: Math.min(2, gyroHits),
+    cabinaDañada: cockpitHit,
+    soporteVida: lifeSupportHits,
+    sensores: sensorsHits,
+    estructura: Math.max(0, isMax - isCur),
+    blindaje: Math.max(0, armorMax - armorCur),
+    miomero: 0,
+    retros: 0,
+    radiadores: 0,
+    actuadores: {},
+  };
+
+  const sessionActiva = {
+    armor: { ...session.armor },
+    is: { ...session.is },
+    crits: JSON.parse(JSON.stringify(session.crits)),
+    ammoBins: JSON.parse(JSON.stringify(session.ammoBins)),
+    destroyed: session.destroyed,
+    destroyedReason: session.destroyedReason,
+  };
+
+  return { estadoPct, damagePersist, sessionActiva };
+}
+
+/** Aplica el daño guardado en el hangar a una sesión recién instanciada. */
+export function applyDamageToSession(session: MechSession, item: HangarItem): void {
+  if (!item.sessionActiva) return;
+  const src = item.sessionActiva;
+  
+  // Copia profunda de los campos persistidos
+  if (src.armor) session.armor = { ...src.armor };
+  if (src.is) session.is = { ...src.is };
+  if (src.crits) session.crits = JSON.parse(JSON.stringify(src.crits));
+  if (src.ammoBins) {
+    // Restaurar los consumos de munición
+    for (let i = 0; i < src.ammoBins.length; i++) {
+      if (session.ammoBins[i] && src.ammoBins[i]) {
+        session.ammoBins[i].current = src.ammoBins[i].current;
+      }
+    }
+    // Recalcular grupos
+    session.ammoGroups = {};
+    session.ammoGroupMax = {};
+    for (const b of session.ammoBins) {
+      const key = `${b.loc}::${b.familyKey}`;
+      session.ammoGroups[key]   = (session.ammoGroups[key]   || 0) + b.current;
+      session.ammoGroupMax[key] = (session.ammoGroupMax[key] || 0) + b.max;
+    }
+  }
+  session.destroyed = src.destroyed || false;
+  session.destroyedReason = src.destroyedReason || '';
+}

@@ -42,6 +42,7 @@ export function RolesPanel() {
   const [saving, setSaving]         = useState<string | null>(null);
   const [usersError, setUsersError] = useState<string | null>(null);
   const [newEmail, setNewEmail]     = useState('');
+  const [newAlias, setNewAlias]     = useState('');
   const [newRole, setNewRole]       = useState<NonNullable<UserRole>>('pj');
   const [addBusy, setAddBusy]       = useState(false);
   const [addError, setAddError]     = useState<string | null>(null);
@@ -70,10 +71,20 @@ export function RolesPanel() {
   const handleChangeRole = async (entry: RoleEntry, role: NonNullable<UserRole>) => {
     setSaving(entry.email); setUsersError(null);
     try {
-      // entry.uid = doc.id real → updates al mismo doc, sin duplicar
-      await setRole(entry.email, role, entry.uid);
+      await setRole(entry.email, role, entry.uid, entry.alias);
       setRoles(prev => prev.map(r => r.uid === entry.uid ? { ...r, role } : r));
     } catch (e: any) { setUsersError(e?.message ?? 'Error'); }
+    setSaving(null);
+  };
+
+  const handleChangeAlias = async (entry: RoleEntry) => {
+    const alias = prompt(`Alias para ${entry.email}:`, entry.alias || '');
+    if (alias === null || alias === entry.alias) return;
+    setSaving(entry.email); setUsersError(null);
+    try {
+      await setRole(entry.email, entry.role, entry.uid, alias);
+      setRoles(prev => prev.map(r => r.uid === entry.uid ? { ...r, alias } : r));
+    } catch (e: any) { setUsersError(e?.message ?? 'Error actualizando alias'); }
     setSaving(null);
   };
 
@@ -96,8 +107,9 @@ export function RolesPanel() {
       // Si ya existe entry con este email (con docId legacy distinto al emailKey),
       // reutiliza su docId para no crear duplicado.
       const existing = roles.find(r => r.email?.toLowerCase() === email);
-      await setRole(email, newRole, existing?.uid);
+      await setRole(email, newRole, existing?.uid, newAlias);
       setNewEmail('');
+      setNewAlias('');
       await loadUsers();
     }
     catch (e: any) { setAddError(e?.message ?? 'Error'); }
@@ -201,7 +213,15 @@ export function RolesPanel() {
           <div className="space-y-1.5">
             {roles.map(entry => (
               <div key={entry.uid} className="flex items-center gap-3 py-1.5 border-b border-outline-variant/10 last:border-0">
-                <span className="font-mono text-[10px] text-on-surface flex-1 truncate">{entry.email}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="font-mono text-[10px] text-on-surface truncate flex items-center gap-2">
+                    {entry.email}
+                    <button disabled={saving === entry.email} onClick={() => handleChangeAlias(entry)}
+                      className="text-primary hover:underline text-[9px] uppercase opacity-70 hover:opacity-100 transition-opacity">
+                      [Alias: {entry.alias || 'Ninguno'}]
+                    </button>
+                  </div>
+                </div>
                 <div className="flex gap-1">
                   {(['admin', 'dm', 'pj'] as const).map(r => (
                     <button key={r} disabled={saving === entry.email} onClick={() => handleChangeRole(entry, r)}
@@ -230,6 +250,9 @@ export function RolesPanel() {
           <input type="email" placeholder="email@ejemplo.com" value={newEmail}
             onChange={e => setNewEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAdd()}
             className="flex-1 h-8 bg-background border border-outline-variant/25 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-primary-container" />
+          <input type="text" placeholder="Alias (Opcional)" value={newAlias}
+            onChange={e => setNewAlias(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAdd()}
+            className="w-28 h-8 bg-background border border-outline-variant/25 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-primary-container" />
           <select value={newRole} onChange={e => setNewRole(e.target.value as NonNullable<UserRole>)}
             className="h-8 bg-background border border-outline-variant/25 px-2 font-mono text-[10px] text-on-surface focus:outline-none focus:border-primary-container appearance-none cursor-pointer">
             <option value="pj">PJ</option>

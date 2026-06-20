@@ -1,0 +1,12 @@
+[
+  {
+    "rule_set": "Opcional (Honor del Clan)",
+    "condition": "El atacante puja y retira cualquier porción de su fuerza",
+    "initiative_bonus": 1
+  },
+  {
+    "rule_set": "Opcional (Honor del Clan)",
+    "condition": "El atacante puja y retira la mitad o más de su fuerza",
+    "initiative_bonus": 2
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "type": "Sistema de Blindaje Furtivo ('Mech)",
+    "short_range_modifier": 0,
+    "medium_range_modifier": 1,
+    "long_range_modifier": 2,
+    "heat_generation": 10
+  },
+  {
+    "type": "Blindaje Furtivo Básico (Infantería)",
+    "short_range_modifier": 0,
+    "medium_range_modifier": 1,
+    "long_range_modifier": 2
+  },
+  {
+    "type": "Blindaje Furtivo Mejorado (Infantería)",
+    "short_range_modifier": 1,
+    "medium_range_modifier": 2,
+    "long_range_modifier": 3
+  },
+  {
+    "type": "Blindaje Furtivo Prototipo (Infantería)",
+    "short_range_modifier": 0,
+    "medium_range_modifier": 1,
+    "long_range_modifier": 2
+  },
+  {
+    "type": "Blindaje Furtivo Estándar (Infantería)",
+    "short_range_modifier": 1,
+    "medium_range_modifier": 1,
+    "long_range_modifier": 2
+  },
+  {
+    "type": "Blindaje Mimético (Infantería)",
+    "modifiers_by_hexes_moved": [
+      {
+        "hexes": "0",
+        "modifier": 3
+      },
+      {
+        "hexes": "1",
+        "modifier": 2
+      },
+      {
+        "hexes": "2",
+        "modifier": 1
+      },
+      {
+        "hexes": "3+",
+        "modifier": 0
+      }
+    ]
+  }
+]

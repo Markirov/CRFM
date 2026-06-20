@@ -1,0 +1,18 @@
+[
+  {
+    "threshold_type": "Secondary",
+    "effect": "+1 modifier to all Piloting and Gunnery target numbers. Cumulative: +1 for every 3 additional turns spent beyond.",
+    "unprotected_crew_thrust_points": 6,
+    "unprotected_crew_g_force": 3,
+    "protected_crew_thrust_points": 12,
+    "protected_crew_g_force": 6
+  },
+  {
+    "threshold_type": "Primary",
+    "effect": "Crew blacks out until the End Phase of the following game turn. Unit continues on same heading and velocity.",
+    "unprotected_crew_thrust_points": 12,
+    "unprotected_crew_g_force": 6,
+    "protected_crew_thrust_points": 22,
+    "protected_crew_g_force": 11
+  }
+]

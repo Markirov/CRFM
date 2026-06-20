@@ -1,0 +1,335 @@
+[
+  {
+    "table": "DamageNotation",
+    "ap_code": "B",
+    "ap_effect": "Ballistic",
+    "bd_code": "A",
+    "bd_effect": "Area-Effect"
+  },
+  {
+    "table": "DamageNotation",
+    "ap_code": "E",
+    "ap_effect": "Energy",
+    "bd_code": "B",
+    "bd_effect": "Burst-Fire"
+  },
+  {
+    "table": "DamageNotation",
+    "ap_code": "M",
+    "ap_effect": "Melee",
+    "bd_code": "C",
+    "bd_effect": "Continuous Damage"
+  },
+  {
+    "table": "DamageNotation",
+    "ap_code": "S",
+    "ap_effect": "Special",
+    "bd_code": "D",
+    "bd_effect": "Subduing/Disabling Damage"
+  },
+  {
+    "table": "DamageNotation",
+    "ap_code": "X",
+    "ap_effect": "Explosive",
+    "bd_code": "S",
+    "bd_effect": "Splash Damage"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Ranged (Standard)*",
+    "damage_value": "Weapon Damage + (Attacker’s MoS x 0.25)**"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Ranged (Burst-Fire)",
+    "damage_value": "Weapon Damage + (Attacker’s MoS)"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Melee (Unarmed)",
+    "damage_value": "(Winner’s STR ÷ 4)† + (Winner’s MoS x 0.25)†"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Melee (Armed)",
+    "damage_value": "(Weapon Damage) + (Winner’s STR ÷ 4)† + (Winner’s MoS x 0.25)†"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Falling (Hard Surface)",
+    "damage_value": "0.2 x (Falling Distance in meters)††"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Falling (Soft Surface)",
+    "damage_value": "0.1 x (Falling Distance in meters)††"
+  },
+  {
+    "table": "StandardDamage",
+    "attack_type": "Area-Effect",
+    "damage_value": "Weapon Damage – (Distance from Impact in meters)**"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Damage-Based Fatigue",
+    "condition": "Non-Subduing Damage",
+    "fatigue_accumulation": "+1 per Hit"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Damage-Based Fatigue",
+    "condition": "Subduing Weapon Damage",
+    "fatigue_accumulation": "+(Weapon Damage) per Hit"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Damage-Based Fatigue",
+    "condition": "Subduing Melee Damage",
+    "fatigue_accumulation": "+(Melee Attack Damage) per Hit"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Continuous Movement Fatigue*",
+    "condition": "Walking",
+    "fatigue_accumulation": "+1 per BOD Minutes"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Continuous Movement Fatigue*",
+    "condition": "Running/Crawling",
+    "fatigue_accumulation": "+3 per BOD Minutes"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Continuous Movement Fatigue*",
+    "condition": "Swimming/Climbing",
+    "fatigue_accumulation": "+1 per BOD Turns"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Continuous Movement Fatigue*",
+    "condition": "Sprinting/Jumping",
+    "fatigue_accumulation": "+1 per Turn"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Continuous Movement Fatigue*",
+    "condition": "Encumbered Movement",
+    "fatigue_accumulation": "+1 per BOD Minutes"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Exertion",
+    "condition": "Character Requires STR Attribute Check",
+    "fatigue_accumulation": "+1 per Turn"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Fatigue Effect Multipliers",
+    "condition": "High/Low Gravity**",
+    "fatigue_accumulation": "x Gravity (G) Rating†"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Fatigue Effect Multipliers",
+    "condition": "Glass Jaw/Handicap Trait",
+    "fatigue_accumulation": "x 2†"
+  },
+  {
+    "table": "FatigueAccumulation",
+    "situation": "Fatigue Effect Multipliers",
+    "condition": "Toughness/Fit Trait",
+    "fatigue_accumulation": "x 0.5†"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "STR",
+    "suggested_effect": "Critically enfeebled (Requires full mobility and life support)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "BOD",
+    "suggested_effect": "Character killed"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "DEX",
+    "suggested_effect": "Extensive nerve damage (No actions involving hands)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "RFL",
+    "suggested_effect": "Paralyzed from the neck down (Requires mobility and life support)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "INT",
+    "suggested_effect": "Major brain damage (All Skills reduced to Untrained)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "WIL",
+    "suggested_effect": "Psychosis (Character receives random Compulsion Trait at maximum value)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "CHA",
+    "suggested_effect": "Crippling depression (Character receives Combat Paralysis Trait; reduced all CHA-based Skills to Untrained)"
+  },
+  {
+    "table": "ZeroAttributeEffects",
+    "attribute": "EDG",
+    "suggested_effect": "Out of luck (Must buy back 1 point with Experience before EDG can restore normally)"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Head",
+    "damage_multiplier": "x2",
+    "combat_effects": "Roll 1D6: 1-4 = Dazed; 5 = Deafened; 6 = Blinded"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Chest",
+    "damage_multiplier": "x1",
+    "combat_effects": "Roll 1D6: 1-3 = No added effect; 4 = Dazed; 5 = Knockdown; 6 = Internal Damage"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Abdomen",
+    "damage_multiplier": "x1",
+    "combat_effects": "Roll 1D6: 1-2 = No added effect; 3-4 = Dazed; 5 = Knockdown; 6 = Internal Damage"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Arm",
+    "damage_multiplier": "x0.5",
+    "combat_effects": "All actions using affected arm suffer –1 roll modifier (max –2)†"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Leg",
+    "damage_multiplier": "x0.75",
+    "combat_effects": "Knockdown; reduce all movement by 2 meters/turn (to a min. of 0 meters/turn)†"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Hand*",
+    "damage_multiplier": "x0.25",
+    "combat_effects": "All actions using affected hand suffer –2 roll modifier (max –4)†"
+  },
+  {
+    "table": "LocationEffects",
+    "location": "Foot",
+    "damage_multiplier": "x0.25",
+    "combat_effects": "Knockdown; reduce all movement by 1 meter/turn (to a min. of 0 meters/turn)†"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Dazed",
+    "description": "Character suffers 1D6 additional Fatigue damage points"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Deafened",
+    "description": "Character suffers critical damage to ear equal to Level 3 Poor Hearing (see p. 122)*"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Blinded",
+    "description": "Character suffers critical damage to eye equal to Level 3 Poor Vision (see p. 122)*"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Internal Damage",
+    "description": "Character suffers 1D6 additional Standard damage points (check for bleeding)*"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Knockdown",
+    "description": "Character must make a RFL Attribute Check to avoid falling, applying Injury modifiers"
+  },
+  {
+    "table": "SpecificWoundEffects",
+    "effect": "Shattered Limb",
+    "description": "Character cannot use the affected limb (check for bleeding)*"
+  },
+  {
+    "table": "SurgerySuccess",
+    "surgery_mos": "+3 or better",
+    "injury_recovery_level": "Full Recovery"
+  },
+  {
+    "table": "SurgerySuccess",
+    "surgery_mos": "+0 to +2",
+    "injury_recovery_level": "Partial Recovery"
+  },
+  {
+    "table": "SurgerySuccess",
+    "surgery_mos": "-1 to -2",
+    "injury_recovery_level": "Limited Functionality"
+  },
+  {
+    "table": "SurgerySuccess",
+    "surgery_mos": "-3 to -5",
+    "injury_recovery_level": "Permanent Effect"
+  },
+  {
+    "table": "SurgerySuccess",
+    "surgery_mos": "-6 or lower",
+    "injury_recovery_level": "Patient suffers additional 1D6 damage from bleeding*"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarrior",
+    "event": "Damage from Falling",
+    "damage_ap_bd": "1M/3"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarrior",
+    "event": "Internal Ammunition Explosion",
+    "damage_ap_bd": "0E/4D*"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarrior",
+    "event": "Center Torso Destroyed by Artillery",
+    "damage_ap_bd": "10X/20"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarriors and Fighter Pilots",
+    "event": "Crew Hit/Cockpit Location Suffers Damage",
+    "damage_ap_bd": "1B/3"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarriors and Fighter Pilots",
+    "event": "Unit Overheats by 15+ points (w/Life Support Damage)",
+    "damage_ap_bd": "0E/2D*"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "MechWarriors and Fighter Pilots",
+    "event": "Unit Overheats by 25+ points (w/Life Support Damage)",
+    "damage_ap_bd": "0E/4D*"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "Conventional Vehicle Crew",
+    "event": "Critical Hit: Commander/Driver Hit",
+    "damage_ap_bd": "5B/4 (to Commander/Driver)"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "Conventional Vehicle Crew",
+    "event": "Critical Hit: Crew Stunned†",
+    "damage_ap_bd": "0M/5D* (to all Crew)"
+  },
+  {
+    "table": "PilotDamage",
+    "category": "Conventional Vehicle Crew",
+    "event": "Crew Killed†",
+    "damage_ap_bd": "5B/10 (to all Crew)"
+  }
+]

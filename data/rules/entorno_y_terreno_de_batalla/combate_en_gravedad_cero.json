@@ -1,0 +1,289 @@
+[
+  {
+    "table_name": "Coste de Cambio de Orientación (Empuje)",
+    "headers": [
+      "Velocidad Actual",
+      "Coste en Puntos de Empuje"
+    ],
+    "rows": [
+      {
+        "Velocidad Actual": "0-2",
+        "Coste en Puntos de Empuje": "1"
+      },
+      {
+        "Velocidad Actual": "3-5",
+        "Coste en Puntos de Empuje": "2"
+      },
+      {
+        "Velocidad Actual": "6-7",
+        "Coste en Puntos de Empuje": "3"
+      },
+      {
+        "Velocidad Actual": "8-9",
+        "Coste en Puntos de Empuje": "4"
+      },
+      {
+        "Velocidad Actual": "10",
+        "Coste en Puntos de Empuje": "5"
+      },
+      {
+        "Velocidad Actual": "11",
+        "Coste en Puntos de Empuje": "6"
+      },
+      {
+        "Velocidad Actual": "12+",
+        "Coste en Puntos de Empuje": "+1 por punto"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Alcance de Armas Aeroespaciales",
+    "headers": [
+      "Tramo de Alcance",
+      "Hexágonos (Estándar)",
+      "Hexágonos (Capital)"
+    ],
+    "rows": [
+      {
+        "Tramo de Alcance": "Corto",
+        "Hexágonos (Estándar)": "0–6",
+        "Hexágonos (Capital)": "0–12"
+      },
+      {
+        "Tramo de Alcance": "Medio",
+        "Hexágonos (Estándar)": "7–12",
+        "Hexágonos (Capital)": "13–24"
+      },
+      {
+        "Tramo de Alcance": "Largo",
+        "Hexágonos (Estándar)": "13–20",
+        "Hexágonos (Capital)": "25–40"
+      },
+      {
+        "Tramo de Alcance": "Extremo",
+        "Hexágonos (Estándar)": "21–25",
+        "Hexágonos (Capital)": "41–50"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Modificadores de Ataque Aeroespacial (Combate Espacial)",
+    "headers": [
+      "Condición",
+      "Modificador"
+    ],
+    "rows": [
+      {
+        "Condición": "Alcance Corto",
+        "Modificador": "+0"
+      },
+      {
+        "Condición": "Alcance Medio",
+        "Modificador": "+2"
+      },
+      {
+        "Condición": "Alcance Largo",
+        "Modificador": "+4"
+      },
+      {
+        "Condición": "Alcance Extremo",
+        "Modificador": "+6"
+      },
+      {
+        "Condición": "Ángulo de Ataque: Popa",
+        "Modificador": "+0"
+      },
+      {
+        "Condición": "Ángulo de Ataque: Proa",
+        "Modificador": "+1"
+      },
+      {
+        "Condición": "Ángulo de Ataque: Lado",
+        "Modificador": "+2"
+      },
+      {
+        "Condición": "Objetivo secundario en arco frontal",
+        "Modificador": "+1"
+      },
+      {
+        "Condición": "Objetivo secundario en arco lateral o trasero",
+        "Modificador": "+2"
+      },
+      {
+        "Condición": "Atacante excedió Empuje Seguro este turno",
+        "Modificador": "+2"
+      },
+      {
+        "Condición": "Atacante está fuera de control",
+        "Modificador": "+2"
+      },
+      {
+        "Condición": "Atacante tiene daño de piloto/tripulación",
+        "Modificador": "+1 por caja marcada"
+      },
+      {
+        "Condición": "Atacante tiene daño crítico en CIC o FCS",
+        "Modificador": "+2 por caja marcada"
+      },
+      {
+        "Condición": "Atacante tiene daño crítico en sensores",
+        "Modificador": "+1 por caja marcada, o +5 si están destruidos"
+      },
+      {
+        "Condición": "Objetivo está evadiendo",
+        "Modificador": "Variable (ver tabla de Acción Evasiva)"
+      },
+      {
+        "Condición": "Arma es de escala capital vs. unidad de menos de 500 toneladas",
+        "Modificador": "+5"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Ataques de Embestida",
+    "headers": [
+      "Elemento",
+      "Modificador"
+    ],
+    "rows": [
+      {
+        "Elemento": "Número Base para Impactar",
+        "Modificador": "6 + (Hab. Pilotaje objetivo – Hab. Pilotaje atacante)"
+      },
+      {
+        "Elemento": "Daño existente del atacante: Sensores",
+        "Modificador": "+1"
+      },
+      {
+        "Elemento": "Daño existente del atacante: Aviónica",
+        "Modificador": "+1 por caja"
+      },
+      {
+        "Elemento": "Objetivo es Caza o Nave Pequeña",
+        "Modificador": "+4"
+      },
+      {
+        "Elemento": "Objetivo es Nave de Descenso",
+        "Modificador": "+2"
+      },
+      {
+        "Elemento": "Objetivo no puede gastar empuje",
+        "Modificador": "-2"
+      },
+      {
+        "Elemento": "Atacante es Caza o Nave Pequeña",
+        "Modificador": "-2"
+      },
+      {
+        "Elemento": "Atacante es Nave de Descenso",
+        "Modificador": "-1"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Localización de Impacto de Unidades Aeroespaciales",
+    "headers": [
+      "Tirada 2D6",
+      "Proa (Caza)",
+      "Popa (Caza)",
+      "Lado (Caza)",
+      "Proa (Nave Descenso/Pequeña)",
+      "Popa (Nave Descenso/Pequeña)"
+    ],
+    "rows": [
+      {
+        "Tirada 2D6": "2",
+        "Proa (Caza)": "Proa/Arma",
+        "Popa (Caza)": "Popa/Arma",
+        "Lado (Caza)": "Proa/Arma",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Tripulación",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Soporte Vital"
+      },
+      {
+        "Tirada 2D6": "3",
+        "Proa (Caza)": "Proa/Sensores",
+        "Popa (Caza)": "Popa/Disipador de Calor",
+        "Lado (Caza)": "Ala/Tren de Aterrizaje",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Aviónica",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Control"
+      },
+      {
+        "Tirada 2D6": "4",
+        "Proa (Caza)": "Ala Derecha/Disipador de Calor",
+        "Popa (Caza)": "Ala Derecha/Combustible",
+        "Lado (Caza)": "Proa/Sensores",
+        "Proa (Nave Descenso/Pequeña)": "Lado Derecho/Arma",
+        "Popa (Nave Descenso/Pequeña)": "Lado Derecho/Arma"
+      },
+      {
+        "Tirada 2D6": "5",
+        "Proa (Caza)": "Ala Derecha/Arma",
+        "Popa (Caza)": "Ala Derecha/Arma",
+        "Lado (Caza)": "Proa/Tripulación",
+        "Proa (Nave Descenso/Pequeña)": "Lado Derecho/Propulsor",
+        "Popa (Nave Descenso/Pequeña)": "Lado Derecho/Puerta"
+      },
+      {
+        "Tirada 2D6": "6",
+        "Proa (Caza)": "Proa/Aviónica",
+        "Popa (Caza)": "Popa/Motor",
+        "Lado (Caza)": "Ala/Arma",
+        "Proa (Nave Descenso/Pequeña)": "Proa/FCS",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Motor"
+      },
+      {
+        "Tirada 2D6": "7",
+        "Proa (Caza)": "Proa/Control",
+        "Popa (Caza)": "Popa/Control",
+        "Lado (Caza)": "Ala/Aviónica",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Arma",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Arma"
+      },
+      {
+        "Tirada 2D6": "8",
+        "Proa (Caza)": "Proa/FCS",
+        "Popa (Caza)": "Popa/Motor",
+        "Lado (Caza)": "Ala/Bomba",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Control",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Anclaje de Atraque"
+      },
+      {
+        "Tirada 2D6": "9",
+        "Proa (Caza)": "Ala Izquierda/Arma",
+        "Popa (Caza)": "Ala Izquierda/Arma",
+        "Lado (Caza)": "Popa/Control",
+        "Proa (Nave Descenso/Pequeña)": "Lado Izquierdo/Propulsor",
+        "Popa (Nave Descenso/Pequeña)": "Lado Izquierdo/Puerta"
+      },
+      {
+        "Tirada 2D6": "10",
+        "Proa (Caza)": "Ala Izquierda/Disipador de Calor",
+        "Popa (Caza)": "Ala Izquierda/Combustible",
+        "Lado (Caza)": "Popa/Motor",
+        "Proa (Nave Descenso/Pequeña)": "Lado Izquierdo/Arma",
+        "Popa (Nave Descenso/Pequeña)": "Lado Izquierdo/Arma"
+      },
+      {
+        "Tirada 2D6": "11",
+        "Proa (Caza)": "Proa/Tren de Aterrizaje",
+        "Popa (Caza)": "Popa/Disipador de Calor",
+        "Lado (Caza)": "Ala/Tren de Aterrizaje",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Sensores",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Tren de Aterrizaje"
+      },
+      {
+        "Tirada 2D6": "12",
+        "Proa (Caza)": "Proa/Arma",
+        "Popa (Caza)": "Popa/Arma",
+        "Lado (Caza)": "Popa/Arma",
+        "Proa (Nave Descenso/Pequeña)": "Proa/Brazo K-F",
+        "Popa (Nave Descenso/Pequeña)": "Popa/Combustible"
+      }
+    ]
+  },
+  {
+    "Tabla": "Modificadores de Eyección",
+    "Condiciones Planetarias": "Gravedad Cero",
+    "Modificador": "+3"
+  }
+]

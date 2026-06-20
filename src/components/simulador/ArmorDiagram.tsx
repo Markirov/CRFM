@@ -111,13 +111,22 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
             const armorCols = Math.ceil(Math.sqrt(armorMax));
             const isCols = isMax > 0 ? Math.ceil(Math.sqrt(isMax)) : armorCols;
 
+            const isMechDestroyed = (session.is['CT'] ?? 0) <= 0;
+            const isUnclickable = isMechDestroyed;
+
             return (
               <div key={zone.armorKey}
-                className={`absolute z-10 transition-all duration-200 ${isSelected ? 'z-20' : 'hover:z-20'}`}
+                className={`absolute z-10 transition-all duration-200 ${isSelected ? 'z-20' : 'hover:z-20'} ${isUnclickable ? 'opacity-50 grayscale' : ''}`}
                 style={{ top: `${zone.top}%`, left: `${zone.left}%`, transform: 'translate(-50%, -50%)' }}
-                onClick={() => onSectionClick(zone.armorKey)}
+                onClick={() => {
+                  if (isMechDestroyed) {
+                    alert('El mech está destruido (Torso Central a 0). Ya no puedes asignarle más daño.');
+                    return;
+                  }
+                  onSectionClick(zone.armorKey);
+                }}
               >
-                <div className={`cursor-pointer p-1.5 transition-all ${
+                <div className={`${isUnclickable ? 'cursor-not-allowed' : 'cursor-pointer'} p-1.5 transition-all ${
                   isSelected
                     ? 'bg-transparent border border-primary shadow-[0_0_12px_rgba(223,186,116,0.25)]'
                     : 'bg-transparent border border-outline-variant/25 hover:border-secondary/40'

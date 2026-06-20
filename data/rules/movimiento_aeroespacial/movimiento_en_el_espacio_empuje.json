@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Tabla de Coste de Cambio de Orientación",
+    "headers": [
+      "Velocidad Actual",
+      "Coste de Puntos de Empuje"
+    ],
+    "rows": [
+      [
+        "0-2",
+        1
+      ],
+      [
+        "3-5",
+        2
+      ],
+      [
+        "6-7",
+        3
+      ],
+      [
+        "8-9",
+        4
+      ],
+      [
+        "10",
+        5
+      ],
+      [
+        "11",
+        6
+      ],
+      [
+        "12+",
+        "+1 por punto"
+      ]
+    ]
+  }
+]

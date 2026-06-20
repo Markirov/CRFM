@@ -1,0 +1,448 @@
+[
+  {
+    "table_name": "Master Skills List",
+    "skills": [
+      {
+        "skill_name": "Acrobatics",
+        "linked_attributes": "RFL",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Acting",
+        "linked_attributes": "CHA",
+        "tn_c": "8 / CB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Administration",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Animal Handling",
+        "linked_attributes": "WIL",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Appraisal",
+        "linked_attributes": "INT",
+        "tn_c": "8 / CB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Archery",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Art [Basic Tier]",
+        "linked_attributes": "DEX",
+        "tn_c": "8 / CB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Art [Advanced Tier]",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Artillery",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Career",
+        "linked_attributes": "INT",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Climbing",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Communications",
+        "linked_attributes": "INT",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Computers [Basic Tier]",
+        "linked_attributes": "INT",
+        "tn_c": "8 / CB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Computers [Advanced Tier]",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Cryptography",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Demolitions",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Disguise",
+        "linked_attributes": "CHA",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Driving",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Escape Artist",
+        "linked_attributes": "STR + DEX",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Forgery",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Gunnery",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Interest [Basic Tier]",
+        "linked_attributes": "INT",
+        "tn_c": "8 / CB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Interest [Advanced Tier]",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Interrogation",
+        "linked_attributes": "WIL + CHA",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Investigation",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Language",
+        "linked_attributes": "INT + CHA",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Leadership",
+        "linked_attributes": "WIL + CHA",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Martial Arts [Basic Tier]",
+        "linked_attributes": "RFL",
+        "tn_c": "7 / SB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Martial Arts [Advanced Tier]",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "MedTech",
+        "linked_attributes": "INT",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Melee Weapons [Basic Tier]",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Melee Weapons [Advanced Tier]",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Navigation",
+        "linked_attributes": "INT",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Negotiation",
+        "linked_attributes": "CHA",
+        "tn_c": "8 / CB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Perception",
+        "linked_attributes": "INT",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Piloting",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Prestidigitation [Basic Tier]",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Prestidigitation [Advanced Tier]",
+        "linked_attributes": "RFL + DEX",
+        "tn_c": "8 / SA*",
+        "is_tiered": true
+      },
+      {
+        "skill_name": "Protocol",
+        "linked_attributes": "WIL + CHA",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Running",
+        "linked_attributes": "RFL",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Science",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Security Systems",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Sensor Operations",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Small Arms",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Stealth",
+        "linked_attributes": "RFL + INT",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Strategy",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Streetwise",
+        "linked_attributes": "CHA",
+        "tn_c": "8 / CB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Support Weapons",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Surgery",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Survival",
+        "linked_attributes": "BOD + INT",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Swimming",
+        "linked_attributes": "STR",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Tactics",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Technician",
+        "linked_attributes": "DEX + INT",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Thrown Weapons",
+        "linked_attributes": "DEX",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Tracking",
+        "linked_attributes": "INT + WIL",
+        "tn_c": "8 / SA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Training",
+        "linked_attributes": "INT + CHA",
+        "tn_c": "9 / CA",
+        "is_tiered": false
+      },
+      {
+        "skill_name": "Zero-G Operations",
+        "linked_attributes": "RFL",
+        "tn_c": "7 / SB",
+        "is_tiered": false
+      }
+    ]
+  },
+  {
+    "table_name": "Specialty Modifiers",
+    "modifiers": [
+      {
+        "condition": "Skill is not specialized",
+        "modifier": 0
+      },
+      {
+        "condition": "Skill is specialized (Specialty applies)",
+        "modifier": 1
+      },
+      {
+        "condition": "Skill is specialized (Specialty does not apply)",
+        "modifier": -1
+      }
+    ]
+  },
+  {
+    "table_name": "Experience Point Costs",
+    "costs": [
+      {
+        "level_score": 0,
+        "trait_level": "N/A",
+        "standard": 20,
+        "fast_learner": 18,
+        "slow_learner": 22
+      },
+      {
+        "level_score": 1,
+        "trait_level": 100,
+        "standard": 30,
+        "fast_learner": 27,
+        "slow_learner": 33
+      },
+      {
+        "level_score": 2,
+        "trait_level": 200,
+        "standard": 50,
+        "fast_learner": 45,
+        "slow_learner": 55
+      },
+      {
+        "level_score": 3,
+        "trait_level": 300,
+        "standard": 80,
+        "fast_learner": 72,
+        "slow_learner": 88
+      },
+      {
+        "level_score": 4,
+        "trait_level": 400,
+        "standard": 120,
+        "fast_learner": 108,
+        "slow_learner": 132
+      },
+      {
+        "level_score": 5,
+        "trait_level": 500,
+        "standard": 170,
+        "fast_learner": 153,
+        "slow_learner": 187
+      },
+      {
+        "level_score": 6,
+        "trait_level": 600,
+        "standard": 230,
+        "fast_learner": 207,
+        "slow_learner": 253
+      },
+      {
+        "level_score": 7,
+        "trait_level": 700,
+        "standard": 300,
+        "fast_learner": 270,
+        "slow_learner": 330
+      },
+      {
+        "level_score": 8,
+        "trait_level": 800,
+        "standard": 380,
+        "fast_learner": 342,
+        "slow_learner": 418
+      },
+      {
+        "level_score": 9,
+        "trait_level": 900,
+        "standard": 470,
+        "fast_learner": 423,
+        "slow_learner": 517
+      },
+      {
+        "level_score": 10,
+        "trait_level": 1000,
+        "standard": 570,
+        "fast_learner": 513,
+        "slow_learner": 627
+      }
+    ]
+  }
+]

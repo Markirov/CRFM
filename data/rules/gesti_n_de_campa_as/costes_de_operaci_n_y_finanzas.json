@@ -1,0 +1,159 @@
+[
+  {
+    "table_name": "Tabla de Salarios",
+    "records": [
+      {
+        "Position": "MechWarrior",
+        "Monthly Salary": 1500
+      },
+      {
+        "Position": "Aerospace Pilot",
+        "Monthly Salary": 1500
+      },
+      {
+        "Position": "Vehicle/Artillery Crewman",
+        "Monthly Salary": 900
+      },
+      {
+        "Position": "Aircraft Pilot",
+        "Monthly Salary": 900
+      },
+      {
+        "Position": "Regular Infantry",
+        "Monthly Salary": 750
+      },
+      {
+        "Position": "Specialist/Armor Infantry",
+        "Monthly Salary": 960
+      },
+      {
+        "Position": "Vessel Crewman (DropShip)",
+        "Monthly Salary": 1000
+      },
+      {
+        "Position": "Vessel Crewman (JumpShip)",
+        "Monthly Salary": 750
+      },
+      {
+        "Position": "Vessel Crewman (WarShip)",
+        "Monthly Salary": 1200
+      },
+      {
+        "Position": "Technician",
+        "Monthly Salary": 800
+      },
+      {
+        "Position": "Astech",
+        "Monthly Salary": 400
+      },
+      {
+        "Position": "Administrator",
+        "Monthly Salary": 500
+      }
+    ]
+  },
+  {
+    "table_name": "Multiplicadores de Salario por Experiencia",
+    "records": [
+      {
+        "Quality/Expertise": "Green",
+        "Multiplier": 0.6
+      },
+      {
+        "Quality/Expertise": "Regular",
+        "Multiplier": 1.0
+      },
+      {
+        "Quality/Expertise": "Veteran",
+        "Multiplier": 1.6
+      },
+      {
+        "Quality/Expertise": "Elite",
+        "Multiplier": 3.2
+      },
+      {
+        "Quality/Expertise": "Anti-BattleMech Training (Infantry only)",
+        "Multiplier": 1.5
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Préstamos",
+    "records": [
+      {
+        "Force Type": "Government",
+        "Base Annual Interest": "5%",
+        "Base Collateral": "0%",
+        "Minimum Interest": "0%",
+        "Maximum Payback Period": "10 years"
+      },
+      {
+        "Force Type": "Mercenary (Reputation 14+)",
+        "Base Annual Interest": "7%",
+        "Base Collateral": "15%",
+        "Minimum Interest": "4%",
+        "Maximum Payback Period": "5 years"
+      },
+      {
+        "Force Type": "Mercenary (Reputation 10-13)",
+        "Base Annual Interest": "10%",
+        "Base Collateral": "25%",
+        "Minimum Interest": "5%",
+        "Maximum Payback Period": "3 years"
+      },
+      {
+        "Force Type": "Mercenary (Reputation 5-9)",
+        "Base Annual Interest": "15%",
+        "Base Collateral": "40%",
+        "Minimum Interest": "5%",
+        "Maximum Payback Period": "2 years"
+      },
+      {
+        "Force Type": "Mercenary (Reputation 1-4)",
+        "Base Annual Interest": "20%",
+        "Base Collateral": "60%",
+        "Minimum Interest": "10%",
+        "Maximum Payback Period": "1 year"
+      },
+      {
+        "Force Type": "Mercenary (Reputation 0 or less)",
+        "Base Annual Interest": "35%",
+        "Base Collateral": "80%",
+        "Minimum Interest": "15%",
+        "Maximum Payback Period": "6 months"
+      },
+      {
+        "Force Type": "Pirate",
+        "Base Annual Interest": "50%",
+        "Base Collateral": "100%",
+        "Minimum Interest": "25%",
+        "Maximum Payback Period": "6 months"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Disponibilidad y Coste de Combustible",
+    "records": [
+      {
+        "Fuel Type": "Natural Gas",
+        "Cost (per ton)": 1200,
+        "Availability": "A"
+      },
+      {
+        "Fuel Type": "Petrochemicals",
+        "Cost (per ton)": 1000,
+        "Availability": "A"
+      },
+      {
+        "Fuel Type": "Hydrogen",
+        "Cost (per ton)": 15000,
+        "Availability": "C*"
+      },
+      {
+        "Fuel Type": "Alcohol",
+        "Cost (per ton)": 1500,
+        "Availability": "A"
+      }
+    ]
+  }
+]

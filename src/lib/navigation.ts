@@ -58,7 +58,12 @@ export const NAV_SECTIONS: NavSection[] = [
     label: 'TÁCTICO',
     items: [
       { id: 'ayudas', label: 'Ayudas',             icon: '📋', path: '/ayudas', palette: 'blue' },
-      { id: 'tro',    label: 'Manual Técnico',  icon: '📖', path: '/tro',    palette: 'blue' },
+      { id: 'tro',    label: 'Manual Técnico',     icon: '📖', path: '/tro',    palette: 'blue',
+        tabs: [
+          { id: 'catalogo', label: 'Catálogo' },
+          { id: 'wiki',     label: 'Enciclopedia' }
+        ]
+      },
     ],
   },
   {

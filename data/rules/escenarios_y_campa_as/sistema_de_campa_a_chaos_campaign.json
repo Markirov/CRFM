@@ -1,0 +1,313 @@
+[
+  {
+    "tableName": "TECH LEVEL TABLE",
+    "rows": [
+      {
+        "2D6": "2",
+        "Opposing Tech Level": "Player's choice"
+      },
+      {
+        "2D6": "3",
+        "Opposing Tech Level": "F"
+      },
+      {
+        "2D6": "4",
+        "Opposing Tech Level": "A"
+      },
+      {
+        "2D6": "5",
+        "Opposing Tech Level": "B"
+      },
+      {
+        "2D6": "6",
+        "Opposing Tech Level": "D"
+      },
+      {
+        "2D6": "7",
+        "Opposing Tech Level": "C"
+      },
+      {
+        "2D6": "8",
+        "Opposing Tech Level": "C"
+      },
+      {
+        "2D6": "9",
+        "Opposing Tech Level": "D"
+      },
+      {
+        "2D6": "10",
+        "Opposing Tech Level": "B"
+      },
+      {
+        "2D6": "11",
+        "Opposing Tech Level": "A"
+      },
+      {
+        "2D6": "12",
+        "Opposing Tech Level": "Player's choice"
+      }
+    ]
+  },
+  {
+    "tableName": "AVERAGE UNIT COST (WP)",
+    "rows": [
+      {
+        "Unit Type": "BattleMech",
+        "WP Cost": "Tonnage x2"
+      },
+      {
+        "Unit Type": "Vehicle",
+        "WP Cost": "Tonnage x1"
+      },
+      {
+        "Unit Type": "Aerospace Fighter",
+        "WP Cost": "Tonnage x1"
+      },
+      {
+        "Unit Type": "Infantry unit",
+        "WP Cost": "10"
+      },
+      {
+        "Unit Type": "Battle Armor unit",
+        "WP Cost": "35"
+      }
+    ]
+  },
+  {
+    "tableName": "REPAIR COST TABLE (WP)",
+    "rows": [
+      {
+        "Unit Weight Class": "Light",
+        "Less Than Crippled": 15,
+        "Crippled": 25
+      },
+      {
+        "Unit Weight Class": "Medium",
+        "Less Than Crippled": 30,
+        "Crippled": 45
+      },
+      {
+        "Unit Weight Class": "Heavy",
+        "Less Than Crippled": 60,
+        "Crippled": 75
+      },
+      {
+        "Unit Weight Class": "Assault",
+        "Less Than Crippled": 80,
+        "Crippled": 100
+      },
+      {
+        "Unit Weight Class": "Battle Armor",
+        "Less Than Crippled": "5/unit",
+        "Crippled": "10/unit"
+      }
+    ]
+  },
+  {
+    "tableName": "SUPPLY COST TABLE (WP)",
+    "rows": [
+      {
+        "Category": "Ammunition",
+        "Item": "Ballistic, per ton",
+        "WP Cost": 4
+      },
+      {
+        "Category": "Ammunition",
+        "Item": "Missile, per ton",
+        "WP Cost": 6
+      },
+      {
+        "Category": "Recruitment",
+        "Item": "Green (Piloting 6, Gunnery 5)",
+        "WP Cost": 15
+      },
+      {
+        "Category": "Recruitment",
+        "Item": "Regular (Piloting 5, Gunnery 4)",
+        "WP Cost": 30
+      },
+      {
+        "Category": "Recruitment",
+        "Item": "Veteran (Piloting 4, Gunnery 3)",
+        "WP Cost": 60
+      },
+      {
+        "Category": "Recruitment",
+        "Item": "Elite (Piloting 3, Gunnery 2)",
+        "WP Cost": 100
+      },
+      {
+        "Category": "Unit Being Sold",
+        "Item": "BattleMech",
+        "WP Gain": "Tonnage x1"
+      },
+      {
+        "Category": "Unit Being Sold",
+        "Item": "Vehicle",
+        "WP Gain": "Tonnage/0.5"
+      },
+      {
+        "Category": "Unit Being Sold",
+        "Item": "Aerospace Fighter",
+        "WP Gain": "Tonnage x1"
+      },
+      {
+        "Category": "Unit Being Sold",
+        "Item": "Battle Armor (squad only)",
+        "WP Gain": "12"
+      }
+    ]
+  },
+  {
+    "tableName": "SKILL ADVANCEMENT TABLE",
+    "rows": [
+      {
+        "Skill Advancement": "MechWarrior Gunnery Skill",
+        "SP Cost": 200
+      },
+      {
+        "Skill Advancement": "ProtoMech Gunnery Skill",
+        "SP Cost": 400
+      },
+      {
+        "Skill Advancement": "MechWarrior Piloting Skill",
+        "SP Cost": 150
+      },
+      {
+        "Skill Advancement": "ProtoMech Piloting Skill",
+        "SP Cost": 400
+      },
+      {
+        "Skill Advancement": "Aerospace/Aircraft Pilot Gunnery Skill",
+        "SP Cost": 200
+      },
+      {
+        "Skill Advancement": "Aerospace/Aircraft Pilot Piloting Skill",
+        "SP Cost": 150
+      },
+      {
+        "Skill Advancement": "Vehicle/Support Vehicle Crew Gunnery Skill",
+        "SP Cost": 100
+      },
+      {
+        "Skill Advancement": "Vehicle/Support Vehicle Crew Driving Skill",
+        "SP Cost": 50
+      },
+      {
+        "Skill Advancement": "DropShip/JumpShip Crew Gunnery Skill",
+        "SP Cost": 1000
+      },
+      {
+        "Skill Advancement": "DropShip/JumpShip Crew Piloting Skill",
+        "SP Cost": 1500
+      },
+      {
+        "Skill Advancement": "Battle Armor Squad/Point Gunnery Skill",
+        "SP Cost": 800
+      },
+      {
+        "Skill Advancement": "Infantry Platoon Gunnery Skill",
+        "SP Cost": 500
+      },
+      {
+        "Skill Advancement": "New pilot Special Ability",
+        "SP Cost": "100 per ability; max 1 per 3 game months and a change in Skill Rating"
+      }
+    ]
+  },
+  {
+    "tableName": "VICTORY CONDITIONS HIERARCHY",
+    "rows": [
+      {
+        "Condition": "Total Victory",
+        "Definition": "Complete all Objectives."
+      },
+      {
+        "Condition": "Clear Victory",
+        "Definition": "Complete all but one Objective."
+      },
+      {
+        "Condition": "Partial Victory",
+        "Definition": "Complete only half of the Objectives (rounding up)."
+      },
+      {
+        "Condition": "Pyrrhic Victory",
+        "Definition": "Complete less than half of the Objectives, but more than one."
+      },
+      {
+        "Condition": "Partial Defeat",
+        "Definition": "Complete only one Objective."
+      },
+      {
+        "Condition": "Total Defeat",
+        "Definition": "No objectives completed."
+      }
+    ]
+  },
+  {
+    "tableName": "ATTACKER/DEFENDER ASSIGNMENT TABLE",
+    "rows": [
+      {
+        "If the primary Force is...": "Assaulting a base or position",
+        "Then they should be assigned as the...": "Attacker"
+      },
+      {
+        "If the primary Force is...": "Performing a covert operation",
+        "Then they should be assigned as the...": "Attacker"
+      },
+      {
+        "If the primary Force is...": "An escort",
+        "Then they should be assigned as the...": "Defender"
+      },
+      {
+        "If the primary Force is...": "Transporting an object or person of note",
+        "Then they should be assigned as the...": "Defender"
+      },
+      {
+        "If the primary Force is...": "Ambushing a target",
+        "Then they should be assigned as the...": "Attacker"
+      },
+      {
+        "If the primary Force is...": "Stealing or destroying a target",
+        "Then they should be assigned as the...": "Attacker"
+      },
+      {
+        "If the primary Force is...": "Preventing theft or destruction of a vital target",
+        "Then they should be assigned as the...": "Defender"
+      },
+      {
+        "If the primary Force is...": "Protecting a position or base",
+        "Then they should be assigned as the...": "Defender"
+      }
+    ]
+  },
+  {
+    "tableName": "FAILED ADMINISTRATION TABLE",
+    "rows": [
+      {
+        "Failed Roll": "2-6",
+        "Result": "No significant event. Combatants make negative jokes about REMF competency, hurting administrators’ feelings."
+      },
+      {
+        "Failed Roll": "7-8",
+        "Result": "Poor legal or human resource paperwork handling results in a financial loss as the Force scrambles to cover missed paydays, harassment lawsuits, workplace injuries, etc. The Force loses 1D6 x 10 precent of a month of peacetime operating costs."
+      },
+      {
+        "Failed Roll": "9",
+        "Result": "Lesson planner scrambles training schedule for a quarter before anyone notices how easy training has gotten. All units in the Force make a Skill Rating loss roll as if they had missed a quarter of training, as discussed under Training, page 51."
+      },
+      {
+        "Failed Roll": "10",
+        "Result": "Understaffed intelligence group means the Force is ill-prepared for the next battle. The Force suffers a –2 Initiative modifier throughout the next battle."
+      },
+      {
+        "Failed Roll": "11",
+        "Result": "Quartermaster gambles spare parts budget on sure-thing investment in recovered Star League myomer lubricant (made with snake oil). All units in the Force must make a breakdown roll as if they had gone without spare parts for a month, per Maintenance, above."
+      },
+      {
+        "Failed Roll": "12",
+        "Result": "Legal officer misreads contract / orders and local laws, resulting in Force being charged with a Mission Failure. Refer to Mission Failure & Partial Failure (see p. 47) for Reputation and budget penalties. Pirate Forces treat this result as a 10."
+      }
+    ]
+  }
+]

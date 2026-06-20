@@ -3,7 +3,7 @@
 // Lee del store de Zustand (ya poblado por App.tsx via usePermissions).
 
 import { useAppStore } from '@/lib/store';
-import { canRead, canWrite, type PermLevel } from '@/lib/permissions-service';
+import { canRead, canWrite, getPermLevel, type PermLevel } from '@/lib/permissions-service';
 
 export function usePerm(sectionId: string) {
   const userRole = useAppStore(s => s.userRole);
@@ -12,8 +12,7 @@ export function usePerm(sectionId: string) {
 
   const readable = canRead(perms, sectionId, userRole);
   const writable = canWrite(perms, sectionId, userRole);
-  const level: PermLevel = userRole === 'admin' ? 'write' : !userRole ? 'none' :
-    perms.find(p => p.id === sectionId)?.[userRole as 'dm' | 'pj'] ?? 'none';
+  const level: PermLevel = getPermLevel(perms, sectionId, userRole);
 
   return { readable, writable, loading: permsLoading, level };
 }

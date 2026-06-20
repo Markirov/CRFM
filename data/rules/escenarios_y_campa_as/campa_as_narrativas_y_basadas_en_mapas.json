@@ -1,0 +1,22 @@
+[
+  {
+    "campaign_type": "Small/Short",
+    "force_size": "Company",
+    "bv": 15000
+  },
+  {
+    "campaign_type": "Medium/Moderate",
+    "force_size": "Reinforced Company/Battalion",
+    "bv": 35000
+  },
+  {
+    "campaign_type": "Large/Long",
+    "force_size": "Battalion/Reinforced Battalion",
+    "bv": 55000
+  },
+  {
+    "campaign_type": "Huge/Very Long",
+    "force_size": "Reinforced Battalion/Regiment",
+    "bv": 120000
+  }
+]

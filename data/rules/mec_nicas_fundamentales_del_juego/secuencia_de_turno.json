@@ -1,0 +1,37 @@
+[
+  {
+    "turno_movimiento": 1,
+    "unidades_restantes_b": 5,
+    "unidades_restantes_a": 8,
+    "movimientos_b": 1,
+    "movimientos_a": 1
+  },
+  {
+    "turno_movimiento": 2,
+    "unidades_restantes_b": 4,
+    "unidades_restantes_a": 7,
+    "movimientos_b": 1,
+    "movimientos_a": 1
+  },
+  {
+    "turno_movimiento": 3,
+    "unidades_restantes_b": 3,
+    "unidades_restantes_a": 6,
+    "movimientos_b": 1,
+    "movimientos_a": 2
+  },
+  {
+    "turno_movimiento": 4,
+    "unidades_restantes_b": 2,
+    "unidades_restantes_a": 4,
+    "movimientos_b": 1,
+    "movimientos_a": 2
+  },
+  {
+    "turno_movimiento": 5,
+    "unidades_restantes_b": 1,
+    "unidades_restantes_a": 2,
+    "movimientos_b": 1,
+    "movimientos_a": 2
+  }
+]

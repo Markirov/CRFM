@@ -1,0 +1,181 @@
+[
+  {
+    "table_name": "Experience Point (XP) Costs",
+    "records": [
+      {
+        "Level/Score": 0,
+        "Trait Level": null,
+        "Standard": 20,
+        "Fast Learner": 18,
+        "Slow Learner": 22
+      },
+      {
+        "Level/Score": 1,
+        "Trait Level": 100,
+        "Standard": 30,
+        "Fast Learner": 27,
+        "Slow Learner": 33
+      },
+      {
+        "Level/Score": 2,
+        "Trait Level": 200,
+        "Standard": 50,
+        "Fast Learner": 45,
+        "Slow Learner": 55
+      },
+      {
+        "Level/Score": 3,
+        "Trait Level": 300,
+        "Standard": 80,
+        "Fast Learner": 72,
+        "Slow Learner": 88
+      },
+      {
+        "Level/Score": 4,
+        "Trait Level": 400,
+        "Standard": 120,
+        "Fast Learner": 108,
+        "Slow Learner": 132
+      },
+      {
+        "Level/Score": 5,
+        "Trait Level": 500,
+        "Standard": 170,
+        "Fast Learner": 153,
+        "Slow Learner": 187
+      },
+      {
+        "Level/Score": 6,
+        "Trait Level": 600,
+        "Standard": 230,
+        "Fast Learner": 207,
+        "Slow Learner": 253
+      },
+      {
+        "Level/Score": 7,
+        "Trait Level": 700,
+        "Standard": 300,
+        "Fast Learner": 270,
+        "Slow Learner": 330
+      },
+      {
+        "Level/Score": 8,
+        "Trait Level": 800,
+        "Standard": 380,
+        "Fast Learner": 342,
+        "Slow Learner": 418
+      },
+      {
+        "Level/Score": 9,
+        "Trait Level": 900,
+        "Standard": 470,
+        "Fast Learner": 423,
+        "Slow Learner": 517
+      },
+      {
+        "Level/Score": 10,
+        "Trait Level": 1000,
+        "Standard": 570,
+        "Fast Learner": 513,
+        "Slow Learner": 627
+      },
+      {
+        "Level/Score": "11+",
+        "Trait Level": "(Level x 100)",
+        "Standard": null,
+        "Fast Learner": null,
+        "Slow Learner": null
+      }
+    ]
+  },
+  {
+    "table_name": "Opposed Traits",
+    "records": [
+      {
+        "Positive Trait": "Animal Empathy (+1)",
+        "Negative Trait": "Animal Antipathy (–1)"
+      },
+      {
+        "Positive Trait": "Attractive (+2)",
+        "Negative Trait": "Unattractive (–1)"
+      },
+      {
+        "Positive Trait": "Combat Sense (+4)",
+        "Negative Trait": "Combat Paralysis (–4)"
+      },
+      {
+        "Positive Trait": "Fast Learner (+3)",
+        "Negative Trait": "Slow Learner (–3)"
+      },
+      {
+        "Positive Trait": "Fit (+2)",
+        "Negative Trait": "Handicap (–[1 to 5])"
+      },
+      {
+        "Positive Trait": "Good Hearing (+1)",
+        "Negative Trait": "Poor Hearing (–[1 to 5])"
+      },
+      {
+        "Positive Trait": "Good Vision (+1)",
+        "Negative Trait": "Poor Vision (–[1 to 9])"
+      },
+      {
+        "Positive Trait": "Gregarious (+1)",
+        "Negative Trait": "Introvert (–1)"
+      },
+      {
+        "Positive Trait": "4+ Levels in a Language Skill",
+        "Negative Trait": "Illiterate (–1)"
+      },
+      {
+        "Positive Trait": "Patient (+1)",
+        "Negative Trait": "Impatient (–1)"
+      },
+      {
+        "Positive Trait": "Tech Empathy (+3)",
+        "Negative Trait": "Gremlins (–3)"
+      },
+      {
+        "Positive Trait": "Thick-Skinned (+1)",
+        "Negative Trait": "Thin Skinned (–1)"
+      },
+      {
+        "Positive Trait": "Toughness (+3)",
+        "Negative Trait": "Glass Jaw (–3)"
+      }
+    ]
+  },
+  {
+    "table_name": "Linked Attribute Value Modifiers",
+    "records": [
+      {
+        "Linked Attribute Value": 0,
+        "Roll Modifier": -4
+      },
+      {
+        "Linked Attribute Value": 1,
+        "Roll Modifier": -2
+      },
+      {
+        "Linked Attribute Value": "2–3",
+        "Roll Modifier": -1
+      },
+      {
+        "Linked Attribute Value": "4–6",
+        "Roll Modifier": 0
+      },
+      {
+        "Linked Attribute Value": "7–9",
+        "Roll Modifier": 1
+      },
+      {
+        "Linked Attribute Value": 10,
+        "Roll Modifier": 2
+      },
+      {
+        "Linked Attribute Value": "11+",
+        "Roll Modifier": "+(Attribute ÷ 3)"
+      }
+    ]
+  }
+]

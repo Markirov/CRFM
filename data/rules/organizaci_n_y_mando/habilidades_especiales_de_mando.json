@@ -1,0 +1,73 @@
+[
+  {
+    "table_name": "force_experience_rating_table",
+    "records": [
+      {
+        "average_skills": "7 or more",
+        "rating": "Wet Behind the Ears"
+      },
+      {
+        "average_skills": "6",
+        "rating": "Very Green"
+      },
+      {
+        "average_skills": "5",
+        "rating": "Green"
+      },
+      {
+        "average_skills": "4",
+        "rating": "Regular"
+      },
+      {
+        "average_skills": "3",
+        "rating": "Veteran"
+      },
+      {
+        "average_skills": "2",
+        "rating": "Elite"
+      },
+      {
+        "average_skills": "1",
+        "rating": "Heroic"
+      },
+      {
+        "average_skills": "0 or less",
+        "rating": "Legendary"
+      }
+    ]
+  },
+  {
+    "table_name": "environmental_specialist_benefits_list",
+    "records": [
+      {
+        "benefit": "Improved Mobility",
+        "rules": "Reduce the MP cost for passing through any terrain of specialization by 1. However, this reduction may never lower movement costs below 1 MP."
+      },
+      {
+        "benefit": "Improved Combat",
+        "rules": "Apply a –1 To-Hit Modifier for all attacks made into and/or through the terrain or environmental condition of specialization (to a minimum modifier of +0)."
+      },
+      {
+        "benefit": "Improved Initiative",
+        "rules": "Receive a +1 Initiative roll modifier if the selected terrain or environment type covers at least half of the map area."
+      }
+    ]
+  },
+  {
+    "table_name": "tactical_specialist_benefits_list",
+    "records": [
+      {
+        "benefit": "Attack Specialization",
+        "rules": "The force receives a +1 Initiative roll modifier when acting as the Attacker in a scenario of any type, but suffers a –1 Initiative roll modifier when acting as the Defender."
+      },
+      {
+        "benefit": "Defense Specialization",
+        "rules": "The force receives a +1 Initiative roll modifier when acting as the Defender in a scenario of any type, but suffers a –1 Initiative roll modifier when acting as the Attacker."
+      },
+      {
+        "benefit": "Scenario Specialization",
+        "rules": "Receive a +1 Initiative roll modifier if the force is taking part in a specified scenario type. For all other scenario types, the force suffers a –1 Initiative roll modifier."
+      }
+    ]
+  }
+]

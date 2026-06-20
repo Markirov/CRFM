@@ -1,0 +1,9 @@
+[
+  {
+    "Evento": "Impacto de Meteoro",
+    "Daño Base": "3D6 puntos (en grupos de 5 puntos a la cara Frontal)",
+    "Modificadores de Daño": "Daño x2 vs Infantería, Battle Armor, o Vehículos de Apoyo con BAR < 10.",
+    "Efecto en Unidades Aéreas (No Aeroespaciales)": "Posibilidad de impacto con 10+ en 2D6. Si es un VTOL, impacto en el Rotor causa caída.",
+    "Interacción con el Terreno": "Si se usan reglas de Factor de Terreno, las condiciones planetarias reciben daño. Las baldosas sin FT se convierten en terreno accidentado (excepto agua)."
+  }
+]

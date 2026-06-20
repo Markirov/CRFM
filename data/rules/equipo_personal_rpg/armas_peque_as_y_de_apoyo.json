@@ -1,0 +1,994 @@
+[
+  {
+    "tableName": "ARMAS BALÍSTICAS: ARMAS PEQUEÑAS (PISTOLAS)",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Auto-Pistol",
+        "C/A-A-A/C",
+        "3B/4",
+        "5/20/45/105",
+        "10",
+        "50/2",
+        "—",
+        "500 G/140 G",
+        "*"
+      ],
+      [
+        "Auto-Pistol (Hawk Eagle)",
+        "C/X-F-C/C",
+        "4B/3B",
+        "5/20/50/100",
+        "15",
+        "100/10",
+        "FW",
+        "500 G/110 G",
+        "Ráfaga: 3; Retroceso: –1"
+      ],
+      [
+        "Auto-Pistol (Magnum)",
+        "C/A-A-B/D",
+        "3B/5",
+        "5/20/50/120",
+        "8",
+        "75/4",
+        "—",
+        "500 G/140 G",
+        "–1 a la tirada de ataque*"
+      ],
+      [
+        "Auto-Pistol (M&G Service Auto)",
+        "C/C-B-C/C",
+        "3B/4",
+        "5/20/40/85",
+        "8",
+        "60/3",
+        "LA",
+        "650 G/110 G",
+        "—"
+      ],
+      [
+        "Auto-Pistol (Nambu)",
+        "C/B-C-C/C",
+        "3B/4",
+        "5/25/50/110",
+        "12",
+        "75/2",
+        "DC",
+        "450 G/160 G",
+        "*"
+      ],
+      [
+        "Auto-Pistol (Serrek 7875D)",
+        "C/X-C-B/C",
+        "3B/3",
+        "5/25/50/120",
+        "16",
+        "185/3",
+        "FS",
+        "400 G/160 G",
+        "+1 a tiradas de ataque y servicio"
+      ],
+      [
+        "Auto-Pistol (Sternsacht Python)",
+        "C/X-X-C/D",
+        "4B/4",
+        "5/15/40/80",
+        "12",
+        "125/4",
+        "—",
+        "750 G/160 G",
+        "*"
+      ],
+      [
+        "Semi-Auto (TK Enforcer)",
+        "C/X-X-B/C",
+        "3B/3B",
+        "7/25/55/140",
+        "20",
+        "110/3",
+        "LA",
+        "1.6 KG/200 G",
+        "Ráfaga: 4; Retroceso: –1"
+      ],
+      [
+        "Pistol (Hold-Out)",
+        "B/A-A-B/E",
+        "3B/3",
+        "2/5/8/20",
+        "2",
+        "20/1",
+        "—",
+        "200 G/20 G",
+        "—"
+      ],
+      [
+        "Pistol (Sternsnacht Claymore)",
+        "C/X-E-D/D",
+        "3B/6",
+        "5/15/38/70",
+        "3",
+        "200/1",
+        "—",
+        "2.5 KG/90 G",
+        "Modificadores de alcance: +0/–3/–6/–11"
+      ],
+      [
+        "Pistol (Makeshift)",
+        "B/A-A-A/C",
+        "3B/4",
+        "5/15/30/65",
+        "1",
+        "15/1",
+        "PER",
+        "1 KG/10 G",
+        "–1 a la tirada de ataque**"
+      ],
+      [
+        "Revolver",
+        "C/A-A-A/C",
+        "4B/4",
+        "8/18/40/90",
+        "6",
+        "40/1",
+        "—",
+        "500 G/60 G",
+        "—"
+      ],
+      [
+        "Revolver (Magnum)",
+        "C/B-B-B/D",
+        "4B/5",
+        "8/18/45/100",
+        "5",
+        "60/3",
+        "—",
+        "500 G/60 G",
+        "–1 a la tirada de ataque"
+      ],
+      [
+        "Harpoon Gun (Pequod, Mk. 1)",
+        "B/D-C-B/C",
+        "3B/3",
+        "8/12/25/30",
+        "1",
+        "350/2",
+        "TC",
+        "2.3 KG/135 G",
+        "Dispara cable de agarre; +4 a la habilidad de Escalada con cable; Acción Simple para soltar cable; sin modificador para usar bajo el agua"
+      ]
+    ],
+    "footer": "*Atasco en fallo crítico (Fumble). **Fallo de disparo en fallo crítico (inflige 1X/1S de daño al usuario). †Ver Accesorios de Armas, pp. 285-286. ††Ver Lanzagranadas, pp. 273-274."
+  },
+  {
+    "tableName": "ARMAS BALÍSTICAS: ARMAS PEQUEÑAS (SUBFUSILES)",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Auto-Pistol (Mydron)",
+        "C/C-B-B/E",
+        "3B/2B",
+        "6/22/40/90",
+        "20",
+        "100/4",
+        "—",
+        "1.5 KG/140 G",
+        "Ráfaga: 6; Retroceso: –1"
+      ],
+      [
+        "Auto-Pistol (Stetta)",
+        "D/X-F-C/E",
+        "3B/2B",
+        "3/10/20/50",
+        "100",
+        "150/10",
+        "—",
+        "2 KG/680 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "Machine Pistol (Martial Eagle)",
+        "D/X-F-D/E",
+        "3B/3B",
+        "5/20/50/100",
+        "30",
+        "180/20",
+        "FW",
+        "1.8 KG/250 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "Submachine Gun",
+        "C/A-A-A/D",
+        "3B/3B",
+        "5/16/35/80",
+        "50",
+        "80/5",
+        "—",
+        "3 KG/570 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "SMG (Gunther MP-20)",
+        "C/X-E-C/D",
+        "4B/3B",
+        "4/12/30/50",
+        "30",
+        "125/5",
+        "LA",
+        "2.5 KG/340 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "SMG (Imperator 2894A1)",
+        "C/X-C-B/D",
+        "4B/2B",
+        "5/18/40/85",
+        "50",
+        "100/5",
+        "—",
+        "4 KG/380 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "SMG (KA-23 Subgun)",
+        "D/X-C-D/E",
+        "4B/2B",
+        "6/20/45/100",
+        "40",
+        "250/6",
+        "DC",
+        "2.5 KG/300 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "SMG (Rorynex RM-3/XXI)",
+        "D/C-B-C/E",
+        "3B/2B",
+        "3/12/28/60",
+        "100",
+        "80/10",
+        "—",
+        "3 KG/760 G",
+        "Ráfaga: 15; Retroceso: –1"
+      ],
+      [
+        "SMG (Rugan)",
+        "C/D-B-C/E",
+        "3B/2B",
+        "4/15/30/70",
+        "80",
+        "100/8",
+        "—",
+        "3.5 KG/610 G",
+        "Ráfaga: 15; Retroceso: –1"
+      ]
+    ]
+  },
+  {
+    "tableName": "ARMAS BALÍSTICAS, CONT.: ARMAS PEQUEÑAS (RIFLES)",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Rifle (Automatic)",
+        "C/A-A-A/D",
+        "4B/4B",
+        "30/75/170/415",
+        "30",
+        "80/2",
+        "—",
+        "4 KG/480 G",
+        "Ráfaga: 15; Retroceso: –1"
+      ],
+      [
+        "Rifle (Bolt-Action)",
+        "B/A-A-A/B",
+        "4B/4",
+        "40/115/225/500",
+        "5",
+        "60/1",
+        "—",
+        "3 KG/60 G",
+        "Acción Simple para cargar el siguiente cartucho"
+      ],
+      [
+        "Rifle (Federated Long)",
+        "C/X-C-A/D",
+        "4B/5",
+        "35/85/205/450",
+        "10",
+        "120/3",
+        "—",
+        "5 KG/150 G",
+        "—"
+      ],
+      [
+        "Rifle (Imperator AX-22 Assault)",
+        "C/X-X-B/D",
+        "4B/4B",
+        "30/80/185/435",
+        "15",
+        "200/3",
+        "—",
+        "3.5 KG/240 G",
+        "Ráfaga: 15; Retroceso: –1"
+      ],
+      [
+        "Rifle (M&G G-150)",
+        "C/X-X-C/D",
+        "4B/4B",
+        "45/95/215/460",
+        "9",
+        "270/5",
+        "LA",
+        "3.5 KG/150 G",
+        "Ráfaga: 3; Telescopio desmontable†"
+      ],
+      [
+        "Rifle (Makeshift)",
+        "B/A-A-A/B",
+        "4B/4",
+        "20/65/140/300",
+        "1",
+        "20/1",
+        "PER",
+        "6 KG/20 G",
+        "–1 a la tirada de ataque**"
+      ],
+      [
+        "Rifle (TK Assault)",
+        "C/X-C-A/D",
+        "4B/4B",
+        "25/70/160/410",
+        "20",
+        "150/3",
+        "LA",
+        "5.5 KG/320 G",
+        "Ráfaga: 10; Retroceso: –1"
+      ],
+      [
+        "Rifle (Zeus Heavy)",
+        "C/C-B-B/D",
+        "5B/5",
+        "35/80/190/420",
+        "5",
+        "200/3",
+        "LA",
+        "8 KG/80 G",
+        "—"
+      ],
+      [
+        "Elephant Gun",
+        "B/B-C-C/C",
+        "5B/6",
+        "20/60/160/400",
+        "2",
+        "100/2",
+        "PER",
+        "5 KG/40 G",
+        "–2 a la tirada de ataque"
+      ],
+      [
+        "Federated-Barrett M42B",
+        "C/X-X-D/E",
+        "—",
+        "—",
+        "—",
+        "1,385/—",
+        "FS",
+        "—/—",
+        "2 Acciones Complejas y tirada de habilidad para reconfigurar"
+      ],
+      [
+        "(Standard Mode)",
+        "—",
+        "4B/5B",
+        "30/75/180/430",
+        "50",
+        "—/12",
+        "FS",
+        "6 KG/300 G",
+        "Ráfaga: 10; Retroceso: –1; Mira láser† y Lanzagranadas††"
+      ],
+      [
+        "(Close-In Mode)",
+        "—",
+        "3B/4B",
+        "20/50/120/280",
+        "50",
+        "—/12",
+        "—",
+        "5 KG/300 G",
+        "Ráfaga: 5; Retroceso: –1; Mira láser, Supresor de sonido/destello† y Lanzagranadas††"
+      ],
+      [
+        "(Lt. Machine Gun Mode)",
+        "—",
+        "—",
+        "—",
+        "—",
+        "—",
+        "—",
+        "—/—",
+        "Ver Armas de Apoyo"
+      ],
+      [
+        "Sniper Rifle",
+        "B/C-C-C/D",
+        "5B/4",
+        "45/150/340/700",
+        "5",
+        "350/4",
+        "—",
+        "10 KG/60 G",
+        "Acción Simple para cargar el siguiente cartucho"
+      ],
+      [
+        "Sniper Rifle (Minolta 9000)",
+        "D/X-X-E/F",
+        "5B/4",
+        "50/160/360/730",
+        "10",
+        "1,000/5",
+        "CC",
+        "6 KG/120 G",
+        "—"
+      ],
+      [
+        "Harpoon Gun (Pequod, Mk. 2)",
+        "C/F-D-B/D",
+        "4B/4",
+        "18/35/65/90",
+        "2",
+        "700/5",
+        "TC",
+        "4.1 KG/360 G",
+        "Inalámbrico; sin modificador para usar bajo el agua"
+      ]
+    ],
+    "footer": "*Atasco en fallo crítico (Fumble). **Fallo de disparo en fallo crítico (inflige 1X/1S de daño al usuario). †Ver Accesorios de Armas, pp. 285-286. ††Ver Lanzagranadas, pp. 273-274."
+  },
+  {
+    "tableName": "ARMAS DE ENERGÍA: ARMAS PEQUEÑAS (PISTOLAS Y RIFLES)",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Laser Pistol",
+        "D/B-A-A/D",
+        "4E/3",
+        "15/35/80/225",
+        "2 PPS",
+        "750/†",
+        "—",
+        "1 KG/†",
+        "—"
+      ],
+      [
+        "Blazer Pistol",
+        "D/C-C-D/E",
+        "5E/3",
+        "15/40/90/240",
+        "8 PPS",
+        "3,000/†",
+        "FW",
+        "2 KG/†",
+        "—"
+      ],
+      [
+        "ER Laser Pistol",
+        "F/X-D-C/D",
+        "4E/3",
+        "20/50/125/300",
+        "3 PPS",
+        "1,000/†",
+        "CLAN",
+        "1 KG/†",
+        "—"
+      ],
+      [
+        "Holdout Laser Pistol",
+        "D/B-B-B/D",
+        "4E/2",
+        "10/22/50/120",
+        "3 PPS",
+        "100/†",
+        "FW",
+        "50 G/†",
+        "—"
+      ],
+      [
+        "Laser Pistol (White Dwarf)",
+        "D/X-X-C/E",
+        "4E/3",
+        "10/25/60/150",
+        "1",
+        "250",
+        "FW",
+        "250 G/—",
+        "Un solo disparo, -3 a la tirada de Percepción para notar el rayo"
+      ],
+      [
+        "Nakjima Hand Laser",
+        "D/X-D-C/D",
+        "5E/2",
+        "20/40/100/250",
+        "1 PPS",
+        "750/†",
+        "DC",
+        "1 KG/†",
+        "—"
+      ],
+      [
+        "Nova Laser Pistol",
+        "E/X-X-D/E",
+        "3E/5",
+        "8/20/40/100",
+        "10 PPS",
+        "1,250/†",
+        "FW",
+        "1.5 KG/†",
+        "—"
+      ],
+      [
+        "Sunbeam Laser Pistol",
+        "D/X-F-D/E",
+        "4E/4",
+        "15/30/65/200",
+        "4 PPS",
+        "750/†",
+        "FW",
+        "1 KG/†",
+        "—"
+      ],
+      [
+        "Pulse Laser Pistol",
+        "D/B-F-C/D",
+        "3E/2B",
+        "12/30/70/195",
+        "2 PPS",
+        "1,000/†",
+        "—",
+        "1 KG/†",
+        "Ráfaga: 5; Retroceso: 0"
+      ],
+      [
+        "Pulse Laser Pistol, Clan",
+        "F/X-C-C/D",
+        "3E/3B",
+        "15/35/80/200",
+        "3 PPS",
+        "1,500/†",
+        "CLAN",
+        "1 KG/†",
+        "Ráfaga: 5; Retroceso: 0"
+      ],
+      [
+        "Laser Rifle",
+        "D/C-B-B/D",
+        "4E/4",
+        "60/205/465/1100",
+        "5 PPS",
+        "1250/†",
+        "—",
+        "5 KG/†",
+        "—"
+      ],
+      [
+        "Laser Rifle (Maxell PL-10)",
+        "D/X-X-C/D",
+        "5E/3",
+        "55/200/460/1050",
+        "9 PPS",
+        "2,000/†",
+        "LA",
+        "6.5 KG/†",
+        "—"
+      ],
+      [
+        "Blazer Rifle",
+        "D/C-C-D/E",
+        "5E/4",
+        "65/220/485/1180",
+        "10 PPS",
+        "2190/†",
+        "—",
+        "7 KG/†",
+        "—"
+      ],
+      [
+        "Marx XX Laser Rifle",
+        "D/D-E-D/D",
+        "5E/3",
+        "75/250/500/1150",
+        "6 PPS",
+        "1750/†",
+        "—",
+        "6 KG/†",
+        "—"
+      ],
+      [
+        "Ebony Assault Rifle",
+        "F/X-X-E/F",
+        "—",
+        "—",
+        "—",
+        "8,500/†",
+        "MC",
+        "10 KG/†",
+        "Acción Simple para cambiar de modo"
+      ],
+      [
+        "(Standard Mode)",
+        "—",
+        "4E/3",
+        "65/200/475/1,000",
+        "8 PPS",
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      [
+        "(High-Power Mode)",
+        "—",
+        "5E/4",
+        "50/160/350/700",
+        "12 PPS",
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      [
+        "(Extended-Range Mode)",
+        "—",
+        "3E/2",
+        "80/260/610/1,200",
+        "4 PPS",
+        "—",
+        "—",
+        "—",
+        "—"
+      ],
+      [
+        "Intek Laser Rifle",
+        "D/X-D-D/D",
+        "4E/3",
+        "80/275/550/1200",
+        "2 PPS",
+        "1,250/†",
+        "FW",
+        "5 KG/†",
+        "—"
+      ],
+      [
+        "Magna Laser Rifle",
+        "D/C-C-D/D",
+        "3E/5",
+        "50/190/440/1000",
+        "5 PPS",
+        "1,500/†",
+        "DC",
+        "6 KG/†",
+        "—"
+      ],
+      [
+        "M61A Combat System",
+        "E/X-X-D/E",
+        "4E/4",
+        "70/225/480/1,100",
+        "5 PPS",
+        "7,150/—",
+        "FS",
+        "9 KG/†",
+        "Incluye mira láser y lanzagranadas compacto"
+      ],
+      [
+        "Mauser 960 Assault System",
+        "E/C-F-D/D",
+        "3E/3B",
+        "55/170/365/740",
+        "2 PPS",
+        "8,000/†",
+        "CS",
+        "10.5 KG/†",
+        "Ráfaga: 10; Retroceso: 0, Incluye vibroespada desmontable†† y lanzagranadas compacto‡"
+      ],
+      [
+        "Mauser 1200 LSS",
+        "E/X-X-E/E",
+        "4E/4B",
+        "55/170/365/740",
+        "5 PPS",
+        "10,000/†",
+        "CS",
+        "11 KG/†",
+        "Ráfaga: 5; Retroceso: 0, Incluye vibroespada desmontable†† y lanzagranadas compacto‡"
+      ],
+      [
+        "Mauser IIC IAS",
+        "F/X-F-E/F",
+        "4E/5",
+        "90/300/700/1,400",
+        "5 PPS",
+        "18,000/†",
+        "CLAN",
+        "12 KG/†",
+        "Engorroso; Incluye vibroespada desmontable†† y lanzagranadas‡"
+      ],
+      [
+        "ER Laser Rifle",
+        "F/X-D-D/D",
+        "4B/4",
+        "90/300/700/1,400",
+        "5 PPS",
+        "2,000/†",
+        "CLAN",
+        "5 KG/†",
+        "—"
+      ],
+      [
+        "Pulse Laser Rifle, Clan",
+        "F/X-E-D/D",
+        "3E/4B",
+        "60/180/400/800",
+        "5 PPS",
+        "2,000/†",
+        "CLAN",
+        "6 KG/†",
+        "Ráfaga: 10; Retroceso: 0"
+      ],
+      [
+        "Pulse Laser Rifle",
+        "D/D-E-C/D",
+        "3E/3B",
+        "40/130/275/595",
+        "4 PPS",
+        "2,000/†",
+        "—",
+        "5 KG/†",
+        "Ráfaga: 10; Retroceso: 0"
+      ],
+      [
+        "Starfire ER Laser Rifle",
+        "E/X-X-E/E",
+        "4E/4",
+        "85/285/625/1300",
+        "6 PPS",
+        "2,500/†",
+        "FW",
+        "5 KG/†",
+        "Recarga: 1; –3 a la tirada de Percepción para notar el rayo"
+      ]
+    ],
+    "footer": "Nota: PPS = Puntos de Poder por Disparo. †Por paquete de poder (ver Paquetes de Poder, p. 306). ††Ver Armas de Combate Cuerpo a Cuerpo Modernas, p. 264. ‡Ver Lanzagranadas, pp. 273-274."
+  },
+  {
+    "tableName": "ARMAS DE APOYO DE AMETRALLADORA",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Autocannon, Bearhunter",
+        "D/X-X-D/F",
+        "7B/7B",
+        "14/60/120/200",
+        "180",
+        "3,000/200",
+        "CLAN",
+        "40 KG/9 KG",
+        "Ráfaga: 30; Retroceso: –3; Tripulación: 2; Atasco en fallo crítico"
+      ],
+      [
+        "Autocannon, Semi-Portable",
+        "C/C-D-D/E",
+        "6B/3B",
+        "25/75/200/550",
+        "200",
+        "2,000/150",
+        "—",
+        "25 KG/8 KG",
+        "Ráfaga: 25; Retroceso: –2; Tripulación: 2"
+      ],
+      [
+        "Machine Gun, Light",
+        "C/B-B-B/D",
+        "5B/3B",
+        "30/80/190/450",
+        "45",
+        "400/6",
+        "—",
+        "7 KG/2 KG",
+        "Ráfaga: 15; Retroceso: –2"
+      ],
+      [
+        "Machine Gun, Portable",
+        "C/B-B-B/D",
+        "5B/4B",
+        "30/85/200/460",
+        "75",
+        "1,000/10",
+        "—",
+        "11.5 KG/3 KG",
+        "Ráfaga: 15; Retroceso: –2; Engorroso"
+      ],
+      [
+        "Machine Gun, Semi-Portable",
+        "C/B-B-B/E",
+        "5B/4B",
+        "40/95/225/500",
+        "80",
+        "1,100/10",
+        "—",
+        "20 KG/4 KG",
+        "Ráfaga: 20; Retroceso: –2; Tripulación: 2"
+      ],
+      [
+        "Machine Gun, Support",
+        "C/C-C-C/E",
+        "5B/5B",
+        "45/100/250/625",
+        "100",
+        "1,750/50",
+        "—",
+        "44 KG/5 KG",
+        "Ráfaga: 20; Retroceso: –2; Tripulación: 2"
+      ],
+      [
+        "Support Needler, Firedrake",
+        "D/X-X-C/F",
+        "3B/7BCS",
+        "16/35/55/80",
+        "30",
+        "500/10",
+        "LA",
+        "25 KG/3 KG",
+        "Ráfaga: 10; Retroceso: –2; Tripulación: 2; Needler*"
+      ]
+    ],
+    "footer": "*Aunque técnicamente no es una ametralladora, el Support Needler Incendiario Firedrake sigue las mismas reglas esenciales para las ametralladoras, mientras que añade los efectos de Needler (incluyendo sufrir un modificador de –2 AP contra barreras y armadura táctica)."
+  },
+  {
+    "tableName": "LANZAGRANADAS Y MORTEROS",
+    "headers": [
+      "Objeto",
+      "Clasificaciones de Equipo",
+      "AP/BD",
+      "Alcance",
+      "Disparos",
+      "Coste/Recarga",
+      "Afil.",
+      "Masa/Recarga",
+      "Notas"
+    ],
+    "rows": [
+      [
+        "Grenade Launcher",
+        "C/A-B-B/D",
+        "(B)",
+        "20/55/130/200",
+        "20",
+        "465/*",
+        "—",
+        "5 KG/4.5 KG",
+        "—"
+      ],
+      [
+        "Grenade Launcher, Compact",
+        "C/B-C-B/E",
+        "(A)",
+        "15/40/90/150",
+        "1",
+        "290/*",
+        "—",
+        "3 KG/200 G",
+        "Acción Simple para recargar"
+      ],
+      [
+        "Grenade Launcher, Automatic",
+        "C/B-B-B/E",
+        "(B)",
+        "20/45/110/180",
+        "10",
+        "975/*",
+        "—",
+        "12 KG/9 KG",
+        "Ráfaga: 5; Retroceso: –2"
+      ],
+      [
+        "Grenade Launcher, Heavy",
+        "C/X-X-D/E",
+        "(C)",
+        "20/60/150/250",
+        "20",
+        "1,500/*",
+        "—",
+        "15 KG/12 KG",
+        "Ráfaga: 5; Retroceso: –2; Engorroso"
+      ],
+      [
+        "Grenade Launcher, Hvy. Auto",
+        "D/X-X-D/E",
+        "(D)",
+        "25/65/150/240",
+        "20",
+        "4,500/*",
+        "CLAN",
+        "20 KG/12 KG",
+        "Ráfaga: 5; Retroceso: –2; Engorroso"
+      ],
+      [
+        "Mortar, Light",
+        "B/A-A-A/D",
+        "(D)",
+        "40/100/250/565",
+        "1",
+        "1,400/*",
+        "—",
+        "50 KG/2 KG",
+        "Tripulación: 2; Indirecto; Alcance mínimo: 40**"
+      ],
+      [
+        "Mortar, Heavy",
+        "B/A-A-A/D",
+        "(E)",
+        "100/180/400/900",
+        "1",
+        "5,000/*",
+        "—",
+        "220 KG/4 KG",
+        "Tripulación: 3; Indirecto; Alcance mínimo: 100**"
+      ]
+    ],
+    "footer": "*Por tipo de munición (ver Municiones, p. 282-284). **Debido a su fuego en arco, los morteros no pueden apuntar eficazmente a ninguna unidad o área dentro de su alcance mínimo."
+  }
+]

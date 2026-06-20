@@ -1,0 +1,278 @@
+[
+  {
+    "table_name": "Tabla de Modificadores de Aterrizaje",
+    "source": "Total Warfare, p. 86",
+    "data": [
+      {
+        "condicion": "La unidad tiene propulsores dañados",
+        "modificador": "+4"
+      },
+      {
+        "condicion": "La unidad está fuera de control",
+        "modificador": "Fallo automático (asumir MoF de 10)"
+      },
+      {
+        "condicion": "Aterrizaje vertical",
+        "modificador": "+1 por punto de Velocidad sobre 1"
+      },
+      {
+        "condicion": "Aterrizaje horizontal",
+        "modificador": "+1 por punto de Velocidad sobre 2"
+      },
+      {
+        "condicion": "Tren de aterrizaje dañado",
+        "modificador": "+5"
+      },
+      {
+        "condicion": "Blindaje del morro destruido (cazas y aerodinos)",
+        "modificador": "+2"
+      },
+      {
+        "condicion": "Empuje reducido al 50% o menos",
+        "modificador": "+2"
+      },
+      {
+        "condicion": "Sin empuje disponible (aerodino)",
+        "modificador": "+4"
+      },
+      {
+        "condicion": "Sin empuje disponible (esferoide)",
+        "modificador": "+8"
+      },
+      {
+        "condicion": "Pista demasiado corta para la unidad",
+        "modificador": "+2"
+      },
+      {
+        "condicion": "Aterrizaje en aeródromo amigo y tripulado",
+        "modificador": "-2"
+      },
+      {
+        "condicion": "Aterrizaje en aeródromo amigo y no tripulado",
+        "modificador": "-1"
+      },
+      {
+        "condicion": "Aterrizaje en carretera o hexágono pavimentado",
+        "modificador": "0"
+      },
+      {
+        "condicion": "Aterrizaje en aeródromo no amigo",
+        "modificador": "+1"
+      },
+      {
+        "condicion": "Aterrizaje en hexágono despejado",
+        "modificador": "+2"
+      },
+      {
+        "condicion": "Aterrizaje en hexágono de agua",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Aterrizaje en hexágono de escombros o irregular",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Aterrizaje en hexágono elevado (no vertical)",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Aterrizaje en hexágono de edificio (no vertical)",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Aterrizaje en bosques ligeros",
+        "modificador": "+4"
+      },
+      {
+        "condicion": "Aterrizaje en bosques pesados",
+        "modificador": "+5"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Maniobra de Frenado Fallida",
+    "source": "Total Warfare, p. 87",
+    "data": [
+      {
+        "margen_de_fallo": "1-4",
+        "efecto": "El aterrizaje requiere la distancia completa. El piloto puede intentar aterrizar normalmente o abortar, dar una vuelta e intentarlo de nuevo en un turno posterior."
+      },
+      {
+        "margen_de_fallo": "5",
+        "efecto": "La unidad debe aterrizar. Sin embargo, la unidad se vuelve más difícil de controlar, añadiendo 1 al número objetivo de la Tirada de Control de aterrizaje."
+      },
+      {
+        "margen_de_fallo": "6+",
+        "efecto": "La unidad debe aterrizar y requiere 20 hexágonos de pista para hacerlo, independientemente del tipo de unidad. La unidad sufre 20 puntos de daño en el morro y el tren de aterrizaje queda destruido. Se añade 2 al número objetivo de la Tirada de Control de aterrizaje."
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Modificadores de Despegue Vertical",
+    "source": "Total Warfare, p. 88",
+    "data": [
+      {
+        "condicion": "Tren de aterrizaje dañado",
+        "modificador": "+1"
+      },
+      {
+        "condicion": "Propulsores de maniobra dañados",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Despegue desde un cráter",
+        "modificador": "+3"
+      },
+      {
+        "condicion": "Despegue desde un aeródromo o pista",
+        "modificador": "-1"
+      },
+      {
+        "condicion": "Unidad no esferoide realizando despegue vertical",
+        "modificador": "+2"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Maniobra de Despegue Fallida",
+    "source": "Total Warfare, p. 88",
+    "data": [
+      {
+        "margen_de_fallo": "1-2",
+        "efecto": "La unidad despega. Tren de aterrizaje dañado."
+      },
+      {
+        "margen_de_fallo": "3-4",
+        "efecto": "Tren de aterrizaje dañado. El piloto debe realizar una Tirada de Control adicional sin modificadores. Si tiene éxito, la unidad despega. Si falla, la unidad cae al suelo, sufriendo 20 puntos de daño a escala estándar en la sección de popa."
+      },
+      {
+        "margen_de_fallo": "5",
+        "efecto": "El tren de aterrizaje está dañado y la unidad golpea el suelo, causando 50 puntos de daño a escala estándar en la sección de popa."
+      },
+      {
+        "margen_de_fallo": "6+",
+        "efecto": "El tren de aterrizaje está dañado y la unidad golpea el suelo, causando 100 puntos de daño a escala estándar en la sección de popa."
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Daño por Escape de DropShip",
+    "source": "Total Warfare, p. 88",
+    "data": [
+      {
+        "distancia_hex": 0,
+        "dano": "Destruido"
+      },
+      {
+        "distancia_hex": 1,
+        "dano": "12D6"
+      },
+      {
+        "distancia_hex": 2,
+        "dano": "10D6"
+      },
+      {
+        "distancia_hex": 3,
+        "dano": "8D6"
+      },
+      {
+        "distancia_hex": 4,
+        "dano": "6D6"
+      },
+      {
+        "distancia_hex": 5,
+        "dano": "4D6"
+      },
+      {
+        "distancia_hex": 6,
+        "dano": "2D6"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Lista de Comprobación Pre-vuelo Fallida",
+    "source": "Strategic Operations, p. 59",
+    "data": [
+      {
+        "tirada_2d6": "2-5",
+        "efecto": "Sin Efecto"
+      },
+      {
+        "tirada_2d6": "6-7",
+        "efecto": "+1 modificador a todas las Tiradas de Control"
+      },
+      {
+        "tirada_2d6": "8-9",
+        "efecto": "+2 modificador a todas las Tiradas de Control, +1 a las Tiradas de Ataque de Armas"
+      },
+      {
+        "tirada_2d6": "10-11",
+        "efecto": "Determinar aleatoriamente una columna y localización en la Tabla de Localización de Impacto aeroespacial apropiada, y aplicar ese daño crítico"
+      },
+      {
+        "tirada_2d6": "12",
+        "efecto": "Determinar aleatoriamente una columna y localización dos veces en la Tabla de Localización de Impacto aeroespacial apropiada, y aplicar ambos daños críticos"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Daño por Clase de Tamaño (Escala Capital)",
+    "source": "Strategic Operations, p. 61",
+    "data": [
+      {
+        "tonelaje": "0 a 500",
+        "dano": "8 + 1D6"
+      },
+      {
+        "tonelaje": "501 a 5,000",
+        "dano": "14 + 2D6"
+      },
+      {
+        "tonelaje": "5,001 a 10,000",
+        "dano": "18 + 3D6"
+      },
+      {
+        "tonelaje": "10,001 a 20,000",
+        "dano": "24 + 4D6"
+      },
+      {
+        "tonelaje": "20,001 a 35,000",
+        "dano": "30 + 5D6"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Condiciones Atmosféricas",
+    "source": "Strategic Operations, p. 61",
+    "data": [
+      {
+        "presion_atmosferica": "Vacío",
+        "modificador": "Sin Daño"
+      },
+      {
+        "presion_atmosferica": "Rastro",
+        "modificador": "Multiplicar Daño por 0.5"
+      },
+      {
+        "presion_atmosferica": "Fina",
+        "modificador": "Multiplicar Daño por 0.75"
+      },
+      {
+        "presion_atmosferica": "Estándar",
+        "modificador": "Sin Modificador"
+      },
+      {
+        "presion_atmosferica": "Alta",
+        "modificador": "Sin Modificador"
+      },
+      {
+        "presion_atmosferica": "Muy Alta",
+        "modificador": "Multiplicar Daño por 1.25"
+      },
+      {
+        "presion_atmosferica": "Despegue en Agua",
+        "modificador": "Multiplicar Daño por 1.25"
+      }
+    ]
+  }
+]

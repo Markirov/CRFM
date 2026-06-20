@@ -1,0 +1,303 @@
+[
+  {
+    "name": "LARGE GROUND SUPPORT VEHICLE HIT LOCATION TABLE",
+    "table": [
+      {
+        "2D6 Roll": "2*",
+        "Front": "Front (critical)",
+        "Rear": "Rear (critical)",
+        "Front Side§": "Side (critical)",
+        "Rear Side§": "Side (critical)"
+      },
+      {
+        "2D6 Roll": "3",
+        "Front": "Right Side†",
+        "Rear": "Left Side†",
+        "Front Side§": "Front†",
+        "Rear Side§": "Rear†"
+      },
+      {
+        "2D6 Roll": "4",
+        "Front": "Front†",
+        "Rear": "Rear†",
+        "Front Side§": "Side†",
+        "Rear Side§": "Side†"
+      },
+      {
+        "2D6 Roll": "5",
+        "Front": "Front†",
+        "Rear": "Rear†",
+        "Front Side§": "Side",
+        "Rear Side§": "Side"
+      },
+      {
+        "2D6 Roll": "6",
+        "Front": "Front",
+        "Rear": "Rear",
+        "Front Side§": "Side",
+        "Rear Side§": "Side"
+      },
+      {
+        "2D6 Roll": "7",
+        "Front": "Front",
+        "Rear": "Rear",
+        "Front Side§": "Side",
+        "Rear Side§": "Side"
+      },
+      {
+        "2D6 Roll": "8",
+        "Front": "Front",
+        "Rear": "Rear",
+        "Front Side§": "Side (critical)*",
+        "Rear Side§": "Side (critical)*"
+      },
+      {
+        "2D6 Roll": "9",
+        "Front": "Front†",
+        "Rear": "Rear†",
+        "Front Side§": "Side†",
+        "Rear Side§": "Side†"
+      },
+      {
+        "2D6 Roll": "10",
+        "Front": "Turret",
+        "Rear": "Turret",
+        "Front Side§": "Turret",
+        "Rear Side§": "Turret"
+      },
+      {
+        "2D6 Roll": "11",
+        "Front": "Turret",
+        "Rear": "Turret",
+        "Front Side§": "Turret",
+        "Rear Side§": "Turret"
+      },
+      {
+        "2D6 Roll": "12*",
+        "Front": "Turret (critical)",
+        "Rear": "Turret (critical)",
+        "Front Side§": "Turret (critical)",
+        "Rear Side§": "Turret (critical)"
+      }
+    ]
+  },
+  {
+    "name": "AIRSHIP VELOCITY TABLE",
+    "table": [
+      {
+        "Current Velocity": "0.25",
+        "Thrust Points per Cycle Turn 1": "1",
+        "Thrust Points per Cycle Turn 2": "—",
+        "Thrust Points per Cycle Turn 3": "—",
+        "Thrust Points per Cycle Turn 4": "—"
+      },
+      {
+        "Current Velocity": "0.5",
+        "Thrust Points per Cycle Turn 1": "1",
+        "Thrust Points per Cycle Turn 2": "—",
+        "Thrust Points per Cycle Turn 3": "1",
+        "Thrust Points per Cycle Turn 4": "—"
+      },
+      {
+        "Current Velocity": "0.75",
+        "Thrust Points per Cycle Turn 1": "1",
+        "Thrust Points per Cycle Turn 2": "—",
+        "Thrust Points per Cycle Turn 3": "1",
+        "Thrust Points per Cycle Turn 4": "1"
+      },
+      {
+        "Current Velocity": "1",
+        "Thrust Points per Cycle Turn 1": "1",
+        "Thrust Points per Cycle Turn 2": "1",
+        "Thrust Points per Cycle Turn 3": "1",
+        "Thrust Points per Cycle Turn 4": "1"
+      },
+      {
+        "Current Velocity": "1.25",
+        "Thrust Points per Cycle Turn 1": "2",
+        "Thrust Points per Cycle Turn 2": "1",
+        "Thrust Points per Cycle Turn 3": "1",
+        "Thrust Points per Cycle Turn 4": "1"
+      },
+      {
+        "Current Velocity": "1.5",
+        "Thrust Points per Cycle Turn 1": "2",
+        "Thrust Points per Cycle Turn 2": "1",
+        "Thrust Points per Cycle Turn 3": "2",
+        "Thrust Points per Cycle Turn 4": "1"
+      },
+      {
+        "Current Velocity": "1.75",
+        "Thrust Points per Cycle Turn 1": "2",
+        "Thrust Points per Cycle Turn 2": "1",
+        "Thrust Points per Cycle Turn 3": "2",
+        "Thrust Points per Cycle Turn 4": "2"
+      },
+      {
+        "Current Velocity": "2",
+        "Thrust Points per Cycle Turn 1": "2",
+        "Thrust Points per Cycle Turn 2": "2",
+        "Thrust Points per Cycle Turn 3": "2",
+        "Thrust Points per Cycle Turn 4": "2"
+      },
+      {
+        "Current Velocity": "2.25",
+        "Thrust Points per Cycle Turn 1": "3",
+        "Thrust Points per Cycle Turn 2": "2",
+        "Thrust Points per Cycle Turn 3": "2",
+        "Thrust Points per Cycle Turn 4": "2"
+      },
+      {
+        "Current Velocity": "2.5",
+        "Thrust Points per Cycle Turn 1": "3",
+        "Thrust Points per Cycle Turn 2": "2",
+        "Thrust Points per Cycle Turn 3": "3",
+        "Thrust Points per Cycle Turn 4": "2"
+      },
+      {
+        "Current Velocity": "2.75",
+        "Thrust Points per Cycle Turn 1": "3",
+        "Thrust Points per Cycle Turn 2": "2",
+        "Thrust Points per Cycle Turn 3": "3",
+        "Thrust Points per Cycle Turn 4": "3"
+      },
+      {
+        "Current Velocity": "3",
+        "Thrust Points per Cycle Turn 1": "3",
+        "Thrust Points per Cycle Turn 2": "3",
+        "Thrust Points per Cycle Turn 3": "3",
+        "Thrust Points per Cycle Turn 4": "3"
+      }
+    ]
+  },
+  {
+    "name": "AIRSHIP RANDOM ALTITUDE CHANGE TABLE",
+    "table": [
+      {
+        "2D6": "2",
+        "Result": "Altitude reduced by 3*"
+      },
+      {
+        "2D6": "3",
+        "Result": "Altitude reduced by 2*"
+      },
+      {
+        "2D6": "4",
+        "Result": "Altitude reduced by 1*"
+      },
+      {
+        "2D6": "5",
+        "Result": "Altitude reduced by 1*"
+      },
+      {
+        "2D6": "6",
+        "Result": "Altitude remains the same"
+      },
+      {
+        "2D6": "7",
+        "Result": "Altitude remains the same"
+      },
+      {
+        "2D6": "8",
+        "Result": "Altitude remains the same"
+      },
+      {
+        "2D6": "9",
+        "Result": "Altitude remains the same"
+      },
+      {
+        "2D6": "10",
+        "Result": "Altitude increased by 1*"
+      },
+      {
+        "2D6": "11",
+        "Result": "Altitude increased by 1*"
+      },
+      {
+        "2D6": "12",
+        "Result": "Altitude increased by 2*"
+      }
+    ]
+  },
+  {
+    "table_name": "Descripciones de Modificaciones de Chasis",
+    "records": [
+      {
+        "Modificación": "Anfibio (Amphibious)",
+        "Descripción/Características": "Puede atravesar o aterrizar en agua de cualquier profundidad (la unidad se considera a flote en la superficie del agua)."
+      },
+      {
+        "Modificación": "Blindado (Armored)",
+        "Descripción/Características": "Puede montar tipos de blindaje más pesados (marcados con un asterisco en la Tabla de Blindaje de Vehículos de Apoyo)."
+      },
+      {
+        "Modificación": "Bicicleta (Bicycle)",
+        "Descripción/Características": "Puede entrar en terreno de Bosque Ligero, si de otro modo estuviera restringido."
+      },
+      {
+        "Modificación": "Descapotable (Convertible)",
+        "Descripción/Características": "No puede montar una torreta; la unidad recibe un resultado de Tripulación Muerta si es impactada en una localización de Torreta mientras la capota está abierta."
+      },
+      {
+        "Modificación": "Buggy de Dunas (Dune Buggy)",
+        "Descripción/Características": "Opera normalmente solo en Arena; cuando no está en Arena: -1 PM de Crucero, y la unidad no puede usar PM de Flanco."
+      },
+      {
+        "Modificación": "Sellado Ambiental (Environmental Sealing)",
+        "Descripción/Características": "Las unidades con motores de Fisión, Fusión y Eléctricos pueden operar normalmente en vacío o bajo el agua a menos que se rompa el sello."
+      },
+      {
+        "Modificación": "Hidroala (Hydrofoil)",
+        "Descripción/Características": "Puede operar como un hidroala; multiplica el PM de Crucero base por 1.25 (redondeo normal, redondeando .5 hacia arriba)."
+      },
+      {
+        "Modificación": "Monociclo (Monocycle)",
+        "Descripción/Características": "Puede entrar en terreno de Bosque Ligero, si de otro modo estuviera restringido."
+      },
+      {
+        "Modificación": "Todoterreno (Off-Road)",
+        "Descripción/Características": "Opera normalmente sobre y fuera de terreno Pavimentado; la unidad sigue considerándose inmóvil si entra en terreno prohibido."
+      },
+      {
+        "Modificación": "Omni",
+        "Descripción/Características": "Puede construirse como un OmniVehículo (pero no puede usar reglas de Infantería Mecanizada)."
+      },
+      {
+        "Modificación": "Hélice (Prop)",
+        "Descripción/Características": "No puede operar por encima de la fila atmosférica 1; solo se mueve 1 hexágono por turno en el mapa de gran altitud; Entra Fuera de Control a Velocidad 8+."
+      },
+      {
+        "Modificación": "Moto de Nieve (Snowmobile)",
+        "Descripción/Características": "Opera normalmente solo en Nieve/Hielo; cuando no está en Nieve o Hielo: -1 PM de Crucero, y la unidad no puede usar PM de Flanco."
+      },
+      {
+        "Modificación": "STOL",
+        "Descripción/Características": "Puede aterrizar y despegar con solo 300 metros (10 hexágonos) de pista."
+      },
+      {
+        "Modificación": "Sumergible (Submersible)",
+        "Descripción/Características": "Puede operar como un submarino (no puede usar la modificación de hidroala, si está equipado, cuando está sumergido)."
+      },
+      {
+        "Modificación": "Tractor (Ruedas/Oruga)",
+        "Descripción/Características": "Puede remolcar otras unidades terrestres sobre terreno no acuático (hasta el peso de la unidad remolcadora)."
+      },
+      {
+        "Modificación": "Tractor (Naval)",
+        "Descripción/Características": "Puede remolcar otras unidades navales sobre agua (hasta 5 veces el peso de la unidad remolcadora)."
+      },
+      {
+        "Modificación": "Remolque (Trailer)",
+        "Descripción/Características": "No se requiere motor (la unidad puede ser remolcada por un Tractor adecuado); no se requiere para unidades navales."
+      },
+      {
+        "Modificación": "Ultraligero (Ultra-Light)",
+        "Descripción/Características": "No puede montar blindaje mejor que un BAR de 5 debido a una estructura más ligera."
+      },
+      {
+        "Modificación": "VSTOL",
+        "Descripción/Características": "Puede operar como un STOL o puede despegar y aterrizar verticalmente."
+      }
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "type": "Explosión de Munición Inferno por Calor",
+    "heat_level": 19,
+    "avoid_number": "8+"
+  },
+  {
+    "type": "Explosión de Munición Inferno por Calor",
+    "heat_level": 23,
+    "avoid_number": "10+"
+  },
+  {
+    "type": "Explosión de Munición Inferno por Calor",
+    "heat_level": 28,
+    "avoid_number": "12"
+  },
+  {
+    "type": "Impacto Crítico de Misil Capital",
+    "missile": "Barracuda",
+    "critical_hit_chance": "11+"
+  },
+  {
+    "type": "Impacto Crítico de Misil Capital",
+    "missile": "White Shark",
+    "critical_hit_chance": "9+"
+  },
+  {
+    "type": "Impacto Crítico de Misil Capital",
+    "missile": "Killer Whale",
+    "critical_hit_chance": "10+"
+  },
+  {
+    "type": "Impacto Crítico de Misil Capital",
+    "missile": "Kraken",
+    "critical_hit_chance": "8+"
+  }
+]

@@ -1,0 +1,562 @@
+[
+  {
+    "name": "Tabla de Modificadores de Edificio (Movimiento)",
+    "data": [
+      {
+        "Tipo de Edificio": "Ligero",
+        "FC Original": "1–15",
+        "Coste de PM por Hex*": "+1",
+        "Modificador de Habilidad de Pilotaje/Conducción": "0"
+      },
+      {
+        "Tipo de Edificio": "Medio",
+        "FC Original": "16–40",
+        "Coste de PM por Hex*": "+2",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+1"
+      },
+      {
+        "Tipo de Edificio": "Pesado",
+        "FC Original": "41–90",
+        "Coste de PM por Hex*": "+3",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+2"
+      },
+      {
+        "Tipo de Edificio": "Reforzado",
+        "FC Original": "91–150",
+        "Coste de PM por Hex*": "+4",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+5"
+      }
+    ],
+    "notes": "*La infantería (excepto la mecanizada) paga solo 1 PM para entrar en un edificio. Los ProtoMechs y la infantería mecanizada pagan 2 PM."
+  },
+  {
+    "name": "Tabla de Modificadores de Movimiento en Edificios",
+    "data": [
+      {
+        "Hexágonos Movidos en el Turno": "1–2",
+        "Modificador de Habilidad de Pilotaje/Conducción": "0"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "3–4",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+1"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "5–6",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+2"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "7–9",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+3"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "10–17",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+4"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "18–24",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+5"
+      },
+      {
+        "Hexágonos Movidos en el Turno": "25+",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+6"
+      }
+    ]
+  },
+  {
+    "name": "Tabla de Daño a Infantería en Edificios (Ataques desde el exterior)",
+    "data": [
+      {
+        "Tipo de Edificio": "Ligero",
+        "Daño a la Infantería es": "75% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Medio",
+        "Daño a la Infantería es": "50% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Pesado",
+        "Daño a la Infantería es": "25% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Reforzado",
+        "Daño a la Infantería es": "Ninguno"
+      }
+    ]
+  },
+  {
+    "name": "Tabla de Daño a Infantería por Ataques Desde Dentro de Edificios",
+    "data": [
+      {
+        "Tipo de Edificio": "Ligero",
+        "Daño a la Infantería es": "100% (el edificio absorbe 0%)"
+      },
+      {
+        "Tipo de Edificio": "Medio",
+        "Daño a la Infantería es": "100% (el edificio absorbe 0%)"
+      },
+      {
+        "Tipo de Edificio": "Pesado",
+        "Daño a la Infantería es": "75% (el edificio absorbe 25%)"
+      },
+      {
+        "Tipo de Edificio": "Reforzado",
+        "Daño a la Infantería es": "50% (el edificio absorbe 50%)"
+      }
+    ]
+  },
+  {
+    "name": "Tabla Especial de Localización de Impacto para 'Mechs en Edificios",
+    "data": [
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "1",
+        "Localización de Impacto (Cuadrúpedo)": "Brazo Izquierdo (Pata Delantera Izquierda)"
+      },
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "2",
+        "Localización de Impacto (Cuadrúpedo)": "Torso Izquierdo Delantero/Trasero*"
+      },
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "3",
+        "Localización de Impacto (Cuadrúpedo)": "Torso Central Delantero/Trasero*"
+      },
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "4",
+        "Localización de Impacto (Cuadrúpedo)": "Torso Derecho Delantero/Trasero*"
+      },
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "5",
+        "Localización de Impacto (Cuadrúpedo)": "Brazo Derecho (Pata Delantera Derecha)"
+      },
+      {
+        "Fuente del Disparo": "Desde Arriba",
+        "Tirada de Dado (1D6)": "6",
+        "Localización de Impacto (Cuadrúpedo)": "Cabeza"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "1",
+        "Localización de Impacto (Cuadrúpedo)": "Pierna Izquierda (Pata Delantera Izquierda)"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "2",
+        "Localización de Impacto (Cuadrúpedo)": "Pierna Izquierda (Pata Trasera Izquierda)"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "3",
+        "Localización de Impacto (Cuadrúpedo)": "Torso Izquierdo Delantero/Trasero*"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "4",
+        "Localización de Impacto (Cuadrúpedo)": "Torso Derecho Delantero/Trasero*"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "5",
+        "Localización de Impacto (Cuadrúpedo)": "Pierna Derecha (Pata Delantera Derecha)"
+      },
+      {
+        "Fuente del Disparo": "Desde Abajo",
+        "Tirada de Dado (1D6)": "6",
+        "Localización de Impacto (Cuadrúpedo)": "Pierna Derecha (Pata Trasera Derecha)"
+      }
+    ],
+    "notes": "*El ataque impacta el frente si es desde el frente o el lado. Impacta la parte trasera si es desde la parte trasera."
+  },
+  {
+    "name": "Tabla de Sótanos",
+    "data": [
+      {
+        "Tirada de Dado (2D6)": "2",
+        "Efecto": "Sótano doble. La unidad cae 2 niveles."
+      },
+      {
+        "Tirada de Dado (2D6)": "3-4",
+        "Efecto": "Sótano. La unidad cae 1 nivel."
+      },
+      {
+        "Tirada de Dado (2D6)": "5-8",
+        "Efecto": "Sin sótano."
+      },
+      {
+        "Tirada de Dado (2D6)": "9",
+        "Efecto": "Sótano pequeño. La infantería puede moverse al sótano como si fuera un nuevo nivel del edificio (Subnivel 1); los ProtoMechs no pueden entrar. Sin efecto en 'Mechs o vehículos."
+      },
+      {
+        "Tirada de Dado (2D6)": "10-11",
+        "Efecto": "Sótano. La unidad cae 1 nivel."
+      },
+      {
+        "Tirada de Dado (2D6)": "12",
+        "Efecto": "Sótano doble. La unidad cae 2 niveles."
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Clasificación y Tipo de Edificio",
+    "source_page": 116,
+    "data": [
+      {
+        "Classification/Type": "Tent",
+        "Construction Factor (CF)*": "1–2",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "1/1",
+        "MP Cost Per Hex†": "+0",
+        "Piloting/Driving Skill Modifier": "—",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0"
+      },
+      {
+        "Classification/Type": "Hangar - Light",
+        "Construction Factor (CF)*": "1–8",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "10/7",
+        "MP Cost Per Hex†": "+0",
+        "Piloting/Driving Skill Modifier": "+0†",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Hangar - Medium",
+        "Construction Factor (CF)*": "9–16",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "14/10",
+        "MP Cost Per Hex†": "+1",
+        "Piloting/Driving Skill Modifier": "+0†",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Hangar - Heavy",
+        "Construction Factor (CF)*": "17–45",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "18/13",
+        "MP Cost Per Hex†": "+2",
+        "Piloting/Driving Skill Modifier": "+1†",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Hangar - Hardened",
+        "Construction Factor (CF)*": "46–75",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "20/14",
+        "MP Cost Per Hex†": "+3",
+        "Piloting/Driving Skill Modifier": "+3†",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Standard§ - Light",
+        "Construction Factor (CF)*": "1–15",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "6/5",
+        "MP Cost Per Hex†": "+1",
+        "Piloting/Driving Skill Modifier": "+0",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x1"
+      },
+      {
+        "Classification/Type": "Standard§ - Medium",
+        "Construction Factor (CF)*": "16–40",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "8/8",
+        "MP Cost Per Hex†": "+2",
+        "Piloting/Driving Skill Modifier": "+1",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x1"
+      },
+      {
+        "Classification/Type": "Standard§ - Heavy",
+        "Construction Factor (CF)*": "41–90",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "10/10",
+        "MP Cost Per Hex†": "+3",
+        "Piloting/Driving Skill Modifier": "+2",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x1"
+      },
+      {
+        "Classification/Type": "Fence",
+        "Construction Factor (CF)*": "1",
+        "Max Armor (per hex)": "—",
+        "Max Size (Hexes/Levels)": "—/3",
+        "MP Cost Per Hex†": "+1††",
+        "Piloting/Driving Skill Modifier": "—",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0"
+      },
+      {
+        "Classification/Type": "Wall - Light",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "1–15",
+        "Max Size (Hexes/Levels)": "—/4",
+        "MP Cost Per Hex†": "+1",
+        "Piloting/Driving Skill Modifier": "+0",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Wall - Medium",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "16–40",
+        "Max Size (Hexes/Levels)": "—/6",
+        "MP Cost Per Hex†": "+2",
+        "Piloting/Driving Skill Modifier": "+0",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Wall - Heavy",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "41–90",
+        "Max Size (Hexes/Levels)": "—/8",
+        "MP Cost Per Hex†": "+3",
+        "Piloting/Driving Skill Modifier": "+1",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Wall - Hardened",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "91–150",
+        "Max Size (Hexes/Levels)": "—/10",
+        "MP Cost Per Hex†": "+4",
+        "Piloting/Driving Skill Modifier": "+3",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x1/x0.5"
+      },
+      {
+        "Classification/Type": "Gun Emplacement - Light",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "1–15",
+        "Max Size (Hexes/Levels)": "1/1",
+        "MP Cost Per Hex†": "NA",
+        "Piloting/Driving Skill Modifier": "NA",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Gun Emplacement - Medium",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "16–40",
+        "Max Size (Hexes/Levels)": "1/1",
+        "MP Cost Per Hex†": "NA",
+        "Piloting/Driving Skill Modifier": "NA",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Gun Emplacement - Heavy",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "41–90",
+        "Max Size (Hexes/Levels)": "1/1",
+        "MP Cost Per Hex†": "NA",
+        "Piloting/Driving Skill Modifier": "NA",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Gun Emplacement - Hardened",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "91–150",
+        "Max Size (Hexes/Levels)": "1/1",
+        "MP Cost Per Hex†": "NA",
+        "Piloting/Driving Skill Modifier": "NA",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Fortress - Medium",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "16–40",
+        "Max Size (Hexes/Levels)": "12/15",
+        "MP Cost Per Hex†": "+3§§",
+        "Piloting/Driving Skill Modifier": "+2",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Fortress - Heavy",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "41–90",
+        "Max Size (Hexes/Levels)": "15/20",
+        "MP Cost Per Hex†": "+4§§",
+        "Piloting/Driving Skill Modifier": "+3",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Fortress - Hardened",
+        "Construction Factor (CF)*": "CF x 1",
+        "Max Armor (per hex)": "91–150",
+        "Max Size (Hexes/Levels)": "20/30",
+        "MP Cost Per Hex†": "+5§§",
+        "Piloting/Driving Skill Modifier": "+4",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "x0.5/x2"
+      },
+      {
+        "Classification/Type": "Castles Brian§§ - Heavy",
+        "Construction Factor (CF)*": "CF x 2**",
+        "Max Armor (per hex)": "35–90",
+        "Max Size (Hexes/Levels)": "20/10",
+        "MP Cost Per Hex†": "+4§§",
+        "Piloting/Driving Skill Modifier": "+4",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "Capital/Capital**"
+      },
+      {
+        "Classification/Type": "Castles Brian§§ - Hardened",
+        "Construction Factor (CF)*": "CF x 2**",
+        "Max Armor (per hex)": "91–150",
+        "Max Size (Hexes/Levels)": "30/15",
+        "MP Cost Per Hex†": "+5§§",
+        "Piloting/Driving Skill Modifier": "+5",
+        "Damage Scaling: Damage to Building/ Damage to Units‡": "Capital/Capital**"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Movimiento en Edificios Avanzados",
+    "source_page": 120,
+    "data": [
+      {
+        "Building Features": "Empty Hangar/Tunnel/Open-Space Hex",
+        "MP Cost/Hex*": "1",
+        "Piloting Modifier**": "NA",
+        "Notes": "Treat as Paved Terrain†"
+      },
+      {
+        "Building Features": "Hangar/Tunnel/Empty Cargo Hex",
+        "MP Cost/Hex*": "-1",
+        "Piloting Modifier**": "-3",
+        "Notes": "To a Minimum MP cost per hex of 1††"
+      },
+      {
+        "Building Features": "Non-Liquid Cargo Hex",
+        "MP Cost/Hex*": "+0",
+        "Piloting Modifier**": "-2",
+        "Notes": ""
+      },
+      {
+        "Building Features": "Liquid Cargo Hex",
+        "MP Cost/Hex*": "+1",
+        "Piloting Modifier**": "+2",
+        "Notes": "See Liquid Fuel/Chemical Storage Tanks (p. 134)"
+      },
+      {
+        "Building Features": "High Ceilings",
+        "MP Cost/Hex*": "+0",
+        "Piloting Modifier**": "-1",
+        "Notes": "Half all damage from movement (round down)‡"
+      },
+      {
+        "Building Features": "Low Ceilings",
+        "MP Cost/Hex*": "+1",
+        "Piloting Modifier**": "+1",
+        "Notes": "Double all damage from movement (round up)‡"
+      },
+      {
+        "Building Features": "Unspecified Equipment Hex‡‡",
+        "MP Cost/Hex*": "+0",
+        "Piloting Modifier**": "+0",
+        "Notes": "+1 to-hit modifier for weapon attacks (per hex)"
+      },
+      {
+        "Building Features": "Specified Equipment Hex‡‡",
+        "MP Cost/Hex*": "+1",
+        "Piloting Modifier**": "+1",
+        "Notes": "+2 to-hit modifier for weapon attacks (per hex)"
+      },
+      {
+        "Building Features": "Generator/Weapon Hex‡‡",
+        "MP Cost/Hex*": "+2",
+        "Piloting Modifier**": "+2",
+        "Notes": "+2 to-hit modifier for weapon attacks (per hex)"
+      },
+      {
+        "Building Features": "Heavy Metal Superstructure",
+        "MP Cost/Hex*": "+1",
+        "Piloting Modifier**": "+2",
+        "Notes": "Double damage to unit from failed Piloting Skill"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Críticos en Edificios Avanzados",
+    "source_page": 122,
+    "data": [
+      {
+        "2D6 Roll": "2–5",
+        "Effect": "No Critical Hit"
+      },
+      {
+        "2D6 Roll": "6",
+        "Effect": "Weapon Malfunction"
+      },
+      {
+        "2D6 Roll": "7",
+        "Effect": "Gunners Stunned"
+      },
+      {
+        "2D6 Roll": "8",
+        "Effect": "Weapon Destroyed"
+      },
+      {
+        "2D6 Roll": "9",
+        "Effect": "Gunners Killed"
+      },
+      {
+        "2D6 Roll": "10",
+        "Effect": "Turret Jammed/Turret Locked*"
+      },
+      {
+        "2D6 Roll": "11",
+        "Effect": "Ammunition"
+      },
+      {
+        "2D6 Roll": "12",
+        "Effect": "Other"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Modificadores de Edificios (Inf. vs Inf.)",
+    "source_page": 204,
+    "data": [
+      {
+        "Building Type": "Hangar",
+        "Modifier*": "No Modifier"
+      },
+      {
+        "Building Type": "Standard",
+        "Modifier*": ".1 Per 6 Levels"
+      },
+      {
+        "Building Type": "Gun Emplacement/Fortress",
+        "Modifier*": ".1 Per 3 Levels"
+      },
+      {
+        "Building Type": "Castles Brian",
+        "Modifier*": ".1 Per Level"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Efectos del Terreno (Zona Industrial)",
+    "source_page": 32,
+    "data": [
+      {
+        "Die Roll": "2-7",
+        "Effect": "No effect"
+      },
+      {
+        "Die Roll": "8",
+        "Effect": "Hex catches fire (see Fire, p. 43)."
+      },
+      {
+        "Die Roll": "9",
+        "Effect": "Power lines fall: all units in hex take 3 points of damage to a random location"
+      },
+      {
+        "Die Roll": "10",
+        "Effect": "Minor explosion: all units in hex take 5 points of damage to a random location; hex catches fire"
+      },
+      {
+        "Die Roll": "11",
+        "Effect": "Electrical explosion: all units in hex take 1D6 + 3 points of damage to a random location"
+      },
+      {
+        "Die Roll": "12",
+        "Effect": "Major explosion: all units in hex take 2D6 points of damage to a random location and suffers as if hit by 1d6 infernos for one turn; hex catches fire"
+      }
+    ]
+  }
+]

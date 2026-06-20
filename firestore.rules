@@ -54,6 +54,15 @@ service cloud.firestore {
       allow read, write: if hasAnyRole();
     }
 
+    match /noticias/{noticiaId} {
+      allow read:  if hasAnyRole();
+      allow write: if isAdmin();
+    }
+
+    match /enciclopedia/{document=**} {
+      allow read: if true;
+    }
+
     // ── Libro Mayor / Finanzas: admin R+W, DM solo R ─────────
     match /libroMayor/{doc} {
       allow read:  if isStaff();

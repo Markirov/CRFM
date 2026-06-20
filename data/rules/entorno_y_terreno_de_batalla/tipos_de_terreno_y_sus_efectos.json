@@ -1,0 +1,518 @@
+[
+  {
+    "title": "Tabla de Costos de Movimiento",
+    "columns": [
+      "Acción de Movimiento/Tipo de Terreno",
+      "Costo de PM por Hex/Costo de Terreno",
+      "Unidades Prohibidas"
+    ],
+    "rows": [
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Costo para Entrar en Cualquier Hexágono",
+        "Costo de PM por Hex/Costo de Terreno": "1",
+        "Unidades Prohibidas": null
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Despejado",
+        "Costo de PM por Hex/Costo de Terreno": "+0",
+        "Unidades Prohibidas": "Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Pavimento/Puente",
+        "Costo de PM por Hex/Costo de Terreno": "+0",
+        "Unidades Prohibidas": "Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Carretera",
+        "Costo de PM por Hex/Costo de Terreno": "+0",
+        "Unidades Prohibidas": "Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Escabroso",
+        "Costo de PM por Hex/Costo de Terreno": "+1",
+        "Unidades Prohibidas": "De ruedas, vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Bosque Ligero",
+        "Costo de PM por Hex/Costo de Terreno": "+1",
+        "Unidades Prohibidas": "De ruedas, hover, VTOL, WiGE, vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Bosque Pesado",
+        "Costo de PM por Hex/Costo de Terreno": "+2",
+        "Unidades Prohibidas": "Vehículos, vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Agua (Profundidad 0)",
+        "Costo de PM por Hex/Costo de Terreno": "+0",
+        "Unidades Prohibidas": "Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Agua (Profundidad 1)",
+        "Costo de PM por Hex/Costo de Terreno": "+1 (costo de cambio de nivel no incluido)",
+        "Unidades Prohibidas": "Infantería, vehículos"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Agua (Profundidad 2+)",
+        "Costo de PM por Hex/Costo de Terreno": "+3 (costo de cambio de nivel no incluido)",
+        "Unidades Prohibidas": "Infantería, vehículos, IndustrialMechs"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Cambio de Nivel (1 nivel)",
+        "Costo de PM por Hex/Costo de Terreno": "+1 ('Mechs, VTOLs, subs, ProtoMechs), +2 (infantería, vehículos terrestres)",
+        "Unidades Prohibidas": null
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Cambio de Nivel (2 niveles)",
+        "Costo de PM por Hex/Costo de Terreno": "+2 ('Mechs, VTOLs, subs)",
+        "Unidades Prohibidas": "Infantería, vehículos terrestres, WiGE, ProtoMechs"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Escombros",
+        "Costo de PM por Hex/Costo de Terreno": "+1",
+        "Unidades Prohibidas": "De ruedas, Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Edificio Ligero",
+        "Costo de PM por Hex/Costo de Terreno": "+1",
+        "Unidades Prohibidas": "VTOL, WiGE, Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Edificio Medio",
+        "Costo de PM por Hex/Costo de Terreno": "+2",
+        "Unidades Prohibidas": "VTOL, WiGE, Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Edificio Pesado",
+        "Costo de PM por Hex/Costo de Terreno": "+3",
+        "Unidades Prohibidas": "VTOL, WiGE, Vehículo naval"
+      },
+      {
+        "Acción de Movimiento/Tipo de Terreno": "Edificio Endurecido",
+        "Costo de PM por Hex/Costo de Terreno": "+4",
+        "Unidades Prohibidas": "VTOL, WiGE, Vehículo naval"
+      }
+    ]
+  },
+  {
+    "title": "Tabla de Factor de Terreno y Conversión (para Despejar Bosques)",
+    "columns": [
+      "Factor de Terreno",
+      "Terreno Anterior",
+      "Terreno Nuevo"
+    ],
+    "rows": [
+      {
+        "Factor de Terreno": "90",
+        "Terreno Anterior": "Bosque Pesado",
+        "Terreno Nuevo": "Bosque Ligero"
+      },
+      {
+        "Factor de Terreno": "50",
+        "Terreno Anterior": "Bosque Ligero",
+        "Terreno Nuevo": "Escabroso"
+      },
+      {
+        "Factor de Terreno": "0",
+        "Terreno Anterior": "Todos los demás",
+        "Terreno Nuevo": "Sin cambios"
+      }
+    ]
+  },
+  {
+    "title": "Tabla de Modificadores de Edificios (Movimiento)",
+    "columns": [
+      "Tipo de Edificio",
+      "CF Original",
+      "Costo de PM por Hex*",
+      "Modificador de Habilidad de Pilotaje/Conducción"
+    ],
+    "rows": [
+      {
+        "Tipo de Edificio": "Ligero",
+        "CF Original": "1–15",
+        "Costo de PM por Hex*": "+1",
+        "Modificador de Habilidad de Pilotaje/Conducción": "0"
+      },
+      {
+        "Tipo de Edificio": "Medio",
+        "CF Original": "16–40",
+        "Costo de PM por Hex*": "+2",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+1"
+      },
+      {
+        "Tipo de Edificio": "Pesado",
+        "CF Original": "41–90",
+        "Costo de PM por Hex*": "+3",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+2"
+      },
+      {
+        "Tipo de Edificio": "Endurecido",
+        "CF Original": "91–150",
+        "Costo de PM por Hex*": "+4",
+        "Modificador de Habilidad de Pilotaje/Conducción": "+5"
+      }
+    ]
+  },
+  {
+    "title": "Tabla de Daño a Infantería en Edificios",
+    "columns": [
+      "Tipo de Edificio",
+      "El daño a la infantería es:"
+    ],
+    "rows": [
+      {
+        "Tipo de Edificio": "Ligero",
+        "El daño a la infantería es:": "75% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Medio",
+        "El daño a la infantería es:": "50% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Pesado",
+        "El daño a la infantería es:": "25% del daño al edificio"
+      },
+      {
+        "Tipo de Edificio": "Endurecido",
+        "El daño a la infantería es:": "Ninguno"
+      }
+    ]
+  },
+  {
+    "Tipo de Terreno/Modificación": "Despejado",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "200",
+    "Unidades Prohibidas": "Vehículos Ferroviarios, Naves Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Pilas de Grava",
+    "Costo de MP por Hex": "+1 por nivel",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1 por nivel",
+    "Factor de Terreno/Construcción": "100",
+    "Unidades Prohibidas": "Vehículos Ferroviarios, Naves Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Escabroso",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "200",
+    "Unidades Prohibidas": "De Ruedas, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Escabroso (Ultra)",
+    "Costo de MP por Hex": "+2",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "200",
+    "Unidades Prohibidas": "Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Bosque Ligero",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+1",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "50",
+    "Unidades Prohibidas": "De Ruedas, Hover, VTOL, WiGE, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Bosque Pesado",
+    "Costo de MP por Hex": "+2",
+    "Modificador de Ataque": "+2",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "90",
+    "Unidades Prohibidas": "Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Bosque (Ultra-Pesado)",
+    "Costo de MP por Hex": "+3",
+    "Modificador de Ataque": "+3",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "120",
+    "Unidades Prohibidas": "'Mechs, ProtoMechs, Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Jungla Ligera",
+    "Costo de MP por Hex": "+2",
+    "Modificador de Ataque": "+1",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "60",
+    "Unidades Prohibidas": "Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Jungla Pesada",
+    "Costo de MP por Hex": "+3",
+    "Modificador de Ataque": "+2",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+2",
+    "Factor de Terreno/Construcción": "100",
+    "Unidades Prohibidas": "Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Jungla (Ultra-Pesada)",
+    "Costo de MP por Hex": "+4",
+    "Modificador de Ataque": "+3",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+3",
+    "Factor de Terreno/Construcción": "130",
+    "Unidades Prohibidas": "'Mechs, ProtoMechs, Vehículos, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Corteza de Magma",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "30",
+    "Unidades Prohibidas": "De Ruedas, Infantería, Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Magma, Líquido",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+4",
+    "Factor de Terreno/Construcción": "0",
+    "Unidades Prohibidas": "De Ruedas, Hover, Oruga, Infantería, Ferroviarios, ProtoMechs, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Campos Plantados",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "Ver p. 38",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "30",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Tundra",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "70",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Arena",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "100",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Agua (Profundidad 0)",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Agua (Profundidad 1)",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Infantería, Vehículos, Ferroviarios"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Agua (Profundidad 2-15)",
+    "Costo de MP por Hex": "+3",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Infantería, Vehículos, Ferroviarios, IndustrialMechs"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Agua (Profundidad 16+)",
+    "Costo de MP por Hex": "Ver p. 42",
+    "Modificador de Ataque": "Ver p. 42",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 42",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ver p. 42"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Acantilados Escarpados",
+    "Costo de MP por Hex": "Ver p. 39",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 39",
+    "Factor de Terreno/Construcción": "50",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Escombros",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "0",
+    "Unidades Prohibidas": "Ferroviarios, Navales, De Ruedas"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Escombros (Ultra)",
+    "Costo de MP por Hex": "+2",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "0",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Hielo Negro",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+4",
+    "Factor de Terreno/Construcción": "40",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Tormenta de Insectos",
+    "Costo de MP por Hex": "Ver p. 40",
+    "Modificador de Ataque": "+1 DB, Mi/+2 DE, Pulso",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Nieve Profunda",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "20",
+    "Unidades Prohibidas": "De Ruedas"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Profundidades Extremas",
+    "Costo de MP por Hex": "Ver p. 42",
+    "Modificador de Ataque": "Ver p. 42",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 42",
+    "Factor de Terreno/Construcción": "0",
+    "Unidades Prohibidas": "Ver p. 42"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Fuego",
+    "Costo de MP por Hex": "Ver p. 43",
+    "Modificador de Ataque": "Ver p. 43",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 43",
+    "Factor de Terreno/Construcción": "0",
+    "Unidades Prohibidas": "Ver p. 43"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Géiser",
+    "Costo de MP por Hex": "Ver p. 48",
+    "Modificador de Ataque": "Ver p. 48",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 48",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ver p. 48"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Pozas de Líquido Peligroso",
+    "Costo de MP por Hex": "Ver p. 49",
+    "Modificador de Ataque": "Ver p. 49",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "Ver p. 49",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ver p. 49"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Hielo",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+4",
+    "Factor de Terreno/Construcción": "40",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Lodo",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+1",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ferroviarios"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Raíles",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "20",
+    "Unidades Prohibidas": "Naves Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Rápidos",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+2",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Carretera (Pavimentada)",
+    "Costo de MP por Hex": "+1 (O/H/I)",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "150",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Carretera (Grava)",
+    "Costo de MP por Hex": "+1 (V/I)",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "50",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Carretera (Tierra)",
+    "Costo de MP por Hex": "+1",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "20",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Pavimentado",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "150",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Humo (Ligero)",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+1",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Humo (Pesado)",
+    "Costo de MP por Hex": "+0",
+    "Modificador de Ataque": "+2",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Pantano",
+    "Costo de MP por Hex": "+1 (M), +2 (V/I)",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "—"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Nieve Fina",
+    "Costo de MP por Hex": "+1 (R/IC)",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+0",
+    "Factor de Terreno/Construcción": "10",
+    "Unidades Prohibidas": "Ferroviarios, Navales"
+  },
+  {
+    "Tipo de Terreno/Modificación": "Torrente",
+    "Costo de MP por Hex": "+2",
+    "Modificador de Ataque": "+0",
+    "Modificador de Habilidad (Pilotaje/Conducción)": "+3",
+    "Factor de Terreno/Construcción": "—",
+    "Unidades Prohibidas": "Ferroviarios"
+  }
+]

@@ -1,0 +1,441 @@
+[
+  {
+    "titulo_objetivo": "Advance Attack",
+    "recompensa_wp": "300",
+    "detalles": "Destroy/Cripple at least half of the opposing Force."
+  },
+  {
+    "titulo_objetivo": "Annihilate",
+    "recompensa_wp": "500",
+    "detalles": "Cripple/destroy all of the opposing Force."
+  },
+  {
+    "titulo_objetivo": "Asset Denial",
+    "recompensa_wp": "200",
+    "detalles": "Retain control of a designated unit, building, person, or other asset at the end of the track."
+  },
+  {
+    "titulo_objetivo": "Being Difficult",
+    "recompensa_wp": "400",
+    "detalles": "At least two-thirds of the player’s Force must be operational at the end of the track."
+  },
+  {
+    "titulo_objetivo": "Blitzkrieg!",
+    "recompensa_wp": "250",
+    "detalles": "Destroy/Cripple a certain number of opposing units (half or more) by a defined time limit."
+  },
+  {
+    "titulo_objetivo": "Boom!",
+    "recompensa_wp": "500",
+    "detalles": "Force the enemy to withdraw completely."
+  },
+  {
+    "titulo_objetivo": "Boxed In",
+    "recompensa_wp": "400",
+    "detalles": "Allow no more than half of the enemy Force to exit off their home edge. (Best when used with the setup of the Force in question on the opposite side from their home edge.)"
+  },
+  {
+    "titulo_objetivo": "Breakthrough",
+    "recompensa_wp": "200",
+    "detalles": "The players exit at least 25% of their Force through the opponent’s home edge."
+  },
+  {
+    "titulo_objetivo": "Bring the Pain",
+    "recompensa_wp": "600",
+    "detalles": "Destroy/Cripple at least 75% of the enemy Force."
+  },
+  {
+    "titulo_objetivo": "Bullet Time",
+    "recompensa_wp": "100",
+    "detalles": "The players must complete the track without a friendly pilot death caused by any means. For example: A cockpit critical hit, MechWarrior damage through failed Piloting Skill Rolls, ammo explosions, falling, and so forth."
+  },
+  {
+    "titulo_objetivo": "Burn the Flag",
+    "recompensa_wp": "500",
+    "detalles": "Locate and destroy the enemy Force’s headquarters unit/building/location."
+  },
+  {
+    "titulo_objetivo": "Cherry Picker",
+    "recompensa_wp": "400",
+    "detalles": "Pre-select no less than 30% of the opposing Force’s units before setup. Cripple or Destroy all of these units. These units do not have to be revealed to the opposing player."
+  },
+  {
+    "titulo_objetivo": "Clean House",
+    "recompensa_wp": "500",
+    "detalles": "Destroy all of the enemy Force’s specific unit types (BattleMechs, vehicles, battle armor, etc.) and hold a specific building/location at the end of the track."
+  },
+  {
+    "titulo_objetivo": "Clear the Zone",
+    "recompensa_wp": "100",
+    "detalles": "Destroy all the buildings on the battlefield."
+  },
+  {
+    "titulo_objetivo": "Close the Door",
+    "recompensa_wp": "300",
+    "detalles": "Destroy, Cripple, or Force Withdrawal at least 75% of the enemy Force."
+  },
+  {
+    "titulo_objetivo": "Command and Conquer",
+    "recompensa_wp": "100",
+    "detalles": "Destroy the opposing command post and retain a friendly command post by the end of the track."
+  },
+  {
+    "titulo_objetivo": "Containment",
+    "recompensa_wp": "*",
+    "detalles": "Stop as many vehicles as possible from exiting the battlefield. Points are given on a per-unit basis, often +10, +25, or +50 depending on the track’s overall story goal."
+  },
+  {
+    "titulo_objetivo": "Cover Me!",
+    "recompensa_wp": "200",
+    "detalles": "The players must not have any units destroyed through attacks into the unit’s rear arc. In other words, do not die from getting shot in the back!"
+  },
+  {
+    "titulo_objetivo": "Cut Off the Head",
+    "recompensa_wp": "100",
+    "detalles": "Destroy/Cripple the enemy commander."
+  },
+  {
+    "titulo_objetivo": "Dead…with Prejudice",
+    "recompensa_wp": "1000",
+    "detalles": "Destroy/Cripple all of the enemy Force before a specified time limit."
+  },
+  {
+    "titulo_objetivo": "Delaying Tactics",
+    "recompensa_wp": "500",
+    "detalles": "Destroy/Cripple two or more commanders or officers, as designated by the GM, before a specified time limit."
+  },
+  {
+    "titulo_objetivo": "Denial",
+    "recompensa_wp": "400",
+    "detalles": "Keep the enemy Force from destroying a set number of buildings or CF before a set time limit or the end of the track."
+  },
+  {
+    "titulo_objetivo": "Discourage Pursuit",
+    "recompensa_wp": "*",
+    "detalles": "Destroy/Cripple the opposing Force’s fastest units; one unit per four fielded is an average number. WP awarded per unit, often +50, +75, or +100."
+  },
+  {
+    "titulo_objetivo": "Drive the Nail",
+    "recompensa_wp": "300",
+    "detalles": "Destroy/Cripple at least half of the enemy Force."
+  },
+  {
+    "titulo_objetivo": "End the Rivalry",
+    "recompensa_wp": "200",
+    "detalles": "The players’ commander defeats the enemy Force commander; typically, by either landing the killing blow or through single combat."
+  },
+  {
+    "titulo_objetivo": "Escape",
+    "recompensa_wp": "200",
+    "detalles": "At least one-third of the players must survive and withdraw from the battlefield after a specific time limit has expired."
+  },
+  {
+    "titulo_objetivo": "Even the Odds",
+    "recompensa_wp": "*",
+    "detalles": "Award a number of WP for each enemy Force’s unit destroyed. Awards can be +50, +100, or even designated per unit type."
+  },
+  {
+    "titulo_objetivo": "Fast Recon",
+    "recompensa_wp": "150",
+    "detalles": "Exit one of the players’ units off the enemy Force’s home edge; a higher award can be given if a specified time limit is indicated."
+  },
+  {
+    "titulo_objetivo": "Ferocity",
+    "recompensa_wp": "300",
+    "detalles": "The players must destroy 50% of the enemy Force with less than 50% losses."
+  },
+  {
+    "titulo_objetivo": "Fight Another Day",
+    "recompensa_wp": "300",
+    "detalles": "The players suffer less than 50% losses."
+  },
+  {
+    "titulo_objetivo": "Fight On",
+    "recompensa_wp": "1000",
+    "detalles": "More than half of the players must survive by the end of the track, or by a specified time limit. Units exiting the home edge under Forced Withdrawal count towards this objective."
+  },
+  {
+    "titulo_objetivo": "Forced March",
+    "recompensa_wp": "200",
+    "detalles": "The players’ commander exits through the enemy Force’s home or starting edge."
+  },
+  {
+    "titulo_objetivo": "Frugal is the Word",
+    "recompensa_wp": "300",
+    "detalles": "The players limit their destroyed units to 10% or less."
+  },
+  {
+    "titulo_objetivo": "Gauntlet",
+    "recompensa_wp": "400",
+    "detalles": "Exit at least half of the players’ Force through the enemy’s home edge."
+  },
+  {
+    "titulo_objetivo": "Get Physical",
+    "recompensa_wp": "*",
+    "detalles": "The player must perform a set number of successful charges, pushes, or Death from Above attacks by the end of the track. WP awards can also be given for each instance, rather than a complete total."
+  },
+  {
+    "titulo_objetivo": "Get the Intel",
+    "recompensa_wp": "300",
+    "detalles": "The players must scan a set number (or designated) of buildings, objective hexes, or specific unit types; scanning rules should be detailed in the Special Rules section."
+  },
+  {
+    "titulo_objetivo": "Hammer",
+    "recompensa_wp": "400",
+    "detalles": "Destroy/Cripple at least two-thirds of the opposing Force."
+  },
+  {
+    "titulo_objetivo": "Headhunter",
+    "recompensa_wp": "500",
+    "detalles": "Destroy the enemy Force’s commander (not Cripple)."
+  },
+  {
+    "titulo_objetivo": "Hearts and Minds",
+    "recompensa_wp": "600",
+    "detalles": "The players must not destroy or damage any buildings (or designated buildings) during the course of the track."
+  },
+  {
+    "titulo_objetivo": "Hit and Run",
+    "recompensa_wp": "150",
+    "detalles": "One of the players’ units enters (or moves adjacent) to a designated hex, and then exits from its home edge."
+  },
+  {
+    "titulo_objetivo": "Hold",
+    "recompensa_wp": "200",
+    "detalles": "Retain control of a designated battlefield edge, with no more than one functional enemy unit within two hexes of that edge during the End Phase (or other designated time)."
+  },
+  {
+    "titulo_objetivo": "Hold the Line",
+    "recompensa_wp": "300",
+    "detalles": "Destroy/Cripple at least half of all designated unit types on the opposing Force."
+  },
+  {
+    "titulo_objetivo": "Honorable Combat",
+    "recompensa_wp": "500",
+    "detalles": "Cripple (do not destroy) at least half of the enemy’s Force."
+  },
+  {
+    "titulo_objetivo": "I Like These Odds",
+    "recompensa_wp": "*",
+    "detalles": "A set number of WP is awarded for every enemy unit destroyed without losing a friendly unit."
+  },
+  {
+    "titulo_objetivo": "I Spy…",
+    "recompensa_wp": "100",
+    "detalles": "Move at least one unit to within a specified number of hexes from the enemy’s home edge to verify there are no hostile reinforcements coming."
+  },
+  {
+    "titulo_objetivo": "Identify and Destroy",
+    "recompensa_wp": "100",
+    "detalles": "Locate (using Scanning, which should be detailed in Special Rules) and destroy a headquarters, an enemy commander, specific unit types, buildings, or other objective. Multiple WP can be awarded if multiple targets are in play during the track."
+  },
+  {
+    "titulo_objetivo": "Identify the Opposition",
+    "recompensa_wp": "200",
+    "detalles": "Successfully scan at least half of the enemy Force. Scanning rules should be defined in the Special Rules section. Higher WP can be awarded if the percentage of enemy Forces to be identified is increased (i.e. two-thirds, 75%, etc.)."
+  },
+  {
+    "titulo_objetivo": "Information",
+    "recompensa_wp": "250",
+    "detalles": "Capture or Cripple a GM-designated unit among the enemy Force."
+  },
+  {
+    "titulo_objetivo": "Interception",
+    "recompensa_wp": "700",
+    "detalles": "A third-party unit makes it across the players’ home or starting edge before or after a specified time."
+  },
+  {
+    "titulo_objetivo": "Interdiction",
+    "recompensa_wp": "500",
+    "detalles": "Destroy a third-party unit before it crosses the enemy’s home or starting edge before or after a specified time."
+  },
+  {
+    "titulo_objetivo": "Justice",
+    "recompensa_wp": "*",
+    "detalles": "Destroy/Cripple secretly designated units or unit types; WP can be awarded as a blanket total, or per unit. The units or unit types can be revealed through scanning, intelligence, or GM-designated turns or other trigger events during the track."
+  },
+  {
+    "titulo_objetivo": "Last Man Standing",
+    "recompensa_wp": "100",
+    "detalles": "At the end of a designated time, the players have more tonnage (or other predetermined value) than the enemy on the battlefield. This should only include units in functioning order and not under Forced Withdrawal or Crippled status."
+  },
+  {
+    "titulo_objetivo": "Leave No Man Behind",
+    "recompensa_wp": "700",
+    "detalles": "At least two-thirds of the players’ Force survives the track or is able to exit their home edge after a certain time limit."
+  },
+  {
+    "titulo_objetivo": "Live to Kill Later",
+    "recompensa_wp": "*",
+    "detalles": "WP awarded per player unit that exits a designated battlefield edge, often before or after a time limit, and not under Forced Withdrawal or Crippled status."
+  },
+  {
+    "titulo_objetivo": "Master the Bid",
+    "recompensa_wp": "*",
+    "detalles": "WP awarded per unit that does not fire any weapon during the course of the track."
+  },
+  {
+    "titulo_objetivo": "New Toys",
+    "recompensa_wp": "50",
+    "detalles": "Capture a designated unit by Crippling (and not Destroying) it."
+  },
+  {
+    "titulo_objetivo": "No Witnesses",
+    "recompensa_wp": "400",
+    "detalles": "Destroy (not Cripple) all of the enemy’s Force."
+  },
+  {
+    "titulo_objetivo": "Pick Up",
+    "recompensa_wp": "300",
+    "detalles": "Capture a designated amount of cargo tonnage, typically within a building or cargo carrier. Rules for capturing should be detailed in the Special Rules section."
+  },
+  {
+    "titulo_objetivo": "POW",
+    "recompensa_wp": "100",
+    "detalles": "Capture (not Destroy) the enemy commander by Crippling the unit and having a unit within two hexes of it at the end of the track."
+  },
+  {
+    "titulo_objetivo": "Pre-emptive Strike",
+    "recompensa_wp": "100",
+    "detalles": "Destroy/Cripple at least 25% of the enemy Force by a predetermined time limit, often close to the start of the battle."
+  },
+  {
+    "titulo_objetivo": "Preserve Your Force",
+    "recompensa_wp": "350",
+    "detalles": "Destroy/Cripple at least 50% of the enemy’s Force without losing more than 25% of the player’s Force."
+  },
+  {
+    "titulo_objetivo": "Professionals",
+    "recompensa_wp": "200",
+    "detalles": "Destroy/Cripple more than 75% of the enemy’s Force before reinforcements arrive at a designated time."
+  },
+  {
+    "titulo_objetivo": "Reduce Effectiveness",
+    "recompensa_wp": "150",
+    "detalles": "Damage at least 75% of the enemy’s Force before a specified time limit."
+  },
+  {
+    "titulo_objetivo": "Research Junkies",
+    "recompensa_wp": "150",
+    "detalles": "Cripple a GM-designated unit and keep it from exiting the battlefield so it can be salvaged."
+  },
+  {
+    "titulo_objetivo": "Run Them Down",
+    "recompensa_wp": "*",
+    "detalles": "Award WP for every enemy unit Destroyed. A higher WP can be given if a designated time limit is also imposed."
+  },
+  {
+    "titulo_objetivo": "Secure the Zone",
+    "recompensa_wp": "500",
+    "detalles": "Occupy at least 3 GM-designated locations by a designated time limit."
+  },
+  {
+    "titulo_objetivo": "Selective Destruction",
+    "recompensa_wp": "*",
+    "detalles": "Before the start of the track, the enemy must secretly write down which of the player’s units they must destroy. The enemy must declare at least half of the player's Force (rounded down). For each unit destroyed, the player loses a number of WP from their total. WP can also be awarded for each of the listed targets survive the track."
+  },
+  {
+    "titulo_objetivo": "Shatter",
+    "recompensa_wp": "800",
+    "detalles": "Destroy/Cripple at least 80% of the enemy’s Force."
+  },
+  {
+    "titulo_objetivo": "Shatter Their Will",
+    "recompensa_wp": "400",
+    "detalles": "Destroy a building/object secretly designated by the opponent. Building/object is selected before the start of the game and is revealed at the end of the track."
+  },
+  {
+    "titulo_objetivo": "Stand Your Ground",
+    "recompensa_wp": "250",
+    "detalles": "At least half of the player’s Force survives the end of the track."
+  },
+  {
+    "titulo_objetivo": "Stop Them Cold",
+    "recompensa_wp": "*",
+    "detalles": "WP are lost for every enemy unit that exits via their home edge that are not under Forced Withdrawal rules."
+  },
+  {
+    "titulo_objetivo": "Superior Firepower",
+    "recompensa_wp": "200",
+    "detalles": "Destroy/Cripple the units of the two best enemy pilots or crews as determined by skill. If there are more than two, the enemy may select which two pilots for the objective."
+  },
+  {
+    "titulo_objetivo": "Sustainability",
+    "recompensa_wp": "100",
+    "detalles": "At least 25% of a third party Force assisting the players survives the track."
+  },
+  {
+    "titulo_objetivo": "Symbolic Victory",
+    "recompensa_wp": "200",
+    "detalles": "At least one player unit occupies a GM designated hex at the end of the track or by a certain time limit."
+  },
+  {
+    "titulo_objetivo": "Take the Hill!",
+    "recompensa_wp": "350",
+    "detalles": "The player must seize an enemy-designated objective hex and occupy it for a set number of Turns (can be consecutive or non-sequential and be the same unit or a combination of units, as determined by the GM according to those that best fit the track story). Multiple objectives can be awarded WP per completion, or a minimum number of objectives set before a blanket award is given."
+  },
+  {
+    "titulo_objetivo": "Target Acquired",
+    "recompensa_wp": "100",
+    "detalles": "Destroy a set number of buildings/locations by a set time limit."
+  },
+  {
+    "titulo_objetivo": "The Road to Paradise",
+    "recompensa_wp": "500",
+    "detalles": "Destroy, drive off, or capture a set percentage of the opposing Force by a set time limit."
+  },
+  {
+    "titulo_objetivo": "Total Victory",
+    "recompensa_wp": "200",
+    "detalles": "Complete all other Objectives. Add +100 if done while a track Option is in effect."
+  },
+  {
+    "titulo_objetivo": "Training Day",
+    "recompensa_wp": "300",
+    "detalles": "At least one third-party Force that is allied with the player must suffer no more than 25% casualties."
+  },
+  {
+    "titulo_objetivo": "Turkey Shoot",
+    "recompensa_wp": "*",
+    "detalles": "Destroy as much of the enemy Force as possible. WP offered per unit Destroyed, typically +50, +100, +200 depending on needs of the campaign."
+  },
+  {
+    "titulo_objetivo": "Undercut",
+    "recompensa_wp": "300",
+    "detalles": "Destroy/Cripple 100% of all third party Forces allied with the opponent."
+  },
+  {
+    "titulo_objetivo": "Vengeance",
+    "recompensa_wp": "500",
+    "detalles": "Destroy/Cripple 100% of the enemy Force while taking less than a certain percentage of damage, often 25% or 50%."
+  },
+  {
+    "titulo_objetivo": "World of Hurt",
+    "recompensa_wp": "500",
+    "detalles": "Destroy/Cripple at least two-thirds of the enemy Force."
+  },
+  {
+    "condicion": "Victoria Total",
+    "definicion": "Completar todos los Objetivos."
+  },
+  {
+    "condicion": "Victoria Clara",
+    "definicion": "Completar todos los Objetivos menos uno."
+  },
+  {
+    "condicion": "Victoria Parcial",
+    "definicion": "Completar solo la mitad de los Objetivos (redondeando hacia arriba)."
+  },
+  {
+    "condicion": "Victoria Pírrica",
+    "definicion": "Completar menos de la mitad de los Objetivos, but más de uno."
+  },
+  {
+    "condicion": "Derrota Parcial",
+    "definicion": "Completar solo un Objetivo."
+  },
+  {
+    "condicion": "Derrota Total",
+    "definicion": "No completar ningún objetivo."
+  }
+]

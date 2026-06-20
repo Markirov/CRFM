@@ -1,0 +1,236 @@
+[
+  {
+    "table_name": "Battle Scenario Table",
+    "defender_score": "< -4.5",
+    "attacker_score_<_-5": "SU",
+    "attacker_score_-4.99_to_-1": "HS",
+    "attacker_score_-0.99_to_0.99": "BK",
+    "attacker_score_1_to_4.99": "TC",
+    "attacker_score_5+": "BA"
+  },
+  {
+    "table_name": "Battle Scenario Table",
+    "defender_score": "-4 to -1",
+    "attacker_score_<_-5": "SU",
+    "attacker_score_-4.99_to_-1": "SU",
+    "attacker_score_-0.99_to_0.99": "HS",
+    "attacker_score_1_to_4.99": "BK",
+    "attacker_score_5+": "TC"
+  },
+  {
+    "table_name": "Battle Scenario Table",
+    "defender_score": "-0.5 to 0.5",
+    "attacker_score_<_-5": "HTL",
+    "attacker_score_-4.99_to_-1": "SU",
+    "attacker_score_-0.99_to_0.99": "SU",
+    "attacker_score_1_to_4.99": "HS",
+    "attacker_score_5+": "BK"
+  },
+  {
+    "table_name": "Battle Scenario Table",
+    "defender_score": "1 to 4",
+    "attacker_score_<_-5": "HTL",
+    "attacker_score_-4.99_to_-1": "HTL",
+    "attacker_score_-0.99_to_0.99": "SU",
+    "attacker_score_1_to_4.99": "SU",
+    "attacker_score_5+": "HS"
+  },
+  {
+    "table_name": "Battle Scenario Table",
+    "defender_score": "4.5+",
+    "attacker_score_<_-5": "EX",
+    "attacker_score_-4.99_to_-1": "HTL",
+    "attacker_score_-0.99_to_0.99": "HTL",
+    "attacker_score_1_to_4.99": "HTL",
+    "attacker_score_5+": "SU"
+  },
+  {
+    "table_name": "Raid Scenario Table",
+    "defender_score": "< -4.5",
+    "attacker_score_<_-5": "PB",
+    "attacker_score_-4.99_to_-1": "EX",
+    "attacker_score_-0.99_to_0.99": "HS",
+    "attacker_score_1_to_4.99": "RR",
+    "attacker_score_5+": "RR"
+  },
+  {
+    "table_name": "Raid Scenario Table",
+    "defender_score": "-4 to -1",
+    "attacker_score_<_-5": "EX",
+    "attacker_score_-4.99_to_-1": "PB",
+    "attacker_score_-0.99_to_0.99": "EX",
+    "attacker_score_1_to_4.99": "HS",
+    "attacker_score_5+": "RR"
+  },
+  {
+    "table_name": "Raid Scenario Table",
+    "defender_score": "-0.5 to 0.5",
+    "attacker_score_<_-5": "EX",
+    "attacker_score_-4.99_to_-1": "EX",
+    "attacker_score_-0.99_to_0.99": "PB",
+    "attacker_score_1_to_4.99": "EX",
+    "attacker_score_5+": "HS"
+  },
+  {
+    "table_name": "Raid Scenario Table",
+    "defender_score": "1 to 4",
+    "attacker_score_<_-5": "SU",
+    "attacker_score_-4.99_to_-1": "EX",
+    "attacker_score_-0.99_to_0.99": "EX",
+    "attacker_score_1_to_4.99": "PB",
+    "attacker_score_5+": "EX"
+  },
+  {
+    "table_name": "Raid Scenario Table",
+    "defender_score": "4.5+",
+    "attacker_score_<_-5": "BK",
+    "attacker_score_-4.99_to_-1": "SU",
+    "attacker_score_-0.99_to_0.99": "EX",
+    "attacker_score_1_to_4.99": "EX",
+    "attacker_score_5+": "PB"
+  },
+  {
+    "table_name": "Force Size Table",
+    "campaign_type": "Small/Short",
+    "force_size": "Company",
+    "bv": 15000
+  },
+  {
+    "table_name": "Force Size Table",
+    "campaign_type": "Medium/Moderate",
+    "force_size": "Reinforced Company/Battalion",
+    "bv": 35000
+  },
+  {
+    "table_name": "Force Size Table",
+    "campaign_type": "Large/Long",
+    "force_size": "Battalion/Reinforced Battalion",
+    "bv": 55000
+  },
+  {
+    "table_name": "Force Size Table",
+    "campaign_type": "Huge/Very Long",
+    "force_size": "Reinforced Battalion/Regiment",
+    "bv": 120000
+  },
+  {
+    "table_name": "Scenario Type Roll Modifiers",
+    "modifier": "+3",
+    "type": "Battle",
+    "condition": "One Formation is given an Attack order and the other is given a non-combat order (Repair, Move, or Fast Move)"
+  },
+  {
+    "table_name": "Scenario Type Roll Modifiers",
+    "modifier": "+1",
+    "type": "Battle",
+    "condition": "Both Formations are given Attack orders"
+  },
+  {
+    "table_name": "Scenario Type Roll Modifiers",
+    "modifier": "+3",
+    "type": "Scout",
+    "condition": "One Formation is given a Scout order and the other is given a non-combat order (Repair, Move, or Fast Move)"
+  },
+  {
+    "table_name": "Scenario Type Roll Modifiers",
+    "modifier": "+1",
+    "type": "Scout",
+    "condition": "Both Formations are given Scout orders"
+  },
+  {
+    "table_name": "Scenario Type Roll Modifiers",
+    "modifier": "-3",
+    "type": "Scout",
+    "condition": "One Formation is given Attack orders"
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Advance Attack",
+    "wp_reward": 300
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Annihilate",
+    "wp_reward": 500
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Asset Denial",
+    "wp_reward": 200
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Breakthrough",
+    "wp_reward": 200
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Bring the Pain",
+    "wp_reward": 600
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Burn the Flag",
+    "wp_reward": 500
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Clean House",
+    "wp_reward": 500
+  },
+  {
+    "table_name": "Sample Chaos Objectives",
+    "objective": "Cut Off the Head",
+    "wp_reward": 100
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "A Cut Above",
+    "wp_reward_range": "75-200"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Aerospace Incoming",
+    "wp_reward_range": "125-300"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Air Support",
+    "wp_reward_range": "25-100"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Bad Weather",
+    "wp_reward_range": "75-200"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Booby Trapped",
+    "wp_reward_range": "75-150"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Brute Force",
+    "wp_reward_range": "150-350"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Complicated Weather",
+    "wp_reward_range": "300-450"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Earthquake",
+    "wp_reward_range": "125-300"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Elites",
+    "wp_reward_range": "125-300"
+  },
+  {
+    "table_name": "Sample Chaos Options",
+    "option": "Reinforcements",
+    "wp_reward_range": "125-300"
+  }
+]

@@ -1,0 +1,447 @@
+[
+  {
+    "category": "Communications",
+    "item": "Communications Headset",
+    "ratings": "D/A-C-C/A",
+    "cost": 50,
+    "mass": "10 G",
+    "range": "100 M",
+    "power_use": "1 PPW",
+    "notes": ""
+  },
+  {
+    "category": "Communications",
+    "item": "Comm. Kit, Long-Range",
+    "ratings": "D/B-D-C/B",
+    "cost": 400,
+    "mass": "5 KG",
+    "range": "50 KM",
+    "power_use": "3 PPH",
+    "notes": "2,500 KM Range to Satellite"
+  },
+  {
+    "category": "Communications",
+    "item": "Civilian Communicator",
+    "ratings": "C/A-A-A/A",
+    "cost": 45,
+    "mass": "100 G",
+    "range": "10 KM (LOS)",
+    "power_use": "0.2 PPH",
+    "notes": ""
+  },
+  {
+    "category": "Communications",
+    "item": "Civilian Micro-Communicator",
+    "ratings": "D/A-B-A/A",
+    "cost": 175,
+    "mass": "5 G",
+    "range": "2 KM (LOS)",
+    "power_use": "0.2 PPH",
+    "notes": ""
+  },
+  {
+    "category": "Communications",
+    "item": "Intercom-Link",
+    "ratings": "D/A-C-B/A",
+    "cost": 500,
+    "mass": "5 G",
+    "range": "10 M",
+    "power_use": "0.2 PPH",
+    "notes": "Usable only in network; Range to nearest network only; Cannot be extended with satellites/relays"
+  },
+  {
+    "category": "Communications",
+    "item": "SatNav Receiver",
+    "ratings": "C/A-E-C/A",
+    "cost": 75,
+    "mass": "500 G",
+    "range": null,
+    "power_use": "1 PPH",
+    "notes": "Receiver only; Requires SatNav network; +2 to Navigation Skill rolls when used"
+  },
+  {
+    "category": "Communications",
+    "item": "Vid-Phone",
+    "ratings": "D/A-B-A/A",
+    "cost": 35,
+    "mass": "400 G",
+    "range": null,
+    "power_use": "0.1 PPH",
+    "notes": "Cordless 'land-line' communicator (ties into local networks)"
+  },
+  {
+    "category": "Communications",
+    "item": "Subvocal Microcommunicator",
+    "ratings": "D/D-F-C/E",
+    "cost": 600,
+    "mass": "3.5 G",
+    "range": "100 M",
+    "power_use": "1 PPH",
+    "notes": "Uses Micro Power Packs only; Requires Communications/Conventional Level 2+ to use; -3 to Perception to eavesdrop on user"
+  },
+  {
+    "category": "Audio/Video/Trideo",
+    "item": "Micro-Recorder",
+    "ratings": "C/A-B-B/A",
+    "cost": 100,
+    "mass": "150 G",
+    "power_use": "0.5 PPH",
+    "notes": "Audio recordings only; 1 hour max on high-quality (10 hours at low-quality); Size: Tiny"
+  },
+  {
+    "category": "Audio/Video/Trideo",
+    "item": "Micro-Camcorder",
+    "ratings": "D/B-D-C/A",
+    "cost": 1000,
+    "mass": "400 G",
+    "power_use": "1 PPH",
+    "notes": "Audio-video recordings; 1 hour of video (or 5,000 still images) max; Size: Tiny"
+  },
+  {
+    "category": "Audio/Video/Trideo",
+    "item": "Holotank",
+    "ratings": "E/E-X-E/B",
+    "cost": 500000,
+    "mass": "2,000 KG",
+    "power_use": "1 PPM",
+    "notes": "Can be hooked to advanced field communications to produce a +2 roll modifier to a commander's Strategy, Tactics and Initiative"
+  },
+  {
+    "category": "Computers",
+    "item": "Descartes Mk.XXI",
+    "ratings": "D/C-E-C/B",
+    "cost": 1000,
+    "mass": "7 KG",
+    "power_use": "2 PPH",
+    "notes": "Diagnostic Scanner; +1 to Technician rolls (when diagnosing damage)"
+  },
+  {
+    "category": "Computers",
+    "item": "Descartes Mk.XXV",
+    "ratings": "E/X-X-D/B",
+    "cost": 2500,
+    "mass": "5 KG",
+    "power_use": "3 PPH",
+    "notes": "Diagnostic Scanner; +2 to Technician rolls (when diagnosing damage)"
+  },
+  {
+    "category": "Computers",
+    "item": "Scananalyzer",
+    "ratings": "D/B-D-C/B",
+    "cost": 5000,
+    "mass": "3 KG",
+    "power_use": "0.1 PPT",
+    "notes": "Desktop; +2 to Science rolls (when analyzing samples)"
+  },
+  {
+    "category": "Computers",
+    "item": "Engineer's Portable Console",
+    "ratings": "D/B-E-C/C",
+    "cost": 5000,
+    "mass": "4 KG",
+    "power_use": "1 PPH",
+    "notes": "Interface; +1 to Security Systems/Electronic; -1 to Piloting/Spacecraft"
+  },
+  {
+    "category": "Computers",
+    "item": "Enhanced Imaging Display",
+    "ratings": "F/X-X-D/F",
+    "cost": 400000,
+    "mass": "5 KG",
+    "power_use": null,
+    "notes": "Interface; Integrates with cockpit systems; +1 to Sensor Operations without EI implants"
+  },
+  {
+    "category": "Computers",
+    "item": "Verigraph Scanner/Reader",
+    "ratings": "D/A-B-A/A",
+    "cost": 360,
+    "mass": "1 KG",
+    "power_use": null,
+    "notes": "Encrypts/reads genetic coding of operator for secure message transfer; -4 to Forgery"
+  },
+  {
+    "category": "Surveillance",
+    "item": "Microphone, Directional",
+    "ratings": "C/A-A-A/A",
+    "cost": 60,
+    "mass": "1.5 KG",
+    "range": "100 M",
+    "power_use": "0.1 PPH",
+    "notes": "Used to hear sounds via direct audio"
+  },
+  {
+    "category": "Surveillance",
+    "item": "Microphone, Laser",
+    "ratings": "C/A-D-C/C",
+    "cost": 500,
+    "mass": "3 KG",
+    "range": "1,000 M",
+    "power_use": "3 PPH",
+    "notes": "Used to hear sounds based on wall/window vibration; reduce range to as little as 100 meters in fog, smoke, or through other visually hindering terrain."
+  },
+  {
+    "category": "Surveillance",
+    "item": "Voice Distorter",
+    "ratings": "C/D-F-D/C",
+    "cost": 600,
+    "mass": "500 G",
+    "range": null,
+    "power_use": "0.1 PPH",
+    "notes": "Used to obscure user's voice"
+  },
+  {
+    "category": "Surveillance",
+    "item": "White Noise Generator",
+    "ratings": "C/D-E-D/B",
+    "cost": 400,
+    "mass": "2 KG",
+    "range": "5 M",
+    "power_use": "1 PPM",
+    "notes": "Used to thwart audio recordings within its detection range"
+  },
+  {
+    "category": "Optics",
+    "item": "Night Vision Scope",
+    "ratings": "D/A-B-B/A",
+    "cost": 125,
+    "mass": "450 G",
+    "power_use": null,
+    "notes": "+2 Attack Roll Modifier at M/L/E ranges; Negates darkness mods up to 1,000M"
+  },
+  {
+    "category": "Optics",
+    "item": "Circle-Vision Visor",
+    "ratings": "D/D-F-E/B",
+    "cost": 5000,
+    "mass": "750 G",
+    "power_use": "0.5 PPH",
+    "notes": "+4 to Perception; Also works as Rangefinder Binoculars; User cannot be surprised; BAR 10 vs. Flash"
+  },
+  {
+    "category": "Optics",
+    "item": "Ultrasonic Detector",
+    "ratings": "E/D-F-E/B",
+    "cost": 2500,
+    "mass": "3 KG",
+    "power_use": "0.1 PPM",
+    "notes": "+3 to Perception; Can spot targets up to 10 meters away through BAR 3 barriers; Ignores darkness; BAR 3 vs. Flash"
+  },
+  {
+    "category": "Remote Sensors",
+    "item": "Seismic Sensor",
+    "ratings": "D/B-D-C/B",
+    "cost": 1000,
+    "mass": "2 KG",
+    "range": "5 KM",
+    "power_use": "0.5 PPH",
+    "notes": "Sensor Operations roll mods: +6 for BattleMechs, +5 for ProtoMechs, +3 for Ground/Naval Vehicles, +2 for Battle Armor, +1 for Infantry"
+  },
+  {
+    "category": "Power Packs",
+    "item": "Power Pack (Standard)",
+    "ratings": "D/A-B-A/A",
+    "cost": 5,
+    "mass": "250 G",
+    "power_capacity": 20,
+    "notes": ""
+  },
+  {
+    "category": "Power Packs",
+    "item": "Power Pack (Clan)",
+    "ratings": "F/X-D-B/A",
+    "cost": 25,
+    "mass": "275 G",
+    "power_capacity": 30,
+    "notes": "Quick-Charge"
+  },
+  {
+    "category": "Power Packs",
+    "item": "Power Pack (High-Capacity)",
+    "ratings": "D/A-C-B/A",
+    "cost": 15,
+    "mass": "300 G",
+    "power_capacity": 30,
+    "notes": ""
+  },
+  {
+    "category": "Power Packs",
+    "item": "Power Pack (Quick-Charge)",
+    "ratings": "D/B-C-B/A",
+    "cost": 10,
+    "mass": "300 G",
+    "power_capacity": 10,
+    "notes": "Quick-Charge"
+  },
+  {
+    "category": "Rechargers",
+    "item": "Fossil Fuel Recharger",
+    "ratings": "C/A-A-A/A",
+    "cost": 50,
+    "mass": "10 KG",
+    "power_generation": "15 PPH",
+    "notes": "Refueling Cost: 2 C-bills per hour of operation"
+  },
+  {
+    "category": "Rechargers",
+    "item": "Fusion Recharger",
+    "ratings": "D/D-X-E/B",
+    "cost": 5000,
+    "mass": "40 KG",
+    "power_generation": "100 PPH",
+    "notes": ""
+  },
+  {
+    "category": "Rechargers",
+    "item": "Heavy-Duty Recharger",
+    "ratings": "C/A-A-A/A",
+    "cost": 50,
+    "mass": "400 G",
+    "power_generation": "200 PPH",
+    "notes": "Plug-In; May service up to 5 power packs at once"
+  },
+  {
+    "category": "Espionage",
+    "item": "Vibro Lock Pick Set",
+    "ratings": "D/C-E-D/D",
+    "cost": 2000,
+    "mass": "520 G",
+    "power_use": "1 PPS",
+    "notes": "+4 to Security Systems/Mechanical roll to pick (Mechanical locks only)"
+  },
+  {
+    "category": "Espionage",
+    "item": "Electronic Security Bypass Kit",
+    "ratings": "C/C-D-D/E",
+    "cost": 1200,
+    "mass": "2 KG",
+    "power_use": "0.1 PPH",
+    "notes": "+2 to Security Systems/Electronic roll to pick (Electronic locks only)"
+  },
+  {
+    "category": "Espionage",
+    "item": "Neural Interrogation Computer",
+    "ratings": "D/X-X-E/F",
+    "cost": 45000,
+    "mass": "200 KG",
+    "power_use": "1 PPM",
+    "notes": "+2 to Interrogation Skill roll (Interrogator only); Subject must make a BOD + WIL Attribute Check every minute or suffer a -1 TP Handicap (-2 TP on Fumble)"
+  },
+  {
+    "category": "Survival",
+    "item": "Advanced Field Kit",
+    "ratings": "C/A-A-A/A",
+    "cost": 100,
+    "mass": "15 KG",
+    "power_use": "1 PPH",
+    "notes": "Includes: Knife, Multi-tool, Inflatable Mattress, Thermal Blankets, Heating Plate, Lantern, 2 Emergency Flares, 5 Campfire-igniters, Canteen, Basic Medical Kit; +2 to Survival Skill rolls"
+  },
+  {
+    "category": "Survival",
+    "item": "Basic Field Kit",
+    "ratings": "B/A-A-A/A",
+    "cost": 10,
+    "mass": "5 KG",
+    "power_use": null,
+    "notes": "Includes: Knife, Sleeping Bag, Lantern, Canteen, Basic Medical Kit; +1 to Survival Skill rolls"
+  },
+  {
+    "category": "Survival",
+    "item": "Electronic Compass",
+    "ratings": "C/A-A-A/A",
+    "cost": 30,
+    "mass": "0.1 KG",
+    "power_use": "0.1 PPH",
+    "notes": "+2 to Navigation/Ground Skill rolls"
+  },
+  {
+    "category": "Survival",
+    "item": "Portable Life Support Unit",
+    "ratings": "D/B-C-B/A",
+    "cost": 5000,
+    "mass": "10 KG",
+    "power_use": null,
+    "notes": "Provides 90 total man-hours of breathable air and heat to properly sealed suits or small, sealed rooms. Recharge Cost: 100 C-bills"
+  },
+  {
+    "category": "Survival",
+    "item": "Bubble Tent",
+    "ratings": "D/A-B-A/A",
+    "cost": 40,
+    "mass": "1 KG",
+    "power_use": "1 PPH",
+    "notes": "3 PPH in positive pressure mode; AP 8 vs. Inhaled Toxins (AP 10 in positive pressure mode)"
+  },
+  {
+    "category": "Survival",
+    "item": "Personal Environment Bag",
+    "ratings": "D/B-B-A/A",
+    "cost": 300,
+    "mass": "4 KG",
+    "power_use": "1 PPH",
+    "notes": "Max capacity: 1 adult occupant; Patch cost: 10; AP 8 vs. Inhaled Toxins"
+  },
+  {
+    "category": "Survival",
+    "item": "Emergency Jet Pack",
+    "ratings": "D/D-X-E/C",
+    "cost": 5000,
+    "mass": "20 KG",
+    "power_use": null,
+    "notes": "1,000 Fuel Points; 2 pts burned per 1 m of flight; Max flight = 150 m per turn; Requires Acrobatics/Free-Fall Skill to launch and land"
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Filter Mask",
+    "ratings": "C/A-A-A/A",
+    "cost": 5,
+    "mass": "420 G",
+    "power_use": null,
+    "notes": "Reload Cost: 2 per 5 filters (must be changed every 72 hours); BAR 5 vs. Inhaled Toxins/Poisons"
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Respirator",
+    "ratings": "C/A-A-A/A",
+    "cost": 50,
+    "mass": "2.5 KG",
+    "power_use": null,
+    "notes": "Provides 4 hours of breathable air per tank (max 3 tanks; tank cost: 2); BAR 10 vs. Inhaled Toxins/Poisons if used as a filter."
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Humidifier Mask",
+    "ratings": "C/A-A-A/A",
+    "cost": 10,
+    "mass": "500 G",
+    "power_use": null,
+    "notes": "Provides 8 hours of comfortable breathing in arid climates (equivalent to Thick-Skinned Trait in desert environments); 10 minutes to refill at water source"
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Heat Suit",
+    "ratings": "D/C-C-C/A",
+    "cost": 100,
+    "mass": "3 KG",
+    "bar": "0/0/1/0",
+    "notes": "Desert survival gear; Includes Filter Mask and Protective Goggles; Requires Power Pack (1 PPD)"
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Wetsuit (Scuba Suit)",
+    "ratings": "B/A-A-A/A",
+    "cost": 55,
+    "mass": "5.5 KG",
+    "bar": "1/0/0/0",
+    "notes": "Underwater gear; Includes 4 hours of life support (reload cost: 2); Immune vs. Inhaled Toxins; Max depth 150 meters; Encumbering on land"
+  },
+  {
+    "category": "Hostile Environment",
+    "item": "Space Suit",
+    "ratings": "C/B-B-B/B",
+    "cost": 5000,
+    "mass": "12 KG",
+    "bar": "1/2/1/1",
+    "notes": "Encumbering; Includes Military Comm., Thruster Pack, Polarized Visor and 48-hour life support"
+  }
+]

@@ -1,0 +1,397 @@
+[
+  {
+    "tableName": "modificador_blindaje_mech",
+    "data": [
+      {
+        "Armor Type": "Standard",
+        "Modifier": 1.0
+      },
+      {
+        "Armor Type": "Ferro-Fibrous (All)",
+        "Modifier": 1.0
+      },
+      {
+        "Armor Type": "Industrial",
+        "Modifier": 1.0
+      },
+      {
+        "Armor Type": "Heavy Industrial",
+        "Modifier": 1.0
+      },
+      {
+        "Armor Type": "Commercial",
+        "Modifier": 0.5
+      },
+      {
+        "Armor Type": "Stealth",
+        "Modifier": 1.0
+      }
+    ]
+  },
+  {
+    "tableName": "modificador_estructura_interna_mech",
+    "data": [
+      {
+        "Internal Structure Type": "Standard",
+        "Modifier": 1.0
+      },
+      {
+        "Internal Structure Type": "Endo-Steel",
+        "Modifier": 1.0
+      },
+      {
+        "Internal Structure Type": "Industrial",
+        "Modifier": 0.5
+      }
+    ]
+  },
+  {
+    "tableName": "modificador_motor_mech",
+    "data": [
+      {
+        "Engine Type": "Standard*",
+        "Modifier": 1.0
+      },
+      {
+        "Engine Type": "Light",
+        "Modifier": 0.75
+      },
+      {
+        "Engine Type": "Compact",
+        "Modifier": 1.0
+      },
+      {
+        "Engine Type": "Inner Sphere XL",
+        "Modifier": 0.5
+      },
+      {
+        "Engine Type": "Clan XL",
+        "Modifier": 0.75
+      }
+    ]
+  },
+  {
+    "tableName": "modificador_giroscopio_mech",
+    "data": [
+      {
+        "Gyro Type": "Standard",
+        "Modifier": 0.5
+      },
+      {
+        "Gyro Type": "Compact",
+        "Modifier": 0.5
+      },
+      {
+        "Gyro Type": "Extralight (XL)",
+        "Modifier": 0.5
+      },
+      {
+        "Gyro Type": "Heavy Duty",
+        "Modifier": 1.0
+      }
+    ]
+  },
+  {
+    "tableName": "factores_defensivos",
+    "data": [
+      {
+        "Target Modifier": 0,
+        "Defensive Factor": 1.0
+      },
+      {
+        "Target Modifier": 1,
+        "Defensive Factor": 1.1
+      },
+      {
+        "Target Modifier": 2,
+        "Defensive Factor": 1.2
+      },
+      {
+        "Target Modifier": 3,
+        "Defensive Factor": 1.3
+      },
+      {
+        "Target Modifier": 4,
+        "Defensive Factor": 1.4
+      },
+      {
+        "Target Modifier": 5,
+        "Defensive Factor": 1.5
+      },
+      {
+        "Target Modifier": 6,
+        "Defensive Factor": 1.6
+      },
+      {
+        "Target Modifier": 7,
+        "Defensive Factor": 1.7
+      },
+      {
+        "Target Modifier": 8,
+        "Defensive Factor": 1.8
+      }
+    ]
+  },
+  {
+    "tableName": "modificador_factor_defensivo",
+    "data": [
+      {
+        "Special Case": "ProtoMech",
+        "Defensive Factor Modifier": 0.1
+      },
+      {
+        "Special Case": "Battle Armor",
+        "Defensive Factor Modifier": 0.1
+      },
+      {
+        "Special Case": "Camo",
+        "Defensive Factor Modifier": 0.2
+      },
+      {
+        "Special Case": "Basic Stealth",
+        "Defensive Factor Modifier": 0.2
+      },
+      {
+        "Special Case": "Prototype Stealth",
+        "Defensive Factor Modifier": 0.2
+      },
+      {
+        "Special Case": "Standard Stealth",
+        "Defensive Factor Modifier": 0.2
+      },
+      {
+        "Special Case": "Improved Stealth",
+        "Defensive Factor Modifier": 0.3
+      },
+      {
+        "Special Case": "Mimetic",
+        "Defensive Factor Modifier": 0.3
+      }
+    ]
+  },
+  {
+    "tableName": "factor_velocidad",
+    "data": [
+      {
+        "Result of Speed Factor Calculation": 0,
+        "Speed Factor": 0.44
+      },
+      {
+        "Result of Speed Factor Calculation": 1,
+        "Speed Factor": 0.54
+      },
+      {
+        "Result of Speed Factor Calculation": 2,
+        "Speed Factor": 0.65
+      },
+      {
+        "Result of Speed Factor Calculation": 3,
+        "Speed Factor": 0.77
+      },
+      {
+        "Result of Speed Factor Calculation": 4,
+        "Speed Factor": 0.88
+      },
+      {
+        "Result of Speed Factor Calculation": 5,
+        "Speed Factor": 1.0
+      },
+      {
+        "Result of Speed Factor Calculation": 6,
+        "Speed Factor": 1.12
+      },
+      {
+        "Result of Speed Factor Calculation": 7,
+        "Speed Factor": 1.24
+      },
+      {
+        "Result of Speed Factor Calculation": 8,
+        "Speed Factor": 1.37
+      },
+      {
+        "Result of Speed Factor Calculation": 9,
+        "Speed Factor": 1.5
+      },
+      {
+        "Result of Speed Factor Calculation": 10,
+        "Speed Factor": 1.63
+      },
+      {
+        "Result of Speed Factor Calculation": 11,
+        "Speed Factor": 1.76
+      },
+      {
+        "Result of Speed Factor Calculation": 12,
+        "Speed Factor": 1.89
+      },
+      {
+        "Result of Speed Factor Calculation": 13,
+        "Speed Factor": 2.02
+      },
+      {
+        "Result of Speed Factor Calculation": 14,
+        "Speed Factor": 2.16
+      },
+      {
+        "Result of Speed Factor Calculation": 15,
+        "Speed Factor": 2.3
+      },
+      {
+        "Result of Speed Factor Calculation": 16,
+        "Speed Factor": 2.44
+      },
+      {
+        "Result of Speed Factor Calculation": 17,
+        "Speed Factor": 2.58
+      },
+      {
+        "Result of Speed Factor Calculation": 18,
+        "Speed Factor": 2.72
+      },
+      {
+        "Result of Speed Factor Calculation": 19,
+        "Speed Factor": 2.86
+      },
+      {
+        "Result of Speed Factor Calculation": 20,
+        "Speed Factor": 3.0
+      },
+      {
+        "Result of Speed Factor Calculation": 21,
+        "Speed Factor": 3.15
+      },
+      {
+        "Result of Speed Factor Calculation": 22,
+        "Speed Factor": 3.29
+      },
+      {
+        "Result of Speed Factor Calculation": 23,
+        "Speed Factor": 3.44
+      },
+      {
+        "Result of Speed Factor Calculation": 24,
+        "Speed Factor": 3.59
+      },
+      {
+        "Result of Speed Factor Calculation": 25,
+        "Speed Factor": 3.74
+      }
+    ]
+  },
+  {
+    "tableName": "modificadores_tipo_unidad",
+    "data": [
+      {
+        "Type": "Tracked",
+        "Modifier": 0.9
+      },
+      {
+        "Type": "Wheeled",
+        "Modifier": 0.8
+      },
+      {
+        "Type": "Hover",
+        "Modifier": 0.7
+      },
+      {
+        "Type": "Naval",
+        "Modifier": 0.6
+      },
+      {
+        "Type": "VTOL",
+        "Modifier": 0.7
+      },
+      {
+        "Type": "Airship",
+        "Modifier": 0.7
+      },
+      {
+        "Type": "Fixed-Wing",
+        "Modifier": 1.0
+      },
+      {
+        "Type": "WiGE",
+        "Modifier": 0.7
+      },
+      {
+        "Type": "Aerospace Fighter",
+        "Modifier": 1.2
+      },
+      {
+        "Type": "Conventional Fighter",
+        "Modifier": 1.1
+      },
+      {
+        "Type": "Small Craft",
+        "Modifier": 1.0
+      },
+      {
+        "Type": "DropShip",
+        "Modifier": 1.0
+      }
+    ]
+  },
+  {
+    "tableName": "ajuste_bv_ofensivo",
+    "data": [
+      {
+        "Fire Control": "None",
+        "OBV Adjustment": 0.8
+      },
+      {
+        "Fire Control": "Basic",
+        "OBV Adjustment": 0.9
+      },
+      {
+        "Fire Control": "Advanced",
+        "OBV Adjustment": 1.0
+      }
+    ]
+  },
+  {
+    "tableName": "modificador_tamano_blindaje_combate",
+    "data": [
+      {
+        "Troopers in Unit": 1,
+        "BV Modifier": 1.0
+      },
+      {
+        "Troopers in Unit": 2,
+        "BV Modifier": 2.2
+      },
+      {
+        "Troopers in Unit": 3,
+        "BV Modifier": 3.6
+      },
+      {
+        "Troopers in Unit": 4,
+        "BV Modifier": 5.2
+      },
+      {
+        "Troopers in Unit": 5,
+        "BV Modifier": 7.0
+      },
+      {
+        "Troopers in Unit": 6,
+        "BV Modifier": 9.0
+      }
+    ]
+  },
+  {
+    "tableName": "modificadores_tipo_unidad_avanzado",
+    "data": [
+      {
+        "Type": "JumpShip",
+        "Modifier": 0.75
+      },
+      {
+        "Type": "WarShip",
+        "Modifier": 0.8
+      },
+      {
+        "Type": "Space Station",
+        "Modifier": 0.7
+      }
+    ]
+  }
+]

@@ -1,0 +1,1585 @@
+[
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit",
+    "component": "Standard",
+    "cost_cbills": "200,000",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit",
+    "component": "Small",
+    "cost_cbills": "175,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit",
+    "component": "Industrial (No Fire Control)",
+    "cost_cbills": "100,000",
+    "tech_rating": "C",
+    "availability": "B-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit",
+    "component": "Industrial (Advanced Fire Control)",
+    "cost_cbills": "200,000",
+    "tech_rating": "D",
+    "availability": "D-E-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Life Support",
+    "component": "Life Support",
+    "cost_cbills": "50,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Sensors",
+    "component": "Sensors",
+    "cost_cbills_formula": "2,000 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Musculature",
+    "component": "Standard",
+    "cost_cbills_formula": "2,000 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Musculature",
+    "component": "Triple-Strength Myomer",
+    "cost_cbills_formula": "16,000 x Unit Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Musculature",
+    "component": "Industrial TSM",
+    "cost_cbills_formula": "12,000 x Unit Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Internal Structure",
+    "component": "Standard",
+    "cost_cbills_formula": "400 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Internal Structure",
+    "component": "Endo-Steel",
+    "cost_cbills_formula": "1,600 x Unit Tonnage",
+    "tech_rating": "E",
+    "availability": "D-F-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Internal Structure",
+    "component": "Industrial",
+    "cost_cbills_formula": "300 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Internal Structure",
+    "component": "Enviro. Sealing (IndustrialMechs only)",
+    "cost_cbills_formula": "225 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Upper Arm",
+    "cost_cbills_formula": "100 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Lower Arm",
+    "cost_cbills_formula": "50 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Hand",
+    "cost_cbills_formula": "80 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Upper Leg",
+    "cost_cbills_formula": "150 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Lower Leg",
+    "cost_cbills_formula": "80 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Actuators (Each)",
+    "component": "Foot",
+    "cost_cbills_formula": "120 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Standard Fusion",
+    "cost_cbills_formula": "(5,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "C-E-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Light Fusion",
+    "cost_cbills_formula": "(15,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "XL Fusion",
+    "cost_cbills_formula": "(20,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "D-F-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Compact Fusion",
+    "cost_cbills_formula": "(10,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Internal Combustion",
+    "cost_cbills_formula": "(1,250 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "C",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Fuel Cell",
+    "cost_cbills_formula": "(3,500 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "C-D-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Engine",
+    "component": "Fission",
+    "cost_cbills_formula": "(7,500 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "E-E-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Gyro",
+    "component": "Standard",
+    "cost_cbills_formula": "300,000 x Gyro Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Gyro",
+    "component": "Compact",
+    "cost_cbills_formula": "400,000 x Gyro Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Gyro",
+    "component": "Heavy Duty",
+    "cost_cbills_formula": "500,000 x Gyro Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Gyro",
+    "component": "XL",
+    "cost_cbills_formula": "750,000 x Gyro Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Jump Jets",
+    "component": "Standard",
+    "cost_cbills_formula": "200 x (Number of Jump Jets)^2 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Jump Jets",
+    "component": "Improved",
+    "cost_cbills_formula": "500 x (Number of Jump Jets)^2 x Unit Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "MASC",
+    "component": "MASC",
+    "cost_cbills_formula": "(1,000 x Engine Rating x MASC Tonnage)",
+    "tech_rating": "E",
+    "availability": "D-F-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Heat Sinks",
+    "component": "Standard (Single) with Fusion Engine",
+    "cost_cbills_formula": "2,000 x (Number of Heat Sinks over 10)",
+    "tech_rating": "C",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Heat Sinks",
+    "component": "Standard with Non-Fusion Engine",
+    "cost_cbills_formula": "2,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "C",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Heat Sinks",
+    "component": "Double",
+    "cost_cbills_formula": "6,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "E",
+    "availability": "C-E-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Power Amplifiers",
+    "component": "Power Amplifiers",
+    "cost_cbills_formula": "20,000 x Amplifier Tonnage",
+    "tech_rating": "D",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Tracks",
+    "component": "Tracks",
+    "cost_cbills_formula": "(500 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "C",
+    "availability": "D-E-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Standard/Heavy Industrial",
+    "cost_cbills_formula": "10,000 x Armor Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Ferro-Fibrous",
+    "cost_cbills_formula": "20,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "D-F-D"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Light Ferro-Fibrous",
+    "cost_cbills_formula": "15,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Heavy Ferro-Fibrous",
+    "cost_cbills_formula": "25,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Stealth",
+    "cost_cbills_formula": "50,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Commercial",
+    "cost_cbills_formula": "3,000 x Armor Tonnage",
+    "tech_rating": "B",
+    "availability": "B-B-A"
+  },
+  {
+    "table": "BATTLEMECH AND INDUSTRIALMECH STRUCTURAL COSTS AND AVAILABILITY (CONT.)",
+    "component_group": "Armor",
+    "component": "Industrial",
+    "cost_cbills_formula": "5,000 x Armor Tonnage",
+    "tech_rating": "C",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit",
+    "component": "Cockpit",
+    "cost_cbills": "500,000",
+    "tech_rating": "F",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Life Support",
+    "component": "Life Support",
+    "cost_cbills": "75,000",
+    "tech_rating": "C",
+    "availability": "X-X-C"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Sensors",
+    "component": "Sensors",
+    "cost_cbills_formula": "2,000 x Unit Tonnage",
+    "tech_rating": "C",
+    "availability": "X-X-C"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Musculature",
+    "component": "Musculature",
+    "cost_cbills_formula": "2,000 x Unit Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Internal Structure",
+    "component": "Internal Structure",
+    "cost_cbills_formula": "400 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "X-X-C"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Actuators",
+    "component": "Arm (each, full limb)",
+    "cost_cbills_formula": "180 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Actuators",
+    "component": "Legs (both, full limbs)",
+    "cost_cbills_formula": "540 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Engine",
+    "cost_cbills_formula": "(5,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Jump Jets",
+    "component": "Jump Jets",
+    "cost_cbills_formula": "200 x (Number of Jump Jets)^2 x Unit Tonnage",
+    "tech_rating": "D",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "ProtoMech Myomer Booster",
+    "component": "ProtoMech Myomer Booster",
+    "cost_cbills_formula": "(1,000 x Engine Rating x Booster Tonnage)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Heat Sinks",
+    "cost_cbills_formula": "2,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "F",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "PROTOMECH STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Armor",
+    "cost_cbills_formula": "625 x Armor Points",
+    "tech_rating": "F",
+    "availability": "X-X-D"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Internal Structure",
+    "component": "Internal Structure",
+    "cost_cbills_formula": "10,000 x Structure Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Control Components",
+    "component": "Control Components",
+    "cost_cbills_formula": "10,000 x Control Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Lift/Dive Equipment",
+    "component": "Lift/Dive Equipment",
+    "cost_cbills_formula": "20,000 x Lift/Dive Equipment Tonnage",
+    "tech_rating": "B",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Rotors",
+    "component": "Rotors",
+    "cost_cbills_formula": "40,000 x Rotor Tonnage",
+    "tech_rating": "B",
+    "availability": "C-D-C"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Standard Fusion",
+    "cost_cbills_formula": "(5,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "C-E-D"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Light Fusion",
+    "cost_cbills_formula": "(15,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "XL Fusion",
+    "cost_cbills_formula": "(20,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "D-F-E"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Compact Fusion",
+    "cost_cbills_formula": "(10,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Internal Combustion",
+    "cost_cbills_formula": "(1,250 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "C",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "With Fusion Engine",
+    "cost_cbills_formula": "2,000 x (Number of Sinks over 10)",
+    "tech_rating": "C",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "With Non-Fusion Engine",
+    "cost_cbills_formula": "2,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "C",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Standard",
+    "cost_cbills_formula": "10,000 x Armor Tonnage",
+    "tech_rating": "D",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Ferro-Fibrous",
+    "cost_cbills_formula": "20,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "D-F-D"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Light Ferro-Fibrous",
+    "cost_cbills_formula": "15,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Heavy Ferro-Fibrous",
+    "cost_cbills_formula": "25,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Turret",
+    "component": "Turret",
+    "cost_cbills_formula": "5,000 x Turret Tonnage",
+    "tech_rating": "B",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "COMBAT VEHICLE COSTS AND AVAILABILITY",
+    "component_group": "Power Amplifiers",
+    "component": "Power Amplifiers",
+    "cost_cbills_formula": "20,000 x Amplifier Tonnage",
+    "tech_rating": "D",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Base",
+    "cost_cbills_formula": "2,500 x Chassis Tonnage x (All Applicable Chassis Modifiers)",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Base",
+    "cost_cbills_formula": "5,000 x Engine Tonnage x (Engine Type Modifier)",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Base",
+    "cost_cbills_formula": "Total Armor Points x (Armor Cost per Point)",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Final Structural Cost",
+    "component": "Final",
+    "cost_cbills_formula": "(Chassis Cost + Engine Cost + Armor Cost) x Tech Rating Multiplier",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Heat Sinks",
+    "cost_cbills_formula": "2,000 x Total Number of Heat Sinks",
+    "tech_rating": "D",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Turret",
+    "component": "Turret",
+    "cost_cbills_formula": "5,000 x Turret Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Pintle",
+    "component": "Pintle",
+    "cost_cbills_formula": "1,000 x Pintle Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "SUPPORT VEHICLE STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Power Amplifiers",
+    "component": "Power Amplifiers",
+    "cost_cbills_formula": "20,000 x Amplifier Tonnage",
+    "tech_rating": "D",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Exoskeleton",
+    "cost_cbills": "50,000",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "PA(L)",
+    "cost_cbills": "50,000",
+    "tech_rating": "D",
+    "availability": "E-F-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Light",
+    "cost_cbills": "50,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Medium",
+    "cost_cbills": "100,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Heavy",
+    "cost_cbills": "200,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Chassis",
+    "component": "Assault",
+    "cost_cbills": "400,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "Ground",
+    "cost_cbills": "25,000",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "Jump",
+    "cost_cbills": "50,000 (PA[L] and Light)",
+    "tech_rating": "D",
+    "availability": "E-F-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "Jump",
+    "cost_cbills": "75,000 (Medium)",
+    "tech_rating": "D",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "Jump",
+    "cost_cbills": "150,000 (Heavy)",
+    "tech_rating": "D",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "Jump",
+    "cost_cbills": "300,000 (Assault)",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "VTOL",
+    "cost_cbills": "50,000 (PA[L] and Light)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "VTOL",
+    "cost_cbills": "100,000 (Medium)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "UMU",
+    "cost_cbills": "50,000 (PA[L] and Light)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "UMU",
+    "cost_cbills": "75,000 (Medium)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "UMU",
+    "cost_cbills": "100,000 (Heavy)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Motive Systems (per MP)",
+    "component": "UMU",
+    "cost_cbills": "150,000 (Assault)",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "None",
+    "cost_cbills": "0",
+    "tech_rating": "B",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Armored Glove",
+    "cost_cbills": "2,500",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Basic Manipulator",
+    "cost_cbills": "5,000",
+    "tech_rating": "C",
+    "availability": "C-D-C"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Basic (Mine-Clearance)",
+    "cost_cbills": "7,500",
+    "tech_rating": "D",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Battle Claw",
+    "cost_cbills": "10,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Battle Claw (Magnets)",
+    "cost_cbills": "12,500",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Battle Claw (Vibro-Claw)",
+    "cost_cbills": "15,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Heavy Battle Claw",
+    "cost_cbills": "25,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Heavy Battle Claw (Magnets)",
+    "cost_cbills": "31,250",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Heavy Battle Claw (Vibro-Claw)",
+    "cost_cbills": "30,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Salvage Arm",
+    "cost_cbills": "50,000",
+    "tech_rating": "D",
+    "availability": "E-E-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Cargo Lifter (per 0.5 ton cap.)",
+    "cost_cbills": "500",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Industrial Drill",
+    "cost_cbills": "2,500",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Manipulators (per arm)",
+    "component": "Modular Equipment Adaptors",
+    "cost_cbills": "10,000",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Standard, Prototype",
+    "cost_cbills": "10,000",
+    "tech_rating": "E",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Standard",
+    "cost_cbills": "10,000",
+    "tech_rating": "E",
+    "availability": "F-F-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Standard, Advanced",
+    "cost_cbills": "12,500",
+    "tech_rating": "E",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Stealth, Prototype",
+    "cost_cbills": "50,000",
+    "tech_rating": "E",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Stealth, Basic",
+    "cost_cbills": "12,000",
+    "tech_rating": "E",
+    "availability": "F-F-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Stealth, Standard",
+    "cost_cbills": "15,000",
+    "tech_rating": "E",
+    "availability": "F-X-E"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Stealth, Improved",
+    "cost_cbills": "20,000",
+    "tech_rating": "E",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Fire Resistant",
+    "cost_cbills": "10,000",
+    "tech_rating": "F",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor (per Armor Point)",
+    "component": "Mimetic",
+    "cost_cbills": "15,000",
+    "tech_rating": "E",
+    "availability": "X-X-F"
+  },
+  {
+    "table": "BATTLE ARMOR STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Clan Technology Multiplier",
+    "component": "Clan Technology Multiplier",
+    "cost_cbills_formula": "1.1 x (Chassis Costs + Motive System Costs + Manipulator Costs + Armor Costs)",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Base Trooper Cost",
+    "component": "Base Trooper Cost",
+    "cost_cbills_formula": "2,000 x SQRT(Weapon Cost)",
+    "tech_rating": null,
+    "availability": null
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Foot",
+    "cost_cbills_formula": "x 1.0",
+    "tech_rating": "A",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Motorized",
+    "cost_cbills_formula": "x 1.6",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Jump",
+    "cost_cbills_formula": "x 2.6",
+    "tech_rating": "D",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Mechanized (Hover)",
+    "cost_cbills_formula": "x 3.2",
+    "tech_rating": "C",
+    "availability": "A-B-A"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Mechanized (Wheeled)",
+    "cost_cbills_formula": "x 3.2",
+    "tech_rating": "A",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Motive Type",
+    "component": "Mechanized (Tracked)",
+    "cost_cbills_formula": "x 3.2",
+    "tech_rating": "B",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "CONVENTIONAL INFANTRY COSTS AND AVAILABILITY",
+    "component_group": "Special",
+    "component": "Anti-'Mech Training and Equipment",
+    "cost_cbills_formula": "x 5.0",
+    "tech_rating": "D",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (Aerospace Fighter)",
+    "component": "Cockpit",
+    "cost_cbills": "200,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (Aerospace Fighter)",
+    "component": "Life Support",
+    "cost_cbills": "50,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (Aerospace Fighter)",
+    "component": "Sensors",
+    "cost_cbills_formula": "2,000 x Fighter Tonnage",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (Conventional Fighter)",
+    "component": "Avionics",
+    "cost_cbills_formula": "4,000 x Control Tonnage",
+    "tech_rating": "C",
+    "availability": "C-D-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (Conventional Fighter)",
+    "component": "VSTOL",
+    "cost_cbills_formula": "5,000 x VSTOL Tonnage",
+    "tech_rating": "C",
+    "availability": "C-D-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Bridge",
+    "cost_cbills_formula": "200,000 + (10 x Unit Tonnage)",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Computer",
+    "cost_cbills": "200,000",
+    "tech_rating": "B",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Life Support",
+    "cost_cbills_formula": "5,000 x (Total Passengers + Crew)",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Sensors",
+    "cost_cbills": "80,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Fire Control Computer",
+    "cost_cbills": "100,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Cockpit/Controls (DropShips and Small Craft)",
+    "component": "Gunnery Control Systems",
+    "cost_cbills_formula": "10,000 x (Number of Arcs with Weapons)",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Structure/Structural Integrity",
+    "component": "Aerospace Fighter",
+    "cost_cbills_formula": "50,000 x Structural Integrity Value",
+    "tech_rating": "C",
+    "availability": "C-D-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Structure/Structural Integrity",
+    "component": "Conventional Fighter",
+    "cost_cbills_formula": "4,000 x Structural Integrity Value",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Structure/Structural Integrity",
+    "component": "DropShip/Small Craft",
+    "cost_cbills_formula": "100,000 x Structural Integrity Value",
+    "tech_rating": "C",
+    "availability": "D-D-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Flight Systems",
+    "component": "Attitude Thruster (All craft)",
+    "cost_cbills": "25,000",
+    "tech_rating": "C",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Flight Systems",
+    "component": "Landing Gear (All craft)",
+    "cost_cbills_formula": "10 x Unit Tonnage",
+    "tech_rating": "B",
+    "availability": "C-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Flight Systems",
+    "component": "Docking Collar (DropShips only)",
+    "cost_cbills": "10,000",
+    "tech_rating": "C",
+    "availability": "D-C-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Standard Fusion (All Fighters)",
+    "cost_cbills_formula": "(5,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "D",
+    "availability": "C-E-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Light Fusion (Aerospace Fighters)",
+    "cost_cbills_formula": "(15,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "XL Fusion (Aerospace Fighters)",
+    "cost_cbills_formula": "(20,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "D-F-E"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Compact Fusion (Aerospace Fighters)",
+    "cost_cbills_formula": "(10,000 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Internal Combustion (Conventional Fighters)",
+    "cost_cbills_formula": "(1,250 x Engine Rating x Unit Tonnage) / 75",
+    "tech_rating": "C",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Drive Unit (DropShips/Small Craft)",
+    "cost_cbills_formula": "500 x Safe Thrust x (Unit Tonnage / 100)",
+    "tech_rating": "D",
+    "availability": "C-D-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Engine",
+    "component": "Engine (DropShips/Small Craft)",
+    "cost_cbills_formula": "1,000 x Engine Tonnage",
+    "tech_rating": "D",
+    "availability": "C-E-C"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Fuel Tanks",
+    "component": "Fuel Tank",
+    "cost_cbills_formula": "200 x Fuel Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Standard",
+    "cost_cbills_formula": "10,000 x Armor Tonnage",
+    "tech_rating": "D",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Ferro-Aluminum",
+    "cost_cbills_formula": "20,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "D-F-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Light Ferro-Aluminum",
+    "cost_cbills_formula": "15,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Heavy Ferro-Aluminum",
+    "cost_cbills_formula": "25,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "X-X-E"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Standard",
+    "cost_cbills_formula": "2,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "D",
+    "availability": "B-B-B"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Double",
+    "cost_cbills_formula": "6,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "E",
+    "availability": "C-E-D"
+  },
+  {
+    "table": "AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Power Amplifiers",
+    "component": "Power Amplifiers",
+    "cost_cbills_formula": "20,000 x Amplifier Tonnage",
+    "tech_rating": "D",
+    "availability": "B-C-B"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Bridge",
+    "cost_cbills_formula": "200,000 + (10 x Unit Tonnage)",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Computer",
+    "cost_cbills": "200,000",
+    "tech_rating": "B",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Life Support",
+    "cost_cbills_formula": "5,000 x (Total Passengers + Crew)",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Sensors",
+    "cost_cbills": "80,000",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Fire Control Computer",
+    "cost_cbills": "100,000",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Controls",
+    "component": "Gunnery Control Systems",
+    "cost_cbills_formula": "10,000 x (Number of Arcs with Weapons)",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Structure",
+    "component": "Structure",
+    "cost_cbills_formula": "100,000 x Structural Integrity",
+    "tech_rating": "C",
+    "availability": "D-D-D",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Maneuvering/Station-Keeping Drive",
+    "component": "Drive Unit",
+    "cost_cbills_formula": "500 x Safe Thrust x (Unit Tonnage / 100)",
+    "tech_rating": "D",
+    "availability": "C-D-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Maneuvering/Station-Keeping Drive",
+    "component": "Engine",
+    "cost_cbills_formula": "1,000 x Engine Tonnage",
+    "tech_rating": "D",
+    "availability": "C-E-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Maneuvering/Station-Keeping Drive",
+    "component": "Engine Control Unit",
+    "cost_cbills": "1,000",
+    "tech_rating": "D",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Drive Coil",
+    "cost_cbills_formula": "60,000,000 + (75,000,000 x No. of Docking Collars)",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Initiator",
+    "cost_cbills_formula": "25,000,000 + (5,000,000 x No. of Docking Collars)",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Controller",
+    "cost_cbills": "50,000,000",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Tankage",
+    "cost_cbills_formula": "50,000 x K-F Drive Integrity Value",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Sail",
+    "cost_cbills_formula": "50,000 x Sail Tonnage",
+    "tech_rating": "D",
+    "availability": "E-E-D",
+    "introduction": "2220"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Charging System",
+    "cost_cbills_formula": "500,000 + (200,000 x No. of Docking Collars)",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Standard Core",
+    "cost_cbills_formula": "Add all Drive Components for total cost of K-F",
+    "tech_rating": "D",
+    "availability": "D-E-D",
+    "introduction": "2300"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Compact Core",
+    "cost_cbills_formula": "Multiply all K-F Drive Components by 5",
+    "tech_rating": "D",
+    "availability": "D-F-E",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Standard Core w/Lithium-Fusion Battery",
+    "cost_cbills_formula": "Multiply all K-F Drive Components by 3",
+    "tech_rating": "D",
+    "availability": "E-F-E",
+    "introduction": "2529"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Kearny-Fuchida (K-F) Drive",
+    "component": "Compact Core w/ Lithium-Fusion Battery",
+    "cost_cbills_formula": "Multiply all K-F Drive Components by 15",
+    "tech_rating": "D",
+    "availability": "E-E-E",
+    "introduction": "2529"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "K-F Drive Support Systems",
+    "component": "JumpShip Support Systems",
+    "cost_cbills_formula": "10,000,000 x (Unit Tonnage / 10,000)",
+    "tech_rating": "D",
+    "availability": "D-D-D",
+    "introduction": "2107"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "K-F Drive Support Systems",
+    "component": "WarShip Support Systems",
+    "cost_cbills_formula": "20,000,000 x (50 + Unit Tonnage / 10,000)",
+    "tech_rating": "D",
+    "availability": "D-X-D",
+    "introduction": "2300"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Ship's Systems",
+    "component": "Attitude Thrusters",
+    "cost_cbills": "25,000",
+    "tech_rating": "C",
+    "availability": "C-C-C",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Ship's Systems",
+    "component": "Docking Collar",
+    "cost_cbills": "100,000",
+    "tech_rating": "B",
+    "availability": "C-C-C",
+    "introduction": "2304"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Additional Ship's Systems",
+    "component": "Fuel Tank",
+    "cost_cbills_formula": "200 x Fuel Tonnage",
+    "tech_rating": "B",
+    "availability": "A-A-A",
+    "introduction": "PS"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Standard",
+    "cost_cbills_formula": "10,000 x Armor Tonnage",
+    "tech_rating": "D",
+    "availability": "B-B-B",
+    "introduction": "2300"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Improved Ferro-Aluminum",
+    "cost_cbills_formula": "50,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "E-X-E",
+    "introduction": "2350"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Ferro-Carbide",
+    "cost_cbills_formula": "75,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "E-F-E",
+    "introduction": "2370"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Armor",
+    "component": "Lamellor Ferro-Carbide",
+    "cost_cbills_formula": "100,000 x Armor Tonnage",
+    "tech_rating": "E",
+    "availability": "E-F-E",
+    "introduction": "2615"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Standard",
+    "cost_cbills_formula": "2,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "D",
+    "availability": "B-B-B",
+    "introduction": "ES"
+  },
+  {
+    "table": "ADVANCED AEROSPACE UNIT STRUCTURAL COSTS AND AVAILABILITY",
+    "component_group": "Heat Sinks",
+    "component": "Double",
+    "cost_cbills_formula": "6,000 x (Total Number of Heat Sinks)",
+    "tech_rating": "E",
+    "availability": "C-E-D",
+    "introduction": "2567"
+  }
+]

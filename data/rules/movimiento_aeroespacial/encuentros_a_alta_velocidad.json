@@ -1,0 +1,129 @@
+[
+  {
+    "table_name": "Random Engagement Speed Table",
+    "records": [
+      {
+        "roll": "2",
+        "speed_class": "Fast"
+      },
+      {
+        "roll": "3",
+        "speed_class": "Medium"
+      },
+      {
+        "roll": "4",
+        "speed_class": "Medium"
+      },
+      {
+        "roll": "5",
+        "speed_class": "Slow"
+      },
+      {
+        "roll": "6",
+        "speed_class": "Slow"
+      },
+      {
+        "roll": "7",
+        "speed_class": "Slow"
+      },
+      {
+        "roll": "8",
+        "speed_class": "Slow"
+      },
+      {
+        "roll": "9",
+        "speed_class": "Slow"
+      },
+      {
+        "roll": "10",
+        "speed_class": "Medium"
+      },
+      {
+        "roll": "11",
+        "speed_class": "Medium"
+      },
+      {
+        "roll": "12",
+        "speed_class": "Fast"
+      }
+    ]
+  },
+  {
+    "table_name": "Angle of Attack Table",
+    "records": [
+      {
+        "roll": "2",
+        "angle": "Crossing"
+      },
+      {
+        "roll": "3",
+        "angle": "Crossing"
+      },
+      {
+        "roll": "4",
+        "angle": "Crossing"
+      },
+      {
+        "roll": "5",
+        "angle": "Head On"
+      },
+      {
+        "roll": "6",
+        "angle": "Head On"
+      },
+      {
+        "roll": "7",
+        "angle": "Head On"
+      },
+      {
+        "roll": "8",
+        "angle": "Head On"
+      },
+      {
+        "roll": "9",
+        "angle": "Head On"
+      },
+      {
+        "roll": "10",
+        "angle": "Head On"
+      },
+      {
+        "roll": "11",
+        "angle": "Crossing"
+      },
+      {
+        "roll": "12",
+        "angle": "Crossing"
+      }
+    ]
+  },
+  {
+    "table_name": "Fighter and Small Craft Deployment Table",
+    "records": [
+      {
+        "roll": 1,
+        "percentage_deployed": 15
+      },
+      {
+        "roll": 2,
+        "percentage_deployed": 30
+      },
+      {
+        "roll": 3,
+        "percentage_deployed": 45
+      },
+      {
+        "roll": 4,
+        "percentage_deployed": 60
+      },
+      {
+        "roll": 5,
+        "percentage_deployed": 75
+      },
+      {
+        "roll": 6,
+        "percentage_deployed": 90
+      }
+    ]
+  }
+]

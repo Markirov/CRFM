@@ -1,0 +1,169 @@
+[
+  {
+    "name": "Mecánicas Fundamentales del Juego",
+    "subcategories": [
+      "Secuencia de Turno",
+      "Iniciativa",
+      "Tiradas y Modificadores",
+      "Línea de Visión (Line of Sight)",
+      "Apilamiento (Stacking)",
+      "Habilidades de Pilotaje y Conducción"
+    ]
+  },
+  {
+    "name": "Movimiento Terrestre",
+    "subcategories": [
+      "Modos de Movimiento (Caminar, Correr, Saltar)",
+      "Encaminamiento y Cambios de Nivel",
+      "Movimiento en Terrenos Específicos",
+      "Caídas, Derrapes y Ponerse en Pie",
+      "Movimiento de Vehículos (VTOL, WiGE, Naval, Submarino)",
+      "Reglas de Movimiento Avanzado"
+    ]
+  },
+  {
+    "name": "Movimiento Aeroespacial",
+    "subcategories": [
+      "Movimiento en el Espacio (Empuje)",
+      "Movimiento Atmosférico",
+      "Maniobras Especiales (Aterrizaje y Despegue)",
+      "Viaje Hiperspacial y Puntos de Salto",
+      "Encuentros a Alta Velocidad",
+      "Efectos Gravitacionales"
+    ]
+  },
+  {
+    "name": "Combate a Distancia (Armas)",
+    "subcategories": [
+      "Secuencia de Ataque con Armas",
+      "Cálculo del Número para Impactar (To-Hit)",
+      "Arcos de Fuego",
+      "Localización de Impacto y Transferencia de Daño",
+      "Munición y Sistemas de Puntería (Artemis IV, NARC)",
+      "Reglas de Combate Avanzado"
+    ]
+  },
+  {
+    "name": "Combate Físico (Cuerpo a Cuerpo)",
+    "subcategories": [
+      "Puñetazos, Patadas y Garrotes",
+      "Armas Físicas (Hachas, Espadas)",
+      "Cargas, Empujones y Embestidas",
+      "Muerte desde Arriba (Death From Above)",
+      "Ataques contra Unidades Derribadas",
+      "Desplazamiento y Efecto Dominó"
+    ]
+  },
+  {
+    "name": "Calor, Daño y Efectos Críticos",
+    "subcategories": [
+      "Gestión y Efectos del Calor",
+      "Daño a la Estructura y Blindaje",
+      "Impactos Críticos y sus Efectos",
+      "Destrucción de Unidades",
+      "Daño al Piloto y Tiradas de Consciencia",
+      "Reglas de Colisión y Embestida"
+    ]
+  },
+  {
+    "name": "Unidades de Combate y Tipos",
+    "subcategories": [
+      "BattleMechs e IndustrialMechs",
+      "Vehículos de Combate (Terrestres, VTOL, WiGE, Navales)",
+      "Infantería (Convencional y Battle Armor)",
+      "ProtoMechs",
+      "Unidades Aeroespaciales (Cazas, Naves de Descenso)",
+      "Naves Capitales (Naves de Salto, Naves de Guerra, Estaciones)",
+      "Vehículos de Apoyo y Estructuras Móviles"
+    ]
+  },
+  {
+    "name": "Armas y Equipo (Unidades)",
+    "subcategories": [
+      "Armas de Energía",
+      "Armas Balísticas",
+      "Sistemas de Misiles",
+      "Equipo Electrónico (C3, ECM, Sondas)",
+      "Mejoras de Movimiento (MASC, TSM, Jets de Salto)",
+      "Tipos de Blindaje y Estructura",
+      "Armas y Equipo Avanzado"
+    ]
+  },
+  {
+    "name": "Entorno y Terreno de Batalla",
+    "subcategories": [
+      "Tipos de Terreno y sus Efectos",
+      "Edificios y Combate Urbano",
+      "Condiciones Planetarias (Clima, Gravedad)",
+      "Combate en Gravedad Cero",
+      "Obstáculos Orbitales (Asteroides, Escombros)",
+      "Combate Submarino y Naval"
+    ]
+  },
+  {
+    "name": "Organización y Mando",
+    "subcategories": [
+      "Estructura Militar (Lanza, Estrella, Compañía, Cúmulo)",
+      "Creación de Formaciones y Bonificaciones",
+      "Habilidades Especiales de Mando",
+      "Roles de Unidad (Asalto, Reconocimiento, Apoyo)",
+      "Comunicaciones y Guerra Electrónica",
+      "Escuadrones de Cazas"
+    ]
+  },
+  {
+    "name": "Escenarios y Campañas",
+    "subcategories": [
+      "Creación de Escenarios",
+      "Tipos de Misión y Objetivos",
+      "Campañas Narrativas y Basadas en Mapas",
+      "Sistema de Campaña \"Chaos Campaign\"",
+      "Reglas de Honor (Zellbrigen)",
+      "Generación de Sistemas Solares y Colonias"
+    ]
+  },
+  {
+    "name": "Gestión de Campañas",
+    "subcategories": [
+      "Creación y Gestión de Fuerzas",
+      "Mantenimiento, Reparación y Salvamento",
+      "Contratos, Negociación y Reputación",
+      "Costes de Operación y Finanzas",
+      "Moral, Fatiga y Experiencia",
+      "Transporte de Tropas y Carga"
+    ]
+  },
+  {
+    "name": "Construcción y Personalización",
+    "subcategories": [
+      "Reglas de Construcción de Unidades",
+      "Construcción Aeroespacial Avanzada",
+      "Personalización y Reparaciones Improvisadas",
+      "Peculiaridades de Diseño (Design Quirks)",
+      "Cálculo del Valor de Batalla (BV)",
+      "Cálculo de Costes y Disponibilidad"
+    ]
+  },
+  {
+    "name": "Personajes y Pilotos (RPG)",
+    "subcategories": [
+      "Creación de Personajes",
+      "Atributos y Rasgos",
+      "Habilidades y Especialidades",
+      "Avance y Experiencia del Personaje",
+      "Salud, Daño Personal y Curación",
+      "Habilidades Especiales de Piloto"
+    ]
+  },
+  {
+    "name": "Equipo Personal (RPG)",
+    "subcategories": [
+      "Armas Pequeñas y de Apoyo",
+      "Armas Cuerpo a Cuerpo (Modernas y Arcaicas)",
+      "Blindaje Personal y Exotrajes",
+      "Equipo Electrónico y de Supervivencia",
+      "Equipo Médico, Prótesis y Drogas",
+      "Explosivos y Demoliciones"
+    ]
+  }
+]

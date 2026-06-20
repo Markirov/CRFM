@@ -1,0 +1,656 @@
+[
+  {
+    "Condición": "Unidad Aeroespacial en mapa de gran altitud (a 10 hexes de la interfaz)",
+    "Fase": "Fase Final (End Phase)",
+    "Efecto": "Desplazamiento de 1 fila de hexágonos hacia el planeta."
+  },
+  {
+    "Condición": "Unidad Aeroespacial en hexágono de tierra con Velocidad 0",
+    "Fase": "Final de la Fase de Movimiento (Aeroespacial)",
+    "Efecto": "Debe Flotar, Aterrizar o Estrellarse."
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Presión Atmosférica (Densidad) - Vacío",
+    "modificador_movimiento": "+0",
+    "modificador_impacto": "+0",
+    "modificador_habilidad": "+0",
+    "unidades_prohibidas": "Vehículos, Infantería"
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Presión Atmosférica (Densidad) - Rastro",
+    "modificador_movimiento": "+0",
+    "modificador_impacto": "+0",
+    "modificador_habilidad": "+0",
+    "unidades_prohibidas": "Vehículos, Infantería"
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Presión Atmosférica (Densidad) - Delgada",
+    "modificador_movimiento": "–2 MP de Crucero (H, Wi, VT)",
+    "modificador_impacto": "+0",
+    "modificador_habilidad": "+0",
+    "unidades_prohibidas": "—"
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Presión Atmosférica (Densidad) - Alta",
+    "modificador_movimiento": "+1 MP de Crucero (H, Wi, VT)",
+    "modificador_impacto": "+0",
+    "modificador_habilidad": "+0",
+    "unidades_prohibidas": "—"
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Presión Atmosférica (Densidad) - Muy Alta",
+    "modificador_movimiento": "+1 MP de Crucero (H, Wi, VT)",
+    "modificador_impacto": "+0",
+    "modificador_habilidad": "+0",
+    "unidades_prohibidas": "—"
+  },
+  {
+    "categoría": "Condición de Terreno",
+    "condición": "Gravedad Alta/Baja",
+    "modificador_movimiento": "Ver p. 55",
+    "modificador_impacto": "Ver p. 55",
+    "modificador_habilidad": "Ver p. 55",
+    "unidades_prohibidas": "—"
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Niebla Densa",
+    "costo_mp_o_modificador": {
+      "mechs": "+2",
+      "vehículos": "+2",
+      "infantería": "+2",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1 DE, P",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Niebla Ligera",
+    "costo_mp_o_modificador": {
+      "mechs": "+1",
+      "vehículos": "+1",
+      "infantería": "+1",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+0",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Granizo Fuerte",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-1 C",
+      "infantería": "-2 G (B)/-3 (CI)",
+      "aeroespacial": "-1 MP (A)"
+    },
+    "puntos_calor": "-1",
+    "modificador_impacto": "+1 DB/+2 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+1",
+      "vehículos": "+2 (H/Wi/VT)",
+      "aeroespacial": "+1 (+3 A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Granizo Ligero",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-1 C",
+      "infantería": "-1 G (B)/-2 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-1",
+    "modificador_impacto": "+1 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Luz - Anochecer/Amanecer",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Luz - Noche de Luna Llena/Resplandor",
+    "costo_mp_o_modificador": {
+      "mechs": "+1",
+      "vehículos": "+1",
+      "infantería": "+1",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+2",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Luz - Noche sin Luna/Llamarada Solar",
+    "costo_mp_o_modificador": {
+      "mechs": "+2",
+      "vehículos": "+2",
+      "infantería": "+2",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+3/+1 PH",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Luz - Oscuridad Total",
+    "costo_mp_o_modificador": {
+      "mechs": "+3",
+      "vehículos": "+3",
+      "infantería": "+3",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+4/+2 PH",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Lluvia con Ráfagas",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 G (B)/-2 (CI)",
+      "aeroespacial": "-1 MP (A)"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+2 DB/+3 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+2",
+      "vehículos": "+3 (H/Wi/VT)",
+      "aeroespacial": "+2 (+4 A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Lluvia Fuerte",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+1",
+      "vehículos": "+1",
+      "aeroespacial": "+1"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Tormenta Eléctrica",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1/+2 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Lluvia Ligera",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1 (CI)",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Lluvia Moderada",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Aguacero Torrencial",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+2",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+2",
+      "vehículos": "+2",
+      "aeroespacial": "+2"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Nevada Fuerte",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-2 C",
+      "infantería": "-2 G (B)/-3 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-2",
+    "modificador_impacto": "+1",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+1",
+      "vehículos": "+1",
+      "aeroespacial": "+1"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Tormenta de Hielo",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-3 C",
+      "infantería": "-3G(B)/-4(CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-3",
+    "modificador_impacto": "+1 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Nieve Ligera",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-1 C",
+      "infantería": "-1 CI",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-1",
+    "modificador_impacto": "+1 (CI)",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Nieve Moderada",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-2 C",
+      "infantería": "-2 CI",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-2",
+    "modificador_impacto": "+1",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Ráfagas de Nieve",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-2 C",
+      "infantería": "-3 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-2",
+    "modificador_impacto": "+1/+2 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Aguanieve",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "-1 C",
+      "infantería": "-2 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "-1",
+    "modificador_impacto": "+1/+2 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Viento Ligero",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 G (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+0",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+1 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Viento Moderado",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1 M",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Viento Fuerte",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 G (B)/-2 (CI)",
+      "aeroespacial": "-1 (A)"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1 DB/+2 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+1",
+      "vehículos": "+2 (H/Wi/VT)",
+      "aeroespacial": "+1 (+3 A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Tormenta",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 G, no J (B); no CI",
+      "aeroespacial": "-1 SF"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+2 DB/+3 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+3",
+      "vehículos": "+3 (H/Wi/VT)",
+      "aeroespacial": "+2"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Tornado F1-F3",
+    "costo_mp_o_modificador": {
+      "mechs": "-2 W",
+      "vehículos": "-2 C",
+      "infantería": "N/A",
+      "aeroespacial": "-1 SF; no A"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+2 DE, P/+3 DB/no Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+3",
+      "vehículos": "+3",
+      "aeroespacial": "+3"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Tornado F4+",
+    "costo_mp_o_modificador": {
+      "mechs": "W only",
+      "vehículos": "N/A",
+      "infantería": "N/A",
+      "aeroespacial": "N/A"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+3 DE, P/no DB, Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+5",
+      "vehículos": "—",
+      "aeroespacial": "—"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Arena Voladora",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "-1 (CI)",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "+0",
+    "modificador_impacto": "+1 DE/P/+1 Mi",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+1 (Wi/VT)",
+      "aeroespacial": "+2 (A)"
+    }
+  },
+  {
+    "categoría": "Condición Climática",
+    "condición": "Temperaturas Extremas",
+    "costo_mp_o_modificador": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "infantería": "+0",
+      "aeroespacial": "+0"
+    },
+    "puntos_calor": "Ver p. 62",
+    "modificador_impacto": "+0",
+    "modificador_pilotaje_conducción": {
+      "mechs": "+0",
+      "vehículos": "+0",
+      "aeroespacial": "+0"
+    }
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "1",
+    "condición": "Luz"
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "2",
+    "condición": "Viento"
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "3",
+    "condición": "Lluvia"
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "4",
+    "condición": "Nieve"
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "5",
+    "condición": "Temperaturas Extremas"
+  },
+  {
+    "tabla": "Tabla General del Clima",
+    "tirada_1d6": "6",
+    "condición": "Clima Combinado"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "1",
+    "condición": "-70C a -60C"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "2",
+    "condición": "-59C a -40C"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "3",
+    "condición": "-39C a -30C"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "4",
+    "condición": "50C a 60C"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "5",
+    "condición": "61C a 70C"
+  },
+  {
+    "tabla": "Tabla de Clima 5: Temperaturas Extremas",
+    "tirada_1d6": "6",
+    "condición": "71C a 80C"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "1",
+    "condición": ".1 a .3"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "2",
+    "condición": ".4 a .6"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "3",
+    "condición": ".5 a .9"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "4",
+    "condición": "1.1 a 1.3"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "5",
+    "condición": "1.4 a 1.5"
+  },
+  {
+    "tabla": "Tabla de Terreno 5: Gravedad Alta/Baja",
+    "tirada_1d6": "6",
+    "condición": "1.6 a 1.9"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "1",
+    "condición": "Vacío"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "2",
+    "condición": "Rastro"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "3",
+    "condición": "Delgada"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "4",
+    "condición": "Estándar"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "5",
+    "condición": "Alta"
+  },
+  {
+    "tabla": "Tabla de Presión Atmosférica",
+    "tirada_1d6": "6",
+    "condición": "Muy Alta"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "table_name": "Conversión de Daño por Escala",
+    "headers": [
+      "Tipo de Ataque",
+      "Tipo de Blindaje",
+      "Cálculo de Daño"
+    ],
+    "rows": [
+      {
+        "Tipo de Ataque": "Arma Capital",
+        "Tipo de Blindaje": "Estándar",
+        "Cálculo de Daño": "Valor de Ataque del Arma x 10"
+      },
+      {
+        "Tipo de Ataque": "Arma Estándar",
+        "Tipo de Blindaje": "Capital",
+        "Cálculo de Daño": "Daño Total de Armas / 10 (redondeado)"
+      }
+    ]
+  },
+  {
+    "table_name": "Tabla de Impacto Crítico de Misiles Capitales",
+    "headers": [
+      "Misil",
+      "Probabilidad de Impacto Crítico (2D6)"
+    ],
+    "rows": [
+      {
+        "Misil": "Barracuda",
+        "Probabilidad de Impacto Crítico (2D6)": "11+"
+      },
+      {
+        "Misil": "White Shark",
+        "Probabilidad de Impacto Crítico (2D6)": "9+"
+      },
+      {
+        "Misil": "Killer Whale",
+        "Probabilidad de Impacto Crítico (2D6)": "10+"
+      },
+      {
+        "Misil": "Kraken",
+        "Probabilidad de Impacto Crítico (2D6)": "8+"
+      }
+    ]
+  }
+]

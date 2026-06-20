@@ -5,10 +5,11 @@ import {
   loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, clearFuerzaConfigSlot, sendFuerzaToUser,
   type FuerzaSlot, type FuerzaConfigEntry,
 } from '@/lib/firebase-service';
-import { getRoles, type RoleEntry } from '@/lib/role-service';
+import { getPublicRoles, type PublicRoleEntry } from '@/lib/role-service';
 import type { SimuladorSnapshot } from '@/lib/simulador-persistence';
 import { useDismissable } from '@/hooks/useDismissable';
 import { auth } from '@/lib/firebase-config';
+import { useAppStore } from '@/lib/store';
 
 interface Props {
   dirty: boolean;
@@ -35,6 +36,7 @@ export function FuerzaSyncBar({
   dirty, lastLocalSave, getSnapshot, hydrateFromSnapshot, clearCurrentUnit, markSynced, bvTotal,
   campaignMode, onToggleCampaignMode, onSaveCampaign, onRequestSaveSlot
 }: Props) {
+  const userRole = useAppStore(s => s.userRole);
   const [pushState, setPushState] = useState<PushState>('idle');
   const [pushError, setPushError] = useState<string | null>(null);
   const [lastSyncIso, setLastSyncIso] = useState<string | null>(null);
@@ -45,10 +47,11 @@ export function FuerzaSyncBar({
   // Slots fijos en Configuracion (FUERZA1..FUERZA5)
   const [slots, setSlots] = useState<Record<FuerzaSlot, FuerzaConfigEntry | null>>({ 1: null, 2: null, 3: null, 4: null, 5: null });
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [slotsError, setSlotsError] = useState<string | null>(null);
   const [slotNombre, setSlotNombre] = useState('');
 
-  const [users, setUsers] = useState<RoleEntry[]>([]);
-  const [selectedUserEmail, setSelectedUserEmail] = useState('');
+  const [users, setUsers] = useState<PublicRoleEntry[]>([]);
+  const [selectedUserSafeEmail, setSelectedUserSafeEmail] = useState('');
   const [sendingFuerza, setSendingFuerza] = useState(false);
   const [sendSuccess, setSendSuccess] = useState('');
 
@@ -107,17 +110,24 @@ export function FuerzaSyncBar({
 
   const reloadSlots = async () => {
     setLoadingSlots(true);
-    const [all, roleList] = await Promise.all([
-      loadAllFuerzaConfigSlots(),
-      getRoles()
-    ]);
-    setSlots(all);
-    setUsers(roleList);
-    setLoadingSlots(false);
+    setSlotsError(null);
+    try {
+      const [all, roleList] = await Promise.all([
+        loadAllFuerzaConfigSlots(),
+        getPublicRoles()
+      ]);
+      setSlots(all);
+      setUsers(roleList);
+    } catch (err: any) {
+      console.error('[FuerzaSyncBar] reloadSlots error:', err);
+      setSlotsError(err?.message || String(err));
+    } finally {
+      setLoadingSlots(false);
+    }
   };
 
   const handleSendFuerza = async () => {
-    if (!selectedUserEmail) return;
+    if (!selectedUserSafeEmail) return;
     setSendingFuerza(true);
     setSendSuccess('');
     const snap: SimuladorSnapshot = {
@@ -126,7 +136,7 @@ export function FuerzaSyncBar({
       ...getSnapshot(),
     };
     const nombre = slotNombre.trim() || `Enviado ${new Date().toLocaleDateString()}`;
-    const res = await sendFuerzaToUser(selectedUserEmail, { nombre, bv: bvTotal, snapshot: snap });
+    const res = await sendFuerzaToUser(selectedUserSafeEmail, { nombre, bv: bvTotal, snapshot: snap });
     if (res?.success) {
       setSendSuccess('¡Fuerza enviada con éxito!');
       setTimeout(() => setSendSuccess(''), 3000);
@@ -201,13 +211,15 @@ export function FuerzaSyncBar({
 
   return (
     <div className="relative flex items-center gap-1 sm:gap-2">
-      <button
-        onClick={openSlotsPanel}
-        title="Slots fijos FUERZA1-5 (Configuracion)"
-        className="flex items-center gap-1 border border-outline-variant/40 hover:border-amber-400/60 text-secondary/70 hover:text-amber-400 px-2 py-1 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors"
-      >
-        <Archive size={12} /> <span className="hidden sm:inline">Slots</span>
-      </button>
+      {userRole !== null && (
+        <button
+          onClick={openSlotsPanel}
+          title="Slots fijos FUERZA1-5 (Configuracion)"
+          className="flex items-center gap-1 border border-outline-variant/40 hover:border-amber-400/60 text-secondary/70 hover:text-amber-400 px-2 py-1 clip-chamfer font-mono text-[9px] uppercase tracking-widest transition-colors"
+        >
+          <Archive size={12} /> <span className="hidden sm:inline">Slots</span>
+        </button>
+      )}
 
       <button
         onClick={() => {
@@ -297,18 +309,18 @@ export function FuerzaSyncBar({
             </h4>
             <div className="flex gap-1 mb-1">
               <select
-                value={selectedUserEmail}
-                onChange={(e) => setSelectedUserEmail(e.target.value)}
+                value={selectedUserSafeEmail}
+                onChange={(e) => setSelectedUserSafeEmail(e.target.value)}
                 className="flex-1 bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[10px] text-secondary focus:border-primary/60 focus:outline-none"
               >
                 <option value="">-- Seleccionar jugador --</option>
                 {users.map(u => (
-                  <option key={u.email} value={u.email}>{u.email} ({u.role})</option>
+                  <option key={u.safeEmail} value={u.safeEmail}>{u.alias || u.safeEmail} ({u.role})</option>
                 ))}
               </select>
               <button
                 onClick={handleSendFuerza}
-                disabled={!selectedUserEmail || sendingFuerza}
+                disabled={!selectedUserSafeEmail || sendingFuerza}
                 className="bg-primary/20 hover:bg-primary/40 disabled:opacity-30 disabled:cursor-not-allowed text-primary border border-primary/50 px-2 py-1 font-mono text-[10px] uppercase tracking-widest transition-colors"
               >
                 {sendingFuerza ? 'Enviando...' : 'Enviar'}
@@ -321,8 +333,9 @@ export function FuerzaSyncBar({
           </div>
 
           {loadingSlots && <p className="font-mono text-[10px] text-secondary/50 italic">Cargando slots…</p>}
+          {slotsError && <p className="font-mono text-[10px] text-error">Error: {slotsError}</p>}
 
-          {!loadingSlots && (
+          {!loadingSlots && !slotsError && (
             <ul className="space-y-1.5">
               {([1, 2, 3, 4, 5] as FuerzaSlot[]).map(s => {
                 const entry = slots[s];

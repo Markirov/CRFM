@@ -1,0 +1,687 @@
+[
+  {
+    "tableName": "FORCE_CREATION_ERA_TABLE",
+    "data": [
+      {
+        "Era": "2100-2412",
+        "Description": "Early Interstellar States and unrestricted Age of War, marked by small and novice militaries"
+      },
+      {
+        "Era": "2412-2570",
+        "Description": "Age of War under the Ares Conventions, an era of growing prosperity and industrial capacity"
+      },
+      {
+        "Era": "2571-2650",
+        "Description": "Reunification War and Early Star League"
+      },
+      {
+        "Era": "2651-2750",
+        "Description": "High Star League, an era of stability and ever-growing technology and military strength"
+      },
+      {
+        "Era": "2751-2820",
+        "Description": "Fall of the Star League, First Succession War. Despite the grim period, this is, in fact, the peak of human military strength, technology, and prosperity."
+      },
+      {
+        "Era": "2821-2900",
+        "Description": "Second Succession War and early Third Succession War, where population, industrial, and technological declines really take hold. The average wealth and technology are higher than the Third Succession War until the end of this period."
+      },
+      {
+        "Era": "2901-3049",
+        "Description": "Third and Fourth Succession Wars. The great malaise of the Succession Wars defines most of the era; the technological revolution seen at the end of this period truly takes hold in the next."
+      },
+      {
+        "Era": "3050-3067",
+        "Description": "Clan Invasion. Technological recovery sweeps the Inner Sphere, increasing standards of living—and military firepower—dramatically."
+      },
+      {
+        "Era": "3068-3085",
+        "Description": "Jihad. The impact of the Helm Memory Core reaches its peak in this period before the Jihad wipes the progress away."
+      },
+      {
+        "Era": "3085-3131",
+        "Description": "The Republic. While civilians recover through this period, militaries remain much-reduced in size."
+      },
+      {
+        "Era": "3132-3150",
+        "Description": "Dark Age. The HPG blackout plunges the Inner Sphere into widespread chaos and warfare."
+      },
+      {
+        "Era": "2800-2840",
+        "Description": "Exodus Civil War, Pentagon Campaign. The SLDF batters itself into warring fragments and then “reunites” into the balkanized Clans. In this era, the Clans are at their smallest and weakest."
+      },
+      {
+        "Era": "2840-3025",
+        "Description": "Golden Century and beyond. The Clans’ population grows from a few million refugees and thus is militarily and industrially smaller than the Clans of the Invasion period."
+      },
+      {
+        "Era": "3025-3072",
+        "Description": "Invasion-era Clans. The Clans reach the peak of their strength."
+      },
+      {
+        "Era": "3072+",
+        "Description": "Post-Wars of Reaving. This era only applies to Homeworld Clans; Clans in the Inner Sphere and Periphery use the Inner Sphere/Periphery eras."
+      }
+    ]
+  },
+  {
+    "tableName": "BASIC_BUDGET_TABLE",
+    "data": [
+      {
+        "Roll": 3,
+        "Funds": "10,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era light BattleMech lance"
+      },
+      {
+        "Roll": 4,
+        "Funds": "20,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era medium BattleMech lance"
+      },
+      {
+        "Roll": 5,
+        "Funds": "30,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era heavy / mixed BattleMech lance"
+      },
+      {
+        "Roll": 6,
+        "Funds": "40,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era well-funded assault BattleMech lance"
+      },
+      {
+        "Roll": 7,
+        "Funds": "50,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 8,
+        "Funds": "60,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era mixed BattleMech company"
+      },
+      {
+        "Roll": 9,
+        "Funds": "75,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era assault BattleMech company"
+      },
+      {
+        "Roll": 10,
+        "Funds": "90,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 11,
+        "Funds": "105,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 12,
+        "Funds": "120,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 13,
+        "Funds": "140,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 14,
+        "Funds": "160,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 15,
+        "Funds": "180,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era mixed BattleMech battalion"
+      },
+      {
+        "Roll": 16,
+        "Funds": "210,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      },
+      {
+        "Roll": 17,
+        "Funds": "240,000,000 CB",
+        "Equivalent_Force_Approximate": "3025-era assault BattleMech battalion"
+      },
+      {
+        "Roll": 18,
+        "Funds": "300,000,000 CB",
+        "Equivalent_Force_Approximate": null
+      }
+    ]
+  },
+  {
+    "tableName": "ERA_BUDGET_MODIFICATION_TABLE",
+    "data": [
+      {
+        "Era": "2100-2412",
+        "Multiplier": 0.75
+      },
+      {
+        "Era": "2412-2570",
+        "Multiplier": 1.25
+      },
+      {
+        "Era": "2571-2650",
+        "Multiplier": 1.5
+      },
+      {
+        "Era": "2651-2750",
+        "Multiplier": 2
+      },
+      {
+        "Era": "2751-2820",
+        "Multiplier": 2.5
+      },
+      {
+        "Era": "2821-2900",
+        "Multiplier": 1.5
+      },
+      {
+        "Era": "2901-3049",
+        "Multiplier": 1
+      },
+      {
+        "Era": "3050-3067",
+        "Multiplier": 1.5
+      },
+      {
+        "Era": "3068-3084",
+        "Multiplier": 2
+      },
+      {
+        "Era": "3084-3130",
+        "Multiplier": 1
+      },
+      {
+        "Era": "2800-2840",
+        "Multiplier": 0.5
+      },
+      {
+        "Era": "2840-3025",
+        "Multiplier": 1.25
+      },
+      {
+        "Era": "3025-3072",
+        "Multiplier": 1.5
+      },
+      {
+        "Era": "3072-3130",
+        "Multiplier": 1.25
+      }
+    ]
+  },
+  {
+    "tableName": "FACTION_BUDGET_MODIFICATION_TABLE",
+    "data": [
+      {
+        "Faction_Type": "Super Power",
+        "Multiplier": 1.5,
+        "Examples": "Terran Hegemony (2450 – 2780), the First Star League, and the Federated Commonwealth"
+      },
+      {
+        "Faction_Type": "Major Power",
+        "Multiplier": 1.2,
+        "Examples": "Inner Sphere Great Houses, Republic of the Sphere, Terran Alliance, Second Star League, Inner Sphere Clans (Wolf, Jade Falcon, Ghost Bear), pre-Schism ComStar, and similar large nations"
+      },
+      {
+        "Faction_Type": "Minor Power",
+        "Multiplier": 1,
+        "Examples": "Most Clans, Capellan Confederation (3030–3060), St. Ives Compact, major Periphery States, Inner Sphere micro-states before 2600 (e.g., Chesterton Trade League, United Hindu Collective), Duchy of Andurien, and similar nations with smaller territories and populations"
+      },
+      {
+        "Faction_Type": "Independent Worlds, Small States",
+        "Multiplier": 0.8,
+        "Examples": "Any independent planet or minor Periphery power, such as the Rim Collection or a Chaos March nation"
+      },
+      {
+        "Faction_Type": "Independent Mercenary and Pirate Forces",
+        "Multiplier": 1,
+        "Examples": "Any mercenary or pirate Force that has been independent from a faction for over 5 years"
+      },
+      {
+        "Faction_Type": "Wealthy Faction",
+        "Multiplier": 1.2,
+        "Examples": "Lyran Commonwealth, Terran Hegemony, First Star League"
+      },
+      {
+        "Faction_Type": "Poor Faction",
+        "Multiplier": 0.8,
+        "Examples": "Capellan Confederation (2860–3130), Outworlds Alliance, most independent Periphery planets"
+      }
+    ]
+  },
+  {
+    "tableName": "EQUIPMENT_AVAILABILITY_COST_TABLE",
+    "data": [
+      {
+        "Category": "Example Unit",
+        "Item": "Light BattleMech or Aerospace Fighter, any Satellite",
+        "Availability": 4,
+        "Cost": "3,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Medium BattleMech or Aerospace Fighter",
+        "Availability": 5,
+        "Cost": "6,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Heavy BattleMech or Aerospace Fighter",
+        "Availability": 6,
+        "Cost": "9,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Assault BattleMech, any Small Craft",
+        "Availability": 8,
+        "Cost": "12,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Light Combat Vehicle",
+        "Availability": 3,
+        "Cost": "500,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Medium Combat Vehicle",
+        "Availability": 4,
+        "Cost": "1,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Heavy Combat Vehicle",
+        "Availability": 5,
+        "Cost": "1,500,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Assault Combat Vehicle",
+        "Availability": 7,
+        "Cost": "2,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Conventional Fighter",
+        "Availability": 5,
+        "Cost": "1,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Battle Armor, Single*",
+        "Availability": 5,
+        "Cost": "750,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Conventional Infantry Platoon, Foot",
+        "Availability": 2,
+        "Cost": "1,200,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Conventional Infantry Platoon, Motorized",
+        "Availability": 3,
+        "Cost": "2,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Conventional Infantry Platoon, Jump or Mechanized",
+        "Availability": 4,
+        "Cost": "2,800,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "ProtoMech, Single*",
+        "Availability": 6,
+        "Cost": "1,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Support Vehicle, Light (<5 tons)",
+        "Availability": 2,
+        "Cost": "250,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Support Vehicle, Medium (6 to 100 tons)",
+        "Availability": 3,
+        "Cost": "750,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Support Vehicle, Heavy (101 to 1,000 tons)",
+        "Availability": 5,
+        "Cost": "2,250,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Support Vehicle, Super Heavy (1,001 to 100,000 tons)",
+        "Availability": 7,
+        "Cost": "20,000,000"
+      },
+      {
+        "Category": "Example Unit",
+        "Item": "Exotic unit (LAM, Super-Heavy ’Mechs, etc.)",
+        "Availability": 10,
+        "Cost": "50,000,000"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Clan equipment for non-Clan Force (after 3070)",
+        "Modifier": "+3"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Tech E and F Equipment for non-Clan, non-ComStar Force between 2860 and 3040",
+        "Modifier": "+5"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "First Star League equipment for Clan Force",
+        "Modifier": "-2"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Cross-faction: Acquiring another faction’s exclusive equipment",
+        "Modifier": "+2"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Green Experience",
+        "Modifier": "-2"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Regular Experience",
+        "Modifier": 0
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Veteran Experience",
+        "Modifier": "+2"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Customized unit",
+        "Modifier": "+TP Value"
+      },
+      {
+        "Category": "Availability Modifier",
+        "Item": "Elite Experience",
+        "Modifier": "+5"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Fusion engine in combat vehicle",
+        "Modifier": "x2.0*"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "XL engine in any unit",
+        "Modifier": "x2.5*"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Light fusion engine in any unit",
+        "Modifier": "x1.5*"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Clan equipment for non-Clan Force (3049-3070)",
+        "Modifier": "x5.0"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Clan equipment for non-Clan Force (3070+)",
+        "Modifier": "x4.0"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Tech E and F Equipment for non-Clan, non-ComStar Force between 2860 and 3040",
+        "Modifier": "x5.0"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Tech Rating E equipment",
+        "Modifier": "x1.1"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Tech Rating F equipment",
+        "Modifier": "x1.25"
+      },
+      {
+        "Category": "Cost Modifier",
+        "Item": "Customized unit",
+        "Modifier": "xTP Value"
+      }
+    ]
+  },
+  {
+    "tableName": "SALARY_TABLE",
+    "data": [
+      {
+        "Category": "Position",
+        "Item": "MechWarrior",
+        "Value": 1500
+      },
+      {
+        "Category": "Position",
+        "Item": "Aerospace Pilot",
+        "Value": 1500
+      },
+      {
+        "Category": "Position",
+        "Item": "Vehicle/Artillery Crewman",
+        "Value": 900
+      },
+      {
+        "Category": "Position",
+        "Item": "Aircraft Pilot",
+        "Value": 900
+      },
+      {
+        "Category": "Position",
+        "Item": "Regular Infantry",
+        "Value": 750
+      },
+      {
+        "Category": "Position",
+        "Item": "Specialist/Armor Infantry",
+        "Value": 960
+      },
+      {
+        "Category": "Position",
+        "Item": "Vessel Crewman (DropShip)",
+        "Value": 1000
+      },
+      {
+        "Category": "Position",
+        "Item": "Vessel Crewman (JumpShip)",
+        "Value": 750
+      },
+      {
+        "Category": "Position",
+        "Item": "Vessel Crewman (WarShip)",
+        "Value": 1200
+      },
+      {
+        "Category": "Position",
+        "Item": "Technician",
+        "Value": 800
+      },
+      {
+        "Category": "Position",
+        "Item": "Astech",
+        "Value": 400
+      },
+      {
+        "Category": "Position",
+        "Item": "Administrator",
+        "Value": 500
+      },
+      {
+        "Category": "Quality/Expertise",
+        "Item": "Green",
+        "Value": "x0.6"
+      },
+      {
+        "Category": "Quality/Expertise",
+        "Item": "Regular",
+        "Value": "x1.0"
+      },
+      {
+        "Category": "Quality/Expertise",
+        "Item": "Veteran",
+        "Value": "x1.6"
+      },
+      {
+        "Category": "Quality/Expertise",
+        "Item": "Elite",
+        "Value": "x3.2"
+      },
+      {
+        "Category": "Training",
+        "Item": "Anti-BattleMech Training (Infantry only)",
+        "Value": "x1.5"
+      },
+      {
+        "Category": "Rank",
+        "Item": "Officer (non-Clan only)",
+        "Value": "((Rank TP-3)/3 +1)"
+      },
+      {
+        "Category": "Rank",
+        "Item": "Enlisted (non-Clan) & All Clan",
+        "Value": "((Rank TP-3)/6 + 1)"
+      }
+    ]
+  },
+  {
+    "tableName": "FORCE_RANDOM_BACKGROUND_TABLE",
+    "data": [
+      {
+        "3D6_Result": 3,
+        "Background": "Atrocity. The Force committed a mass murder of innocents. –50 Reputation."
+      },
+      {
+        "3D6_Result": 4,
+        "Background": "War criminals. The Force committed a serious crime, accidentally killing many civilians; committed rape, or indulged in kidnapping. –25 Reputation."
+      },
+      {
+        "3D6_Result": 5,
+        "Background": "Contract breach. The Force violated a contract (if mercenary) or orders (if government). –25 Reputation. Ignore this result if a pirate Force."
+      },
+      {
+        "3D6_Result": 6,
+        "Background": "Textbook warriors. The Force got into a rut, favoring fighting in certain conditions over others. The Force now suffers a –1 Initiative in a specific terrain type (e.g., woods)."
+      },
+      {
+        "3D6_Result": 7,
+        "Background": "Poor discipline. The Force launched an unauthorized raid or indulged in looting. –5 Reputation."
+      },
+      {
+        "3D6_Result": 8,
+        "Background": "Debt. The Force loses any leftover funds from Force creation and starts in debt at an amount equal to 1D6 times its peacetime monthly operating cost. -10 Reputation."
+      },
+      {
+        "3D6_Result": "9-12",
+        "Background": "The Force had a quiet year in a garrison or cadre mission."
+      },
+      {
+        "3D6_Result": 13,
+        "Background": "Profitable year. After completing some missions successfully, the Force’s bank account is in the black. Delete any debt from Force creation and give the Force a bonus equal to 1D6 times its monthly operating cost."
+      },
+      {
+        "3D6_Result": 14,
+        "Background": "Out-of-the-box thinkers. After repeated campaigns in unusual terrain, the Force gains a +1 Initiative bonus in a specific terrain type."
+      },
+      {
+        "3D6_Result": 15,
+        "Background": "Hard training and experience pay off. The Force gains a +1 Piloting/Driving Skill bonus in a specific terrain type."
+      },
+      {
+        "3D6_Result": 16,
+        "Background": "The Force has a string of successful missions and gains 1D6 x 5 Reputation points."
+      },
+      {
+        "3D6_Result": 17,
+        "Background": "The Force has a string of successful missions against one foe, learning best how to kill them dead. The Force has a +1 Gunnery Skill bonus against that faction."
+      },
+      {
+        "3D6_Result": 18,
+        "Background": "They came, they saw, they conquered. The Force is almost unbeaten after years of hard combat, gaining 2D6 x 5 Reputation points."
+      }
+    ]
+  },
+  {
+    "tableName": "LOAN_TABLE",
+    "data": [
+      {
+        "Force_Type": "Government",
+        "Base_Annual_Interest": "5%",
+        "Base_Collateral": "0%",
+        "Interest_with_Reduced_Collateral": "N/A",
+        "Interest_with_Increased_Collateral": "-1% per +10%",
+        "Minimum_Interest": "0%",
+        "Maximum_Payback_Period": "10 years"
+      },
+      {
+        "Force_Type": "Mercenary (Reputation 14+)",
+        "Base_Annual_Interest": "7%",
+        "Base_Collateral": "15%",
+        "Interest_with_Reduced_Collateral": "+1% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +10%",
+        "Minimum_Interest": "4%",
+        "Maximum_Payback_Period": "5 years"
+      },
+      {
+        "Force_Type": "Mercenary (Reputation 10-13)",
+        "Base_Annual_Interest": "10%",
+        "Base_Collateral": "25%",
+        "Interest_with_Reduced_Collateral": "+1% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +10%",
+        "Minimum_Interest": "5%",
+        "Maximum_Payback_Period": "3 years"
+      },
+      {
+        "Force_Type": "Mercenary (Reputation 5-9)",
+        "Base_Annual_Interest": "15%",
+        "Base_Collateral": "40%",
+        "Interest_with_Reduced_Collateral": "+1% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +10%",
+        "Minimum_Interest": "5%",
+        "Maximum_Payback_Period": "2 years"
+      },
+      {
+        "Force_Type": "Mercenary (Reputation 1-4)",
+        "Base_Annual_Interest": "20%",
+        "Base_Collateral": "60%",
+        "Interest_with_Reduced_Collateral": "+2% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +15%",
+        "Minimum_Interest": "10%",
+        "Maximum_Payback_Period": "1 year"
+      },
+      {
+        "Force_Type": "Mercenary (Reputation 0 or less)",
+        "Base_Annual_Interest": "35%",
+        "Base_Collateral": "80%",
+        "Interest_with_Reduced_Collateral": "+2% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +15%",
+        "Minimum_Interest": "15%",
+        "Maximum_Payback_Period": "6 months"
+      },
+      {
+        "Force_Type": "Pirate",
+        "Base_Annual_Interest": "50%",
+        "Base_Collateral": "100%",
+        "Interest_with_Reduced_Collateral": "+2% per -1%",
+        "Interest_with_Increased_Collateral": "-1% per +20%",
+        "Minimum_Interest": "25%",
+        "Maximum_Payback_Period": "6 months"
+      }
+    ]
+  }
+]

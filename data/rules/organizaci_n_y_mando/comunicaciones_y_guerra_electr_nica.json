@@ -1,0 +1,79 @@
+[
+  {
+    "table_name": "HPG TABLE",
+    "headers": [
+      "2D6 Roll",
+      "Inner Sphere",
+      "Major Periphery State",
+      "Other Periphery"
+    ],
+    "rows": [
+      {
+        "2D6 Roll": "1 or less",
+        "Inner Sphere": "C-rated Service",
+        "Major Periphery State": "D-rated Service",
+        "Other Periphery": "None"
+      },
+      {
+        "2D6 Roll": "2",
+        "Inner Sphere": "B-rated HPG",
+        "Major Periphery State": "C-rated Service",
+        "Other Periphery": "None"
+      },
+      {
+        "2D6 Roll": "3-9",
+        "Inner Sphere": "B-rated HPG",
+        "Major Periphery State": "B-rated HPG",
+        "Other Periphery": "None"
+      },
+      {
+        "2D6 Roll": "10",
+        "Inner Sphere": "B-rated HPG",
+        "Major Periphery State": "B-rated HPG",
+        "Other Periphery": "D-rated Service"
+      },
+      {
+        "2D6 Roll": "11",
+        "Inner Sphere": "A-rated HPG",
+        "Major Periphery State": "B-rated HPG",
+        "Other Periphery": "C-rated Service"
+      },
+      {
+        "2D6 Roll": "12",
+        "Inner Sphere": "A-rated HPG",
+        "Major Periphery State": "A-rated HPG",
+        "Other Periphery": "B-rated HPG"
+      }
+    ],
+    "modifiers": [
+      {
+        "modifier": -1,
+        "condition": "per 100LY from Terra"
+      },
+      {
+        "modifier": -1,
+        "condition": "if population under 1 billion"
+      },
+      {
+        "modifier": -1,
+        "condition": "if Technological Sophistication of D or less"
+      },
+      {
+        "modifier": -1,
+        "condition": "if Industrial Development of D or less"
+      },
+      {
+        "modifier": 2,
+        "condition": "if the year is before 2800"
+      },
+      {
+        "modifier": 1,
+        "condition": "if population over 2 billion"
+      },
+      {
+        "modifier": 3,
+        "condition": "if national capital"
+      }
+    ]
+  }
+]

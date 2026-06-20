@@ -211,6 +211,24 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
     }
   }, [sessionId]);
 
+  // Retirar ataques enviados por una unidad específica en este turno
+  const revokeMyAttacks = useCallback(async (sourceUnitName: string) => {
+    if (!sessions) return;
+    for (const sess of sessions) {
+      if (!sess.incomingDamage) continue;
+      const myAttacks = sess.incomingDamage.filter(atk => atk.sourceUnitName === sourceUnitName);
+      if (myAttacks.length > 0) {
+        try {
+          await updateDoc(doc(db, LIVE_COL, sess.id), {
+            incomingDamage: arrayRemove(...myAttacks)
+          });
+        } catch (e) {
+          console.error("Error revoking attacks", e);
+        }
+      }
+    }
+  }, [sessions]);
+
   return {
     isLive,
     toggleLive,
@@ -220,5 +238,6 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
     mySession,
     sendAttack,
     resolveAttack,
+    revokeMyAttacks,
   };
 }

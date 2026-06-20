@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Shield, Crosshair, Cpu, Users, Eye, Target, Map as MapIcon, RotateCcw, Save, Search, Settings, AlertTriangle, AlertCircle, FileDigit, Plus } from 'lucide-react';
+import { Shield, Crosshair, Cpu, Users, Eye, Target, Map as MapIcon, RotateCcw, Save, Search, Settings, AlertTriangle, AlertCircle, FileDigit, Plus, Download } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, loadHangar, type FuerzaSlot } from '@/lib/firebase-service';
+import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, loadHangar, saveHangarItem, type FuerzaSlot } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
-import { loadLocalSnapshot, snapshotHasUnits } from '@/lib/simulador-persistence';
+import { newHangarItem } from '@/lib/hangar-types';
+import { loadLocalSnapshot, snapshotHasUnits, extractDamageFromSession, applyDamageToSession } from '@/lib/simulador-persistence';
+import { useMechCatalog } from '@/hooks/useMechCatalog';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
 import { EndTurnSummaryModal } from '@/components/simulador/EndTurnSummaryModal';
@@ -31,7 +33,6 @@ import { useLiveSession } from '@/hooks/useLiveSession';
 import { ComputadoraCombate, IncomingAttacks } from '@/components/simulador/CombatRadar';
 import { FireControlModal } from '@/components/simulador/FireControlModal';
 import { SaveSlotModal } from '@/components/simulador/SaveSlotModal';
-
 const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' };
 
 // Orden fijo PJs (8 slots simulador en modo campaña). Match contra roster.jugador.
@@ -59,6 +60,7 @@ export function SimuladorPage() {
   const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
   const sim = useSimulador();
   const live = useLiveSession(sim);
+  const { catalog } = useMechCatalog();
   const { readable, writable, loading: permLoading } = usePerm('simulador');
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
@@ -112,11 +114,76 @@ export function SimuladorPage() {
         if (key) map[key] = pct;
       }
       await saveConfigBatch({ ESTADOMECHS: JSON.stringify(map) });
+
+      // Integración Hangar: guardar daño persistente
+      if (campaignMode) {
+        const promises: Promise<any>[] = [];
+        for (let i = 0; i < hangarBySlot.length; i++) {
+          const item = hangarBySlot[i];
+          const slot = snap.mechSlots[i];
+          if (item && slot?.state && slot?.session) {
+            const { estadoPct, damagePersist, sessionActiva } = extractDamageFromSession(slot.state, slot.session);
+            item.estadoPct = estadoPct;
+            item.damagePersist = damagePersist;
+            item.sessionActiva = sessionActiva;
+            if (estadoPct === 0) item.estado = 'destruido';
+            else if (estadoPct < 100) item.estado = 'danado';
+            else item.estado = 'operativo';
+            promises.push(saveHangarItem(item));
+          }
+        }
+        if (promises.length > 0) {
+          await Promise.all(promises);
+        }
+      }
       sim.markSynced?.();
       return true;
     } catch (err) {
       alert('Fallo guardando: ' + err);
       return false;
+    }
+  };
+
+  const handleEnviarSalvataje = async () => {
+    const ms = sim.mechSlots[sim.currentMechIdx]?.state;
+    const ss = sim.mechSlots[sim.currentMechIdx]?.session;
+    if (!ms || !ss) return;
+
+    if (!window.confirm(`¿Reclamar ${ms.chassis} ${ms.model} como salvataje en el Hangar?`)) return;
+
+    let cost = 0;
+    if (catalog) {
+      const match = catalog.mechs.find(m => m.chassis === ms.chassis && m.model === ms.model);
+      if (match?.cost) cost = match.cost;
+    }
+    if (cost === 0) {
+      const costStr = window.prompt(`Coste canon no encontrado en catálogo.\nIntroduce el coste base (para calcular futuras reparaciones):`, String(ms.bv * 10000));
+      if (costStr) cost = parseInt(costStr, 10) || 0;
+    }
+
+    const item = newHangarItem({
+      chassis: ms.chassis,
+      model: ms.model,
+      tons: ms.tonnage,
+      bv: ms.bv,
+      era: ms.era,
+      precioBase: cost,
+      fechaCompra: getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
+    });
+
+    const { estadoPct, damagePersist, sessionActiva } = extractDamageFromSession(ms, ss);
+    item.estadoPct = estadoPct;
+    item.damagePersist = damagePersist;
+    item.sessionActiva = sessionActiva;
+    if (estadoPct === 0) item.estado = 'destruido';
+    else if (estadoPct < 100) item.estado = 'danado';
+    else item.estado = 'operativo';
+
+    try {
+      await saveHangarItem(item);
+      alert(`✅ Salvataje reclamado y añadido al Hangar:\n${ms.chassis} ${ms.model}`);
+    } catch (e) {
+      alert('❌ Error guardando el salvataje.');
     }
   };
 
@@ -187,6 +254,13 @@ export function SimuladorPage() {
       </div>
     );
   }
+
+  useEffect(() => {
+    if (sim.justResolvedAttack && live.isLive) {
+      live.resolveAttack(sim.justResolvedAttack);
+      sim.setJustResolvedAttack(null);
+    }
+  }, [sim.justResolvedAttack, live, sim]);
 
   const [saveSlotPromiseResolver, setSaveSlotPromiseResolver] = useState<(val: FuerzaSlot | null | 'CANCEL') => void>();
 
@@ -286,7 +360,12 @@ export function SimuladorPage() {
           } catch {/* ignore */}
         }
         if (text) {
-          sim.loadUnitText(text, fname, i);
+          // Cargamos el texto del mech (.ssw) y aplicamos daño si hay (Integración Hangar)
+          sim.loadUnitText(text, fname, i, (state, session) => {
+            if (item.sessionActiva) {
+              applyDamageToSession(session, item);
+            }
+          });
         } else {
           console.warn(`[Campaign] mech del hangar no encontrado en assets: ${item.chassis} ${item.model} (PJ ${handle})`);
         }
@@ -324,6 +403,27 @@ export function SimuladorPage() {
       </label>
     </div>
   );
+
+  const { mechState: ms, mechSession: ss, vehicleState: vs, vehicleSession: vss } = sim;
+  const isMech = sim.activeTab === 'mechs';
+
+  const slotCount = isMech ? sim.mechSlots.length : sim.vehicleSlots.length;
+  const activeIdx = isMech ? sim.currentMechIdx : sim.currentVehicleIdx;
+
+  const lockedSlotsForView = isMech ? lockedSlots.slice(0, slotCount) : Array(slotCount).fill(false);
+  const activeLocked = lockedSlotsForView[activeIdx] === true;
+
+  const visibleIndices = useMemo(() => {
+    const indices: number[] = [];
+    if (campaignMode && isMech) {
+      for (let i = 0; i < slotCount; i++) {
+        if (hangarBySlot[i] || sim.mechSlots[i].state) indices.push(i);
+      }
+    } else {
+      for (let i = 0; i < slotCount; i++) indices.push(i);
+    }
+    return indices;
+  }, [campaignMode, isMech, slotCount, hangarBySlot, sim.mechSlots]);
 
   if (simuladorPortada) {
     return (
@@ -367,38 +467,12 @@ export function SimuladorPage() {
     return <InfantryView sim={sim} />;
   }
 
-  const { mechState: ms, mechSession: ss, vehicleState: vs, vehicleSession: vss } = sim;
-  const isMech = sim.activeTab === 'mechs';
-
   const slotNames = isMech
     ? sim.mechSlots.map((s, i) => {
         if (campaignPilots && campaignPilots[i]) return campaignPilots[i];
         return s.state ? `${s.state.chassis} ${s.state.model}` : `SLOT ${i + 1}`;
       })
     : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`);
-
-  const slotCount = isMech ? sim.mechSlots.length : sim.vehicleSlots.length;
-  const activeIdx = isMech ? sim.currentMechIdx : sim.currentVehicleIdx;
-
-  // lockedSlots se computa más arriba (antes de early returns) para no
-  // violar reglas de hooks. Aquí se rebanan al slotCount actual.
-  const lockedSlotsForView = isMech ? lockedSlots.slice(0, slotCount) : Array(slotCount).fill(false);
-  const activeLocked = lockedSlotsForView[activeIdx] === true;
-
-  const visibleIndices = useMemo(() => {
-    const indices: number[] = [];
-    if (campaignMode && isMech) {
-      // En campaña, mostrar solo los slots que tienen asignado un piloto con mech (según hangarBySlot)
-      // O si el slot tiene un mech cargado pero no hangar (fallback por si acaso)
-      for (let i = 0; i < slotCount; i++) {
-        if (hangarBySlot[i] || sim.mechSlots[i].state) indices.push(i);
-      }
-    } else {
-      // En modo libre (o vehículos), mostrar todos los slots
-      for (let i = 0; i < slotCount; i++) indices.push(i);
-    }
-    return indices;
-  }, [campaignMode, isMech, slotCount, hangarBySlot, sim.mechSlots]);
 
   const blockMsg = (i: number) => {
     const h = hangarBySlot[i];
@@ -439,6 +513,7 @@ export function SimuladorPage() {
           mechUpdates={sim.globalEndTurnSummary.mechUpdates}
           vehicleUpdates={sim.globalEndTurnSummary.vehicleUpdates}
           onConfirm={sim.confirmGlobalNextTurn}
+          onCancel={() => sim.setGlobalEndTurnSummary(null)}
         />
       )}
 
@@ -550,6 +625,20 @@ export function SimuladorPage() {
             )}
 
             <HeatMonitor state={ms} session={ss} onAdjustHeat={sim.adjustHeat} />
+
+            {(!hangarBySlot[sim.currentMechIdx]) && (
+              <div className="bg-surface-container-low p-3 clip-chamfer border-l-2 border-primary-container/30 mt-4">
+                <button
+                  onClick={handleEnviarSalvataje}
+                  className="w-full bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 text-primary-container font-mono text-xs uppercase tracking-widest py-2 clip-chamfer transition-all flex items-center justify-center gap-2"
+                >
+                  <Download size={14} /> Reclamar Salvataje
+                </button>
+                <p className="text-[9px] text-secondary/60 text-center mt-2 font-mono uppercase tracking-widest">
+                  Envía el mech y su daño al Hangar
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Center: Armor Diagram */}

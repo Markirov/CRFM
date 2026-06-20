@@ -1,0 +1,861 @@
+[
+  {
+    "title": "TABLA DE TIPOS DE UNIDADES AEROESPACIALES",
+    "headers": [
+      "Tipo de Unidad",
+      "Clase de Peso",
+      "Tonelaje"
+    ],
+    "rows": [
+      [
+        "Caza Convencional",
+        "N/A",
+        "10-50 toneladas"
+      ],
+      [
+        "Caza Aeroespacial",
+        "Ligero",
+        "20-45 toneladas"
+      ],
+      [
+        "Caza Aeroespacial",
+        "Medio",
+        "50-70 toneladas"
+      ],
+      [
+        "Caza Aeroespacial",
+        "Pesado",
+        "75-100 toneladas"
+      ],
+      [
+        "Nave Pequeña",
+        "N/A",
+        "100-200 toneladas"
+      ],
+      [
+        "Nave de Descenso",
+        "Pequeña",
+        "200-2,499 toneladas"
+      ],
+      [
+        "Nave de Descenso",
+        "Media",
+        "2,500-9,999 toneladas"
+      ],
+      [
+        "Nave de Descenso",
+        "Grande",
+        "10,000-100,000 toneladas"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE COSTE DE CAMBIO DE ORIENTACIÓN",
+    "headers": [
+      "Velocidad Actual",
+      "Coste en Puntos de Empuje"
+    ],
+    "rows": [
+      [
+        "0-2",
+        "1"
+      ],
+      [
+        "3-5",
+        "2"
+      ],
+      [
+        "6-7",
+        "3"
+      ],
+      [
+        "8-9",
+        "4"
+      ],
+      [
+        "10",
+        "5"
+      ],
+      [
+        "11",
+        "6"
+      ],
+      [
+        "12+",
+        "+1 por punto"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE MODIFICADORES DE ACCIÓN EVASIVA",
+    "headers": [
+      "Unidad Evasiva",
+      "Modificador de Evasión del Objetivo",
+      "Modificador de Evasión del Atacante"
+    ],
+    "rows": [
+      [
+        "Caza",
+        "+3",
+        "N/A"
+      ],
+      [
+        "Nave Pequeña, Caza de Ala Fija de Apoyo",
+        "+2",
+        "N/A"
+      ],
+      [
+        "Nave de Descenso",
+        "+2",
+        "+2"
+      ],
+      [
+        "Dirigible",
+        "N/A",
+        "N/A"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE ALTA ALTITUD",
+    "headers": [
+      "Fila de Hexágonos",
+      "Altitud (km)",
+      "Velocidad Segura Máxima"
+    ],
+    "rows": [
+      [
+        "Tierra",
+        "0-17",
+        "2"
+      ],
+      [
+        "Fila 1",
+        "18-35",
+        "3"
+      ],
+      [
+        "Fila 2",
+        "36-53",
+        "6"
+      ],
+      [
+        "Fila 3",
+        "54-71",
+        "9"
+      ],
+      [
+        "Fila 4",
+        "72-89",
+        "12"
+      ],
+      [
+        "Interfaz",
+        "90-107",
+        "15"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE MODIFICADORES DE ATAQUE AIRE-TIERRA",
+    "headers": [
+      "Tipo de Ataque",
+      "Modificador"
+    ],
+    "rows": [
+      [
+        "Ataque Rasante (Strafing)",
+        "+4*"
+      ],
+      [
+        "Ataque de Precisión (Striking)",
+        "+2‡"
+      ],
+      [
+        "Bombardeo",
+        "+2†"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE RANGO DE ARMAS AEROESPACIALES",
+    "headers": [
+      "Categoría de Rango",
+      "Hexágonos (Estándar)",
+      "Hexágonos (Capital)"
+    ],
+    "rows": [
+      [
+        "Corto",
+        "0-6",
+        "0-12"
+      ],
+      [
+        "Medio",
+        "7-12",
+        "13-24"
+      ],
+      [
+        "Largo",
+        "13-20",
+        "25-40"
+      ],
+      [
+        "Extremo",
+        "21-25",
+        "41-50"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE MODIFICADORES DE ATAQUE AEROESPACIAL",
+    "headers": [
+      "Condición",
+      "Modificador"
+    ],
+    "rows": [
+      [
+        "Rango Corto",
+        "+0"
+      ],
+      [
+        "Rango Medio",
+        "+2"
+      ],
+      [
+        "Rango Largo",
+        "+4"
+      ],
+      [
+        "Rango Extremo",
+        "+6"
+      ],
+      [
+        "Ángulo de Ataque: Popa",
+        "+0"
+      ],
+      [
+        "Ángulo de Ataque: Nariz",
+        "+1"
+      ],
+      [
+        "Ángulo de Ataque: Lateral",
+        "+2"
+      ],
+      [
+        "Atacante a Altitud 1 (NOE) atacando objetivo aéreo",
+        "+1 (OmniFighter) / +2 (No-OmniFighter)"
+      ],
+      [
+        "Objetivo realizando ataque aire-tierra este turno",
+        "-3"
+      ],
+      [
+        "Disparando a través de hexágono atmosférico*",
+        "+2 por hexágono"
+      ],
+      [
+        "Atacante excedió Empuje Seguro este turno",
+        "+2"
+      ],
+      [
+        "Atacante está fuera de control",
+        "+2"
+      ],
+      [
+        "Atacante tiene daño de piloto/tripulación",
+        "+1 por caja cruzada"
+      ],
+      [
+        "Atacante tiene daño crítico en sensores",
+        "+1 por caja cruzada, o +5 si están destruidos"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE LOCALIZACIÓN DE IMPACTO DE UNIDADES AEROESPACIALES (CAZAS)",
+    "headers": [
+      "2D6",
+      "Nariz",
+      "Popa",
+      "Lateral",
+      "Arriba/Abajo"
+    ],
+    "rows": [
+      [
+        "2",
+        "Nariz/Arma",
+        "Popa/Arma",
+        "Nariz/Arma",
+        "Nariz/Arma"
+      ],
+      [
+        "3",
+        "Nariz/Sensores",
+        "Popa/Disipador",
+        "Ala/Tren",
+        "Ala/Tren"
+      ],
+      [
+        "4",
+        "Ala Dcha/Disipador",
+        "Ala Dcha/Combustible",
+        "Nariz/Sensores",
+        "Nariz/Sensores"
+      ],
+      [
+        "5",
+        "Ala Dcha/Arma",
+        "Ala Dcha/Arma",
+        "Nariz/Tripulación",
+        "Nariz/Tripulación"
+      ],
+      [
+        "6",
+        "Nariz/Aviónica",
+        "Popa/Motor",
+        "Ala/Arma",
+        "Ala/Arma"
+      ],
+      [
+        "7",
+        "Nariz/Control",
+        "Popa/Control",
+        "Ala/Aviónica",
+        "Nariz/Aviónica"
+      ],
+      [
+        "8",
+        "Nariz/FCS",
+        "Popa/Motor",
+        "Ala/Bomba",
+        "Ala/Arma"
+      ],
+      [
+        "9",
+        "Ala Izda/Arma",
+        "Ala Izda/Arma",
+        "Popa/Control",
+        "Popa/Control"
+      ],
+      [
+        "10",
+        "Ala Izda/Disipador",
+        "Ala Izda/Combustible",
+        "Popa/Motor",
+        "Popa/Motor"
+      ],
+      [
+        "11",
+        "Nariz/Tren",
+        "Popa/Disipador",
+        "Ala/Tren",
+        "Ala/Tren"
+      ],
+      [
+        "12",
+        "Nariz/Arma",
+        "Popa/Arma",
+        "Popa/Arma",
+        "Popa/Arma"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE LOCALIZACIÓN DE IMPACTO DE UNIDADES AEROESPACIALES (NAVES DE DESCENSO/PEQUEÑAS)",
+    "headers": [
+      "2D6",
+      "Nariz",
+      "Popa",
+      "Lateral",
+      "Arriba/Abajo"
+    ],
+    "rows": [
+      [
+        "2",
+        "Nariz/Tripulación",
+        "Popa/Soporte Vital",
+        "Nariz/Arma",
+        "Nariz/Arma"
+      ],
+      [
+        "3",
+        "Nariz/Aviónica",
+        "Popa/Control",
+        "Nariz/FCS",
+        "Nariz/FCS"
+      ],
+      [
+        "4",
+        "Lado Dcho/Arma",
+        "Lado Dcho/Arma",
+        "Nariz/Sensores",
+        "Nariz/Sensores"
+      ],
+      [
+        "5",
+        "Lado Dcho/Propulsor",
+        "Lado Dcho/Puerta",
+        "Lado/Propulsor",
+        "Lado/Propulsor"
+      ],
+      [
+        "6",
+        "Nariz/FCS",
+        "Popa/Motor",
+        "Lado/Carga",
+        "Lado/Carga"
+      ],
+      [
+        "7",
+        "Nariz/Arma",
+        "Popa/Arma",
+        "Lado/Arma",
+        "Lado/Arma"
+      ],
+      [
+        "8",
+        "Nariz/Control",
+        "Popa/Anclaje",
+        "Lado/Puerta",
+        "Lado/Puerta"
+      ],
+      [
+        "9",
+        "Lado Izdo/Propulsor",
+        "Lado Izdo/Puerta",
+        "Lado/Propulsor",
+        "Lado/Propulsor"
+      ],
+      [
+        "10",
+        "Lado Izdo/Arma",
+        "Lado Izdo/Arma",
+        "Popa/Aviónica",
+        "Popa/Aviónica"
+      ],
+      [
+        "11",
+        "Nariz/Sensores",
+        "Popa/Tren",
+        "Popa/Motor",
+        "Popa/Motor"
+      ],
+      [
+        "12",
+        "Nariz/Brazo K-F",
+        "Popa/Combustible",
+        "Popa/Arma",
+        "Popa/Arma"
+      ]
+    ]
+  },
+  {
+    "title": "TABLA DE PUNTOS DE CALOR PARA CAZAS AEROESPACIALES/NAVES PEQUEÑAS",
+    "headers": [
+      "Actividad",
+      "Puntos de Calor"
+    ],
+    "rows": [
+      [
+        "Disparo de armas",
+        "Según Tablas de Armas y Equipo"
+      ],
+      [
+        "Armas que causan calor",
+        "Según Tablas de Armas y Equipo"
+      ],
+      [
+        "Disipador de calor",
+        "-1 por disipador simple operacional / -2 por doble"
+      ],
+      [
+        "Daño de motor",
+        "+2 por impacto"
+      ]
+    ]
+  },
+  {
+    "name": "Tabla de Tipos de Unidades Aeroespaciales",
+    "rows": [
+      {
+        "Tipo de Motivo": "Caza Convencional",
+        "Rango de Peso (Toneladas)": "5-50",
+        "Restricciones de Juego*": "Solo atmosférico; Restringido a la Fila de Tierra y Fila 1 en el Mapa de Gran Altitud"
+      },
+      {
+        "Tipo de Motivo": "Caza Aeroespacial",
+        "Rango de Peso (Toneladas)": "5-100",
+        "Restricciones de Juego*": "Capaz de operar en atmósfera y espacio"
+      },
+      {
+        "Tipo de Motivo": "Nave Pequeña (Aerodina)",
+        "Rango de Peso (Toneladas)": "100-200",
+        "Restricciones de Juego*": "Capaz de operar en atmósfera y espacio"
+      },
+      {
+        "Tipo de Motivo": "Nave Pequeña (Esferoide)",
+        "Rango de Peso (Toneladas)": "100-200",
+        "Restricciones de Juego*": "Capaz de operar en atmósfera y espacio; (En atmósfera: Solo puede Aterrizar/Despegar y Flotar)"
+      },
+      {
+        "Tipo de Motivo": "Nave de Descenso (Aerodina)",
+        "Rango de Peso (Toneladas)": "200-35,000",
+        "Restricciones de Juego*": "Capaz de operar en atmósfera y espacio"
+      },
+      {
+        "Tipo de Motivo": "Nave de Descenso (Esferoide)",
+        "Rango de Peso (Toneladas)": "200-100,000",
+        "Restricciones de Juego*": "Capaz de operar en atmósfera y espacio; (En atmósfera: Solo puede Aterrizar/Despegar y Flotar)"
+      }
+    ],
+    "notes": "*Todas las unidades aeroespaciales, excepto los cazas convencionales, incorporan automáticamente la capacidad VSTOL."
+  },
+  {
+    "name": "Tabla de Hojas de Registro de Unidades Aeroespaciales",
+    "rows": [
+      {
+        "Tipo de Unidad": "Caza Convencional",
+        "Hoja de Registro": "Caza Convencional",
+        "Arcos de Armas": "Nariz, Ala Izquierda*, Ala Derecha*, Popa"
+      },
+      {
+        "Tipo de Unidad": "Caza Aeroespacial",
+        "Hoja de Registro": "Caza Aeroespacial",
+        "Arcos de Armas": "Nariz, Ala Izquierda*, Ala Derecha*, Popa"
+      },
+      {
+        "Tipo de Unidad": "Nave Pequeña (Aerodina)",
+        "Hoja de Registro": "Nave Pequeña Aerodina",
+        "Arcos de Armas": "Nariz, Ala Izquierda*, Ala Derecha*, Popa"
+      },
+      {
+        "Tipo de Unidad": "Nave Pequeña (Esferoide)",
+        "Hoja de Registro": "Nave Pequeña Esferoide",
+        "Arcos de Armas": "Nariz, Frontal-Izquierdo, Frontal-Derecho, Posterior-Izquierdo, Posterior-Derecho, Popa"
+      },
+      {
+        "Tipo de Unidad": "Nave de Descenso (Aerodina)",
+        "Hoja de Registro": "Nave de Descenso Aerodina",
+        "Arcos de Armas": "Nariz, Ala Izquierda*, Ala Derecha*, Popa"
+      },
+      {
+        "Tipo de Unidad": "Nave de Descenso (Esferoide)",
+        "Hoja de Registro": "Nave de Descenso Esferoide",
+        "Arcos de Armas": "Nariz, Frontal-Izquierdo, Frontal-Derecho, Posterior-Izquierdo, Posterior-Derecho, Popa"
+      }
+    ],
+    "notes": "*Las armas colocadas en los arcos de las alas pueden asignarse a direcciones de disparo hacia adelante o hacia atrás."
+  },
+  {
+    "name": "Tabla de Motores de Unidades Aeroespaciales",
+    "rows": [
+      {
+        "Tipo de Unidad Aeroespacial": "Caza Convencional (Clan o EI)",
+        "Peso del Motor": "Consultar Tabla Maestra de Motores (p. 49)*",
+        "Tipos de Motor Permitidos": "ICE, Fusión (Estándar) solamente"
+      },
+      {
+        "Tipo de Unidad Aeroespacial": "Caza Aeroespacial (Clan)",
+        "Peso del Motor": "Consultar Tabla Maestra de Motores (p. 49)*",
+        "Tipos de Motor Permitidos": "Fusión (Estándar, XL) solamente"
+      },
+      {
+        "Tipo de Unidad Aeroespacial": "Caza Aeroespacial (Esfera Interior)",
+        "Peso del Motor": "Consultar Tabla Maestra de Motores (p. 49)*",
+        "Tipos de Motor Permitidos": "Fusión (Estándar, Ligero, XL, Compacto) solamente"
+      },
+      {
+        "Tipo de Unidad Aeroespacial": "Nave Pequeña o Nave de Descenso (Clan)",
+        "Peso del Motor": "Factor de Movimiento Base x 0.061**",
+        "Tipos de Motor Permitidos": "Fusión solamente"
+      },
+      {
+        "Tipo de Unidad Aeroespacial": "Nave Pequeña o Nave de Descenso (Esfera Interior)",
+        "Peso del Motor": "Factor de Movimiento Base x 0.065**",
+        "Tipos de Motor Permitidos": "Fusión solamente"
+      }
+    ],
+    "notes": "*Encontrar el tonelaje para estos motores cruzando el Índice de Motor Base de la unidad con el tipo de motor deseado; los cazas convencionales multiplican los pesos de los motores de fusión por 1.5 (redondeado a la 0.5 tonelada más cercana).\n**Redondear todos los pesos a la 0.5 tonelada más cercana."
+  },
+  {
+    "name": "Tabla de Combustible Aeroespacial",
+    "rows": [
+      {
+        "Tipo de Unidad (Masa)": "Caza Convencional",
+        "Puntos de Combustible por Tonelada": "160",
+        "Uso Estratégico de Combustible (ton/día/G)": "NA"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Caza Aeroespacial",
+        "Puntos de Combustible por Tonelada": "80",
+        "Uso Estratégico de Combustible (ton/día/G)": "NA"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave Pequeña",
+        "Puntos de Combustible por Tonelada": "80",
+        "Uso Estratégico de Combustible (ton/día/G)": "1.84"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (Hasta 399 toneladas)",
+        "Puntos de Combustible por Tonelada": "80",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (400 a 799 toneladas)",
+        "Puntos de Combustible por Tonelada": "70",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (800 a 1,199 toneladas)",
+        "Puntos de Combustible por Tonelada": "60",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (1,200 a 1,899 toneladas)",
+        "Puntos de Combustible por Tonelada": "50",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (1,900 a 2,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "40",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (3,000 a 19,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "30",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (20,000 a 39,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "20",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso (40,000 a 100,000 toneladas)",
+        "Puntos de Combustible por Tonelada": "10",
+        "Uso Estratégico de Combustible (ton/día/G)": "Varía"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Militar (Cualquier Tonelaje)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "1.84"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (100 a 999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "1.84"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (1,000 a 3,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "2.82"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (4,000 a 8,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "3.37"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (9,000 a 19,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "4.22"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (20,000 a 29,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "5.19"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (30,000 a 39,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "6.52"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (40,000 a 49,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "7.71"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (50,000 a 69,999 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "8.37"
+      },
+      {
+        "Tipo de Unidad (Masa)": "Nave de Descenso Civil (70,000 a 100,000 toneladas)",
+        "Puntos de Combustible por Tonelada": "Varía",
+        "Uso Estratégico de Combustible (ton/día/G)": "8.83"
+      }
+    ]
+  },
+  {
+    "name": "Tabla de Integridad Estructural",
+    "rows": [
+      {
+        "Tipo de Unidad Aeroespacial*": "Caza Convencional o Aeroespacial",
+        "IE Mínima": "**",
+        "IE Máxima": "**",
+        "Peso de IE": "0"
+      },
+      {
+        "Tipo de Unidad Aeroespacial*": "Nave Pequeña o Nave de Descenso (Aerodina)",
+        "IE Mínima": "Empuje Máximo x 1",
+        "IE Máxima": "Empuje Máximo x 30",
+        "Peso de IE": "(IE x Tonelaje) ÷ 200†"
+      },
+      {
+        "Tipo de Unidad Aeroespacial*": "Nave Pequeña o Nave de Descenso (Esferoide)",
+        "IE Mínima": "Empuje Máximo x 1",
+        "IE Máxima": "Empuje Máximo x 30",
+        "Peso de IE": "(IE x Tonelaje) ÷ 500†"
+      }
+    ],
+    "notes": "*Estos valores se aplican a las bases tecnológicas del Clan o de la Esfera Interior.\n**Los cazas convencionales o aeroespaciales usan el mayor valor entre su Empuje Seguro o el 10 por ciento del tonelaje de la unidad (redondeado hacia abajo).\n†Redondear a la media tonelada más cercana."
+  },
+  {
+    "name": "Tabla de Bahías de Transporte",
+    "rows": [
+      {
+        "Tipo de Bahía de Transporte": "Carga, Contenedor",
+        "Peso": "10 toneladas",
+        "Espacio de Equipo": "1 por contenedor ('Mech o Vehículo)",
+        "Capacidad": "10 toneladas por contenedor",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Carga, Estándar",
+        "Peso": "Variable",
+        "Espacio de Equipo": "1 por tonelada ('Mech)* / 1 (Vehículo)",
+        "Capacidad": "Peso x 1.0 (Artículos a Granel)",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Carga, Líquido",
+        "Peso": "Variable",
+        "Espacio de Equipo": "1 por tonelada ('Mech)* / 1 (Vehículo)",
+        "Capacidad": "Peso x 0.91 (Artículos Fluidos)",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Carga, Aislada o Refrigerada",
+        "Peso": "Variable",
+        "Espacio de Equipo": "1 por tonelada ('Mech)* / 1 (Vehículo)",
+        "Capacidad": "Peso x 0.87 (Artículos Fluidos/a Granel)",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Carga, Ganado",
+        "Peso": "Variable",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "Peso x 0.83 (Animales)",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Compartimento de Infantería (Todos)†",
+        "Peso": "Variable",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "Peso x 1.0 (Infantería o Blindaje de Batalla)",
+        "Personal Total de la Bahía": "NA"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Infantería, a Pie",
+        "Peso": "5 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "28 soldados (Infantería a Pie)",
+        "Personal Total de la Bahía": "28 (EI), 25 (C)"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Infantería, de Salto",
+        "Peso": "6 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "21 soldados (Infantería de Salto)",
+        "Personal Total de la Bahía": "21 (EI), 20 (C)"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Infantería, Motorizada",
+        "Peso": "7 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "28 soldados (Infantería Motorizada)",
+        "Personal Total de la Bahía": "28 (EI), 25 (C)"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Infantería, Mecanizada",
+        "Peso": "8 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "5-7 soldados (Mecanizada)",
+        "Personal Total de la Bahía": "7 (EI), 5 (C)"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Blindaje de Batalla (EI)",
+        "Peso": "8 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "4 Soldados de Blindaje de Batalla",
+        "Personal Total de la Bahía": "6"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Blindaje de Batalla (Clan)",
+        "Peso": "10 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "5 Soldados de Blindaje de Batalla",
+        "Personal Total de la Bahía": "6"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Bahía de Blindaje de Batalla (EI)",
+        "Peso": "12 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)**",
+        "Capacidad": "6 Soldados de Blindaje de Batalla",
+        "Personal Total de la Bahía": "6"
+      },
+      {
+        "Tipo de Bahía de Transporte": "'Mech (por Cubículo)",
+        "Peso": "150 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 BattleMech o IndustrialMech",
+        "Personal Total de la Bahía": "2"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Caza (por Cubículo)",
+        "Peso": "150 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 unidad aero (hasta 100 toneladas)",
+        "Personal Total de la Bahía": "2"
+      },
+      {
+        "Tipo de Bahía de Transporte": "ProtoMech (por 5 Cubículos)",
+        "Peso": "50 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "5 ProtoMechs",
+        "Personal Total de la Bahía": "6"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Nave Pequeña (por Cubículo)",
+        "Peso": "200 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 unidad aero (hasta 200 toneladas)",
+        "Personal Total de la Bahía": "5"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Vehículo, Ligero (por Cubículo)",
+        "Peso": "50 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 Vehículo (hasta 50 toneladas)",
+        "Personal Total de la Bahía": "5"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Vehículo, Pesado (por Cubículo)",
+        "Peso": "100 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 Vehículo (hasta 100 toneladas)",
+        "Personal Total de la Bahía": "8"
+      },
+      {
+        "Tipo de Bahía de Transporte": "Vehículo, Superpesado (por Cubículo)",
+        "Peso": "200 toneladas",
+        "Espacio de Equipo": "NA ('Mech) / 1 (Vehículo)",
+        "Capacidad": "1 Vehículo (hasta 200 toneladas)",
+        "Personal Total de la Bahía": "15"
+      }
+    ],
+    "notes": "*Redondear al número entero más cercano.\n**Todas las bahías de infantería del mismo tipo en un Vehículo de Combate o de Apoyo pueden combinarse en una única bahía de infantería unificada correspondiente.\n†No se puede montar en Naves de Descenso, Dirigibles (más de 301 toneladas), Navales (más de 301 toneladas), Estructuras Móviles y Unidades Aeroespaciales Avanzadas."
+  }
+]

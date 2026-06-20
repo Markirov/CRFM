@@ -1,0 +1,86 @@
+[
+  {
+    "nombre": "Ambusher",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Lento, con blindaje ligero, prefiere enfrentamientos a corta distancia; barato y fácil de desplegar.",
+    "pagina_referencia": 57
+  },
+  {
+    "nombre": "Brawler",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Velocidad y blindaje adecuados, capaz de hacer daño a distancia y más a medida que se acerca.",
+    "pagina_referencia": 57
+  },
+  {
+    "nombre": "Juggernaut",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Lento, muy resistente, prefiere el combate cercano; excelente para mantener la línea, no para batallas en movimiento.",
+    "pagina_referencia": 57
+  },
+  {
+    "nombre": "Missile Boat",
+    "tipo": "Terrestre",
+    "descripcion_breve": "La mayoría del daño a larga distancia proviene de armas con capacidad de fuego indirecto.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Scout",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Rápido, con blindaje ligero y muy poco armamento; evita batallas, proporciona avistamiento y apoyo.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Skirmisher",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Rápido con blindaje adecuado o pesado pero armamento más ligero; ideal para batallas cambiantes.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Sniper",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Se queda quieto y dispara; la defensa puede provenir de la distancia, el sigilo, el blindaje o la cobertura.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Striker",
+    "tipo": "Terrestre",
+    "descripcion_breve": "Rápido, blindaje ligero, armas de corto o medio alcance; la velocidad es vida.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Attack Fighter",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Lento pero con blindaje y armamento pesados; a menudo carece de potencia de fuego a larga distancia.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Dogfighter",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Cazas medianos o pesados; combate directo con otros cazas.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Fast Dogfighter",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Cazas ligeros o medianos; interceptan a los cazas que superan las líneas iniciales de combate aéreo.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Fire Support",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Cazas medianos o pesados; armas de largo alcance para proporcionar apoyo aéreo o terrestre.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Interceptor",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Cazas ligeros y rápidos para enfrentarse al enemigo lo más lejos posible de los perímetros defensivos.",
+    "pagina_referencia": 58
+  },
+  {
+    "nombre": "Transport",
+    "tipo": "Aeroespacial",
+    "descripcion_breve": "Generalmente no son cazas; naves pequeñas, DropShips y vehículos de apoyo para transportar unidades.",
+    "pagina_referencia": 58
+  }
+]

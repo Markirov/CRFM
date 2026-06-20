@@ -1,0 +1,367 @@
+[
+  {
+    "table_name": "Experience Award Table",
+    "entries": [
+      {
+        "category": "Group",
+        "outcome": "Mission - Failure",
+        "awards": [
+          0,
+          1,
+          5
+        ]
+      },
+      {
+        "category": "Group",
+        "outcome": "Mission - Success",
+        "awards": [
+          1,
+          3,
+          7
+        ]
+      },
+      {
+        "category": "Group",
+        "outcome": "Mission - Outstanding Success",
+        "awards": [
+          2,
+          5,
+          9
+        ]
+      },
+      {
+        "category": "Group",
+        "outcome": "Campaign - Players Advanced Campaign",
+        "awards": [
+          3,
+          5,
+          7
+        ]
+      },
+      {
+        "category": "Group",
+        "outcome": "Campaign - Campaign Completed",
+        "awards": [
+          5,
+          10,
+          20
+        ]
+      },
+      {
+        "category": "Individual",
+        "outcome": "Character Development",
+        "awards": [
+          2,
+          4,
+          6
+        ]
+      },
+      {
+        "category": "Individual",
+        "outcome": "Role-playing",
+        "awards": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "category": "Individual",
+        "outcome": "Stayed In-Character (even when it was unwise)",
+        "awards": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "category": "Individual",
+        "outcome": "Achievements",
+        "awards": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "category": "Individual",
+        "outcome": "Entertainment",
+        "awards": [
+          1,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "Bonus Table",
+    "entries": [
+      {
+        "category": "Mission Completion",
+        "outcome": "Failure",
+        "bonus_percent": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "category": "Mission Completion",
+        "outcome": "Success",
+        "bonus_percent": [
+          1,
+          3,
+          5
+        ]
+      },
+      {
+        "category": "Mission Completion",
+        "outcome": "Outstanding Success",
+        "bonus_percent": [
+          2,
+          6,
+          10
+        ]
+      },
+      {
+        "category": "Campaign Completion",
+        "outcome": "Failure",
+        "bonus_percent": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "category": "Campaign Completion",
+        "outcome": "Success",
+        "bonus_percent": [
+          5,
+          10,
+          20
+        ]
+      },
+      {
+        "category": "Campaign Completion",
+        "outcome": "Outstanding Success",
+        "bonus_percent": [
+          10,
+          20,
+          40
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "Aging Table",
+    "entries": [
+      {
+        "age_in_years": 25,
+        "xp_changes": {
+          "STR": 100,
+          "BOD": 100,
+          "DEX": 0,
+          "RFL": 100,
+          "INT": 100,
+          "WIL": 100,
+          "CHA": 50
+        },
+        "trait_changes": null
+      },
+      {
+        "age_in_years": 31,
+        "xp_changes": {
+          "STR": 100,
+          "BOD": 100,
+          "DEX": 0,
+          "RFL": -100,
+          "INT": 100,
+          "WIL": 100,
+          "CHA": 0
+        },
+        "trait_changes": "Reputation (-150 XP)*"
+      },
+      {
+        "age_in_years": 41,
+        "xp_changes": {
+          "STR": 0,
+          "BOD": 0,
+          "DEX": -50,
+          "RFL": 0,
+          "INT": 0,
+          "WIL": 50,
+          "CHA": -25
+        },
+        "trait_changes": null
+      },
+      {
+        "age_in_years": 51,
+        "xp_changes": {
+          "STR": 0,
+          "BOD": -100,
+          "DEX": 0,
+          "RFL": -100,
+          "INT": 0,
+          "WIL": 0,
+          "CHA": -50
+        },
+        "trait_changes": "Reputation (-300 XP)**"
+      },
+      {
+        "age_in_years": 61,
+        "xp_changes": {
+          "STR": -100,
+          "BOD": -100,
+          "DEX": -100,
+          "RFL": 0,
+          "INT": 50,
+          "WIL": 0,
+          "CHA": -50
+        },
+        "trait_changes": "Slow Learner (-300 XP)†"
+      },
+      {
+        "age_in_years": 71,
+        "xp_changes": {
+          "STR": -100,
+          "BOD": -125,
+          "DEX": 0,
+          "RFL": -100,
+          "INT": 0,
+          "WIL": -50,
+          "CHA": -75
+        },
+        "trait_changes": "Glass Jaw (-300 XP)†"
+      },
+      {
+        "age_in_years": 81,
+        "xp_changes": {
+          "STR": -150,
+          "BOD": -150,
+          "DEX": -100,
+          "RFL": -100,
+          "INT": -100,
+          "WIL": -50,
+          "CHA": -100
+        },
+        "trait_changes": null
+      },
+      {
+        "age_in_years": 91,
+        "xp_changes": {
+          "STR": -150,
+          "BOD": -175,
+          "DEX": -150,
+          "RFL": -125,
+          "INT": -150,
+          "WIL": -100,
+          "CHA": -100
+        },
+        "trait_changes": null
+      },
+      {
+        "age_in_years": 101,
+        "xp_changes": {
+          "STR": -200,
+          "BOD": -200,
+          "DEX": -200,
+          "RFL": -150,
+          "INT": -200,
+          "WIL": -100,
+          "CHA": -150
+        },
+        "trait_changes": null
+      }
+    ]
+  },
+  {
+    "table_name": "Experience Point Costs Table",
+    "entries": [
+      {
+        "level_score": 0,
+        "attribute_trait_level": null,
+        "skill_standard": 20,
+        "skill_fast_learner": 18,
+        "skill_slow_learner": 22
+      },
+      {
+        "level_score": 1,
+        "attribute_trait_level": 100,
+        "skill_standard": 30,
+        "skill_fast_learner": 27,
+        "skill_slow_learner": 33
+      },
+      {
+        "level_score": 2,
+        "attribute_trait_level": 200,
+        "skill_standard": 50,
+        "skill_fast_learner": 45,
+        "skill_slow_learner": 55
+      },
+      {
+        "level_score": 3,
+        "attribute_trait_level": 300,
+        "skill_standard": 80,
+        "skill_fast_learner": 72,
+        "skill_slow_learner": 88
+      },
+      {
+        "level_score": 4,
+        "attribute_trait_level": 400,
+        "skill_standard": 120,
+        "skill_fast_learner": 108,
+        "skill_slow_learner": 132
+      },
+      {
+        "level_score": 5,
+        "attribute_trait_level": 500,
+        "skill_standard": 170,
+        "skill_fast_learner": 153,
+        "skill_slow_learner": 187
+      },
+      {
+        "level_score": 6,
+        "attribute_trait_level": 600,
+        "skill_standard": 230,
+        "skill_fast_learner": 207,
+        "skill_slow_learner": 253
+      },
+      {
+        "level_score": 7,
+        "attribute_trait_level": 700,
+        "skill_standard": 300,
+        "skill_fast_learner": 270,
+        "skill_slow_learner": 330
+      },
+      {
+        "level_score": 8,
+        "attribute_trait_level": 800,
+        "skill_standard": 380,
+        "skill_fast_learner": 342,
+        "skill_slow_learner": 418
+      },
+      {
+        "level_score": 9,
+        "attribute_trait_level": 900,
+        "skill_standard": 470,
+        "skill_fast_learner": 423,
+        "skill_slow_learner": 517
+      },
+      {
+        "level_score": 10,
+        "attribute_trait_level": 1000,
+        "skill_standard": 570,
+        "skill_fast_learner": 513,
+        "skill_slow_learner": 627
+      },
+      {
+        "level_score": "11+",
+        "attribute_trait_level": "(Level x 100)",
+        "skill_standard": null,
+        "skill_fast_learner": null,
+        "skill_slow_learner": null
+      }
+    ]
+  }
+]

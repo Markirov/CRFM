@@ -1,0 +1,382 @@
+[
+  {
+    "table_name": "Piloting/Driving Skill Roll Table",
+    "entries": [
+      {
+        "category": "Damage to 'Mech",
+        "situation": "'Mech takes 20+ damage points in one phase",
+        "modifier": "+1"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "'Mech fusion (or fission) reactor shuts down",
+        "modifier": "+3"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "Leg/foot actuator destroyed",
+        "modifier": "+1"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "Hip actuator destroyed",
+        "modifier": "+2"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "Gyro hit",
+        "modifier": "+3"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "Gyro destroyed",
+        "modifier": "Automatic fall"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "situation": "Leg destroyed",
+        "modifier": "Automatic fall"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "situation": "'Mech was kicked",
+        "modifier": "0"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "situation": "'Mech was pushed",
+        "modifier": "0"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "situation": "'Mech was successfully charged/hit by death from above",
+        "modifier": "+2"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech missed kick",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech made a successful charging attack",
+        "modifier": "+2"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech made death from above attack",
+        "modifier": "+4"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech entered Depth 1 water hex",
+        "modifier": "-1"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech entered Depth 2 water hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech entered Depth 3+ water hex",
+        "modifier": "+1"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech attempted to stand",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech entered rubble hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "Running/flanking unit moved after facing change while on pavement",
+        "modifier": "See Skidding, p. 62"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "Flanking VTOL/WiGE/Hover Vehicle moved after facing change",
+        "modifier": "See Sideslipping, p. 67"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech jumped with damaged gyro or leg/foot/hip actuators",
+        "modifier": "per Preexisting Damage, at right"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech jumped with destroyed leg",
+        "modifier": "per Preexisting Damage, at right"
+      },
+      {
+        "category": "Unit's Actions",
+        "situation": "'Mech ran with damaged hip or gyro",
+        "modifier": "per Preexisting Damage, at right"
+      },
+      {
+        "category": "Special Cases",
+        "situation": "MechWarrior trying to avoid damage when his 'Mech is falling",
+        "modifier": "+1/every level above 1"
+      },
+      {
+        "category": "Special Cases",
+        "situation": "IndustrialMech trying to avoid critical damage when falling",
+        "modifier": "+1/every level above 1"
+      },
+      {
+        "category": "Special Cases",
+        "situation": "IndustrialMech with ICE power plant fails PSR",
+        "modifier": "0 (no additional modifiers)"
+      },
+      {
+        "category": "Special Cases (Continued)",
+        "situation": "Four-legged 'Mech with intact legs",
+        "modifier": "-2"
+      },
+      {
+        "category": "Special Cases (Continued)",
+        "situation": "Unintentional charge",
+        "modifier": "+3"
+      },
+      {
+        "category": "Special Cases (Continued)",
+        "situation": "'Mech mounts small cockpit",
+        "modifier": "+1"
+      },
+      {
+        "category": "Preexisting Damage",
+        "situation": "Per leg/foot actuator previously destroyed",
+        "modifier": "+1"
+      },
+      {
+        "category": "Preexisting Damage",
+        "situation": "Per hip actuator previously destroyed",
+        "modifier": "+2"
+      },
+      {
+        "category": "Preexisting Damage",
+        "situation": "Gyro previously hit",
+        "modifier": "+3"
+      },
+      {
+        "category": "Preexisting Damage",
+        "situation": "Leg previously destroyed",
+        "modifier": "+5"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 0-2",
+        "modifier": "-1"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 3-4",
+        "modifier": "0"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 5-7",
+        "modifier": "+1"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 8-10",
+        "modifier": "+2"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 11-17",
+        "modifier": "+4"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 18-24",
+        "modifier": "+5"
+      },
+      {
+        "category": "Skidding Movement",
+        "situation": "Hexes moved in turn 25+",
+        "modifier": "+6"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Unit entering/leaving light building hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Unit entering/leaving medium building hex",
+        "modifier": "+1"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Unit entering/leaving heavy building hex",
+        "modifier": "+2"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Unit entering/leaving hardened building hex",
+        "modifier": "+5"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 1-2",
+        "modifier": "0"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 3-4",
+        "modifier": "+1"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 5-6",
+        "modifier": "+2"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 7-9",
+        "modifier": "+3"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 10-17",
+        "modifier": "+4"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 18-24",
+        "modifier": "+5"
+      },
+      {
+        "category": "Building Movement",
+        "situation": "Hexes moved in turn 25+",
+        "modifier": "+6"
+      }
+    ]
+  },
+  {
+    "table_name": "Facing After Fall Table",
+    "entries": [
+      {
+        "die_roll": 1,
+        "new_facing": "Same Direction",
+        "hit_location": "Front"
+      },
+      {
+        "die_roll": 2,
+        "new_facing": "1 Hexside Right",
+        "hit_location": "Right Side"
+      },
+      {
+        "die_roll": 3,
+        "new_facing": "2 Hexsides Right",
+        "hit_location": "Right Side"
+      },
+      {
+        "die_roll": 4,
+        "new_facing": "Opposite Direction",
+        "hit_location": "Rear"
+      },
+      {
+        "die_roll": 5,
+        "new_facing": "2 Hexsides Left",
+        "hit_location": "Left Side"
+      },
+      {
+        "die_roll": 6,
+        "new_facing": "1 Hexside Left",
+        "hit_location": "Left Side"
+      }
+    ]
+  },
+  {
+    "table_name": "Control Roll Table",
+    "entries": [
+      {
+        "category": "Base Target",
+        "condition": "Base Target Number",
+        "modifier": "Piloting Skill"
+      },
+      {
+        "category": "Situation",
+        "condition": "Exceed normal operational ceiling (conventional fighters, Airships and Fixed Wing Support Vehicles)",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Rolling more than once in a turn",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Using thrust in excess of current SI rating",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Unit with velocity over 2x Safe Thrust in a atmosphere hex",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Stalling",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Descending 3+ altitudes in a single turn",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Avionics critical",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Control critical",
+        "modifier": null
+      },
+      {
+        "category": "Situation",
+        "condition": "Sustaining damage while in atmosphere",
+        "modifier": null
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Pilot/crew damage",
+        "modifier": "+1 per crossed box"
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Avionics damage",
+        "modifier": "+1 per crossed box"
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Life support damage",
+        "modifier": "+1 per crossed box"
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Atmospheric operations",
+        "modifier": "+2"
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Above safe thrust",
+        "modifier": "+1"
+      },
+      {
+        "category": "Modifiers",
+        "condition": "Above 2x Safe Thrust",
+        "modifier": "+1 per velocity point above 2x Safe Thrust"
+      }
+    ]
+  }
+]

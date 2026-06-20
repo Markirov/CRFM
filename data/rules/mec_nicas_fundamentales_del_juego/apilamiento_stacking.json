@@ -1,0 +1,47 @@
+[
+  {
+    "Tipo de Unidad": "'Mech (de pie)",
+    "Altura en Niveles": "2 niveles",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "'Mech (tumbado)",
+    "Altura en Niveles": "1 nivel",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "ProtoMechs, vehículos, infantería y cazas",
+    "Altura en Niveles": "1 nivel",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "Submarinos",
+    "Altura en Niveles": "1 de profundidad",
+    "Notas": "Una nave en la superficie ocupa 1 nivel de altura."
+  },
+  {
+    "Tipo de Unidad": "Vehículos de Soporte Grandes y naves pequeñas",
+    "Altura en Niveles": "2 niveles",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "Naves de Descenso Aerodina",
+    "Altura en Niveles": "5 niveles",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "Naves de Descenso Esferoide",
+    "Altura en Niveles": "10 niveles",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "Unidades Aéreas No Aeroespaciales (VTOL, etc.)",
+    "Altura en Niveles": "Elevación + 1 nivel",
+    "Notas": ""
+  },
+  {
+    "Tipo de Unidad": "Vehículos de Soporte Grandes Aéreos",
+    "Altura en Niveles": "Elevación + 2 niveles",
+    "Notas": ""
+  }
+]

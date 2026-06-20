@@ -1,0 +1,26 @@
+[
+  {
+    "type": "'Mech",
+    "heights": "2 levels**"
+  },
+  {
+    "type": "ProtoMechs, vehicles, infantry and fighters",
+    "heights": "1 level"
+  },
+  {
+    "type": "Submarines",
+    "heights": "1 depth"
+  },
+  {
+    "type": "Large Support Vehicles and small craft",
+    "heights": "2 levels"
+  },
+  {
+    "type": "Aerodyne DropShips",
+    "heights": "5 levels"
+  },
+  {
+    "type": "Spheroid DropShips",
+    "heights": "10 levels"
+  }
+]

@@ -13,6 +13,7 @@ interface Props {
   mechUpdates: { idx: number; summary: TurnSummary }[];
   vehicleUpdates: { idx: number; summary: TurnSummary }[];
   onConfirm: () => void;
+  onCancel?: () => void;
 }
 
 function SummaryCard({ summary }: { summary: TurnSummary }) {
@@ -82,7 +83,7 @@ function SummaryCard({ summary }: { summary: TurnSummary }) {
   );
 }
 
-export function GlobalEndTurnSummaryModal({ mechUpdates, vehicleUpdates, onConfirm }: Props) {
+export function GlobalEndTurnSummaryModal({ mechUpdates, vehicleUpdates, onConfirm, onCancel }: Props) {
   return (
     <div className="fixed inset-0 z-[200] bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
       <div className="bg-surface-container border-2 border-primary w-full max-w-lg shadow-[0_0_40px_rgba(223,186,116,0.3)] flex flex-col max-h-[90vh]">
@@ -103,12 +104,20 @@ export function GlobalEndTurnSummaryModal({ mechUpdates, vehicleUpdates, onConfi
         </div>
 
         {/* Footer */}
-        <div className="p-4 pt-2 shrink-0 border-t border-outline-variant/20">
+        <div className="p-4 pt-2 shrink-0 border-t border-outline-variant/20 flex gap-3">
+          {onCancel && (
+            <button
+              onClick={onCancel}
+              className="flex-1 border border-outline-variant/40 hover:bg-surface-container-high text-secondary font-mono uppercase tracking-widest text-[11px] py-3 clip-chamfer transition-colors"
+            >
+              Cancelar
+            </button>
+          )}
           <button
             onClick={onConfirm}
-            className="w-full bg-primary hover:bg-primary/90 text-on-primary font-headline font-bold uppercase tracking-widest py-3 clip-chamfer transition-all flex items-center justify-center gap-2"
+            className="flex-[2] bg-primary hover:bg-primary/90 text-on-primary font-headline font-bold uppercase tracking-widest py-3 clip-chamfer transition-all flex items-center justify-center gap-2"
           >
-            <Check size={18} /> Confirmar Todo y Aplicar
+            <Check size={18} /> Confirmar Todo
           </button>
         </div>
       </div>

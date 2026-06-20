@@ -1,0 +1,98 @@
+[
+  {
+    "nombre": "Fácil de Mantener",
+    "tipo": "Positiva",
+    "descripcion": "Reduce el tiempo requerido para mantenimiento y reparaciones en un 10%.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Difícil de Mantener",
+    "tipo": "Negativa",
+    "descripcion": "Aumenta el tiempo requerido para mantenimiento y reparaciones en un 25%.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Actuadores Expuestos",
+    "tipo": "Negativa",
+    "descripcion": "Cualquier impacto crítico en una localización de brazo o pierna que no contenga otro componente impacta automáticamente un actuador si es posible. Si hay múltiples actuadores, se determina al azar.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs"
+  },
+  {
+    "nombre": "Sistemas de Puntería Mejorados",
+    "tipo": "Positiva",
+    "descripcion": "Aplica un modificador de -1 al número objetivo para un arma o tipo de arma específico (ej. todos los PPC, o solo el AC/10 del brazo derecho). El arma debe ser declarada durante la construcción.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Torso Estrecho/Bajo Perfil",
+    "tipo": "Positiva",
+    "descripcion": "Aplica un modificador de -1 al número objetivo para todos los ataques realizados contra los arcos de flanco de la unidad.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Torso Ancho",
+    "tipo": "Negativa",
+    "descripcion": "Aplica un modificador de +1 al número objetivo para todos los ataques realizados contra los arcos de flanco de la unidad.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Saltador Ágil",
+    "tipo": "Positiva",
+    "descripcion": "Aplica un modificador de -1 al número objetivo para todas las Tiradas de Habilidad de Pilotaje requeridas al saltar.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs, ProtoMechs"
+  },
+  {
+    "nombre": "Difícil de Pilotar",
+    "tipo": "Negativa",
+    "descripcion": "Aplica un modificador de +1 a todas las Tiradas de Habilidad de Pilotaje.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs"
+  },
+  {
+    "nombre": "Escotilla de Eyección Defectuosa",
+    "tipo": "Negativa",
+    "descripcion": "El piloto debe realizar una Tirada de Habilidad de Pilotaje con éxito para eyectarse. Si falla, la eyección falla.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs, Cazas Aeroespaciales"
+  },
+  {
+    "nombre": "Sensores Pobremente Protegidos",
+    "tipo": "Negativa",
+    "descripcion": "El primer impacto crítico en la cabeza destruye automáticamente los sensores.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs, Vehículos de Combate"
+  },
+  {
+    "nombre": "Robusto",
+    "tipo": "Positiva",
+    "descripcion": "La unidad ignora el primer impacto crítico de arma que reciba durante una partida.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Sin Brazos o con Brazos Mínimos",
+    "tipo": "Negativa",
+    "descripcion": "La unidad no tiene actuadores de brazo inferior ni de mano. No puede levantar o manipular objetos, ni realizar ataques físicos con los brazos.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs"
+  },
+  {
+    "nombre": "Fácil de Pilotar",
+    "tipo": "Positiva",
+    "descripcion": "Aplica un modificador de -1 a todas las Tiradas de Habilidad de Pilotaje.",
+    "unidades_afectadas": "BattleMechs, IndustrialMechs"
+  },
+  {
+    "nombre": "Munición de Carga Lenta",
+    "tipo": "Negativa",
+    "descripcion": "Un arma específica (ej. AC/10) solo puede disparar cada dos turnos.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Buena Reputación",
+    "tipo": "Positiva",
+    "descripcion": "Aplica un modificador de -2 a las tiradas de Reacción del oponente en la fase final de una campaña.",
+    "unidades_afectadas": "Todas"
+  },
+  {
+    "nombre": "Mala Reputación",
+    "tipo": "Negativa",
+    "descripcion": "Aplica un modificador de +2 a las tiradas de Reacción del oponente en la fase final de una campaña.",
+    "unidades_afectadas": "Todas"
+  }
+]

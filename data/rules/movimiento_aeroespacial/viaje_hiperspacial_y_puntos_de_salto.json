@@ -1,0 +1,461 @@
+[
+  {
+    "table_name": "PROXIMITY POINT DISTANCE TABLE",
+    "description": "Distances in billions of kilometers.",
+    "data": [
+      {
+        "star_type": "B",
+        "subtypes": [
+          347.84,
+          282.07,
+          229.4,
+          187.12,
+          153.06,
+          125.56,
+          103.29,
+          85.2,
+          70.47,
+          58.44
+        ]
+      },
+      {
+        "star_type": "A",
+        "subtypes": [
+          48.56,
+          40.51,
+          33.85,
+          28.36,
+          23.82,
+          20.06,
+          19.63,
+          14.32,
+          12.15,
+          10.32
+        ]
+      },
+      {
+        "star_type": "F",
+        "subtypes": [
+          8.8,
+          7.51,
+          6.43,
+          5.51,
+          4.74,
+          4.08,
+          3.52,
+          3.04,
+          2.64,
+          2.29
+        ]
+      },
+      {
+        "star_type": "G",
+        "subtypes": [
+          1.99,
+          1.74,
+          1.52,
+          1.33,
+          1.16,
+          1.02,
+          0.9,
+          0.79,
+          0.7,
+          0.62
+        ]
+      },
+      {
+        "star_type": "K",
+        "subtypes": [
+          0.55,
+          0.49,
+          0.43,
+          0.39,
+          0.34,
+          0.31,
+          0.28,
+          0.25,
+          0.22,
+          0.2
+        ]
+      },
+      {
+        "star_type": "M",
+        "subtypes": [
+          0.18,
+          0.16,
+          0.15,
+          0.13,
+          0.12,
+          0.11,
+          0.1,
+          0.09,
+          0.08,
+          0.07
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "DISTANCE TO ZENITH/NADIR JUMP POINT TABLE",
+    "description": "Time in days, assuming 1G acceleration and mid-point turnover.",
+    "data": [
+      {
+        "star_type": "B",
+        "subtypes": [
+          137.91,
+          124.19,
+          112,
+          101.15,
+          91.48,
+          82.86,
+          75.15,
+          68.25,
+          62.07,
+          56.53
+        ]
+      },
+      {
+        "star_type": "A",
+        "subtypes": [
+          51.51,
+          47.06,
+          43.02,
+          39.38,
+          36.09,
+          33.12,
+          32.76,
+          27.98,
+          25.77,
+          23.75
+        ]
+      },
+      {
+        "star_type": "F",
+        "subtypes": [
+          21.94,
+          20.26,
+          18.75,
+          17.36,
+          16.1,
+          14.94,
+          13.87,
+          12.89,
+          12.01,
+          11.19
+        ]
+      },
+      {
+        "star_type": "G",
+        "subtypes": [
+          10.43,
+          9.75,
+          9.12,
+          8.53,
+          7.96,
+          7.47,
+          7.01,
+          6.57,
+          6.19,
+          5.82
+        ]
+      },
+      {
+        "star_type": "K",
+        "subtypes": [
+          5.48,
+          5.18,
+          4.85,
+          4.62,
+          4.31,
+          4.12,
+          3.91,
+          3.7,
+          3.47,
+          3.31
+        ]
+      },
+      {
+        "star_type": "M",
+        "subtypes": [
+          3.14,
+          2.96,
+          2.86,
+          2.67,
+          2.56,
+          2.45,
+          2.34,
+          2.22,
+          2.09,
+          1.96
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "JUMP SAIL RECHARGING TABLE",
+    "description": "Results in hours.",
+    "data": [
+      {
+        "star_type": "M",
+        "subtypes": [
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210
+        ]
+      },
+      {
+        "star_type": "K",
+        "subtypes": [
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200
+        ]
+      },
+      {
+        "star_type": "G",
+        "subtypes": [
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190
+        ]
+      },
+      {
+        "star_type": "F",
+        "subtypes": [
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180
+        ]
+      },
+      {
+        "star_type": "A",
+        "subtypes": [
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170
+        ]
+      },
+      {
+        "star_type": "B",
+        "subtypes": [
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160
+        ]
+      }
+    ]
+  },
+  {
+    "table_name": "QUICK-CHARGE TABLE",
+    "data": [
+      {
+        "time_spent_hours": "175+",
+        "control_roll_modifier": "No failure"
+      },
+      {
+        "time_spent_hours": "150-174",
+        "control_roll_modifier": 0
+      },
+      {
+        "time_spent_hours": "125-149",
+        "control_roll_modifier": 1
+      },
+      {
+        "time_spent_hours": "100-124",
+        "control_roll_modifier": 2
+      },
+      {
+        "time_spent_hours": "75-99",
+        "control_roll_modifier": 3
+      },
+      {
+        "time_spent_hours": "25-74",
+        "control_roll_modifier": 4
+      },
+      {
+        "time_spent_hours": "22-24",
+        "control_roll_modifier": 5
+      },
+      {
+        "time_spent_hours": "20-21",
+        "control_roll_modifier": 6
+      },
+      {
+        "time_spent_hours": "19",
+        "control_roll_modifier": 7
+      },
+      {
+        "time_spent_hours": "18",
+        "control_roll_modifier": 8
+      },
+      {
+        "time_spent_hours": "17",
+        "control_roll_modifier": 9
+      },
+      {
+        "time_spent_hours": "16",
+        "control_roll_modifier": 10
+      },
+      {
+        "time_spent_hours": "15",
+        "control_roll_modifier": "N/A"
+      }
+    ]
+  },
+  {
+    "table_name": "QUICK-CHARGE FAILURE TABLE",
+    "data": [
+      {
+        "die_roll_2d6_plus_mof": 2,
+        "result": "40% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 3,
+        "result": "60% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 4,
+        "result": "80% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 5,
+        "result": "80% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 6,
+        "result": "100% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 7,
+        "result": "100% charge lost"
+      },
+      {
+        "die_roll_2d6_plus_mof": 8,
+        "result": "100% charge lost; reduce K-F Drive Integrity by 1"
+      },
+      {
+        "die_roll_2d6_plus_mof": 9,
+        "result": "100% charge lost; reduce K-F Drive Integrity by 2"
+      },
+      {
+        "die_roll_2d6_plus_mof": 10,
+        "result": "100% charge lost; reduce K-F Drive Integrity by 3"
+      },
+      {
+        "die_roll_2d6_plus_mof": 11,
+        "result": "100% charge lost; reduce K-F Drive Integrity by 4"
+      },
+      {
+        "die_roll_2d6_plus_mof": 12,
+        "result": "100% charge lost; reduce K-F Drive Integrity by 5"
+      },
+      {
+        "die_roll_2d6_plus_mof": "13+",
+        "result": "100% charge lost; K-F Drive destroyed"
+      }
+    ]
+  },
+  {
+    "table_name": "HYPERSPACE NAVIGATION TABLE",
+    "data": [
+      {
+        "situation": "Calculations made without navigation computer",
+        "modifier": 2
+      },
+      {
+        "situation": "Aerospace unit is moving predictably",
+        "modifier": 1
+      },
+      {
+        "situation": "Aerospace unit is moving out-of-control",
+        "modifier": 3
+      },
+      {
+        "situation": "Destination is nadir or zenith point",
+        "modifier": 0
+      },
+      {
+        "situation": "Destination is non-standard point",
+        "modifier": 4
+      },
+      {
+        "situation": "Destination is transient point",
+        "modifier": 4
+      },
+      {
+        "situation": "Origin point is at nadir or zenith",
+        "modifier": 0
+      },
+      {
+        "situation": "Origin is non-standard (Lagrange) point",
+        "modifier": 2
+      },
+      {
+        "situation": "Origin is transient point",
+        "modifier": 2
+      }
+    ]
+  },
+  {
+    "table_name": "JUMP CALCULATION TABLE",
+    "data": [
+      {
+        "target": "zenith or nadir",
+        "with_computer": "(2D6 - MoS) x 10 minutes",
+        "without_computer": "(2D6 - MoS) hours"
+      },
+      {
+        "target": "non-standard jump point",
+        "with_computer": "(2D6 - MoS) x 30 minutes",
+        "without_computer": "Impossible"
+      },
+      {
+        "target": "Other (unit is moving)",
+        "with_computer": "Base time x 1.1",
+        "without_computer": "Base time x 1.1"
+      }
+    ]
+  }
+]

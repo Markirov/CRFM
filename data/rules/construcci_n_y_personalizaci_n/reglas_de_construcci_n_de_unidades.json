@@ -1,0 +1,309 @@
+[
+  {
+    "table_name": "BATTLEMECH INTERNAL STRUCTURE TABLE",
+    "records": [
+      {
+        "Total 'Mech Tonnage": 20,
+        "Standard Structure": 2,
+        "Endo Steel": 1,
+        "Head": 3,
+        "Torso (Center)": 6,
+        "Torso (Left/Right)": 5,
+        "Arms (Each)": 3,
+        "Legs (Each)": 4,
+        "Maximum Armor Factor (Biped/Four-legged)": "69/73"
+      },
+      {
+        "Total 'Mech Tonnage": 25,
+        "Standard Structure": 2.5,
+        "Endo Steel": 1.5,
+        "Head": 3,
+        "Torso (Center)": 8,
+        "Torso (Left/Right)": 6,
+        "Arms (Each)": 4,
+        "Legs (Each)": 6,
+        "Maximum Armor Factor (Biped/Four-legged)": "89/97"
+      },
+      {
+        "Total 'Mech Tonnage": 30,
+        "Standard Structure": 3,
+        "Endo Steel": 1.5,
+        "Head": 3,
+        "Torso (Center)": 10,
+        "Torso (Left/Right)": 7,
+        "Arms (Each)": 5,
+        "Legs (Each)": 7,
+        "Maximum Armor Factor (Biped/Four-legged)": "105/113"
+      },
+      {
+        "Total 'Mech Tonnage": 35,
+        "Standard Structure": 3.5,
+        "Endo Steel": 2,
+        "Head": 3,
+        "Torso (Center)": 11,
+        "Torso (Left/Right)": 8,
+        "Arms (Each)": 6,
+        "Legs (Each)": 8,
+        "Maximum Armor Factor (Biped/Four-legged)": "119/127"
+      },
+      {
+        "Total 'Mech Tonnage": 40,
+        "Standard Structure": 4,
+        "Endo Steel": 2,
+        "Head": 3,
+        "Torso (Center)": 12,
+        "Torso (Left/Right)": 10,
+        "Arms (Each)": 6,
+        "Legs (Each)": 10,
+        "Maximum Armor Factor (Biped/Four-legged)": "137/153"
+      },
+      {
+        "Total 'Mech Tonnage": 45,
+        "Standard Structure": 4.5,
+        "Endo Steel": 2.5,
+        "Head": 3,
+        "Torso (Center)": 14,
+        "Torso (Left/Right)": 11,
+        "Arms (Each)": 7,
+        "Legs (Each)": 11,
+        "Maximum Armor Factor (Biped/Four-legged)": "153/169"
+      },
+      {
+        "Total 'Mech Tonnage": 50,
+        "Standard Structure": 5,
+        "Endo Steel": 2.5,
+        "Head": 3,
+        "Torso (Center)": 16,
+        "Torso (Left/Right)": 12,
+        "Arms (Each)": 8,
+        "Legs (Each)": 12,
+        "Maximum Armor Factor (Biped/Four-legged)": "169/185"
+      },
+      {
+        "Total 'Mech Tonnage": 55,
+        "Standard Structure": 5.5,
+        "Endo Steel": 3,
+        "Head": 3,
+        "Torso (Center)": 18,
+        "Torso (Left/Right)": 13,
+        "Arms (Each)": 9,
+        "Legs (Each)": 13,
+        "Maximum Armor Factor (Biped/Four-legged)": "185/201"
+      },
+      {
+        "Total 'Mech Tonnage": 60,
+        "Standard Structure": 6,
+        "Endo Steel": 3,
+        "Head": 3,
+        "Torso (Center)": 20,
+        "Torso (Left/Right)": 14,
+        "Arms (Each)": 10,
+        "Legs (Each)": 14,
+        "Maximum Armor Factor (Biped/Four-legged)": "201/217"
+      },
+      {
+        "Total 'Mech Tonnage": 65,
+        "Standard Structure": 6.5,
+        "Endo Steel": 3.5,
+        "Head": 3,
+        "Torso (Center)": 21,
+        "Torso (Left/Right)": 15,
+        "Arms (Each)": 10,
+        "Legs (Each)": 15,
+        "Maximum Armor Factor (Biped/Four-legged)": "211/231"
+      },
+      {
+        "Total 'Mech Tonnage": 70,
+        "Standard Structure": 7,
+        "Endo Steel": 3.5,
+        "Head": 3,
+        "Torso (Center)": 22,
+        "Torso (Left/Right)": 15,
+        "Arms (Each)": 11,
+        "Legs (Each)": 15,
+        "Maximum Armor Factor (Biped/Four-legged)": "217/233"
+      },
+      {
+        "Total 'Mech Tonnage": 75,
+        "Standard Structure": 7.5,
+        "Endo Steel": 4,
+        "Head": 3,
+        "Torso (Center)": 23,
+        "Torso (Left/Right)": 16,
+        "Arms (Each)": 12,
+        "Legs (Each)": 16,
+        "Maximum Armor Factor (Biped/Four-legged)": "231/247"
+      },
+      {
+        "Total 'Mech Tonnage": 80,
+        "Standard Structure": 8,
+        "Endo Steel": 4,
+        "Head": 3,
+        "Torso (Center)": 25,
+        "Torso (Left/Right)": 17,
+        "Arms (Each)": 13,
+        "Legs (Each)": 17,
+        "Maximum Armor Factor (Biped/Four-legged)": "247/263"
+      },
+      {
+        "Total 'Mech Tonnage": 85,
+        "Standard Structure": 8.5,
+        "Endo Steel": 4.5,
+        "Head": 3,
+        "Torso (Center)": 27,
+        "Torso (Left/Right)": 18,
+        "Arms (Each)": 14,
+        "Legs (Each)": 18,
+        "Maximum Armor Factor (Biped/Four-legged)": "263/279"
+      },
+      {
+        "Total 'Mech Tonnage": 90,
+        "Standard Structure": 9,
+        "Endo Steel": 4.5,
+        "Head": 3,
+        "Torso (Center)": 29,
+        "Torso (Left/Right)": 19,
+        "Arms (Each)": 15,
+        "Legs (Each)": 19,
+        "Maximum Armor Factor (Biped/Four-legged)": "279/295"
+      },
+      {
+        "Total 'Mech Tonnage": 95,
+        "Standard Structure": 9.5,
+        "Endo Steel": 5,
+        "Head": 3,
+        "Torso (Center)": 30,
+        "Torso (Left/Right)": 20,
+        "Arms (Each)": 16,
+        "Legs (Each)": 20,
+        "Maximum Armor Factor (Biped/Four-legged)": "293/309"
+      },
+      {
+        "Total 'Mech Tonnage": 100,
+        "Standard Structure": 10,
+        "Endo Steel": 5,
+        "Head": 3,
+        "Torso (Center)": 31,
+        "Torso (Left/Right)": 21,
+        "Arms (Each)": 17,
+        "Legs (Each)": 21,
+        "Maximum Armor Factor (Biped/Four-legged)": "307/323"
+      }
+    ]
+  },
+  {
+    "table_name": "CONVENTIONAL INFANTRY MOTIVE TYPES TABLE",
+    "records": [
+      {
+        "Motive Type": "Foot",
+        "Max Squad Size (Troopers)": 10,
+        "Max Platoon Size (Troopers)": 30,
+        "MP (Type)": "1 (Ground)",
+        "Prohibited Terrain": "Water (Any)"
+      },
+      {
+        "Motive Type": "Motorized",
+        "Max Squad Size (Troopers)": 10,
+        "Max Platoon Size (Troopers)": 30,
+        "MP (Type)": "3 (Ground)",
+        "Prohibited Terrain": "Water (Any)"
+      },
+      {
+        "Motive Type": "Jump",
+        "Max Squad Size (Troopers)": 10,
+        "Max Platoon Size (Troopers)": 30,
+        "MP (Type)": "3 (Jump)",
+        "Prohibited Terrain": "Water (Any)"
+      },
+      {
+        "Motive Type": "Mechanized Hover",
+        "Max Squad Size (Troopers)": 5,
+        "Max Platoon Size (Troopers)": 20,
+        "MP (Type)": "5 (Hover)",
+        "Prohibited Terrain": "Woods (Any)"
+      },
+      {
+        "Motive Type": "Mechanized Tracked",
+        "Max Squad Size (Troopers)": 7,
+        "Max Platoon Size (Troopers)": 28,
+        "MP (Type)": "3 (Tracked)",
+        "Prohibited Terrain": "Woods (Heavy), Water (Depth 1+)"
+      },
+      {
+        "Motive Type": "Mechanized Wheeled",
+        "Max Squad Size (Troopers)": 6,
+        "Max Platoon Size (Troopers)": 24,
+        "MP (Type)": "4 (Wheeled)",
+        "Prohibited Terrain": "Rough, Rubble, Woods (Any), Water (Depth 1+)"
+      }
+    ]
+  },
+  {
+    "table_name": "BATTLE ARMOR STRUCTURE WEIGHTS TABLE",
+    "records": [
+      {
+        "Battle Armor Weight Class": "PA(L) / Exoskeleton",
+        "Total Suit Weight (kg)": "80 - 400",
+        "Chassis Weight (kg) Clan": 130,
+        "Chassis Weight (kg) Inner Sphere": 80,
+        "Weapon Slots Humanoid (Arms/Body)": "2 / 2",
+        "Weapon Slots Quad (Body)": null
+      },
+      {
+        "Battle Armor Weight Class": "Light",
+        "Total Suit Weight (kg)": "401 - 750",
+        "Chassis Weight (kg) Clan": 150,
+        "Chassis Weight (kg) Inner Sphere": 100,
+        "Weapon Slots Humanoid (Arms/Body)": "2 / 4",
+        "Weapon Slots Quad (Body)": 5
+      },
+      {
+        "Battle Armor Weight Class": "Medium",
+        "Total Suit Weight (kg)": "751 - 1000",
+        "Chassis Weight (kg) Clan": 250,
+        "Chassis Weight (kg) Inner Sphere": 175,
+        "Weapon Slots Humanoid (Arms/Body)": "3 / 4",
+        "Weapon Slots Quad (Body)": 7
+      },
+      {
+        "Battle Armor Weight Class": "Heavy",
+        "Total Suit Weight (kg)": "1001 - 1500",
+        "Chassis Weight (kg) Clan": 400,
+        "Chassis Weight (kg) Inner Sphere": 300,
+        "Weapon Slots Humanoid (Arms/Body)": "3 / 6",
+        "Weapon Slots Quad (Body)": 9
+      },
+      {
+        "Battle Armor Weight Class": "Assault",
+        "Total Suit Weight (kg)": "1501 - 2000",
+        "Chassis Weight (kg) Clan": 700,
+        "Chassis Weight (kg) Inner Sphere": 550,
+        "Weapon Slots Humanoid (Arms/Body)": "4 / 6",
+        "Weapon Slots Quad (Body)": 11
+      }
+    ]
+  },
+  {
+    "table_name": "ADVANCED AEROSPACE UNIT TYPES TABLE",
+    "records": [
+      {
+        "Aerospace Unit Type": "Space Stations",
+        "Weight Range (Tons)": "2,000 to 2,500,000",
+        "Weight Incremental (Tons)": 500,
+        "Restricted Terrain": "Any non-Space"
+      },
+      {
+        "Aerospace Unit Type": "JumpShips",
+        "Weight Range (Tons)": "50,000 to 500,000",
+        "Weight Incremental (Tons)": 1000,
+        "Restricted Terrain": "Any non-Space"
+      },
+      {
+        "Aerospace Unit Type": "WarShips",
+        "Weight Range (Tons)": "100,000 to 2,500,000",
+        "Weight Incremental (Tons)": 10000,
+        "Restricted Terrain": "Any non-Space"
+      }
+    ]
+  }
+]

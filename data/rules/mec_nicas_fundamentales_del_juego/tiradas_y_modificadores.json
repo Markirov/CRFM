@@ -1,0 +1,687 @@
+[
+  {
+    "tableName": "Habilidades Promedio",
+    "data": [
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "MechWarrior",
+        "gunnery": 4,
+        "piloting": 5,
+        "driving": null,
+        "anti_mech": null
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Combat Vehicle crew",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": 5,
+        "anti_mech": null
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Support Vehicle crew",
+        "gunnery": 5,
+        "piloting": null,
+        "driving": 5,
+        "anti_mech": null
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Conventional infantry*",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 8
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Conventional infantry (anti-'Mech) Foot",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 5
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Conventional infantry (anti-'Mech) Jump/Motorized",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 6
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Battle armor infantry",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 5
+      },
+      {
+        "faction": "Inner Sphere",
+        "unit_type": "Aerospace fighter pilot",
+        "gunnery": 4,
+        "piloting": 5,
+        "driving": null,
+        "anti_mech": null
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "MechWarrior",
+        "gunnery": 3,
+        "piloting": 4,
+        "driving": null,
+        "anti_mech": null
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "ProtoMech pilot",
+        "gunnery": 4,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": null
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Combat Vehicle crew",
+        "gunnery": 5,
+        "piloting": null,
+        "driving": 6,
+        "anti_mech": null
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Support Vehicle crew",
+        "gunnery": 6,
+        "piloting": null,
+        "driving": 6,
+        "anti_mech": null
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Conventional infantry*",
+        "gunnery": 5,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 8
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Conventional infantry (anti-'Mech) Foot",
+        "gunnery": 5,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 5
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Conventional infantry (anti-'Mech) Jump/Motorized",
+        "gunnery": 5,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 6
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Battle armor infantry",
+        "gunnery": 3,
+        "piloting": null,
+        "driving": null,
+        "anti_mech": 4
+      },
+      {
+        "faction": "Clan",
+        "unit_type": "Aerospace fighter pilot",
+        "gunnery": 4,
+        "piloting": 5,
+        "driving": null,
+        "anti_mech": null
+      }
+    ]
+  },
+  {
+    "tableName": "Tirada de Consciencia del Guerrero",
+    "data": [
+      {
+        "total_damage_points": 1,
+        "consciousness_number": 3
+      },
+      {
+        "total_damage_points": 2,
+        "consciousness_number": 5
+      },
+      {
+        "total_damage_points": 3,
+        "consciousness_number": 7
+      },
+      {
+        "total_damage_points": 4,
+        "consciousness_number": 10
+      },
+      {
+        "total_damage_points": 5,
+        "consciousness_number": 11
+      },
+      {
+        "total_damage_points": 6,
+        "consciousness_number": "Dead"
+      }
+    ]
+  },
+  {
+    "tableName": "Tirada de Habilidad de Pilotaje/Conducción",
+    "data": [
+      {
+        "category": "Damage to 'Mech",
+        "condition": "'Mech takes 20+ damage points in one phase",
+        "modifier": "+1"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "'Mech fusion (or fission) reactor shuts down",
+        "modifier": "+3"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "Leg/foot actuator destroyed",
+        "modifier": "+1"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "Hip actuator destroyed",
+        "modifier": "+2"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "Gyro hit",
+        "modifier": "+3"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "Gyro destroyed",
+        "modifier": "Automatic fall"
+      },
+      {
+        "category": "Damage to 'Mech",
+        "condition": "Leg destroyed",
+        "modifier": "Automatic fall"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "condition": "'Mech was kicked",
+        "modifier": "0"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "condition": "'Mech was pushed",
+        "modifier": "0"
+      },
+      {
+        "category": "Physical Attacks Against 'Mech",
+        "condition": "'Mech was successfully charged/hit by death from above",
+        "modifier": "+2"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech missed kick",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech made a successful charging attack",
+        "modifier": "+2"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech made death from above attack",
+        "modifier": "+4"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech entered Depth 1 water hex",
+        "modifier": "-1"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech entered Depth 2 water hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech entered Depth 3+ water hex",
+        "modifier": "+1"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech attempted to stand",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech entered rubble hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "Running/flanking unit moved after facing change while on pavement",
+        "modifier": "See Skidding, p. 62"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "Flanking VTOL/WiGE/Hover Vehicle moved after facing change",
+        "modifier": "See Sideslipping, p. 67"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech jumped with damaged gyro or leg/foot/hip actuators",
+        "modifier": "per Preexisting Damage"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech jumped with destroyed leg",
+        "modifier": "per Preexisting Damage"
+      },
+      {
+        "category": "Unit's Actions",
+        "condition": "'Mech ran with damaged hip or gyro",
+        "modifier": "per Preexisting Damage"
+      },
+      {
+        "category": "Special Cases",
+        "condition": "MechWarrior trying to avoid damage when his 'Mech is falling",
+        "modifier": "+1/every level above 1"
+      },
+      {
+        "category": "Special Cases",
+        "condition": "Four-legged 'Mech with intact legs",
+        "modifier": "-2"
+      },
+      {
+        "category": "Special Cases",
+        "condition": "Unintentional charge",
+        "modifier": "+3"
+      },
+      {
+        "category": "Special Cases",
+        "condition": "'Mech mounts small cockpit",
+        "modifier": "+1"
+      },
+      {
+        "category": "Preexisting Damage",
+        "condition": "Per leg/foot actuator previously destroyed",
+        "modifier": "+1"
+      },
+      {
+        "category": "Preexisting Damage",
+        "condition": "Per hip actuator previously destroyed",
+        "modifier": "+2"
+      },
+      {
+        "category": "Preexisting Damage",
+        "condition": "Gyro previously hit",
+        "modifier": "+3"
+      },
+      {
+        "category": "Preexisting Damage",
+        "condition": "Leg previously destroyed",
+        "modifier": "+5"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 0-2",
+        "modifier": "-1"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 3-4",
+        "modifier": "0"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 5-7",
+        "modifier": "+1"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 8-10",
+        "modifier": "+2"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 11-17",
+        "modifier": "+4"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 18-24",
+        "modifier": "+5"
+      },
+      {
+        "category": "Skidding Movement",
+        "condition": "Hexes moved in turn 25+",
+        "modifier": "+6"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Unit entering/leaving light building hex",
+        "modifier": "0"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Unit entering/leaving medium building hex",
+        "modifier": "+1"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Unit entering/leaving heavy building hex",
+        "modifier": "+2"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Unit entering/leaving hardened building hex",
+        "modifier": "+5"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 1-2",
+        "modifier": "0"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 3-4",
+        "modifier": "+1"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 5-6",
+        "modifier": "+2"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 7-9",
+        "modifier": "+3"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 10-17",
+        "modifier": "+4"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 18-24",
+        "modifier": "+5"
+      },
+      {
+        "category": "Building Movement",
+        "condition": "Hexes moved in turn 25+",
+        "modifier": "+6"
+      }
+    ]
+  },
+  {
+    "tableName": "Modificadores de Ataque",
+    "data": [
+      {
+        "category": "Attacker Movement",
+        "condition": "Stationary",
+        "modifier": "None"
+      },
+      {
+        "category": "Attacker Movement",
+        "condition": "Walked/Cruised",
+        "modifier": "+1"
+      },
+      {
+        "category": "Attacker Movement",
+        "condition": "Ran/Flanked",
+        "modifier": "+2"
+      },
+      {
+        "category": "Attacker Movement",
+        "condition": "Jumped",
+        "modifier": "+3"
+      },
+      {
+        "category": "Attacker Movement",
+        "condition": "Prone",
+        "modifier": "+2"
+      },
+      {
+        "category": "Attacker Movement",
+        "condition": "Skidding",
+        "modifier": "+1"
+      },
+      {
+        "category": "Terrain",
+        "condition": "Light Woods",
+        "modifier": "+1 per intervening hex; +1 if target in light woods"
+      },
+      {
+        "category": "Terrain",
+        "condition": "Heavy Woods",
+        "modifier": "+2 per intervening hex; +2 if target in heavy woods"
+      },
+      {
+        "category": "Terrain",
+        "condition": "Water Depth 1",
+        "modifier": "+1"
+      },
+      {
+        "category": "Terrain",
+        "condition": "Partial Cover",
+        "modifier": "+1"
+      },
+      {
+        "category": "Target",
+        "condition": "Prone",
+        "modifier": "-2 from adjacent hex; +1 from all others"
+      },
+      {
+        "category": "Target",
+        "condition": "Immobile",
+        "modifier": "-4"
+      },
+      {
+        "category": "Target",
+        "condition": "Skidding",
+        "modifier": "+2"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 0-2 hexes",
+        "modifier": "0"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 3-4 hexes",
+        "modifier": "+1"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 5-6 hexes",
+        "modifier": "+2"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 7-9 hexes",
+        "modifier": "+3"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 10-17 hexes",
+        "modifier": "+4"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 18-24 hexes",
+        "modifier": "+5"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Moved 25+ hexes",
+        "modifier": "+6"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Jumped/Airborne (non-aerospace units)",
+        "modifier": "+1 additional"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Battle armor unit",
+        "modifier": "+1"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Airborne aerospace unit at Altitude 1 (NOE) (attacker in attack/flight path)",
+        "modifier": "+1"
+      },
+      {
+        "category": "Target Movement",
+        "condition": "Airborne aerospace unit at Altitude 1 (NOE) (attacker not in attack/flight path)",
+        "modifier": "+3"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker 'Mech Damage",
+        "condition": "Sensor hit",
+        "modifier": "+2"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker 'Mech Damage",
+        "condition": "Shoulder hit",
+        "modifier": "+4 for weapons in arm"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker 'Mech Damage",
+        "condition": "Upper or lower arm actuator (each)",
+        "modifier": "+1 for weapons in arm"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker Heat",
+        "condition": "0-7",
+        "modifier": "None"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker Heat",
+        "condition": "8-12",
+        "modifier": "+1"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker Heat",
+        "condition": "13-16",
+        "modifier": "+2"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker Heat",
+        "condition": "17-23",
+        "modifier": "+3"
+      },
+      {
+        "category": "Weapon Attacks Only - Attacker Heat",
+        "condition": "24+",
+        "modifier": "+4"
+      },
+      {
+        "category": "Weapon Attacks Only - Other",
+        "condition": "Making indirect LRM attack",
+        "modifier": "+1"
+      },
+      {
+        "category": "Weapon Attacks Only - Other",
+        "condition": "Attacker is IndustrialMech",
+        "modifier": "+1"
+      },
+      {
+        "category": "Weapon Attacks Only - Other",
+        "condition": "Grounded DropShip",
+        "modifier": "-2"
+      },
+      {
+        "category": "Weapon Attacks Only - Range",
+        "condition": "Short",
+        "modifier": "None"
+      },
+      {
+        "category": "Weapon Attacks Only - Range",
+        "condition": "Medium",
+        "modifier": "+2"
+      },
+      {
+        "category": "Weapon Attacks Only - Range",
+        "condition": "Long",
+        "modifier": "+4"
+      },
+      {
+        "category": "Weapon Attacks Only - Range",
+        "condition": "Minimum range",
+        "modifier": "[Minimum] - [Target Range] +1"
+      },
+      {
+        "category": "Weapon Attacks Only - Target",
+        "condition": "Secondary target in forward arc",
+        "modifier": "+1"
+      },
+      {
+        "category": "Weapon Attacks Only - Target",
+        "condition": "Secondary target in side or rear arc",
+        "modifier": "+2"
+      },
+      {
+        "category": "Weapon Attacks Only - Target",
+        "condition": "Large Support Vehicle or Grounded Small Craft",
+        "modifier": "-1"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Shoulder hit",
+        "modifier": "No punching/physical weapon attack with arm; +2 to pushing"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Upper or lower arm actuator hit (each)",
+        "modifier": "+2 to punching/physical weapon attack with arm; half damage for punch"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Hand actuator hit",
+        "modifier": "+1 to punching attack with arm"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Hip actuator hit",
+        "modifier": "No kicking attacks"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Upper or lower leg actuator hit (each)",
+        "modifier": "+2 and half damage to all kick attacks"
+      },
+      {
+        "category": "Physical Attacks Only - Attacker 'Mech Damage",
+        "condition": "Foot actuator hit",
+        "modifier": "+1 to all kick attacks"
+      },
+      {
+        "category": "Physical Attacks Only - Target",
+        "condition": "Infantry",
+        "modifier": "+3 to kicking and death from above attacks"
+      },
+      {
+        "category": "Physical Attacks Only - Target",
+        "condition": "Large Support Vehicle or Grounded Small Craft",
+        "modifier": "-2"
+      },
+      {
+        "category": "Physical Attacks Only - Other Modifiers",
+        "condition": "Charging attack",
+        "modifier": "Modify for relative Piloting Skills"
+      },
+      {
+        "category": "Physical Attacks Only - Other Modifiers",
+        "condition": "Death from above attack",
+        "modifier": "Modify for relative Piloting Skills"
+      }
+    ]
+  }
+]
