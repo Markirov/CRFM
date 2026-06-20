@@ -349,6 +349,16 @@ Servicio: `src/lib/firebase-service.ts` con `safe()` envelope (`{success, data, 
 
 ---
 
+## Workflow de revisión automática
+
+Tras completar cualquier feature o fix que toque **3+ archivos o >50 LOC**, Claude debe invocar el subagente `crfm-reviewer` en **background** (`run_in_background: true`) mientras el usuario sigue programando. El subagente revisa diff + typecheck + grep targeted y reporta findings críticos / importantes / sugerencias. NO modifica código.
+
+Trigger explícito: usuario escribe "revisa", "review", "lgtm?" — invocar foreground.
+
+Ver `.claude/agents/crfm-reviewer.md` para detalle.
+
+---
+
 ## Convenciones de Código
 
 - Componentes: función exportada con nombre (`export function ComponentName`)
