@@ -23,3 +23,7 @@ backups/
 # Local tooling/refs no comiteables
 herramientas/
 AutoMover.py
+
+# Scratch / audits temporales
+scratch/
+scratch_*.txt
