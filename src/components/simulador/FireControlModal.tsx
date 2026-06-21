@@ -23,7 +23,9 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       const initialTargets: Record<number, { targetSessionId: string, targetUnitId: string, damage: number }> = {};
       state.weapons.forEach((w: any) => {
         if (session.activeShots[w.id]) {
-          const baseDmg = parseInt(w.dmg) || 0;
+          // Canon SSW: damageShort (number) preferido. Fallback parseInt(dmg).
+          // ATM con damage variable por rango: usa short como inicial (player ajusta).
+          const baseDmg = (typeof w.damageShort === 'number' ? w.damageShort : parseInt(w.dmg)) || 0;
           initialTargets[w.id] = { targetSessionId: '', targetUnitId: '', damage: baseDmg };
         }
       });

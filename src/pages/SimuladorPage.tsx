@@ -577,9 +577,9 @@ export function SimuladorPage() {
         </div>
       ) : isMech && ms && ss ? (
         /* ── MECH LAYOUT ── */
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
           {/* Left: Pilot + Fire + Heat */}
-          <div className="col-span-1 md:col-span-3 space-y-4">
+          <div className="col-span-1 md:col-span-1 lg:col-span-3 space-y-4">
             <PilotPanel
               state={ms}
               session={ss}
@@ -642,7 +642,7 @@ export function SimuladorPage() {
           </div>
 
           {/* Center: Armor Diagram */}
-          <div className="col-span-1 md:col-span-6">
+          <div className="col-span-1 md:col-span-1 lg:col-span-6">
             <ArmorDiagram
               state={ms}
               session={ss}
@@ -658,7 +658,7 @@ export function SimuladorPage() {
           </div>
 
           {/* Right: Weapons + Log */}
-          <div className="col-span-1 md:col-span-3 space-y-4">
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 space-y-4">
             {/* Weapons */}
             <section className="bg-surface-container-low p-4 clip-chamfer border-l-2 border-primary-container/30">
               <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">
@@ -689,7 +689,8 @@ export function SimuladorPage() {
                     const m = ss.critMods?.[`${w.loc}:${idx}`];
                     return m ? { heat: acc.heat + (m.heat || 0), atk: acc.atk + (m.atk || 0) } : acc;
                   }, { heat: 0, atk: 0 });
-                  const weaponToHit = sim.gunneryTotal + armMod + wMod.atk + slotCritMod.atk;
+                  // w.toHitMod = canon SSW: Pulse -2 IS, Pulse -1 Clan ER, 0 resto.
+                  const weaponToHit = sim.gunneryTotal + armMod + wMod.atk + slotCritMod.atk + (w.toHitMod ?? 0);
                   const effectiveHeat = w.heat + wMod.heat + slotCritMod.heat;
 
                   return (

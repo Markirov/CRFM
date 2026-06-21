@@ -1,4 +1,9 @@
-import { mwLookup, mechAmmoFamilyFromWeaponName, mechAmmoTechFromName, mechAmmoErTagFromName, mechAmmoMetaForWeapon, mechNormEquipName, mechIsAmmoCrit, MECH_AMMO_PER_TON } from './weapons';
+import {
+  mwLookup, mechAmmoFamilyFromWeaponName, mechAmmoTechFromName, mechAmmoErTagFromName,
+  mechAmmoMetaForWeapon, mechNormEquipName, mechIsAmmoCrit, MECH_AMMO_PER_TON,
+  // ── SSW canon (Sprint 3 migration) ──
+  getWeaponStats, buildWeaponEntry, legacyFamilyToLookup,
+} from './weapons';
 
 export const MECH_IS_TABLE: Record<number, any> = {
   20:{HD:3,CT:6,LT:5,RT:5,LA:3,RA:3,LL:4,RL:4},25:{HD:3,CT:8,LT:6,RT:6,LA:4,RA:4,LL:6,RL:6},
@@ -80,14 +85,16 @@ export function mechParseMTF(text: string){
     const parts=l.split(',');const rawName=parts[0].replace(/^\d+\s+/,'').trim();
     if(mechIsAmmoCrit(rawName)) continue; // ammo bins come from crits section, not weapons list
     const rawLoc=(parts[1]||'').trim();const ammoM=l.match(/Ammo:(\d+)/i);const ammoMax=ammoM?parseInt(ammoM[1]):null;
-    const stats=mwLookup(rawName);
-    const loc=mwNormLoc(rawLoc);
+    // Lookup canon SSW primero. Fallback a tabla legacy para entries no canon.
+    const ssw = getWeaponStats(rawName);
+    const stats = ssw ?? mwLookup(rawName);
+    const loc = mwNormLoc(rawLoc);
     const expectedSlots = getWeaponSlots(rawName);
 
     const isRear = /\s*\((R|Rear)\)\s*$/i.test(rawName) || /\s*\((R|Rear)\)\s*$/i.test(rawLoc)
       || /(rear)/i.test((rawLoc||'').replace(/\s+/g,''));
     const posSuffix = isRear ? ' (R)' : '';
-    const baseName = stats ? stats.d : rawName.replace(/\s*\((R|Rear|T|Turret)\)\s*$/i,'').trim();
+    const baseName = ssw?.actualName ?? (stats && 'd' in (stats as any) ? (stats as any).d : rawName.replace(/\s*\((R|Rear|T|Turret)\)\s*$/i,'').trim());
     const displayName = baseName + posSuffix;
 
     const slotIndices: number[] = [];
@@ -102,7 +109,36 @@ export function mechParseMTF(text: string){
       }
     }
 
-    wMap[wid]={id:wid,name:displayName,rawName,loc,locRaw:rawLoc,heat:stats?stats.h:0,dmg:stats?stats.dm:'?',r:stats?stats.r:'?',ammo:ammoMax,ammoMax,count:1,slotIndices};
+    if (ssw) {
+      // Path canon SSW: weapon enriquecido con damageShort/rangeShort/hooks/toHitMod/etc.
+      wMap[wid] = buildWeaponEntry({
+        id: wid,
+        name: displayName,
+        rawName,
+        loc,
+        locRaw: rawLoc,
+        stats: ssw,
+        ammo: ammoMax,
+        ammoMax,
+        slotIndices,
+      });
+    } else {
+      // Fallback legacy MECH_WEAPON_DB. Sprint 4: borrar tras coverage 100%.
+      wMap[wid] = {
+        id: wid,
+        name: displayName,
+        rawName,
+        loc,
+        locRaw: rawLoc,
+        heat: stats ? (stats as any).h : 0,
+        dmg: stats ? (stats as any).dm : '?',
+        r: stats ? (stats as any).r : '?',
+        ammo: ammoMax,
+        ammoMax,
+        count: 1,
+        slotIndices,
+      };
+    }
     wid++;
   }
 
@@ -114,7 +150,12 @@ export function mechParseMTF(text: string){
       if(!mechIsAmmoCrit(slotName)) return;
       const meta = mechAmmoMetaForWeapon({rawName: slotName});
       if(!meta.familyKey) return;
-      const perTon = MECH_AMMO_PER_TON[meta.family] || 0;
+
+      // Canon SSW: ammoPerTon de la weapons.json. Fallback legacy MECH_AMMO_PER_TON.
+      const tech = mechAmmoTechFromName(slotName) === 'CL' ? 'CL' : 'IS';
+      const sswLookup = legacyFamilyToLookup(meta.family, tech);
+      const sswStats = getWeaponStats(sswLookup);
+      const perTon = sswStats?.ammoPerTon ?? (MECH_AMMO_PER_TON[meta.family] || 0);
       const max = perTon;
       ammoTonsByFamily[meta.familyKey] = (ammoTonsByFamily[meta.familyKey]||0) + 1;
       ammoBins.push({id:binId++,loc,slotIdx,familyKey:meta.familyKey,family:meta.family,perTon,current:max,max});
@@ -324,7 +365,10 @@ export function mechParseSSW(text: string){
     if(type && !weaponTypes.includes(type) && !looksLikeWeapon)return;
 
     const cleanName=rawName.replace(/^\(IS\)\s*/i,'').replace(/^\(CL\)\s*/i,'').replace(/\s*\((R|Rear|T|Turret)\)\s*$/i,'').trim();
-    const stats=mwLookup(rawName)||mwLookup(cleanName);
+
+    // Lookup canon SSW: el rawName del .ssw ya viene con (IS)/(CL) prefix.
+    const ssw = getWeaponStats(rawName);
+    const stats = ssw ?? mwLookup(rawName) ?? mwLookup(cleanName);
     const loc=mwNormLoc(rawLoc);
 
     const slotIndices: number[]=[];
@@ -343,11 +387,41 @@ export function mechParseSSW(text: string){
     const isRear = /\s*\((R|Rear)\)\s*$/i.test(rawName) || /\s*\((R|Rear)\)\s*$/i.test(rawLoc)
       || /(rear|ctr|ltr|rtr|lar|rar)/i.test((rawLoc||'').replace(/\s+/g,''));
     const posSuffix = isRear ? ' (R)' : '';
-    const displayName=(stats?stats.d:cleanName)+posSuffix;
+    const baseName = ssw?.actualName ?? (stats && 'd' in (stats as any) ? (stats as any).d : cleanName);
+    const displayName = baseName + posSuffix;
 
-    wMap[wid]={id:wid,name:displayName,rawName:rawName.trim(),loc:loc,locRaw:rawLoc,
-      heat:stats?.h??0,dmg:stats?.dm??'?',r:stats?.r??'?',
-      ammo:null,ammoMax:null,count:1,slotsUsed:slotsUsed,slotIndices:slotIndices};
+    if (ssw) {
+      const built = buildWeaponEntry({
+        id: wid,
+        name: displayName,
+        rawName: rawName.trim(),
+        loc,
+        locRaw: rawLoc,
+        stats: ssw,
+        ammo: null,
+        ammoMax: null,
+        slotIndices,
+      });
+      // slotsUsed se usa en sim para validación; añade el field aquí.
+      wMap[wid] = { ...built, slotsUsed };
+    } else {
+      // Fallback legacy.
+      wMap[wid] = {
+        id: wid,
+        name: displayName,
+        rawName: rawName.trim(),
+        loc,
+        locRaw: rawLoc,
+        heat: (stats as any)?.h ?? 0,
+        dmg: (stats as any)?.dm ?? '?',
+        r: (stats as any)?.r ?? '?',
+        ammo: null,
+        ammoMax: null,
+        count: 1,
+        slotsUsed,
+        slotIndices,
+      };
+    }
     wid++;
   });
 
@@ -378,7 +452,11 @@ export function mechParseSSW(text: string){
     if(!usedAmmoSlots[loc]) usedAmmoSlots[loc]=new Set();
     usedAmmoSlots[loc].add(slotIdx);
 
-    const perTon=MECH_AMMO_PER_TON[meta.family||'']||0;
+    // Canon SSW: ammoPerTon de la weapons.json. Fallback legacy.
+    const tech = mechAmmoTechFromName(rawName) === 'CL' ? 'CL' : 'IS';
+    const sswLookup = meta.family ? legacyFamilyToLookup(meta.family, tech) : '';
+    const sswStats = sswLookup ? getWeaponStats(sswLookup) : null;
+    const perTon = sswStats?.ammoPerTon ?? (MECH_AMMO_PER_TON[meta.family||''] || 0);
     const max=perTon;
     ammoTonsByFamily[meta.familyKey]=(ammoTonsByFamily[meta.familyKey]||0)+1;
     ammoBins.push({id:binId++,loc:loc,slotIdx:slotIdx,familyKey:meta.familyKey,family:meta.family,perTon:perTon,current:max,max:max});
@@ -436,15 +514,37 @@ function vehicleAmmoFamily(name: string){
 
 function vehicleLookupWeapon(rawName: string){
   const clean = mechNormEquipName(rawName);
-  const m = mwLookup(clean) || mwLookup(rawName);
-  const name = m ? m.d : clean;
-  const heat = m ? m.h : 0;
-  const dmg = m ? m.dm : '?';
-  const range = m ? m.r : '?';
+
+  // Canon SSW primero. Fallback a legacy.
+  const ssw = getWeaponStats(rawName) ?? getWeaponStats(clean);
+  const m = ssw ? null : (mwLookup(clean) || mwLookup(rawName));
+
+  const name = ssw?.actualName ?? (m ? (m as any).d : clean);
+  const heat = ssw?.heat ?? (m ? (m as any).h : 0);
+  const dmg = ssw ? formatVehicleDamage(ssw) : (m ? (m as any).dm : '?');
+  const range = ssw ? `${ssw.rangeShort}/${ssw.rangeMedium}/${ssw.rangeLong}` : (m ? (m as any).r : '?');
+
+  // Ammo per ton: SSW canon directo si arma usa munición; fallback legacy.
+  let ammoPerTon: number | null = null;
+  if (ssw?.hasAmmo) {
+    ammoPerTon = ssw.ammoPerTon;
+  } else {
+    const family = vehicleAmmoFamily(name || clean);
+    ammoPerTon = family ? (MECH_AMMO_PER_TON[family] || null) : null;
+  }
+
   const family = vehicleAmmoFamily(name || clean);
-  const ammoPerTon = family ? (MECH_AMMO_PER_TON[family] || null) : null;
-  const oneShot = /rocket launcher/i.test(clean);
+  const oneShot = ssw?.oneShot ?? /rocket launcher/i.test(clean);
   return { name, heat, dmg, range, family, ammoPerTon, oneShot };
+}
+
+/** Display damage para vehicle UI (mismo formato que mech). */
+function formatVehicleDamage(ssw: ReturnType<typeof getWeaponStats>) {
+  if (!ssw) return '?';
+  const { damageShort: s, damageMedium: m, damageLong: l, isCluster } = ssw;
+  const suffix = isCluster ? '/m' : '';
+  if (s !== m || m !== l) return `S:${s}/M:${m}/L:${l}${suffix ? ' ' + suffix : ''}`;
+  return `${s}${suffix}`;
 }
 
 function vehicleParseAmmoTonsFromName(nm: string){

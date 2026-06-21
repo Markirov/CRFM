@@ -43,8 +43,8 @@ export interface MechWeapon {
   rawName: string;
   loc: string;
   heat: number;
-  dmg: string;
-  r: string;                 // 'short/med/long'
+  dmg: string;               // legacy display: "5" | "1/m" | "S:3/M:2/L:1 /m"
+  r: string;                 // legacy display: 'short/med/long'
   ammo: number | null;
   ammoMax: number | null;
   ammoFamily: string;
@@ -54,6 +54,24 @@ export interface MechWeapon {
   usesAmmo: boolean;
   slotsUsed: number;
   slotIndices: number[];
+
+  // ── Canon SSW (opcional durante migración Sprint 3) ──
+  // Cuando la arma se resuelve contra weapons.json se rellenan estos campos.
+  // Si stats == null (arma desconocida) → quedan undefined; sim usa fallback.
+  lookupName?: string;       // "(IS) Medium Pulse Laser"
+  damageShort?: number;
+  damageMedium?: number;
+  damageLong?: number;
+  rangeMin?: number;
+  rangeShort?: number;
+  rangeMedium?: number;
+  rangeLong?: number;
+  isCluster?: boolean;
+  rackSize?: number;
+  toHitMod?: number;         // suma Pulse -2 + canon toHitShort
+  weaponClass?: string;      // 'LASER' | 'AUTOCANNON' | 'LRM' | ...
+  techBase?: 'IS' | 'CL';
+  hasAmmo?: boolean;
 }
 
 export interface AmmoBin {

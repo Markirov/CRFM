@@ -1,3 +1,260 @@
+// ════════════════════════════════════════════════════════════════
+// API canon SSW (Sprint 2). Coexiste con tabla legacy durante migración.
+// Sim sigue usando MECH_WEAPON_DB hasta Sprint 3.
+// ════════════════════════════════════════════════════════════════
+
+import { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, getHooks } from './weapons-data';
+import type { WeaponRule, AmmoRule, SpecialHook } from './weapons-types';
+
+export type { WeaponRule, AmmoRule, SpecialHook };
+export { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, getHooks };
+
+/**
+ * Normaliza nombre de arma para lookup canon SSW.
+ * Maneja prefijos de orientación y entities HTML.
+ *   "(R) (IS) Medium Laser"  → "(IS) Medium Laser"
+ *   "(T) (CL) ER Med Laser"  → "(CL) ER Med Laser"
+ *   "&apos;Mech Mortar 4"    → "'Mech Mortar 4"
+ */
+export function normalizeWeaponName(name: string): string {
+  return name
+    .replace(/^\(R\)\s*/, '')
+    .replace(/^\(T\)\s*/, '')
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&')
+    .trim();
+}
+
+/**
+ * Lookup canon: prueba lookupName, luego cualquier alias (LookupName,
+ * ActualName, MegaMekName, ChatName, CritName).
+ * Returns null si no encuentra.
+ */
+export function getWeaponStats(name: string): WeaponRule | null {
+  const clean = normalizeWeaponName(name);
+  return BY_LOOKUP[clean] ?? BY_ALIAS[clean] ?? null;
+}
+
+/**
+ * Versión con WARN: registra en console.warn cuando un nombre no resuelve.
+ * Útil durante migración para curar gaps. Usa en sim donde quieras tracking.
+ */
+const _missingReported = new Set<string>();
+export function getWeaponStatsLogged(name: string): WeaponRule | null {
+  const stats = getWeaponStats(name);
+  if (!stats && !_missingReported.has(name)) {
+    _missingReported.add(name);
+    if (typeof console !== 'undefined') {
+      console.warn(`[weapons] missing canon entry: "${name}"`);
+    }
+  }
+  return stats;
+}
+
+/**
+ * Daño por proyectil para armas con cluster (LRM 1, SRM 2, ATM-S 3, etc.).
+ * SSW guarda damageShort = daño/misil para LRM/SRM. Para SRM debería ser 2,
+ * verifica caso a caso al wirear sim (Sprint 3).
+ */
+export function getMissileDamagePerShot(stats: WeaponRule): number {
+  // SSW pone damage por misil ya. Para SRM verifica que damageShort = 2.
+  return stats.damageShort;
+}
+
+/**
+ * Tamaño del cluster (rack size). Útil para tabla de cluster hits.
+ */
+export function getClusterSize(stats: WeaponRule): number {
+  return stats.rackSize || stats.clusterSize || 1;
+}
+
+// ════════════════════════════════════════════════════════════════
+// Formatters de display canon → legacy string compat
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * Damage display canon:
+ *   AC/5             → "5"           (igual short/med/long, no cluster)
+ *   LRM-15           → "1/m"         (per-misil + sufijo)
+ *   SRM-6            → "2/m"
+ *   ATM-6            → "S:3/M:2/L:1 /m"   (variable por rango + cluster)
+ *   VSP Pulse        → "S:7/M:5/L:3"      (variable, no cluster)
+ *   PPC              → "10"
+ */
+export function formatWeaponDamage(stats: WeaponRule): string {
+  const { damageShort: s, damageMedium: m, damageLong: l, isCluster } = stats;
+  const suffix = isCluster ? '/m' : '';
+  if (s !== m || m !== l) {
+    return `S:${s}/M:${m}/L:${l}${suffix ? ' ' + suffix : ''}`;
+  }
+  return `${s}${suffix}`;
+}
+
+/**
+ * Range display canon:
+ *   AC/5  rangeMin=3   → "m3/6/12/18"
+ *   ML            min=0 → "3/6/9"
+ *   PPC           min=3 → "m3/6/12/18"
+ */
+export function formatWeaponRange(stats: WeaponRule): string {
+  const r = `${stats.rangeShort}/${stats.rangeMedium}/${stats.rangeLong}`;
+  return stats.rangeMin > 0 ? `m${stats.rangeMin}/${r}` : r;
+}
+
+/**
+ * Modifier toHit por arma — SSW ya guarda el bonus Pulse en ToHitShort/Medium/Long.
+ *   Pulse Laser IS  → ToHitShort: -2
+ *   ER Pulse CL     → ToHitShort: -1
+ *   resto           → 0
+ *
+ * Usa toHitShort como representativo del arma (sim aplica el mismo a todos los rangos
+ * porque Pulse mod canon no varía por rango). Para casos avanzados (variable por rango)
+ * el sim puede leer toHitMedium/Long del WeaponRule directamente.
+ */
+export function getWeaponToHitMod(stats: WeaponRule): number {
+  return stats.toHitShort;
+}
+
+/**
+ * Mapea family legacy → SSW lookupName.
+ *
+ * SSW NO unifica AC. Standard "Autocannon/X", variantes mantienen "AC":
+ *   ("AC/5", "IS")          → "(IS) Autocannon/5"
+ *   ("Ultra AC/5", "IS")    → "(IS) Ultra AC/5"     (no se transforma)
+ *   ("Light AC/5", "IS")    → "(IS) Light AC/5"     (no se transforma)
+ *   ("LBX AC/10", "IS")     → "(IS) LB 10-X AC"
+ *   ("Rotary AC/5", "IS")   → "(IS) Rotary AC/5"
+ *
+ *   ("LRM-15", "IS")        → "(IS) LRM-15"
+ *   ("SRM-6", "IS")         → "(IS) SRM-6"
+ *   ("Streak SRM-6", "CL")  → "(CL) Streak SRM-6"
+ *   ("Gauss Rifle", "IS")   → "(IS) Gauss Rifle"
+ *   ("Heavy Gauss", "IS")   → "(IS) Heavy Gauss Rifle"
+ *   ("Light Gauss", "IS")   → "(IS) Light Gauss Rifle"
+ *   ("Machine Gun", "IS")   → "(IS) Machine Gun"
+ */
+export function legacyFamilyToLookup(family: string, tech: 'IS' | 'CL'): string {
+  let f = family.trim();
+
+  // LBX AC/X → LB X-X AC  (formato especial canon)
+  f = f.replace(/^LBX AC\/(\d+)$/i, 'LB $1-X AC');
+
+  // Standard AC/X → Autocannon/X. NO toca variantes (Ultra/Light/Rotary).
+  if (/^AC\/\d+$/i.test(f)) {
+    f = f.replace(/^AC\/(\d+)$/i, 'Autocannon/$1');
+  }
+
+  // Gauss alias
+  f = f.replace(/^Heavy Gauss$/i, 'Heavy Gauss Rifle');
+  f = f.replace(/^Light Gauss$/i, 'Light Gauss Rifle');
+
+  return `(${tech}) ${f}`;
+}
+
+// ════════════════════════════════════════════════════════════════
+// Builder de entry para parsers — única fuente del weapon object.
+// ════════════════════════════════════════════════════════════════
+
+export interface BuildWeaponInput {
+  id: number;
+  name: string;
+  rawName: string;
+  loc: string;
+  locRaw: string;
+  stats: WeaponRule | null;
+  ammo: number | null;
+  ammoMax: number | null;
+  slotIndices: number[];
+}
+
+export interface ParsedWeapon {
+  // ── Identificación ──
+  id: number;
+  name: string;
+  rawName: string;
+  loc: string;
+  locRaw: string;
+  ammo: number | null;
+  ammoMax: number | null;
+  count: 1;
+  slotIndices: number[];
+
+  // ── Legacy display compat ──
+  heat: number;
+  dmg: string;
+  r: string;
+
+  // ── Canon completo ──
+  lookupName: string;
+  damageShort: number;
+  damageMedium: number;
+  damageLong: number;
+  rangeMin: number;
+  rangeShort: number;
+  rangeMedium: number;
+  rangeLong: number;
+  isCluster: boolean;
+  rackSize: number;
+  toHitMod: number;
+  weaponClass: string;
+  techBase: 'IS' | 'CL';
+  hasAmmo: boolean;
+  ammoPerTon: number | null;
+  hooks: SpecialHook[];
+}
+
+/**
+ * Construye el weapon embebido en MechState desde stats SSW.
+ * Cuando stats == null (arma desconocida): fallback con valores '?' / 0
+ * para que sim no rompa.
+ */
+export function buildWeaponEntry(input: BuildWeaponInput): ParsedWeapon {
+  const { id, name, rawName, loc, locRaw, stats, ammo, ammoMax, slotIndices } = input;
+
+  if (!stats) {
+    return {
+      id, name, rawName, loc, locRaw,
+      ammo, ammoMax, count: 1, slotIndices,
+      heat: 0, dmg: '?', r: '?',
+      lookupName: rawName,
+      damageShort: 0, damageMedium: 0, damageLong: 0,
+      rangeMin: 0, rangeShort: 0, rangeMedium: 0, rangeLong: 0,
+      isCluster: false, rackSize: 0,
+      toHitMod: 0, weaponClass: 'OTHER', techBase: 'IS',
+      hasAmmo: false, ammoPerTon: null,
+      hooks: [],
+    };
+  }
+
+  return {
+    id, name, rawName, loc, locRaw,
+    ammo, ammoMax, count: 1, slotIndices,
+    heat: stats.heat,
+    dmg: formatWeaponDamage(stats),
+    r: formatWeaponRange(stats),
+    lookupName: stats.lookupName,
+    damageShort: stats.damageShort,
+    damageMedium: stats.damageMedium,
+    damageLong: stats.damageLong,
+    rangeMin: stats.rangeMin,
+    rangeShort: stats.rangeShort,
+    rangeMedium: stats.rangeMedium,
+    rangeLong: stats.rangeLong,
+    isCluster: stats.isCluster,
+    rackSize: stats.rackSize,
+    toHitMod: getWeaponToHitMod(stats),
+    weaponClass: stats.weaponClass,
+    techBase: stats.techBase,
+    hasAmmo: stats.hasAmmo,
+    ammoPerTon: stats.ammoPerTon,
+    hooks: getHooks(stats.lookupName),
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// Tabla LEGACY (a borrar en Sprint 3 tras wire sim + audit 100%).
+// ════════════════════════════════════════════════════════════════
+
 export const MECH_AMMO_PER_TON: Record<string, number> = {
   'Machine Gun': 200,
   'Light Machine Gun': 200,
