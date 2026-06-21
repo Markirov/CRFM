@@ -255,19 +255,19 @@ export function BarraconesPage() {
           {/* FICHA */}
           {tab === 'ficha' && (
             <>
-            <MechAssignmentBar pilotIdx={activeIdx} />
             <FichaHeraldica
               pilot={pilot}
               pilotImg={activeRosterEntry ? `${BASE}pilot-${pilotSlug(activeRosterEntry.jugador)}.png` : undefined}
               apodoOverride={activeRosterEntry?.apodo}
+              mechAssignmentNode={<MechAssignmentBar pilotIdx={activeIdx} variant="parchment" />}
               onAddQuirk={sim.addQuirk}
               onSetWeapon={sim.setWeapon}
               onSetArmadura={sim.setArmadura}
               onSetArmadura2={sim.setArmadura2}
               onSetNotas={sim.setNotas}
-              onUpgradeSkill={sim.upgradeSkill}
-              onUpgradeAttr={sim.upgradeAttr}
-              onAddSkill={sim.addSkill}
+              onUpgradeSkill={pilot.isPj ? sim.upgradeSkill : undefined}
+              onUpgradeAttr={pilot.isPj ? sim.upgradeAttr : undefined}
+              onAddSkill={pilot.isPj ? sim.addSkill : undefined}
             />
             </>
           )}

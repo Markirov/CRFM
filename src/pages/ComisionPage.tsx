@@ -15,10 +15,12 @@ import type { LogEntry } from '@/lib/barracones-log';
 import { readCronicas, loadCronicasFromSheets, sortCronicas, type CronicaEntry } from '@/lib/cronicas-store';
 import { stripMarkdownLite } from '@/lib/markdown-lite';
 import { readPartes, loadPartesFromSheets, type ParteEntry, type ParteTone } from '@/lib/parte-store';
-import { loadMovimientos, type MovimientoEntry } from '@/lib/firebase-service';
+import { loadMovimientos, type MovimientoEntry, loadHangar } from '@/lib/firebase-service';
+import type { HangarItem } from '@/lib/hangar-types';
 import { isActivo } from '@/lib/roster';
 // IMPORTANTE: Importamos el catálogo global para que lea tonelaje y BV de modelos que no tienen .ssw
 import { useMechCatalog, findMechByName } from '@/hooks/useMechCatalog';
+import { calcAdjustedBV } from '@/lib/combat-data';
 
 const SLOTS_KEY = 'barracones_slots_v1';
 const SLOT_COUNT = 6;
@@ -749,6 +751,7 @@ export function ComisionPage() {
   const BASE = import.meta.env.BASE_URL;
   const { isTabletDown, isMobile } = useViewport();
   const { readable, writable, loading: permLoading } = usePerm('comision');
+  const [hangar, setHangar] = useState<HangarItem[]>([]);
 
   // NUEVO: Hook del catálogo global
   const { catalog: mechCatalog } = useMechCatalog();
@@ -797,6 +800,12 @@ export function ComisionPage() {
       })
       .catch(() => {});
 
+    loadHangar().then(res => {
+      if (!cancelled && res.success && Array.isArray(res.data?.items)) {
+        setHangar(res.data.items as HangarItem[]);
+      }
+    });
+
     return () => { cancelled = true; };
   }, []);
   
@@ -837,7 +846,8 @@ export function ComisionPage() {
     try {
       const dmgPct   = p ? calcDamagePct(p) : 0;
       const status   = dmgPct > 30 ? 'REPARACIÓN' : 'READY';
-      const mech     = p?.mech || r.mech;
+      const assignedItem = hangar.find(h => h.pilotoIdx === i);
+      const mech     = p?.mech || assignedItem?.model || r.mech;
       const nombre   = p?.nombre || r.nombre;
       const key      = mechKey(mech);
       const meta     = MECH_META[key] ?? { weight: 0, bv: 0, cost: 0 };
@@ -847,21 +857,22 @@ export function ComisionPage() {
       const catMatch = mechCatalog ? findMechByName(mechCatalog.mechs, mech || '') : null;
 
       // Actualizado para pillar el tonelaje y BV de catMatch también
-      const weight   = stats?.tons ?? catMatch?.tons ?? meta.weight;
+      const weight   = assignedItem?.tons ?? stats?.tons ?? catMatch?.tons ?? meta.weight;
       const weightClass = mechWeightCategory(weight);
-      const bv       = stats?.bv ?? catMatch?.bv2 ?? meta.bv;
-      const price    = stats?.cost ?? catMatch?.cost ?? meta.cost;
+      const baseBv   = assignedItem?.bv ?? stats?.bv ?? catMatch?.bv2 ?? meta.bv;
+      const bv       = calcAdjustedBV(baseBv, r.disparoMech, r.pilotajeMech);
+      const price    = assignedItem?.precioBase ?? stats?.cost ?? catMatch?.cost ?? meta.cost;
       
       const apodo       = r.apodo?.trim() || p?.apodo?.trim() || p?.callsign || '?';
       const fullName    = nombre || p?.callsign || '—';
       
-      // Prioridad ESTADOMECHS (Configuracion, escrito por simulador slot 5).
-      // Match tolerante: substring contra mechs (case-insensitive, longest match).
       let simDamagePct: number | null = null;
-      if (campaign.estadoMechs && mech) {
+      if (assignedItem && typeof assignedItem.estadoPct === 'number') {
+        simDamagePct = 100 - assignedItem.estadoPct;
+      } else if ((campaign as any).estadoMechs && mech) {
         const target = mech.toLowerCase().trim();
         let best: { k: string; pct: number } | null = null;
-        for (const [k, v] of Object.entries(campaign.estadoMechs)) {
+        for (const [k, v] of Object.entries((campaign as any).estadoMechs)) {
           const kl = k.toLowerCase().trim();
           if (target.includes(kl) || kl.includes(target)) {
             if (!best || kl.length > best.k.length) best = { k: kl, pct: Number(v) };
@@ -874,6 +885,10 @@ export function ComisionPage() {
       // Fallback: snapshot del simulador (stub, puede fallar).
       if (simDamagePct === null && simSnapshot) {
         simDamagePct = getMechSimDamage(mech || '', simSnapshot);
+      }
+      // Ultimate fallback
+      if (simDamagePct === null && mech) {
+        simDamagePct = 0; // 0% daño = 100% estado
       }
       
       return {

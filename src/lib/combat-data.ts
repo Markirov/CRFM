@@ -1356,3 +1356,28 @@ export function vehicleEndTurnEffects(session: VehicleSession): VehicleSession {
     weaponMalfunctionIds: [], // clear temporary malfunctions
   };
 }
+
+// ─── BV Pilot Multiplier ──────────────────────────────────────────────────────
+
+// Battle Value skill multiplier table (TechManual)
+// Rows: Gunnery (0-8), Columns: Piloting (0-8)
+export const BV_SKILL_MULTIPLIER = [
+  [ 2.42, 2.31, 2.20, 2.09, 1.98, 1.87, 1.76, 1.65, 1.54 ], // G0
+  [ 2.21, 2.11, 2.01, 1.91, 1.81, 1.71, 1.61, 1.51, 1.41 ], // G1
+  [ 2.00, 1.91, 1.82, 1.73, 1.64, 1.55, 1.46, 1.36, 1.27 ], // G2
+  [ 1.79, 1.71, 1.63, 1.55, 1.47, 1.39, 1.31, 1.22, 1.14 ], // G3
+  [ 1.58, 1.51, 1.44, 1.37, 1.30, 1.23, 1.16, 1.08, 1.01 ], // G4
+  [ 1.37, 1.31, 1.25, 1.19, 1.13, 1.07, 1.01, 0.94, 0.88 ], // G5
+  [ 1.16, 1.11, 1.06, 1.01, 0.96, 0.91, 0.86, 0.80, 0.75 ], // G6
+  [ 0.95, 0.91, 0.87, 0.83, 0.79, 0.75, 0.71, 0.66, 0.62 ], // G7
+  [ 0.74, 0.71, 0.68, 0.65, 0.62, 0.59, 0.56, 0.52, 0.49 ], // G8
+];
+
+export function calcAdjustedBV(baseBV: number, gunnery: number | null | undefined, piloting: number | null | undefined): number {
+  if (!baseBV) return 0;
+  const g = Math.min(8, Math.max(0, gunnery ?? 4));
+  const p = Math.min(8, Math.max(0, piloting ?? 5));
+  const multi = BV_SKILL_MULTIPLIER[g]?.[p] ?? 1.0;
+  return Math.round(baseBV * multi);
+}
+

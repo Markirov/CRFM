@@ -22,6 +22,7 @@ export interface Pilot {
   id: string;
 
   // Identidad
+  isPj: boolean;
   nombre: string;
   callsign: string;
   apodo: string;       // viene de columna Apodo en Sheet (nickname narrativo)
@@ -73,6 +74,7 @@ export interface Pilot {
 export function emptyPilot(): Pilot {
   return {
     id: crypto.randomUUID(),
+    isPj: false,
     nombre: '', callsign: '', apodo: '', mech: '', sexo: '', edad: 25,
     decade: 0, yearBorn: 0, ageRoll: 0,
     altura: '', peso: '', pelo: '', ojos: '', origen: '', notas: '',

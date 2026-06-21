@@ -45,18 +45,19 @@ import {
   type Preset, type OrdenSecundario, type RepairItem, type ResultadoItem,
   type UnidadTiempo, type BayTeam,
 } from '@/lib/repair-priority';
+import { MunicionTab } from '@/components/taller/MunicionTab';
 
 export function TallerPage() {
-  const { activeSubTab, setActiveSubTab, campaign } = useAppStore();
+  const { activeSubTab, setActiveSubTab, campaign, setCampaign } = useAppStore();
   const { readable, writable, loading: permLoading } = usePerm('taller');
-  type View = 'factura' | 'prioridades' | 'mantenimiento';
+  type View = 'prioridades' | 'mantenimiento' | 'municion';
   const view: View =
-    activeSubTab === 'factura'       ? 'factura'
-    : activeSubTab === 'mantenimiento' ? 'mantenimiento'
+    activeSubTab === 'mantenimiento' ? 'mantenimiento'
+    : activeSubTab === 'municion' ? 'municion'
     : 'prioridades';
 
   useEffect(() => {
-    if (activeSubTab !== 'factura' && activeSubTab !== 'prioridades' && activeSubTab !== 'mantenimiento') {
+    if (!['prioridades', 'mantenimiento', 'municion'].includes(activeSubTab)) {
       setActiveSubTab('prioridades');
     }
   }, [activeSubTab, setActiveSubTab]);
@@ -81,6 +82,7 @@ export function TallerPage() {
 
   if (view === 'prioridades')   return <PrioridadesTab />;
   if (view === 'mantenimiento') return <MantenimientoTab />;
+  if (view === 'municion')      return <MunicionTab />;
 
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease]">
@@ -266,9 +268,10 @@ function PrioridadesTab() {
 
   // Orden manual via drag/flechas. Cuando set -> presetId pasa a 'manual'.
   const [manualOrder, setManualOrder] = useState<string[]>([]);
+  const [usandoAlmacenState, setUsandoAlmacenState] = useState<Record<string, boolean>>({});
 
-  // Reset manual order al cambiar mech.
-  useEffect(() => { setManualOrder([]); }, [selectedKey]);
+  // Reset manual order y almacén al cambiar mech.
+  useEffect(() => { setManualOrder([]); setUsandoAlmacenState({}); }, [selectedKey]);
 
   // Si user cambia preset a otro distinto de manual, limpiar orden manual.
   const setPresetIdSafe = (id: string) => {
@@ -277,17 +280,21 @@ function PrioridadesTab() {
   };
 
   // displayItems: si presetId='manual' y manualOrder definido, ordenar por manualOrder.
+  // También aplica el descuento a coste 0 si usa almacén.
   const displayItems = useMemo<RepairItem[]>(() => {
-    if (presetId !== 'manual' || manualOrder.length === 0) return orderedItems;
-    const byId = new Map(orderedItems.map(it => [it.id, it]));
-    const out: RepairItem[] = [];
-    for (const id of manualOrder) {
-      const it = byId.get(id);
-      if (it) { out.push(it); byId.delete(id); }
+    let out = orderedItems;
+    if (presetId === 'manual' && manualOrder.length > 0) {
+      const byId = new Map(orderedItems.map(it => [it.id, it]));
+      const sorted: RepairItem[] = [];
+      for (const id of manualOrder) {
+        const it = byId.get(id);
+        if (it) { sorted.push(it); byId.delete(id); }
+      }
+      for (const it of byId.values()) sorted.push(it);
+      out = sorted;
     }
-    for (const it of byId.values()) out.push(it);
-    return out;
-  }, [orderedItems, manualOrder, presetId]);
+    return out.map(it => usandoAlmacenState[it.id] ? { ...it, costoBase: 0 } : it);
+  }, [orderedItems, manualOrder, presetId, usandoAlmacenState]);
 
   // Reordenar manualmente: switch a preset manual, set nuevo orden.
   const reorderManual = (newOrder: string[]) => {
@@ -315,6 +322,35 @@ function PrioridadesTab() {
     if (!mechCtx || totalAplicado <= 0) return;
     setCommitState('sending');
     try {
+      let notaExtra = '';
+      const almacenUpdates = { ...(campaign.almacen || {}) };
+      let changedAlmacen = false;
+
+      // Restar consumibles del almacén
+      for (const res of resultado.resultados) {
+        if ((res.estado === 'reparado' || res.estado === 'parcial') && usandoAlmacenState[res.item.id]) {
+          const cat = res.item.categoria;
+          const qty = (cat === 'Blindaje') ? (res.puntosReparados || 0) : 1;
+          
+          let nombreAlmacen = '';
+          if (cat === 'Blindaje') nombreAlmacen = 'Armor (Standard)'; // simplificación por ahora
+          else if (res.item.nombre.toLowerCase().includes('heat sink')) nombreAlmacen = 'Heat Sink';
+          else if (res.item.nombre.toLowerCase().includes('jump jet')) nombreAlmacen = 'Jump Jet';
+          else nombreAlmacen = res.item.nombre; // armas
+
+          if (nombreAlmacen && almacenUpdates[nombreAlmacen] && almacenUpdates[nombreAlmacen] >= qty) {
+            almacenUpdates[nombreAlmacen] -= qty;
+            changedAlmacen = true;
+          }
+        }
+      }
+
+      if (changedAlmacen) {
+        notaExtra = ' · Usó piezas de almacén';
+        setCampaign({ almacen: almacenUpdates });
+        await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(almacenUpdates) });
+      }
+
       await commitLibroEntryAndTreasury({
         id:        genId('lm'),
         fecha:     campaignDate,
@@ -322,7 +358,7 @@ function PrioridadesTab() {
         cantidad:  totalAplicado,
         tipo:      'gasto',
         categoria: 'repuestos',
-        nota:      `Taller priorizado · ${preset.nombre} · est ${estadoFactPct}%`,
+        nota:      `Taller priorizado · ${preset.nombre} · est ${estadoFactPct}%${notaExtra}`,
         jugador:   '',
       });
       setCommitState('done');
@@ -401,6 +437,8 @@ function PrioridadesTab() {
           items={displayItems}
           resultados={resultado.resultados}
           onReorder={reorderManual}
+          usandoAlmacenState={usandoAlmacenState}
+          onToggleAlmacen={(id, val) => setUsandoAlmacenState(prev => ({ ...prev, [id]: val }))}
         />
         <ResultsSummary
           resultado={resultado}
@@ -682,6 +720,8 @@ function RepairItemList({
   items: RepairItem[];
   resultados: ResultadoItem[];
   onReorder: (newOrder: string[]) => void;
+  usandoAlmacenState: Record<string, boolean>;
+  onToggleAlmacen: (id: string, val: boolean) => void;
 }) {
   const resultadoMap = new Map(resultados.map(r => [r.item.id, r]));
   const ids = items.map(it => it.id);
@@ -727,6 +767,8 @@ function RepairItemList({
                 resultado={resultadoMap.get(it.id)}
                 isFirst={idx === 0}
                 isLast={idx === items.length - 1}
+                usandoAlmacen={!!usandoAlmacenState[it.id]}
+                onToggleAlmacen={(val) => onToggleAlmacen(it.id, val)}
                 onUp={() => moveBy(it.id, -1)}
                 onDown={() => moveBy(it.id, +1)}
               />
@@ -740,11 +782,14 @@ function RepairItemList({
 
 function SortableRow({
   item, resultado, isFirst, isLast, onUp, onDown,
+  usandoAlmacen, onToggleAlmacen
 }: {
   item: RepairItem;
   resultado: ResultadoItem | undefined;
   isFirst: boolean;
   isLast: boolean;
+  usandoAlmacen: boolean;
+  onToggleAlmacen: (val: boolean) => void;
   onUp: () => void;
   onDown: () => void;
 }) {
@@ -781,7 +826,17 @@ function SortableRow({
         estado === 'parcial'  ? 'text-amber-400' :
         'text-error'
       }`}>{estado.slice(0,4)}{resultado?.riesgoFatiga ? '⚠' : ''}</span>
-      <div className="flex flex-col gap-0.5">
+      {(item.categoria === 'Armas' || item.categoria === 'Blindaje' || item.nombre.toLowerCase().includes('heat sink') || item.nombre.toLowerCase().includes('jump jet')) && (
+        <label className="flex items-center justify-center cursor-pointer ml-1" title="Pagar usando material del almacén en lugar de C-Bills">
+          <input
+            type="checkbox"
+            checked={usandoAlmacen}
+            onChange={e => onToggleAlmacen(e.target.checked)}
+            className="w-3 h-3 accent-primary-container bg-surface-container border border-outline-variant/40 rounded-sm cursor-pointer"
+          />
+        </label>
+      )}
+      <div className="flex flex-col gap-0.5 ml-1">
         <button
           type="button"
           onClick={onUp}

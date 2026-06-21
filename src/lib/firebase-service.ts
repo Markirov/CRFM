@@ -376,7 +376,9 @@ export async function commitLibroEntryAndTreasury(
     delta -= prevEntry.tipo === 'ingreso' ? prevEntry.cantidad : -prevEntry.cantidad;
   }
   const newVal = cur + delta;
-  state.setCampaign({ contratoValor: formatCzar(newVal).replace(' ₡', '') });
+  const newContratoValor = formatCzar(newVal).replace(' ₡', '');
+  state.setCampaign({ contratoValor: newContratoValor });
+  await saveConfigBatch({ CONTRATO_VALOR: newContratoValor });
 }
 
 export async function deleteLibroEntryAndTreasury(entry: LibroMayorEntry): Promise<void> {
@@ -389,7 +391,9 @@ export async function deleteLibroEntryAndTreasury(entry: LibroMayorEntry): Promi
   const cur = parseCurrencyValue(state.campaign.contratoValor) ?? 0;
   const delta = entry.tipo === 'ingreso' ? -entry.cantidad : entry.cantidad;
   const newVal = cur + delta;
-  state.setCampaign({ contratoValor: formatCzar(newVal).replace(' ₡', '') });
+  const newContratoValor = formatCzar(newVal).replace(' ₡', '');
+  state.setCampaign({ contratoValor: newContratoValor });
+  await saveConfigBatch({ CONTRATO_VALOR: newContratoValor });
 }
 
 // ═══════════════════════════════════════════════════════════════

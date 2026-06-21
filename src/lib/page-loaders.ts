@@ -19,9 +19,13 @@ export const pageLoaders = {
   '/hud':                  () => import('@/pages/HudTacticoPage'),
   '/ayudas':               () => import('@/pages/AyudasPage'),
   '/tro':                  () => import('@/pages/TROPage'),
+  '/wiki':                 () => import('@/pages/WikiPage'),
   '/mapa':                 () => import('@/pages/MapaEstelarPage'),
   '/cronicas':             () => import('@/pages/CronicasPage'),
   '/logros':               () => import('@/pages/LogrosPage'),
+  '/mando':                () => import('@/pages/MandoPage'),
+  '/rrhh':                 () => import('@/pages/RecursosHumanosPage'),
+  '/suministros':          () => import('@/pages/SuministrosPage'),
 } as const;
 
 export type PagePath = keyof typeof pageLoaders;

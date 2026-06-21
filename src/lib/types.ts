@@ -141,5 +141,8 @@ export interface CampaignConfig {
   totalMechs:    string; // TOTAL_MECHS from config
   pcJugadores:   string[]; // PC_JUGADORES from config — handles separados por coma (PCs vs NPCs)
   /** ESTADOMECHS: map { "chassis model": pct_estado_0_100 }. Escrito por simulador slot 5. */
-  estadoMechs?:  Record<string, number>;
+  /** ALMACEN_JSON: map { "item_name": quantity }. Ej: "Medium Laser": 2, "Ammo (LRM)": 120. */
+  almacen?:      Record<string, number>;
+  /** Limite de capacidad de almacen en toneladas. Si es 0 o undefined, ilimitado. */
+  almacenLímiteTon?: number;
 }

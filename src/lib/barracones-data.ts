@@ -164,19 +164,6 @@ export const MERITOS_TABLE = [
 
 // ── Defectos ── (nombres exactos del sistema antiguo / Google Sheets)
 export const DEFECTOS_TABLE = [
-  'Adiccion leve',
-  'Adiccion fuerte',
-  'Mala reputacion leve',
-  'Mala reputacion media',
-  'Mala reputacion alta',
-  'Terror de combate leve',
-  'Terror de combate alto',
-  'Enemigo debil',
-  'Enemigo medio',
-  'Enemigo poderoso',
-  'SDT',
-  'Deudas leves',
-  'Deudas medias',
   'Deudas elevadas',
   'Ineptitud natural',
   'Repulsivo',
@@ -245,4 +232,13 @@ export const QUIRKS_DATABASE: { positivos: QuirkDef[]; negativos: QuirkDef[] } =
     { id: 'weak_head',       nombre: 'Weak Head Armor',            efecto: '-3 armadura en la cabeza' },
     { id: 'weak_legs',       nombre: 'Weak Legs',                  efecto: 'Daño propio por DFA duplicado' },
   ],
+};
+
+// ── Perfiles predefinidos de PNJ ──
+export const PNJ_PRESETS: Record<string, { attr: {fue: number, des: number, int: number, car: number}, skills: string[] }> = {
+  'Zhao Wei': { attr: { fue: 6, des: 8, int: 7, car: 7 }, skills: ['Supervivencia', 'Furtividad', 'Técnica Mech'] },
+  'Erik Von Rath': { attr: { fue: 8, des: 6, int: 8, car: 6 }, skills: ['Pelea', 'Tácticas', 'Historia'] },
+  'Valeria Vance': { attr: { fue: 6, des: 8, int: 8, car: 6 }, skills: ['Técnica Mech', 'Mecánica', 'Pilotar Aeronave'] },
+  'Tariq Al-Jamil': { attr: { fue: 6, des: 8, int: 7, car: 7 }, skills: ['Rastreo', 'Pilotar Vehículo', 'Furtividad'] },
+  'Alex Palacios': { attr: { fue: 6, des: 7, int: 7, car: 8 }, skills: ['Comercio', 'Negociación', 'Armas Pequeñas'] },
 };

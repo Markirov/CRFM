@@ -313,12 +313,14 @@ function EntryCard({ entry, writable, onEdit, onDelete }: EntryCardProps) {
       />
 
       {/* Acciones */}
+      {/* 
       {writable && (
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 12 }}>
           <button onClick={onEdit} style={iconBtn(T.gold)}>EDITAR</button>
           <button onClick={onDelete} style={iconBtn(T.bloodLight)}>BORRAR</button>
         </div>
-      )}
+      )} 
+      */}
     </article>
   );
 }

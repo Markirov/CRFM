@@ -35,21 +35,7 @@ import {
   type PersonalEntry, type PersonalRol, type PersonalNivel, type PersonalEstado,
 } from '@/lib/firebase-service';
 
-// ── Paleta ─────────────────────────────────────────────────
-const T = {
-  void:       '#0a0e14',
-  surface:    '#10141a',
-  surfaceLow: '#181c22',
-  outlineV:   '#4e453a',
-  gold:       '#ffd79b',
-  bronze:     '#c79764',
-  cream:      '#e8d5b8',
-  creamHi:    '#fff1d6',
-  bone:       '#d1c5b6',
-  bloodLight: '#ffb4ab',
-  greenDeep:  '#9bd28a',
-  outline:    '#9a8f81',
-};
+import { T } from '@/lib/theme';
 
 // ── Catálogos ──────────────────────────────────────────────
 const CATEGORIAS: { key: LibroMayorCategoria; label: string; tipo: LibroMayorTipo }[] = [
@@ -59,6 +45,7 @@ const CATEGORIAS: { key: LibroMayorCategoria; label: string; tipo: LibroMayorTip
   { key: 'repuestos',              label: 'Repuestos',              tipo: 'gasto'   },
   { key: 'sueldo_extra',           label: 'Sueldo extra',           tipo: 'gasto'   },
   { key: 'mantenimiento_mensual',  label: 'Mantenimiento mensual',  tipo: 'gasto'   },
+  { key: 'transporte',             label: 'Viajes y Transporte',    tipo: 'gasto'   },
   { key: 'soborno',                label: 'Soborno',                tipo: 'gasto'   },
   { key: 'gasto_misc',             label: 'Gasto varios',           tipo: 'gasto'   },
 ];
@@ -126,9 +113,8 @@ export function FinanzasPage() {
   const { activeSubTab, setActiveSubTab, campaign, roster, setFinanzasPendingModal } = useAppStore();
   const { readable, writable, loading: permLoading } = usePerm('finanzas');
   // Defaults: si la sub-tab activa no es de Finanzas, mostramos 'home'
-  const view: 'home' | 'libro-mayor' | 'personal' =
+  const view: 'home' | 'libro-mayor' =
     activeSubTab === 'libro-mayor' ? 'libro-mayor'
-    : activeSubTab === 'personal'  ? 'personal'
     : 'home';
   const campaignDate = getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth);
 
@@ -162,8 +148,6 @@ export function FinanzasPage() {
         activeView={view}
         onHome={()      => { setFinanzasPendingModal(null); setActiveSubTab('home'); }}
         onLibro={()     => { setFinanzasPendingModal(null); setActiveSubTab('libro-mayor'); }}
-        onCompras={()   => goToLibroWithModal('compras')}
-        onPersonal={()  => setActiveSubTab('personal')}
         onProjector={() => goToLibroWithModal('projector')}
         writable={writable}
       />
@@ -172,7 +156,7 @@ export function FinanzasPage() {
       {view === 'libro-mayor' && (
         <LibroMayorTab campaignDate={campaignDate} campaignYear={campaign?.campaignYear ?? 3026} campaignMonth={campaign?.campaignMonth ?? 1} roster={roster} />
       )}
-      {view === 'personal' && <PersonalTab campaignDate={campaignDate} />}
+      {/* Remove personal tab render */}
     </div>
   );
 }
@@ -185,14 +169,11 @@ interface FinanzasActionBarProps {
   activeView: 'home' | 'libro-mayor' | 'personal';
   onHome:      () => void;
   onLibro:     () => void;
-  onCompras:   () => void;
-  // onTaller removido — Taller vive en sidebar (/taller)
-  onPersonal:  () => void;
   onProjector: () => void;
   writable?: boolean;
 }
 
-function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal, onProjector, writable = true }: FinanzasActionBarProps) {
+function FinanzasActionBar({ activeView, onHome, onLibro, onProjector, writable = true }: FinanzasActionBarProps) {
   const BTN_BASE: React.CSSProperties = {
     display: 'flex', alignItems: 'center', gap: 8,
     padding: '10px 14px',
@@ -221,10 +202,6 @@ function FinanzasActionBar({ activeView, onHome, onLibro, onCompras, onPersonal,
       </button>
       <button style={active(activeView === 'libro-mayor')} onClick={onLibro}>
         📒 LIBRO DE CUENTAS
-      </button>
-      <button style={BTN_BASE} onClick={onCompras} disabled={!writable}>🛒 COMPRAS</button>
-      <button style={active(activeView === 'personal')} onClick={onPersonal}>
-        👥 PERSONAL
       </button>
       <button style={BTN_BASE} onClick={onProjector} disabled={!writable}>📊 PROYECTAR MES</button>
     </div>
@@ -737,7 +714,7 @@ function LibroMayorEditor({ entry, setEntry, onSave, onCancel }: {
 //  PERSONAL
 // ══════════════════════════════════════════════════════════
 
-function PersonalTab({ campaignDate }: { campaignDate: string }) {
+export function PersonalTab({ campaignDate }: { campaignDate: string }) {
   const [entries, setEntries] = useState<PersonalEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [editorOpen, setEditorOpen] = useState(false);

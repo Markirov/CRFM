@@ -315,7 +315,7 @@ const MELEE_WEAPONS = INFANTRY_WEAPON_TABLE.filter(w =>
   ['melee', 'espada', 'granada'].includes(w.tipo.toLowerCase())
 );
 
-export function FichaHeraldica({ pilot, pilotImg, apodoOverride, onAddQuirk, onSetWeapon, onSetArmadura, onSetArmadura2, onSetNotas, onUpgradeSkill, onUpgradeAttr, onAddSkill }: {
+interface FichaHeraldicaProps {
   pilot: Pilot;
   pilotImg?: string;
   apodoOverride?: string;
@@ -327,7 +327,14 @@ export function FichaHeraldica({ pilot, pilotImg, apodoOverride, onAddQuirk, onS
   onUpgradeSkill?: (nombre: string, cost: number) => void;
   onUpgradeAttr?:  (attr: 'fue' | 'des' | 'int' | 'car', cost: number) => void;
   onAddSkill?:     (nombre: string) => void;
-}) {
+  mechAssignmentNode?: React.ReactNode;
+}
+
+export function FichaHeraldica({
+  pilot, pilotImg, apodoOverride,
+  onAddQuirk, onSetWeapon, onSetArmadura, onSetArmadura2, onSetNotas,
+  onUpgradeSkill, onUpgradeAttr, onAddSkill, mechAssignmentNode
+}: FichaHeraldicaProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -525,6 +532,16 @@ export function FichaHeraldica({ pilot, pilotImg, apodoOverride, onAddQuirk, onS
               }}>
                 {rank}
               </div>
+              {!pilot.isPj && (
+                <div style={{
+                  marginTop: 8, padding: '2px 6px',
+                  background: '#6b4a1a22', border: '1px solid #6b4a1a',
+                  color: '#6b4a1a', display: 'inline-block',
+                  fontFamily: '"Share Tech Mono", monospace', fontSize: 9,
+                }}>
+                  PERFIL DE MANDO ESTÁNDAR
+                </div>
+              )}
             </div>
           </div>
 
@@ -543,7 +560,7 @@ export function FichaHeraldica({ pilot, pilotImg, apodoOverride, onAddQuirk, onS
               <HandField label="Altura" val={pilot.altura || '—'} />
               <HandField label="Peso"   val={pilot.peso  || '—'} />
             </div>
-            <HandField label="Battlemech asignado" val={pilot.mech || '—'} />
+            <HandField label="Battlemech asignado" val={mechAssignmentNode || pilot.mech || '—'} />
           </div>
 
           {/* ─── CUERPO A 3 COLUMNAS ─── */}

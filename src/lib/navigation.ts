@@ -11,25 +11,52 @@ import type { NavSection, Palette } from './types';
 
 export const NAV_SECTIONS: NavSection[] = [
   {
-    label: 'CUARTEL GENERAL',
+    label: 'MANDO Y LOGÍSTICA',
     items: [
-      { id: 'comision',      label: 'Comisión',         icon: '🏛️', path: '/comision',      palette: 'amber' },
-      { id: 'reclutamiento', label: 'Reclutamiento',    icon: '👤', path: '/reclutamiento', palette: 'amber' },
-      { id: 'finanzas',      label: 'Finanzas',         icon: '💰', path: '/finanzas',      palette: 'amber',
+      { id: 'mando', label: 'Mando & Contratos', icon: '🏛️', path: '/mando', palette: 'amber',
         tabs: [
-          { id: 'home',        label: 'Inicio' },
+          { id: 'comision', label: 'Comisión' },
+          { id: 'hoja', label: 'Hoja de Servicio' },
+        ],
+      },
+      { id: 'finanzas', label: 'Tesorería', icon: '💰', path: '/finanzas', palette: 'amber',
+        tabs: [
+          { id: 'home', label: 'Inicio' },
           { id: 'libro-mayor', label: 'Libro Mayor' },
-          { id: 'personal',    label: 'Personal' },
         ],
       },
-      { id: 'hangar',        label: 'Hangar',           icon: '🛠️', path: '/hangar',        palette: 'amber',
+      { id: 'rrhh', label: 'Recursos Humanos', icon: '👥', path: '/rrhh', palette: 'amber',
         tabs: [
-          { id: 'inventario', label: 'Inventario' },
-          { id: 'comprar',    label: 'Comprar' },
-          { id: 'vender',     label: 'Vender' },
+          { id: 'plantilla', label: 'Plantilla' },
+          { id: 'reclutamiento', label: 'Reclutamiento' },
+          { id: 'barracones', label: 'Barracones' },
+          { id: 'logros', label: 'Logros' },
         ],
       },
-      { id: 'barracones',    label: 'Barracones',       icon: '🏠', path: '/barracones',    palette: 'amber' },
+      { id: 'suministros', label: 'Suministros', icon: '📦', path: '/suministros', palette: 'amber',
+        tabs: [
+          { id: 'mercado', label: 'Mercado' },
+          { id: 'viajes', label: 'Viajes y Transporte' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'INGENIERÍA Y MANTENIMIENTO',
+    items: [
+      { id: 'hangar', label: 'Hangar', icon: '🛠️', path: '/hangar', palette: 'amber',
+        tabs: [
+          { id: 'unidades', label: 'Unidades' },
+          { id: 'almacen', label: 'Almacén' },
+        ],
+      },
+      { id: 'taller', label: 'Taller', icon: '🔧', path: '/taller', palette: 'amber',
+        tabs: [
+          { id: 'prioridades', label: 'Prioridades' },
+          { id: 'mantenimiento', label: 'Mantenimiento' },
+          { id: 'municion', label: 'Munición' },
+        ],
+      },
     ],
   },
   {
@@ -39,44 +66,26 @@ export const NAV_SECTIONS: NavSection[] = [
         id: 'simulador', label: 'Simulador', icon: '⚔️', path: '/simulador', palette: 'green',
         tabs: [
           { id: 'infanteria', label: 'Infantería' },
-          { id: 'mechs',      label: 'Mechs' },
-          { id: 'vehiculos',  label: 'Vehículos' },
+          { id: 'mechs', label: 'Mechs' },
+          { id: 'vehiculos', label: 'Vehículos' },
         ],
       },
-      { id: 'taller',        label: 'Taller',            icon: '🔧', path: '/taller',        palette: 'amber',
-        tabs: [
-          { id: 'prioridades',   label: 'Prioridades' },
-          { id: 'mantenimiento', label: 'Mantenimiento' },
-          { id: 'factura',       label: 'Factura' },
-        ],
-      },
-      { id: 'hud',           label: 'Seguimiento de Combate', icon: '🎯', path: '/hud',          palette: 'green' },
-      { id: 'hoja',          label: 'Hoja de Servicio', icon: '📝', path: '/hoja-servicio', palette: 'amber' },
+      { id: 'hud', label: 'Seguimiento de Combate', icon: '🎯', path: '/hud', palette: 'green' },
     ],
   },
   {
-    label: 'TÁCTICO',
+    label: 'INTELIGENCIA Y REGISTROS',
     items: [
-      { id: 'ayudas', label: 'Ayudas',             icon: '📋', path: '/ayudas', palette: 'blue' },
-      { id: 'tro',    label: 'Manual Técnico',     icon: '📖', path: '/tro',    palette: 'blue',
+      { id: 'ayudas', label: 'Ayudas Rápidas', icon: '📋', path: '/ayudas', palette: 'blue' },
+      { id: 'tro',    label: 'Manual Técnico', icon: '📖', path: '/tro',    palette: 'blue' },
+      { id: 'wiki',   label: 'Wiki de Reglas', icon: '📚', path: '/wiki',   palette: 'blue' },
+      { id: 'mapa', label: 'Navegación', icon: '🌌', path: '/mapa', palette: 'blue',
         tabs: [
-          { id: 'catalogo', label: 'Catálogo' },
-          { id: 'wiki',     label: 'Enciclopedia' }
-        ]
-      },
-    ],
-  },
-  {
-    label: 'INTEL',
-    items: [
-      { id: 'mapa',     label: 'Navegación', icon: '🌌', path: '/mapa',     palette: 'blue',
-        tabs: [
-                    { id: 'saltos',       label: 'Calculadora de Saltos' },
-                    { id: 'mapa-estelar', label: 'Mapa Estelar' },
+          { id: 'mapa-estelar', label: 'Mapa Estelar' },
+          { id: 'saltos', label: 'Calculadora' },
         ],
       },
-      { id: 'logros',   label: 'Logros',        icon: '🎖️', path: '/logros',   palette: 'amber' },
-      { id: 'cronicas', label: 'Crónicas',      icon: '📜', path: '/cronicas', palette: 'amber' },
+      { id: 'cronicas', label: 'Crónicas', icon: '📜', path: '/cronicas', palette: 'amber' },
     ],
   },
 ];

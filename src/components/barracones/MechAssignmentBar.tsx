@@ -13,7 +13,7 @@ import { useAppStore } from '@/lib/store';
 import { loadHangar, saveHangarItem } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 
-export function MechAssignmentBar({ pilotIdx }: { pilotIdx: number }) {
+export function MechAssignmentBar({ pilotIdx, variant = 'bar' }: { pilotIdx: number; variant?: 'bar' | 'parchment' }) {
   const { roster } = useAppStore();
   const pilotEntry = roster[pilotIdx];
   const pilotName = pilotEntry?.apodo || pilotEntry?.nombre || `Piloto ${pilotIdx + 1}`;
@@ -97,6 +97,44 @@ export function MechAssignmentBar({ pilotIdx }: { pilotIdx: number }) {
     } catch (e: any) { setErr(e?.message ?? 'Error al guardar'); }
     finally { setSaving(false); }
   };
+
+  if (variant === 'parchment') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
+        <select
+          value={current?.id ?? ''}
+          onChange={e => handleChange(e.target.value)}
+          disabled={loading || saving}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            fontFamily: '"Homemade Apple", cursive',
+            fontSize: 16,
+            color: '#8b1c1c', // C.redDeep approx
+            width: '100%',
+            cursor: 'pointer',
+            appearance: 'none',
+            padding: 0,
+            margin: 0,
+          }}
+        >
+          <option value="" style={{fontFamily: 'sans-serif', color: 'black'}}>— Sin mech (reserva) —</option>
+          {items.map(it => {
+            const taken = it.pilotoIdx !== undefined && it.pilotoIdx !== pilotIdx;
+            const otroR = taken ? roster[it.pilotoIdx!] : null;
+            const otroPiloto = taken ? (otroR?.apodo || otroR?.nombre || `P${it.pilotoIdx! + 1}`) : '';
+            return (
+              <option key={it.id} value={it.id} style={{fontFamily: 'sans-serif', color: 'black'}}>
+                {it.chassis} {it.model} ({it.tons}t){taken ? ` ⚠ ${otroPiloto}` : ''}
+              </option>
+            );
+          })}
+        </select>
+        {saving && <span style={{ fontSize: 10, fontFamily: 'monospace', color: '#8b1c1c' }}>...</span>}
+      </div>
+    );
+  }
 
   return (
     <div className="mb-3 bg-surface-container-low border-l-2 border-primary-container/30 p-2.5 flex items-center gap-3 clip-chamfer">

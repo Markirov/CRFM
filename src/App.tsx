@@ -27,9 +27,13 @@ const TallerPage            = lazy(() => pageLoaders['/taller']().then(m => ({ d
 const HudTacticoPage        = lazy(() => pageLoaders['/hud']().then(m => ({ default: m.HudTacticoPage })));
 const AyudasPage            = lazy(() => pageLoaders['/ayudas']().then(m => ({ default: m.AyudasPage })));
 const TROPage               = lazy(() => pageLoaders['/tro']().then(m => ({ default: m.TROPage })));
+const WikiPage              = lazy(() => pageLoaders['/wiki']().then(m => ({ default: m.WikiPage })));
 const MapaEstelarPage       = lazy(() => pageLoaders['/mapa']().then(m => ({ default: m.MapaEstelarPage })));
 const CronicasPage          = lazy(() => pageLoaders['/cronicas']().then(m => ({ default: m.CronicasPage })));
 const LogrosPage            = lazy(() => pageLoaders['/logros']().then(m => ({ default: m.LogrosPage })));
+const MandoPage             = lazy(() => pageLoaders['/mando']().then(m => ({ default: m.MandoPage })));
+const RecursosHumanosPage   = lazy(() => pageLoaders['/rrhh']().then(m => ({ default: m.RecursosHumanosPage })));
+const SuministrosPage       = lazy(() => pageLoaders['/suministros']().then(m => ({ default: m.SuministrosPage })));
 const PortadaPage           = lazy(() => pageLoaders['/portada']().then(m => ({ default: m.PortadaPage })));
 
 function RouteSpinner() {
@@ -79,6 +83,15 @@ export function App() {
           const map = JSON.parse(String(d['ESTADOMECHS']));
           if (map && typeof map === 'object') patch.estadoMechs = map;
         } catch {/* ignore */}
+      }
+      if (d['ALMACEN_JSON']) {
+        try {
+          const map = JSON.parse(String(d['ALMACEN_JSON']));
+          if (map && typeof map === 'object') patch.almacen = map;
+        } catch {/* ignore */}
+      }
+      if (d['ALMACEN_LIMITE_TON'] !== undefined) {
+        patch.almacenLímiteTon = parseInt(d['ALMACEN_LIMITE_TON']) || 0;
       }
       if (Object.keys(patch).length) setCampaign(patch);
 
@@ -133,6 +146,7 @@ export function App() {
             <Route path="/"               element={<Navigate to="/portada" replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
             <Route path="/tro"            element={<TROPage />} />
+            <Route path="/wiki"           element={<WikiPage />} />
             <Route path="/mapa"           element={<MapaEstelarPage />} />
             <Route path="/cronicas"       element={<CronicasPage />} />
             <Route path="/simulador"      element={<SimuladorPage />} />
@@ -151,6 +165,9 @@ export function App() {
               <Route path="/hud"            element={<HudTacticoPage />} />
               <Route path="/ayudas"         element={<AyudasPage />} />
               <Route path="/logros"         element={<LogrosPage />} />
+              <Route path="/mando"          element={<MandoPage />} />
+              <Route path="/rrhh"           element={<RecursosHumanosPage />} />
+              <Route path="/suministros"    element={<SuministrosPage />} />
             </Route>
           </Routes>
         </Suspense>

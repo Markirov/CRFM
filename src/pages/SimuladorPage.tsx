@@ -547,7 +547,7 @@ export function SimuladorPage() {
           shortLabels={campaignPilots ?? undefined}
           lockedSlots={lockedSlotsForView}
           visibleIndices={visibleIndices}
-          onAddSlot={!campaignMode ? (isMech ? sim.addMechSlot : sim.addVehicleSlot) : undefined}
+          // onAddSlot={!campaignMode ? (isMech ? sim.addMechSlot : sim.addVehicleSlot) : undefined}
           maxSlots={12}
         />
         <FuerzaSyncBar

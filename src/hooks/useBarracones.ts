@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Pilot } from '@/lib/barracones-types';
 import { emptyPilot } from '@/lib/barracones-types';
-import { calcHp } from '@/lib/barracones-data';
+import { calcHp, PNJ_PRESETS, getVeterancy } from '@/lib/barracones-data';
 import { searchPilots, savePilot, registerImprovement } from '@/lib/firebase-service';
 import { resolveWeaponName } from '@/lib/barracones-weapons';
 import { useAppStore } from '@/lib/store';
@@ -41,12 +41,28 @@ function sheetsDataToPilot(d: any): Pilot {
   p.callsign  = d.jugador  || '';
   p.apodo     = d.apodo || d.Apodo || d.alias || '';
   p.mech      = d.mech || d.mechModel || d.battlemech || '';
-  p.fue       = parseInt(d.str) || 6;
-  p.des       = parseInt(d.dex) || 6;
-  p.int       = parseInt(d.int) || 6;
-  p.car       = parseInt(d.cha) || 6;
   p.xpTotal      = parseInt(d.xpTotal)      || 0;
   p.xpDisponible = parseInt(d.xpDisponible) || 0;
+
+  p.isPj = p.callsign.trim().length > 0 && p.callsign.toLowerCase() !== 'pnj';
+  const preset = !p.isPj ? PNJ_PRESETS[p.nombre] : null;
+
+  if (p.isPj) {
+    p.fue = parseInt(d.str) || 6;
+    p.des = parseInt(d.dex) || 6;
+    p.int = parseInt(d.int) || 6;
+    p.car = parseInt(d.cha) || 6;
+  } else if (preset) {
+    p.fue = preset.attr.fue;
+    p.des = preset.attr.des;
+    p.int = preset.attr.int;
+    p.car = preset.attr.car;
+  } else {
+    // PNJ genérico sin preset
+    const vet = getVeterancy(p.xpTotal);
+    const baseAttr = 6 + Math.floor(vet.upgrades / 2);
+    p.fue = baseAttr; p.des = baseAttr; p.int = baseAttr; p.car = baseAttr;
+  }
   p.sexo  = d.sexo   || '';
   p.altura= d.altura || '';
   p.peso  = d.peso   || '';
@@ -77,7 +93,19 @@ function sheetsDataToPilot(d: any): Pilot {
       if (raw && typeof raw === 'object') skillUpgradesMap = raw;
     } catch {}
   }
-  if (rawSkills.length > 0) {
+  if (!p.isPj) {
+    const vet = getVeterancy(p.xpTotal);
+    const combatLevel = vet.upgrades + 2; // Novato=2 (5/5), Regular=3 (4/4), Veterano=4 (3/3), Elite=5 (2/2)
+    
+    p.habilidades = [
+      { nombre: 'Disparo Mech', nivel: combatLevel, upgrades: 0 },
+      { nombre: 'Pilotar Mech', nivel: combatLevel, upgrades: 0 },
+    ];
+    
+    if (preset) {
+      p.habilidades.push(...preset.skills.map(s => ({ nombre: s, nivel: 2, upgrades: 0 })));
+    }
+  } else if (rawSkills.length > 0) {
     p.habilidades = rawSkills
       .map((s: any) => {
         if (typeof s === 'string') return { nombre: s, nivel: 1, upgrades: skillUpgradesMap[s] ?? 0 };

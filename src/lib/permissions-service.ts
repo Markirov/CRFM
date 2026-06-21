@@ -38,6 +38,9 @@ export const DEFAULT_PERMISSIONS: SectionPerm[] = [
   { id: 'mapa',          label: 'Navegación / Mapa Estelar', dm: 'write', pj: 'write' },
   { id: 'logros',        label: 'Logros',                    dm: 'write', pj: 'read'  },
   { id: 'cronicas',      label: 'Crónicas',                  dm: 'write', pj: 'read'  },
+  { id: 'mando',         label: 'Mando & Contratos',         dm: 'write', pj: 'read'  },
+  { id: 'rrhh',          label: 'Recursos Humanos',          dm: 'write', pj: 'read'  },
+  { id: 'suministros',   label: 'Suministros',               dm: 'write', pj: 'read'  },
 ];
 
 const PERMISOS_DOC = () => doc(db, 'config', 'permisos');
@@ -126,7 +129,7 @@ export function usePermissions(): {
 export function getPermLevel(perms: SectionPerm[], sectionId: string, role: UserRole): PermLevel {
   if (role === 'admin') return 'write';
   if (!role) {
-    const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador'];
+    const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador', 'ayudas'];
     if (PUBLIC_ROUTES.includes(sectionId)) return sectionId === 'simulador' ? 'write' : 'read';
     return 'none';
   }

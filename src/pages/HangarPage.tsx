@@ -15,19 +15,20 @@ import { commitLibroEntryAndTreasury, loadHangar, saveHangarItem, deleteHangarIt
 import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
 import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
 import { parseSSWBasic } from '@/lib/ssw-basic';
+import { MaterialTab } from '@/components/hangar/MaterialTab';
 
 export function HangarPage() {
   const { activeSubTab, setActiveSubTab } = useAppStore();
   const { readable, writable, loading: permLoading } = usePerm('hangar');
-  type View = 'inventario' | 'comprar' | 'vender';
-  const view: View =
-    activeSubTab === 'comprar' ? 'comprar'
-    : activeSubTab === 'vender' ? 'vender'
-    : 'inventario';
+  type View = 'unidades' | 'almacen';
+
+  const view: View = 
+    activeSubTab === 'almacen' ? 'almacen'
+    : 'unidades';
 
   useEffect(() => {
-    if (!['inventario', 'comprar', 'vender'].includes(activeSubTab)) {
-      setActiveSubTab('inventario');
+    if (!['unidades', 'almacen'].includes(activeSubTab)) {
+      setActiveSubTab('unidades');
     }
   }, [activeSubTab, setActiveSubTab]);
 
@@ -63,12 +64,11 @@ export function HangarPage() {
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease] max-w-6xl mx-auto">
       <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase mb-4">
-        Hangar de la unidad
+        Logística de la unidad
       </h1>
 
-      {view === 'inventario' && <InventarioTab items={items} loading={loading} refresh={refresh} />}
-      {view === 'comprar'    && <ComprarTab refresh={refresh} />}
-      {view === 'vender'     && <VenderTab items={items} loading={loading} refresh={refresh} />}
+      {view === 'unidades' && <UnidadesTab items={items} loading={loading} refresh={refresh} />}
+      {view === 'almacen'  && <MaterialTab />}
     </div>
   );
 }
@@ -94,7 +94,7 @@ function Th({ children, align = 'left' }: { children: React.ReactNode; align?: '
   );
 }
 
-function InventarioTab({ items, loading, refresh }: {
+function UnidadesTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
   const { roster } = useAppStore();

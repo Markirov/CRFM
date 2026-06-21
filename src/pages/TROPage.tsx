@@ -62,13 +62,6 @@ export function TROPage() {
   const [selected, setSelected] = useState<CatalogEntry | null>(null);
   const [detailText, setDetailText] = useState<string | null>(null);
   const [fetchingDetail, setFetchingDetail] = useState(false);
-  const { activeSubTab, setActiveSubTab } = useAppStore();
-
-  useEffect(() => {
-    if (activeSubTab !== 'catalogo' && activeSubTab !== 'wiki') {
-      setActiveSubTab('catalogo');
-    }
-  }, [activeSubTab, setActiveSubTab]);
 
   // Load all catalogs on mount
   useEffect(() => {
@@ -165,23 +158,16 @@ export function TROPage() {
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, paddingBottom: 12, borderBottom: '1px solid #4e453a', flexWrap: 'wrap', gap: 12 }}>
         <div>
           <div style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: '#bdf4ff', letterSpacing: 4, textTransform: 'uppercase' }}>
-            — Technical Readout · {activeSubTab === 'catalogo' ? 'Catálogo' : 'Reglas'} —
+            — Technical Readout —
           </div>
           <h1 style={{ margin: '6px 0 4px', fontFamily: '"Space Grotesk", sans-serif', fontSize: 30, fontWeight: 800, color: '#fff1d6', letterSpacing: -0.6 }}>
-            {activeSubTab === 'catalogo' ? 'TRO' : 'ENCICLOPEDIA'} {loading && <Loader size={20} className="animate-spin inline ml-2" />}
+            MANUAL TÉCNICO {loading && <Loader size={20} className="animate-spin inline ml-2" />}
           </h1>
-          {activeSubTab === 'catalogo' && (
-            <div style={{ fontSize: 12, color: '#9a8f81' }}>
-              {visible.length} de {catalog.length} unidades
-            </div>
-          )}
-        </div>
+      </div>
       </div>
 
-      {activeSubTab === 'catalogo' ? (
-        <>
-          {/* Filter bar */}
-          <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+      {/* Filter bar */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
         {/* Search */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#181c22', border: '1px solid #4e453a', padding: '6px 10px', flex: 1, minWidth: 280 }}>
           <Search size={14} color="#9a8f81" />
@@ -311,14 +297,6 @@ export function TROPage() {
           />
         )}
       </div>
-      </>
-      ) : (
-        /* Vista de la Wiki */
-        <iframe 
-          src={import.meta.env.DEV ? 'http://localhost:5174/wiki/' : '/wiki/'} 
-          style={{ width: '100%', flex: 1, border: 'none', background: 'transparent' }} 
-        />
-      )}
     </div>
   );
 }
