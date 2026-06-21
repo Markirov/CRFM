@@ -3,11 +3,12 @@
 // Sim sigue usando MECH_WEAPON_DB hasta Sprint 3.
 // ════════════════════════════════════════════════════════════════
 
-import { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, getHooks } from './weapons-data';
+import { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, AMMO_BY_LOOKUP, getHooks } from './weapons-data';
 import type { WeaponRule, AmmoRule, SpecialHook } from './weapons-types';
+import { lookupAmmoOverride } from './ammo-overrides';
 
 export type { WeaponRule, AmmoRule, SpecialHook };
-export { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, getHooks };
+export { BY_LOOKUP, BY_ALIAS, AMMO_BY_PARENT, AMMO_BY_LOOKUP, getHooks };
 
 /**
  * Normaliza nombre de arma para lookup canon SSW.
@@ -113,6 +114,40 @@ export function formatWeaponRange(stats: WeaponRule): string {
  */
 export function getWeaponToHitMod(stats: WeaponRule): number {
   return stats.toHitShort;
+}
+
+/**
+ * Detecta variant del nombre canónico de un bin de munición.
+ *   "(IS) @ AC/2 (Armor-Piercing)" → "Armor-Piercing"
+ *   "(IS) @ AC/2"                  → "Standard"
+ *   "@ SRM-2 (Inferno)"            → "Inferno"
+ *   "(IS) @ LB 10-X AC (Cluster)"  → "Cluster"
+ */
+export function parseAmmoVariant(ammoName: string): string {
+  const m = ammoName.match(/\(([^)]+)\)\s*$/);
+  if (!m) return 'Standard';
+  const v = m[1].trim();
+  // Filtra los prefijos tech (no son variants)
+  if (/^(IS|CL|Clan)$/i.test(v)) return 'Standard';
+  return v;
+}
+
+/**
+ * Resuelve stats del bin de ammo con variant.
+ * 1. Lookup en ammunition.json canon
+ * 2. Fallback overrides Inferno/Smoke/Fragmentation
+ * 3. Devuelve undefined si no aplica override (= Standard base)
+ */
+export function getAmmoVariantOverride(family: string, variant: string, tech: 'IS' | 'CL'): import('./weapons-types').AmmoRule | import('./ammo-overrides').AmmoOverride | null {
+  if (!variant || variant === 'Standard') return null;
+
+  // Try canon SSW: "(IS) @ SRM-6 (Inferno)"
+  const sswKey = `(${tech}) @ ${family} (${variant})`;
+  const sswHit = AMMO_BY_LOOKUP[sswKey];
+  if (sswHit) return sswHit;
+
+  // Fallback overrides manuales
+  return lookupAmmoOverride(family, variant);
 }
 
 /**

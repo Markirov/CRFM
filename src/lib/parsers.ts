@@ -3,6 +3,8 @@ import {
   mechAmmoMetaForWeapon, mechNormEquipName, mechIsAmmoCrit, MECH_AMMO_PER_TON,
   // ── SSW canon (Sprint 3 migration) ──
   getWeaponStats, buildWeaponEntry, legacyFamilyToLookup,
+  // ── Ammo variants (Sprint 5) ──
+  parseAmmoVariant, getAmmoVariantOverride,
 } from './weapons';
 
 export const MECH_IS_TABLE: Record<number, any> = {
@@ -158,7 +160,36 @@ export function mechParseMTF(text: string){
       const perTon = sswStats?.ammoPerTon ?? (MECH_AMMO_PER_TON[meta.family] || 0);
       const max = perTon;
       ammoTonsByFamily[meta.familyKey] = (ammoTonsByFamily[meta.familyKey]||0) + 1;
-      ammoBins.push({id:binId++,loc,slotIdx,familyKey:meta.familyKey,family:meta.family,perTon,current:max,max});
+
+      // ── Variant SSW canon ──
+      const variant = parseAmmoVariant(slotName);
+      const variantStats = variant !== 'Standard'
+        ? getAmmoVariantOverride(meta.family, variant, tech)
+        : null;
+      const variantFields: any = {};
+      if (variantStats) {
+        variantFields.variant = variant;
+        variantFields.ammoLookup = `(${tech}) @ ${meta.family} (${variant})`;
+        // SSW AmmoRule usa damageShort/Medium/Long; override usa damageShort/Medium/Long también
+        const s = (variantStats as any).damageShort ?? (variantStats as any).DamSht ?? 0;
+        const m = (variantStats as any).damageMedium ?? (variantStats as any).DamMed ?? s;
+        const l = (variantStats as any).damageLong ?? (variantStats as any).DamLng ?? s;
+        variantFields.damageOverride = { short: s, medium: m, long: l };
+        if ('rangeShort' in (variantStats as any) || 'srtrng' in (variantStats as any)) {
+          variantFields.rangeOverride = {
+            min: (variantStats as any).rangeMin ?? 0,
+            short: (variantStats as any).rangeShort ?? 0,
+            medium: (variantStats as any).rangeMedium ?? 0,
+            long: (variantStats as any).rangeLong ?? 0,
+          };
+        }
+        if ((variantStats as any).toHit !== undefined) variantFields.toHitOverride = (variantStats as any).toHit;
+        if ((variantStats as any).heatToTarget !== undefined) variantFields.heatToTarget = (variantStats as any).heatToTarget;
+      } else {
+        variantFields.variant = variant; // 'Standard' o variant sin override
+      }
+
+      ammoBins.push({id:binId++,loc,slotIdx,familyKey:meta.familyKey,family:meta.family,perTon,current:max,max,...variantFields});
     });
   });
 
@@ -459,7 +490,32 @@ export function mechParseSSW(text: string){
     const perTon = sswStats?.ammoPerTon ?? (MECH_AMMO_PER_TON[meta.family||''] || 0);
     const max=perTon;
     ammoTonsByFamily[meta.familyKey]=(ammoTonsByFamily[meta.familyKey]||0)+1;
-    ammoBins.push({id:binId++,loc:loc,slotIdx:slotIdx,familyKey:meta.familyKey,family:meta.family,perTon:perTon,current:max,max:max});
+
+    // ── Variant SSW canon ──
+    const variant = parseAmmoVariant(rawName);
+    const variantStats = variant !== 'Standard' && meta.family
+      ? getAmmoVariantOverride(meta.family, variant, tech)
+      : null;
+    const variantFields: any = { variant };
+    if (variantStats) {
+      variantFields.ammoLookup = `(${tech}) @ ${meta.family} (${variant})`;
+      const s = (variantStats as any).damageShort ?? (variantStats as any).DamSht ?? 0;
+      const m = (variantStats as any).damageMedium ?? (variantStats as any).DamMed ?? s;
+      const l = (variantStats as any).damageLong ?? (variantStats as any).DamLng ?? s;
+      variantFields.damageOverride = { short: s, medium: m, long: l };
+      if ('rangeShort' in (variantStats as any)) {
+        variantFields.rangeOverride = {
+          min: (variantStats as any).rangeMin ?? 0,
+          short: (variantStats as any).rangeShort ?? 0,
+          medium: (variantStats as any).rangeMedium ?? 0,
+          long: (variantStats as any).rangeLong ?? 0,
+        };
+      }
+      if ((variantStats as any).toHit !== undefined) variantFields.toHitOverride = (variantStats as any).toHit;
+      if ((variantStats as any).heatToTarget !== undefined) variantFields.heatToTarget = (variantStats as any).heatToTarget;
+    }
+
+    ammoBins.push({id:binId++,loc:loc,slotIdx:slotIdx,familyKey:meta.familyKey,family:meta.family,perTon:perTon,current:max,max:max,...variantFields});
   });
 
   const inferredQuad=(crits.LA||[]).some(s=>/^\s*Hip\s*$/i.test(String(s||'')))&&(crits.RA||[]).some(s=>/^\s*Hip\s*$/i.test(String(s||'')));

@@ -83,6 +83,28 @@ export interface AmmoBin {
   perTon: number;
   current: number;
   max: number;
+
+  // ── Variant SSW canon (Sprint 5) ──────────────────────────────
+  // Detectado por parser desde el nombre `(IS) @ AC/2 (Armor-Piercing)`.
+  // Si el bin es Standard → variant = 'Standard'. Si es Inferno/AP/HE/ER/etc.
+  // → stats override aplican al disparar.
+  variant?: string;              // 'Standard' | 'Armor-Piercing' | 'Caseless' | 'Flak' |
+                                 // 'Flechette' | 'Tracer' | 'Inferno' | 'HE' | 'ER' |
+                                 // 'Slug' | 'Cluster' | etc.
+  ammoLookup?: string;           // "(IS) @ AC/2 (Armor-Piercing)" — clave canon en ammunition.json
+  damageOverride?: {             // override stats del weapon al disparar este bin
+    short: number;
+    medium: number;
+    long: number;
+  };
+  rangeOverride?: {              // override range (ATM canon varía drásticamente por ammo)
+    min: number;
+    short: number;
+    medium: number;
+    long: number;
+  };
+  toHitOverride?: number;        // mod toHit por ammo (Cluster -1, Flak vs aero, etc.)
+  heatToTarget?: number;         // Inferno SRM: calor al target por misil impactado
 }
 
 // ── Mech Session (mutable combat state) ──
