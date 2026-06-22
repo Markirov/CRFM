@@ -285,9 +285,10 @@ function deriveSpecialHooks(raw: RawWeapon): SpecialHook[] {
       jamTable: { 2: 2, 3: 2, 4: 3, 5: 3, 6: 4 },
     });
   }
-  if (raw.IsCluster && raw.SwitchableAmmo) {
-    hooks.push({ kind: 'lbx_cluster_mode', clusterMod: -1 });
-  }
+  // Nota: lbx_cluster_mode eliminado del hook automático. El toggle slug/cluster
+  // es exclusivo de LB-X autocannons y ya lo cubre el selector de ammo bin
+  // (variants "Slug" / "Cluster" en ammunition.json con damage/toHit overrides).
+  // Hacerlo aquí causaba falsos positivos en LRM/SRM (también IsCluster + SwitchableAmmo).
   if (raw.Streak) {
     hooks.push({ kind: 'streak_all_or_nothing' });
   }

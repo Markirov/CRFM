@@ -173,14 +173,7 @@ export function getWeaponBadges(
           color: 'amber',
         });
         break;
-      case 'lbx_cluster_mode':
-        out.push({
-          label: 'LBX',
-          title: 'LB-X AC: toggle Slug (canon AC) o Cluster (-1 toHit, daño por cluster table).',
-          kind: 'lbx_cluster_mode',
-          color: 'amber',
-        });
-        break;
+      // lbx_cluster_mode: eliminado de hooks. Toggle slug/cluster ahora vía ammo selector.
       case 'one_shot':
         out.push({
           label: 'OS',
@@ -266,11 +259,10 @@ export type UltraMode = '1' | '2';
 export type RACMode = '1' | '2' | '4' | '6';
 export type WeaponMode = FlamerMode | LBXMode | UltraMode | RACMode;
 
-/** Modo por defecto según hooks del arma. */
+/** Modo por defecto según hooks del arma. LBX cluster/slug NO está aquí — lo cubre ammo selector. */
 export function getDefaultMode(hooks: SpecialHook[] | undefined): WeaponMode | null {
   if (!hooks) return null;
   if (hooks.some(h => h.kind === 'flamer_dual_mode')) return 'damage';
-  if (hooks.some(h => h.kind === 'lbx_cluster_mode')) return 'slug';
   if (hooks.some(h => h.kind === 'ultra_jam')) return '1';
   if (hooks.some(h => h.kind === 'rotary_variable')) return '1';
   return null;
@@ -281,9 +273,6 @@ export function cycleMode(hooks: SpecialHook[] | undefined, current: WeaponMode 
   if (!hooks) return null;
   if (hooks.some(h => h.kind === 'flamer_dual_mode')) {
     return current === 'damage' ? 'heat' : 'damage';
-  }
-  if (hooks.some(h => h.kind === 'lbx_cluster_mode')) {
-    return current === 'slug' ? 'cluster' : 'slug';
   }
   if (hooks.some(h => h.kind === 'ultra_jam')) {
     return current === '1' ? '2' : '1';
@@ -301,7 +290,6 @@ export function hasMode(hooks: SpecialHook[] | undefined): boolean {
   if (!hooks) return false;
   return hooks.some(h =>
     h.kind === 'flamer_dual_mode' ||
-    h.kind === 'lbx_cluster_mode' ||
     h.kind === 'ultra_jam' ||
     h.kind === 'rotary_variable'
   );
