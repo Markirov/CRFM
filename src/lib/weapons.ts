@@ -116,6 +116,165 @@ export function getWeaponToHitMod(stats: WeaponRule): number {
   return stats.toHitShort;
 }
 
+// ════════════════════════════════════════════════════════════════
+// Badges per arma para UI (Sprint 5.4)
+// ════════════════════════════════════════════════════════════════
+
+export interface WeaponBadge {
+  label: string;      // texto corto a mostrar (ej. "P-2", "STREAK")
+  title: string;      // tooltip
+  kind: SpecialHook['kind'] | 'pulse_display' | 'tc_active';
+  color?: 'amber' | 'red' | 'cyan' | 'green';
+}
+
+/**
+ * Genera badges visuales para un weapon según sus hooks + flags del mech.
+ * Para TC: requiere mechHasTC=true para aplicar el bonus -1; sino solo marca compatible.
+ */
+export function getWeaponBadges(
+  hooks: SpecialHook[] | undefined,
+  toHitMod: number | undefined,
+  mechHasTC: boolean = false,
+): WeaponBadge[] {
+  const out: WeaponBadge[] = [];
+  if (!hooks) return out;
+
+  for (const h of hooks) {
+    switch (h.kind) {
+      case 'pulse_mod':
+        out.push({
+          label: `P${h.value}`,
+          title: `Pulse Laser: ${h.value} a tirada de impacto. Aplicado ya en toHit total.`,
+          kind: 'pulse_mod',
+          color: 'cyan',
+        });
+        break;
+      case 'streak_all_or_nothing':
+        out.push({
+          label: 'STREAK',
+          title: 'Streak: todo o nada. Si fallas la tirada → 0 impactos, NO consume munición. Si aciertas → todo el rack impacta.',
+          kind: 'streak_all_or_nothing',
+          color: 'cyan',
+        });
+        break;
+      case 'ultra_jam':
+        out.push({
+          label: 'ULTRA',
+          title: 'Ultra AC: elige 1 o 2 disparos. Si disparas 2 y sacas natural 2 en toHit → arma atascada resto partida.',
+          kind: 'ultra_jam',
+          color: 'amber',
+        });
+        break;
+      case 'rotary_variable':
+        out.push({
+          label: 'RAC',
+          title: 'Rotary AC: elige cadencia 1/2/4/6 (house rule). Si cadencia >1 + tirada cadencia natural 2 → drop a cadencia inferior.',
+          kind: 'rotary_variable',
+          color: 'amber',
+        });
+        break;
+      case 'lbx_cluster_mode':
+        out.push({
+          label: 'LBX',
+          title: 'LB-X AC: toggle Slug (canon AC) o Cluster (-1 toHit, daño por cluster table).',
+          kind: 'lbx_cluster_mode',
+          color: 'amber',
+        });
+        break;
+      case 'one_shot':
+        out.push({
+          label: 'OS',
+          title: 'One-Shot: el bin se consume entero al primer disparo. Sin recarga.',
+          kind: 'one_shot',
+          color: 'red',
+        });
+        break;
+      case 'flamer_dual_mode':
+        out.push({
+          label: 'FLAMER',
+          title: 'Flamer: toggle 2 daño o 2 calor al target.',
+          kind: 'flamer_dual_mode',
+          color: 'amber',
+        });
+        break;
+      case 'gauss_explosion':
+        out.push({
+          label: 'GAUSS',
+          title: `Gauss: explosión ${h.damage} de daño si recibe crit hit en el arma.`,
+          kind: 'gauss_explosion',
+          color: 'red',
+        });
+        break;
+      case 'anti_infantry':
+        out.push({
+          label: 'AI',
+          title: 'Anti-Infantry: daño x2 vs infantería convencional.',
+          kind: 'anti_infantry',
+          color: 'green',
+        });
+        break;
+      case 'tc_capable':
+        if (mechHasTC) {
+          out.push({
+            label: 'TC-1',
+            title: 'Targeting Computer activo: -1 toHit aplicado.',
+            kind: 'tc_active',
+            color: 'cyan',
+          });
+        }
+        // sin TC en mech → no badge (cosmetic minimal)
+        break;
+      case 'capacitor_capable':
+        out.push({
+          label: 'CAP',
+          title: 'PPC + Capacitor: +5 daño/+5 calor al disparar. Riesgo de crit en capacitor.',
+          kind: 'capacitor_capable',
+          color: 'amber',
+        });
+        break;
+      case 'narc_attached':
+        out.push({
+          label: 'NARC',
+          title: 'NARC: aplica pod en target, facilita guiado de misiles.',
+          kind: 'narc_attached',
+          color: 'cyan',
+        });
+        break;
+    }
+  }
+
+  // Si toHitMod es -3 (VSP Laser) y no salió como pulse_mod → forzar badge
+  if (toHitMod !== undefined && toHitMod === -3 && !out.some(b => b.kind === 'pulse_mod')) {
+    out.unshift({
+      label: 'VSP-3',
+      title: 'Variable Speed Pulse: -3 a tirada de impacto.',
+      kind: 'pulse_display',
+      color: 'cyan',
+    });
+  }
+
+  return out;
+}
+
+/**
+ * Detecta si el mech tiene Targeting Computer instalado.
+ * Scan de crits en busca de "Targeting Computer".
+ */
+export function mechHasTargetingComputer(
+  crits: Record<string, Array<{ name: string } | string | null>> | undefined,
+): boolean {
+  if (!crits) return false;
+  for (const slots of Object.values(crits)) {
+    if (!slots) continue;
+    for (const slot of slots) {
+      if (!slot) continue;
+      const name = typeof slot === 'string' ? slot : (slot.name ?? '');
+      if (/Targeting Computer/i.test(name)) return true;
+    }
+  }
+  return false;
+}
+
 /**
  * Detecta variant del nombre canónico de un bin de munición.
  *   "(IS) @ AC/2 (Armor-Piercing)" → "Armor-Piercing"

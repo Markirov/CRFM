@@ -8,6 +8,7 @@ import { loadLocalSnapshot, snapshotHasUnits, extractDamageFromSession, applyDam
 import { useMechCatalog } from '@/hooks/useMechCatalog';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
+import { getWeaponBadges, mechHasTargetingComputer } from '@/lib/weapons';
 import { EndTurnSummaryModal } from '@/components/simulador/EndTurnSummaryModal';
 import { GlobalEndTurnSummaryModal } from '@/components/simulador/GlobalEndTurnSummaryModal';
 import { usePerm } from '@/hooks/usePerm';
@@ -665,9 +666,12 @@ export function SimuladorPage() {
                 Armas
               </h2>
               <div className="space-y-1">
-                {ms.weapons.length === 0 ? (
-                  <div className="font-mono text-[10px] text-secondary/40 italic py-4 text-center">Sin armas</div>
-                ) : ms.weapons.map(w => {
+                {(() => {
+                  const mechHasTC = mechHasTargetingComputer(ss.crits as any);
+                  if (ms.weapons.length === 0) return (
+                    <div className="font-mono text-[10px] text-secondary/40 italic py-4 text-center">Sin armas</div>
+                  );
+                  return ms.weapons.map(w => {
                   const isActive = ss.activeShots[w.id] || false;
                   const isDestroyed = w.slotIndices?.length > 0 && w.slotIndices.every(idx => ss.crits[w.loc]?.[idx]?.hit);
                   const wFam = w.ammoFamilyKey.split(':').slice(2).join(':') || w.ammoFamilyKey;
@@ -690,8 +694,12 @@ export function SimuladorPage() {
                     return m ? { heat: acc.heat + (m.heat || 0), atk: acc.atk + (m.atk || 0) } : acc;
                   }, { heat: 0, atk: 0 });
                   // w.toHitMod = canon SSW: Pulse -2 IS, Pulse -1 Clan ER, 0 resto.
-                  const weaponToHit = sim.gunneryTotal + armMod + wMod.atk + slotCritMod.atk + (w.toHitMod ?? 0);
+                  // TC: si mech tiene Targeting Computer + arma TCCapable → -1 adicional.
+                  const tcCapable = (w as any).hooks?.some((h: any) => h.kind === 'tc_capable') ?? false;
+                  const tcMod = (mechHasTC && tcCapable) ? -1 : 0;
+                  const weaponToHit = sim.gunneryTotal + armMod + wMod.atk + slotCritMod.atk + (w.toHitMod ?? 0) + tcMod;
                   const effectiveHeat = w.heat + wMod.heat + slotCritMod.heat;
+                  const badges = getWeaponBadges((w as any).hooks, w.toHitMod, mechHasTC);
 
                   return (
                     <div key={w.id}
@@ -708,7 +716,21 @@ export function SimuladorPage() {
                         className={`flex flex-col flex-1 ${!isDestroyed ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                       >
                         <span className="font-bold uppercase">{w.name}</span>
-                        <span className="text-[8px] text-secondary/40">{w.loc} • {w.r}</span>
+                        <span className="text-[8px] text-secondary/40 flex items-center gap-1 flex-wrap">
+                          {w.loc} • {w.r}
+                          {badges.map((b, i) => (
+                            <span
+                              key={i}
+                              title={b.title}
+                              className={`px-1 py-px text-[7px] font-bold border ${
+                                b.color === 'red' ? 'border-error/60 text-error'
+                                : b.color === 'cyan' ? 'border-primary-container/60 text-primary-container'
+                                : b.color === 'green' ? 'border-emerald-400/60 text-emerald-400'
+                                : 'border-amber-400/60 text-amber-400'
+                              }`}
+                            >{b.label}</span>
+                          ))}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-[9px]">
                         <span>
@@ -746,7 +768,8 @@ export function SimuladorPage() {
                       </div>
                     </div>
                   );
-                })}
+                });
+                })()}
               </div>
             </section>
 
