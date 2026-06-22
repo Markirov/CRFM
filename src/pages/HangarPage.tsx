@@ -145,12 +145,14 @@ function UnidadesTab({ items, loading, refresh }: {
     
     // Asiento
     await commitLibroEntryAndTreasury({
-      type: 'ingreso',
-      amount,
+      id: genId('lm'),
+      tipo: 'ingreso',
+      cantidad: amount,
       concepto: `Venta restos: ${item.chassis} ${item.model}`,
-      tags: ['mech', 'restos'],
-      campaignDate: getCampaignDateISO(useAppStore.getState().campaign?.campaignYear, useAppStore.getState().campaign?.campaignMonth),
-      relatedMechId: item.id
+      categoria: 'venta_mech',
+      fecha: getCampaignDateISO(useAppStore.getState().campaign?.campaignYear, useAppStore.getState().campaign?.campaignMonth),
+      nota: '',
+      jugador: ''
     });
     
     // Borrar hangar

@@ -1,0 +1,2335 @@
+[
+  {
+    "item": "Autocannon/2",
+    "aliases": [
+      "(IS) Autocannon/2",
+      "ISAC2",
+      "AC2",
+      "Autocannon/2"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "cost": 75000,
+    "tonnage": 6,
+    "battle_value": 37,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Autocannon/5",
+    "aliases": [
+      "(IS) Autocannon/5",
+      "ISAC5",
+      "AC5",
+      "Autocannon/5"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "cost": 125000,
+    "tonnage": 8,
+    "battle_value": 70,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Autocannon/10",
+    "aliases": [
+      "(IS) Autocannon/10",
+      "ISAC10",
+      "AC10",
+      "Autocannon/10"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 12,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Autocannon/20",
+    "aliases": [
+      "(IS) Autocannon/20",
+      "ISAC20",
+      "AC20",
+      "Autocannon/20"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 14,
+    "battle_value": 178,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Autocannon/2",
+    "aliases": [
+      "(IS) Prototype Autocannon/2",
+      "ISAC2",
+      "PTAC2",
+      "Prototype AC/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 34,
+    "is_cluster": false,
+    "cost": 75000,
+    "tonnage": 6,
+    "battle_value": 37,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Autocannon/5",
+    "aliases": [
+      "(IS) Prototype Autocannon/5",
+      "ISAC5",
+      "PTAC5",
+      "Prototype AC/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": false,
+    "cost": 125000,
+    "tonnage": 8,
+    "battle_value": 70,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Autocannon/10",
+    "aliases": [
+      "(IS) Prototype Autocannon/10",
+      "ISAC10",
+      "PTAC10",
+      "Prototype AC/10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 12,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Autocannon/20",
+    "aliases": [
+      "(IS) Prototype Autocannon/20",
+      "ISAC20",
+      "PTAC20",
+      "Prototype AC/20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 14,
+    "battle_value": 178,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 2-X Autocannon",
+    "aliases": [
+      "(IS) LB 2-X AC",
+      "ISLBXAC2",
+      "LB2",
+      "LB 2-X AC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 150000,
+    "tonnage": 6,
+    "battle_value": 42,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype LB 2-X Autocannon",
+    "aliases": [
+      "LB 2-X CP AC",
+      "ISLBXAC2",
+      "LB2-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 150000,
+    "tonnage": 6,
+    "battle_value": 42,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim LB 2-X Autocannon",
+    "aliases": [
+      "LB 2-X CI AC",
+      "ISLBXAC2",
+      "LB2-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 150000,
+    "tonnage": 6,
+    "battle_value": 42,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 2-X Autocannon",
+    "aliases": [
+      "(CL) LB 2-X AC",
+      "CLLBXAC2",
+      "LB2",
+      "LB 2-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 10,
+    "medium_range": 20,
+    "long_range": 30,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 150000,
+    "tonnage": 5,
+    "battle_value": 47,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 5-X Autocannon",
+    "aliases": [
+      "(IS) LB 5-X AC",
+      "ISLBXAC5",
+      "LB5",
+      "LB 5-X AC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 8,
+    "battle_value": 83,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype LB 5-X Autocannon",
+    "aliases": [
+      "LB 5-X CP AC",
+      "ISLBXAC5",
+      "LB5-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 8,
+    "battle_value": 83,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim LB 5-X Autocannon",
+    "aliases": [
+      "LB 5-X CI AC",
+      "ISLBXAC5",
+      "LB5-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 8,
+    "battle_value": 83,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 5-X Autocannon",
+    "aliases": [
+      "(CL) LB 5-X AC",
+      "CLLBXAC5",
+      "LB5",
+      "LB 5-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 15,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 7,
+    "battle_value": 93,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 10-X Autocannon",
+    "aliases": [
+      "(IS) LB 10-X AC",
+      "ISLBXAC10",
+      "LB10",
+      "LB 10-X AC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 400000,
+    "tonnage": 11,
+    "battle_value": 148,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 10-X Autocannon",
+    "aliases": [
+      "(CL) LB 10-X AC",
+      "CLLBXAC10",
+      "LB10",
+      "LB 10-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 400000,
+    "tonnage": 10,
+    "battle_value": 148,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 20-X Autocannon",
+    "aliases": [
+      "(IS) LB 20-X AC",
+      "ISLBXAC20",
+      "LB20",
+      "LB 20-X AC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 14,
+    "battle_value": 237,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype LB 20-X Autocannon",
+    "aliases": [
+      "LB 20-X CP AC",
+      "ISLBXAC20",
+      "LB20-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 14,
+    "battle_value": 237,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim LB 20-X Autocannon",
+    "aliases": [
+      "LB 20-X CI AC",
+      "ISLBXAC20",
+      "LB20-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 14,
+    "battle_value": 237,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "LB 20-X Autocannon",
+    "aliases": [
+      "(CL) LB 20-X AC",
+      "CLLBXAC20",
+      "LB20",
+      "LB 20-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 12,
+    "battle_value": 237,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Autocannon/2",
+    "aliases": [
+      "(IS) Light AC/2",
+      "ISLAC2",
+      "LAC2",
+      "Light AC/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 4,
+    "battle_value": 30,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Autocannon/5",
+    "aliases": [
+      "(IS) Light AC/5",
+      "ISLAC5",
+      "LAC5",
+      "Light AC/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "cost": 150000,
+    "tonnage": 5,
+    "battle_value": 62,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Protomech Autocannon/2",
+    "aliases": [
+      "(CL) Protomech AC/2",
+      "CLProtoAC2",
+      "PrmAC2",
+      "Protomech AC/2"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 20,
+    "has_ammo": true,
+    "ammo_per_ton": 40,
+    "is_cluster": false,
+    "cost": 95000,
+    "tonnage": 3.5,
+    "battle_value": 34,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Protomech Autocannon/4",
+    "aliases": [
+      "(CL) Protomech AC/4",
+      "CLProtoAC4",
+      "PrmAC4",
+      "Protomech AC/4"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "4",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "cost": 133000,
+    "tonnage": 4.5,
+    "battle_value": 49,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Protomech Autocannon/8",
+    "aliases": [
+      "(CL) Protomech AC/8",
+      "CLProtoAC8",
+      "PrmAC8",
+      "Protomech AC/8"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "cost": 175000,
+    "tonnage": 5.5,
+    "battle_value": 66,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rotary Autocannon/2",
+    "aliases": [
+      "(IS) Rotary AC/2",
+      "ISRotaryAC2",
+      "RAC2",
+      "Rotary AC/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 8,
+    "battle_value": 118,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rotary Autocannon/2",
+    "aliases": [
+      "(CL) Rotary AC/2",
+      "CLRotaryAC2",
+      "RAC2",
+      "Rotary AC/2"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 8,
+    "battle_value": 161,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rotary Autocannon/5",
+    "aliases": [
+      "(IS) Rotary AC/5",
+      "ISRotaryAC5",
+      "RAC5",
+      "Rotary AC/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 275000,
+    "tonnage": 10,
+    "battle_value": 247,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rotary Autocannon/5",
+    "aliases": [
+      "(CL) Rotary AC/5",
+      "CLRotaryAC5",
+      "RAC5",
+      "Rotary AC/5"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 275000,
+    "tonnage": 10,
+    "battle_value": 345,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/2",
+    "aliases": [
+      "(IS) Ultra AC/2",
+      "ISUltraAC2",
+      "UAC2",
+      "Ultra AC/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 7,
+    "battle_value": 56,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype Ultra Autocannon/2",
+    "aliases": [
+      "Ultra AC/2 CP",
+      "ISUltraAC2",
+      "UAC2-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 7,
+    "battle_value": 56,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim Ultra Autocannon/2",
+    "aliases": [
+      "Ultra AC/2 CI",
+      "ISUltraAC2",
+      "UAC2-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 7,
+    "battle_value": 56,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/2",
+    "aliases": [
+      "(CL) Ultra AC/2",
+      "CLUltraAC2",
+      "UAC2",
+      "Ultra AC/2"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 2,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 5,
+    "battle_value": 62,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/5",
+    "aliases": [
+      "(IS) Ultra AC/5",
+      "ISUltraAC5",
+      "UAC5",
+      "Ultra AC/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 2,
+    "short_range": 6,
+    "medium_range": 13,
+    "long_range": 20,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 9,
+    "battle_value": 112,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/5",
+    "aliases": [
+      "(CL) Ultra AC/5",
+      "CLUltraAC5",
+      "UAC5",
+      "Ultra AC/5"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 7,
+    "battle_value": 122,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/10",
+    "aliases": [
+      "(IS) Ultra AC/10",
+      "ISUltraAC10",
+      "UAC10",
+      "Ultra AC/10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 320000,
+    "tonnage": 13,
+    "battle_value": 210,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype Ultra Autocannon/10",
+    "aliases": [
+      "Ultra AC/10 CP",
+      "ISUltraAC10",
+      "UAC10-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 320000,
+    "tonnage": 13,
+    "battle_value": 210,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim Ultra Autocannon/10",
+    "aliases": [
+      "Ultra AC/10 CI",
+      "ISUltraAC10",
+      "UAC10-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 320000,
+    "tonnage": 13,
+    "battle_value": 210,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/10",
+    "aliases": [
+      "(CL) Ultra AC/10",
+      "CLUltraAC10",
+      "UAC/10",
+      "Ultra AC/10"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 320000,
+    "tonnage": 10,
+    "battle_value": 210,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/20",
+    "aliases": [
+      "(IS) Ultra AC/20",
+      "ISUltraAC20",
+      "UAC20",
+      "Ultra AC/20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 8,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 480000,
+    "tonnage": 15,
+    "battle_value": 281,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype Ultra Autocannon/20",
+    "aliases": [
+      "Ultra AC/20 CP",
+      "ISUltraAC20",
+      "UAC20-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 8,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 480000,
+    "tonnage": 15,
+    "battle_value": 281,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim Ultra Autocannon/20",
+    "aliases": [
+      "Ultra AC/20 CI",
+      "ISUltraAC20",
+      "UAC20-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 8,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 480000,
+    "tonnage": 15,
+    "battle_value": 281,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ultra Autocannon/20",
+    "aliases": [
+      "(CL) Ultra AC/20",
+      "CLUltraAC20",
+      "UAC20",
+      "Ultra AC/20"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 480000,
+    "tonnage": 12,
+    "battle_value": 335,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper-Velocity Autocannon/2",
+    "aliases": [
+      "(IS) Hyper-Velocity Autocannon/2",
+      "ISHVAC2",
+      "HVAC2",
+      "HV AC/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 3,
+    "short_range": 10,
+    "medium_range": 20,
+    "long_range": 35,
+    "has_ammo": true,
+    "ammo_per_ton": 30,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 8,
+    "battle_value": 53,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper-Velocity Autocannon/5",
+    "aliases": [
+      "(IS) Hyper-Velocity Autocannon/5",
+      "ISHVAC5",
+      "HVAC5",
+      "HV AC/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 28,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": false,
+    "cost": 160000,
+    "tonnage": 12,
+    "battle_value": 109,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper-Velocity Autocannon/10",
+    "aliases": [
+      "(IS) Hyper-Velocity Autocannon/10",
+      "ISHVAC10",
+      "HVAC10",
+      "HV AC/10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 20,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 230000,
+    "tonnage": 14,
+    "battle_value": 158,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Anti-Personnel Gauss Rifle",
+    "aliases": [
+      "(CL) AP Gauss Rifle",
+      "CLAPGaussRifle",
+      "APGR",
+      "AP Gauss Rifle"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 40,
+    "is_cluster": false,
+    "cost": 10000,
+    "tonnage": 0.5,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Gauss Rifle",
+    "aliases": [
+      "(IS) Light Gauss Rifle",
+      "ISLightGaussRifle",
+      "LGR",
+      "Light Gauss Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "8",
+    "min_range": 3,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 16,
+    "is_cluster": false,
+    "cost": 275000,
+    "tonnage": 12,
+    "battle_value": 159,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Gauss Rifle",
+    "aliases": [
+      "(IS) Gauss Rifle",
+      "ISGaussRifle",
+      "GR",
+      "Gauss Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 15,
+    "battle_value": 320,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Gauss Rifle",
+    "aliases": [
+      "(IS) Prototype Gauss Rifle",
+      "IS Gauss Rifle Prototype",
+      "GR-P",
+      "Prototype Gauss Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 1200000,
+    "tonnage": 15,
+    "battle_value": 320,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Gauss Rifle-X",
+    "aliases": [
+      "(IS) Prototype Gauss Rifle-X",
+      "IS Gauss Rifle Prototype",
+      "GR-X",
+      "Prototype Gauss Rifle-X"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 1200000,
+    "tonnage": 15,
+    "battle_value": 320,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Gauss Rifle",
+    "aliases": [
+      "(CL) Gauss Rifle",
+      "CLGaussRifle",
+      "GR",
+      "Gauss Rifle"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 12,
+    "battle_value": 320,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Gauss Rifle",
+    "aliases": [
+      "(IS) Heavy Gauss Rifle",
+      "ISHeavyGaussRifle",
+      "HGR",
+      "Heavy Gauss Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "25",
+    "min_range": 4,
+    "short_range": 6,
+    "medium_range": 13,
+    "long_range": 20,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": false,
+    "cost": 500000,
+    "tonnage": 18,
+    "battle_value": 346,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Heavy Gauss Rifle",
+    "aliases": [
+      "(IS) Improved Heavy Gauss Rifle",
+      "ISImprovedHeavyGaussRifle",
+      "iHGR",
+      "Imp. Heavy Gauss Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "22",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 19,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": false,
+    "cost": 700000,
+    "tonnage": 20,
+    "battle_value": 385,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Magshot Gauss Rifle",
+    "aliases": [
+      "(IS) Magshot Gauss Rifle",
+      "ISMagshotGR",
+      "MSGR",
+      "Magshot"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": false,
+    "cost": 8500,
+    "tonnage": 0.5,
+    "battle_value": 15,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Silver Bullet Gauss",
+    "aliases": [
+      "(IS) Silver Bullet Gauss",
+      "ISSBGR",
+      "SBGR",
+      "Silver Bullet Gauss"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 350000,
+    "tonnage": 15,
+    "battle_value": 198,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper Assault Gauss 20",
+    "aliases": [
+      "(CL) Hyper Assault Gauss 20",
+      "CLHAG20",
+      "HAG20",
+      "HAG-20"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "20",
+    "min_range": 2,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 400000,
+    "tonnage": 10,
+    "battle_value": 267,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper Assault Gauss 30",
+    "aliases": [
+      "(CL) Hyper Assault Gauss 30",
+      "CLHAG30",
+      "HAG30",
+      "HAG-30"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "30",
+    "min_range": 2,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": true,
+    "cost": 500000,
+    "tonnage": 13,
+    "battle_value": 401,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Hyper Assault Gauss 40",
+    "aliases": [
+      "(CL) Hyper Assault Gauss 40",
+      "CLHAG40",
+      "HAG40",
+      "HAG-40"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 8,
+    "damage": "40",
+    "min_range": 2,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 3,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 16,
+    "battle_value": 535,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Rifle",
+    "aliases": [
+      "(IS) Light Rifle",
+      "ISLightRifle",
+      "LtRfl",
+      "Light Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 18,
+    "is_cluster": false,
+    "cost": 37750,
+    "tonnage": 3,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Rifle",
+    "aliases": [
+      "(IS) Medium Rifle",
+      "ISMediumRifle",
+      "MedRfl",
+      "Medium Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "6",
+    "min_range": 1,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 9,
+    "is_cluster": false,
+    "cost": 75500,
+    "tonnage": 5,
+    "battle_value": 51,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Rifle",
+    "aliases": [
+      "(IS) Heavy Rifle",
+      "ISHeavyRifle",
+      "HvRfl",
+      "Heavy Rifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "9",
+    "min_range": 2,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": false,
+    "cost": 90000,
+    "tonnage": 8,
+    "battle_value": 91,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Autocannon/2",
+    "aliases": [
+      "(CL) Improved Autocannon/2",
+      "Improved Autocannon/2",
+      "iAC2",
+      "Improved AC/2"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "cost": 75000,
+    "tonnage": 5,
+    "battle_value": 37,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Autocannon/5",
+    "aliases": [
+      "(CL) Improved Autocannon/5",
+      "Improved Autocannon/5",
+      "iAC5",
+      "Improved AC/5"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "cost": 125000,
+    "tonnage": 7,
+    "battle_value": 70,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Autocannon/10",
+    "aliases": [
+      "(CL) Improved Autocannon/10",
+      "Improved Autocannon/10",
+      "iAC10",
+      "Improved AC/10"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 11,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Autocannon/20",
+    "aliases": [
+      "(CL) Improved Autocannon/20",
+      "Improved Autocannon/20",
+      "iAC20",
+      "Improved AC/20"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 13,
+    "battle_value": 178,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Gauss Rifle",
+    "aliases": [
+      "(CL) Improved Gauss Rifle",
+      "Improved Gauss Rifle",
+      "iGR"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 2,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 13,
+    "battle_value": 320,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  }
+]

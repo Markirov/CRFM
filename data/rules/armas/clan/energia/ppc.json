@@ -1,0 +1,27 @@
+[
+  {
+    "item": "ER PPC",
+    "aliases": [
+      "(CL) ER PPC",
+      "CLERPPC",
+      "ER PPC"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "15",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

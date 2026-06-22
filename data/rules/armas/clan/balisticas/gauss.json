@@ -1,0 +1,30 @@
+[
+  {
+    "item": "Gauss Rifle",
+    "aliases": [
+      "(CL) Gauss Rifle",
+      "CLGaussRifle"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "gauss_explosion"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

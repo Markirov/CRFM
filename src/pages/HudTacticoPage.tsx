@@ -37,7 +37,6 @@ interface BTState {
   dead: Record<string, boolean>;   // true = abatido (da XP)
   bonus: Record<number, number>;   // playerIdx → bonus/malus XP
   rerolls: Record<number, number>;    // playerIdx → rerolls used
-  iniciativa: Record<number, boolean>; // playerIdx → initiative purchased
 }
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
@@ -53,12 +52,11 @@ type Action =
   | { type: 'TOGGLE_DEAD'; id: string }
   | { type: 'ADJ_BONUS'; pidx: number; delta: number }
   | { type: 'SET_REROLLS'; pidx: number; value: number }
-  | { type: 'TOGGLE_INIT'; pidx: number }
   | { type: 'FINISH' }
   | { type: 'BACK_TO_SETUP' }
   | { type: 'RESET' };
 
-const INIT: BTState = { step: 'setup', numPlayers: 3, enemies: [], hits: {}, dead: {}, bonus: {}, rerolls: {}, iniciativa: {} };
+const INIT: BTState = { step: 'setup', numPlayers: 3, enemies: [], hits: {}, dead: {}, bonus: {}, rerolls: {} };
 
 function mkHits(n: number) { return Array(n).fill(0); }
 
@@ -101,8 +99,6 @@ function reducer(s: BTState, a: Action): BTState {
       return { ...s, bonus: { ...s.bonus, [a.pidx]: (s.bonus[a.pidx] ?? 0) + a.delta } };
     case 'SET_REROLLS':
       return { ...s, rerolls: { ...s.rerolls, [a.pidx]: a.value } };
-    case 'TOGGLE_INIT':
-      return { ...s, iniciativa: { ...s.iniciativa, [a.pidx]: !s.iniciativa[a.pidx] } };
     case 'FINISH':
       return { ...s, step: 'results' };
     case 'BACK_TO_SETUP':
@@ -589,63 +585,52 @@ export function HudTacticoPage() {
           {/* Player panel: bonus XP + rerolls + initiative */}
           <div className="bg-surface-container p-2 sm:p-3 border-t-2 border-amber-400">
             <div className="text-[8px] font-mono text-outline uppercase tracking-[3px] mb-2 sm:mb-3">Gastos de sesión por jugador</div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+            <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3">
               {Array.from({ length: Math.min(state.numPlayers, 4) }).map((_, i) => {
                 const bonus = state.bonus[i] ?? 0;
                 const pi = playerInfo[i];
                 const usedRerolls = state.rerolls[i] ?? 0;
-                const hasInit = state.iniciativa[i] ?? false;
                 return (
-                  <div key={i} className="bg-surface-container-high border border-outline-variant/15 border-t-2 p-2.5 space-y-2"
+                  <div key={i} className="bg-surface-container-high border border-outline-variant/15 border-t-2 p-1.5 sm:p-2.5 space-y-1 sm:space-y-2 flex flex-col justify-between"
                     style={{ borderTopColor: PLAYER_COLORS[i] }}>
                     {/* Name + nivel */}
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest" style={{ color: PLAYER_COLORS[i] }}>
+                    <div className="flex items-center justify-center sm:justify-between">
+                      <span className="font-mono text-[8px] sm:text-[10px] font-bold uppercase tracking-widest truncate" style={{ color: PLAYER_COLORS[i] }}>
                         {PLAYER_NAMES[i]}
                       </span>
-                      <span className="font-mono text-[8px] text-outline">{pi.nivel}</span>
+                      <span className="font-mono text-[8px] text-outline hidden sm:inline">{pi.nivel}</span>
                     </div>
 
                     {/* Bonus XP */}
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[7px] text-outline uppercase tracking-widest">Bonus XP</span>
-                      <div className="flex items-center gap-1">
+                      <span className="font-mono text-[7px] text-outline uppercase tracking-widest hidden sm:inline">Bonus XP</span>
+                      <div className="flex items-center gap-1 w-full sm:w-auto justify-between sm:justify-start">
                         <button onClick={() => dispatch({ type: 'ADJ_BONUS', pidx: i, delta: -100 })}
-                          className="w-5 h-5 flex items-center justify-center border border-error/20 text-error font-mono text-[10px] hover:bg-error/10 transition-all">−</button>
-                        <span className={`font-mono text-[9px] font-bold w-10 text-center ${bonus > 0 ? 'text-green-400' : bonus < 0 ? 'text-error' : 'text-outline'}`}>
+                          className="w-5 h-5 sm:w-5 sm:h-5 flex items-center justify-center border border-[#b87333]/70 text-error font-mono text-[10px] hover:bg-[#b87333]/20 transition-all shrink-0">−</button>
+                        <span className={`font-mono text-[8px] sm:text-[9px] font-bold w-full sm:w-10 text-center truncate ${bonus > 0 ? 'text-green-400' : bonus < 0 ? 'text-error' : 'text-outline'}`}>
                           {bonus > 0 ? `+${bonus}` : bonus}
                         </span>
                         <button onClick={() => dispatch({ type: 'ADJ_BONUS', pidx: i, delta: 100 })}
-                          className="w-5 h-5 flex items-center justify-center border border-green-400/20 text-green-400 font-mono text-[10px] hover:bg-green-400/10 transition-all">+</button>
+                          className="w-5 h-5 sm:w-5 sm:h-5 flex items-center justify-center border border-[#b87333]/70 text-green-400 font-mono text-[10px] hover:bg-[#b87333]/20 transition-all shrink-0">+</button>
                       </div>
                     </div>
 
-                    {/* Initiative */}
-                    <button onClick={() => dispatch({ type: 'TOGGLE_INIT', pidx: i })}
-                      className={`w-full h-5 font-mono text-[7px] uppercase tracking-widest border transition-all ${
-                        hasInit
-                          ? 'bg-primary-container/10 border-primary-container/40 text-primary-container'
-                          : 'border-outline-variant/15 text-outline/50 hover:border-outline-variant/30'
-                      }`}>
-                      Iniciativa ({INIT_COST} XP)
-                    </button>
-
                     {/* Rerolls */}
                     <div className="space-y-1">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between hidden sm:flex">
                         <span className="font-mono text-[7px] text-outline uppercase tracking-widest">Rerolls</span>
                         <span className={`font-mono text-[8px] ${usedRerolls > 0 ? 'text-amber-400' : 'text-outline/30'}`}>
                           {usedRerolls}/{pi.maxRerolls}
                         </span>
                       </div>
                       <div className="flex gap-1">
-                        {Array.from({ length: pi.maxRerolls }).map((_, ri) => (
+                        {Array.from({ length: Math.min(3, pi.maxRerolls) }).map((_, ri) => (
                           <button key={ri}
                             onClick={() => dispatch({ type: 'SET_REROLLS', pidx: i, value: usedRerolls <= ri ? ri + 1 : ri })}
-                            className={`flex-1 h-4 font-mono text-[7px] border transition-all ${
+                            className={`flex-1 h-5 font-mono text-[7px] border transition-all ${
                               ri < usedRerolls
                                 ? 'bg-amber-400/10 border-amber-400/50 text-amber-400'
-                                : 'border-outline-variant/15 text-outline/30 hover:border-outline-variant/30'
+                                : 'border-[#b87333]/60 text-outline/50 hover:border-[#b87333]'
                             }`}>
                             R{ri + 1}
                           </button>
@@ -686,29 +671,29 @@ export function HudTacticoPage() {
                           ? 'border-error/50 bg-error/10 text-error hover:bg-error/20'
                           : 'border-outline-variant/30 text-outline hover:border-green-400 hover:text-green-400'
                       }`}>
-                      {isDead ? <><Skull size={10} /> <span className="hidden sm:inline">Abatido</span></> : <><Shield size={10} /> <span className="hidden sm:inline">Vivo</span></>}
+                      {isDead ? <><Skull size={10} /> <span>SI DA XP</span></> : <><Shield size={10} /> <span>NO DA XP</span></>}
                     </button>
                   </div>
 
                   {/* Hit counters */}
-                  <div className={`grid p-2 sm:p-3 gap-1.5 sm:gap-2 ${state.numPlayers <= 3 ? 'grid-cols-3' : state.numPlayers === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-5'}`}>
+                  <div className={`grid p-1.5 sm:p-3 gap-1 sm:gap-2 ${state.numPlayers <= 3 ? 'grid-cols-3' : state.numPlayers === 4 ? 'grid-cols-4' : 'grid-cols-5'}`}>
                     {Array.from({ length: state.numPlayers }).map((_, i) => (
                       <div key={i} className="flex flex-col gap-1">
                         {/* Hit button */}
                         <button onClick={() => dispatch({ type: 'HIT', eid: enemy.id, pidx: i, delta: 1 })}
-                          className="h-16 flex flex-col items-center justify-center border-2 border-outline-variant/25 hover:border-outline-variant/60 bg-surface-container-high transition-all"
+                          className="h-12 sm:h-16 flex flex-col items-center justify-center border-2 border-[#b87333]/50 hover:border-[#b87333] bg-surface-container-high transition-all"
                           style={{ borderTopColor: PLAYER_COLORS[i] }}>
-                          <span className="font-mono text-[8px] font-bold text-outline uppercase">{PLAYER_NAMES[i]}</span>
-                          <span className="font-headline text-2xl font-black text-on-surface leading-none my-0.5"
+                          <span className="font-mono text-[7px] sm:text-[8px] font-bold text-outline uppercase">{PLAYER_NAMES[i]}</span>
+                          <span className="font-headline text-xl sm:text-2xl font-black text-on-surface leading-none my-0.5"
                             style={{ color: hits[i] > 0 ? PLAYER_COLORS[i] : undefined }}>
                             {hits[i]}
                           </span>
-                          <span className="font-mono text-[7px] text-outline">IMPACTOS</span>
+                          <span className="font-mono text-[6px] sm:text-[7px] text-outline hidden sm:block">IMPACTOS</span>
                         </button>
                         {/* Undo button */}
                         <button onClick={() => dispatch({ type: 'HIT', eid: enemy.id, pidx: i, delta: -1 })}
                           disabled={hits[i] === 0}
-                          className="h-5 border border-error/20 text-error font-mono text-[9px] hover:bg-error/10 disabled:opacity-20 transition-all">
+                          className="h-5 sm:h-5 border border-[#b87333]/70 text-error font-mono text-[12px] hover:bg-[#b87333]/20 disabled:opacity-20 transition-all flex items-center justify-center">
                           −
                         </button>
                       </div>
@@ -805,7 +790,7 @@ export function HudTacticoPage() {
                 // Pass reroll & initiative data
                 const gastos = Array.from({ length: Math.min(state.numPlayers, 4) }).map((_, i) => ({
                   rerolls: state.rerolls[i] ?? 0,
-                  iniciativa: state.iniciativa[i] ?? false,
+                  iniciativa: false,
                   chequeos: state.bonus[i] ?? 0,
                 }));
                 localStorage.setItem('kk_hoja_gastos_from_hud', JSON.stringify(gastos));

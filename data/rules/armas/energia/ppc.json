@@ -1,0 +1,96 @@
+[
+  {
+    "item": "PPC",
+    "aliases": [
+      "(IS) PPC",
+      "ISPPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "ER PPC",
+    "aliases": [
+      "ISERPPC",
+      "ISERPPCCanon"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Snub PPC",
+    "aliases": [
+      "ISSnPPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 10,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "PPC",
+    "aliases": [
+      "PPC"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  }
+]

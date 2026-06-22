@@ -82,7 +82,7 @@ export function RolesPanel() {
     if (alias === null || alias === entry.alias) return;
     setSaving(entry.email); setUsersError(null);
     try {
-      await setRole(entry.email, entry.role, entry.uid, alias);
+      await setRole(entry.email, entry.role as NonNullable<UserRole>, entry.uid, alias);
       setRoles(prev => prev.map(r => r.uid === entry.uid ? { ...r, alias } : r));
     } catch (e: any) { setUsersError(e?.message ?? 'Error actualizando alias'); }
     setSaving(null);

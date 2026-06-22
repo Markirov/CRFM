@@ -1,0 +1,110 @@
+[
+  {
+    "item": "Gauss Rifle",
+    "aliases": [
+      "ISGaussRifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "gauss_explosion"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Heavy Gauss",
+    "aliases": [
+      "ISHGaussRifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "25",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 16,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "gauss_explosion"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Light Gauss",
+    "aliases": [
+      "ISLGaussRifle"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": true,
+    "ammo_per_ton": 16,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "gauss_explosion"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Gauss Rifle",
+    "aliases": [
+      "Gauss Rifle"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "15",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 22,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "gauss_explosion"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  }
+]

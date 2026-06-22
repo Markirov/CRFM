@@ -71,6 +71,15 @@ function sheetsDataToPilot(d: any): Pilot {
   p.origen= d.origen || '';
   p.notas = d.notas  || '';
 
+  // Finanzas y RPG
+  p.patrimonio = parseInt(d.patrimonio) || 0;
+  p.equipoPersonal = d.equipoPersonal || '';
+  if (d.rpgFinanzas) {
+    try {
+      p.rpgFinanzas = typeof d.rpgFinanzas === 'string' ? JSON.parse(d.rpgFinanzas) : d.rpgFinanzas;
+    } catch {}
+  }
+
   // Age — store raw fields so the UI can recalculate with current campaignYear
   if (d.decade !== undefined) {
     p.decade   = parseInt(d.decade)  || 0;
@@ -231,6 +240,11 @@ function pilotToSheets(pilot: Pilot): Record<string, any> {
     // Send under both names for backwards-compatibility with Apps Script
     quirks:          pilot.quirks ?? [],
     quirksComprados: pilot.quirks ?? [],
+    
+    // Finanzas y RPG
+    patrimonio:      pilot.patrimonio ?? 0,
+    equipoPersonal:  pilot.equipoPersonal ?? '',
+    rpgFinanzas:     pilot.rpgFinanzas ?? {},
   };
 
   // Solo enviar apodo si no está vacío — evita borrar Personajes.Apodo en sheet
@@ -318,6 +332,37 @@ export function useBarracones() {
       const next = [...prev];
       next[activeIdx] = null;
       saveSlots(next);
+      return next;
+    });
+  }, [activeIdx]);
+
+
+  const setPatrimonio = useCallback((v: number) => {
+    setSlots(prev => {
+      const next = [...prev];
+      const p = next[activeIdx];
+      if (p) { p.patrimonio = v; saveSlots(next); }
+      return next;
+    });
+  }, [activeIdx]);
+
+  const setEquipoPersonal = useCallback((v: string) => {
+    setSlots(prev => {
+      const next = [...prev];
+      const p = next[activeIdx];
+      if (p) { p.equipoPersonal = v; saveSlots(next); }
+      return next;
+    });
+  }, [activeIdx]);
+
+  const setRpgFinanzas = useCallback((updates: Partial<NonNullable<Pilot['rpgFinanzas']>>) => {
+    setSlots(prev => {
+      const next = [...prev];
+      const p = next[activeIdx];
+      if (p) {
+        p.rpgFinanzas = { ...(p.rpgFinanzas || {}), ...updates };
+        saveSlots(next);
+      }
       return next;
     });
   }, [activeIdx]);
@@ -571,8 +616,8 @@ export function useBarracones() {
     setSheetsMsg(`${pilot.callsign || pilot.nombre} cargado`);
   }, [activeIdx]);
 
-  const sheetsSave = useCallback(async () => {
-    const pilot = slots[activeIdx];
+  const sheetsSave = useCallback(async (overridePilot?: Pilot) => {
+    const pilot = overridePilot ?? slots[activeIdx];
     if (!pilot) return;
     setSheetsStatus('loading');
     setSheetsMsg('');
@@ -626,6 +671,7 @@ export function useBarracones() {
     addSkill, removeSkill, upgradeSkill, downgradeSkill,
     setHpDmg,
     setWeapon, setArmadura, setArmadura2, setNotas, setMeritos, setDefectos,
+    setPatrimonio, setEquipoPersonal, setRpgFinanzas,
     addXP,
     addQuirk,
     exportJSON, importJSON,

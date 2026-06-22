@@ -1,0 +1,814 @@
+[
+  {
+    "item": "Hatchet",
+    "aliases": [
+      "Hatchet",
+      "Htcht"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Sword",
+    "aliases": [
+      "Sword",
+      "Swrd"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Retractable Blade",
+    "aliases": [
+      "Retractable Blade",
+      "RBlde"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Chain Whip",
+    "aliases": [
+      "Chain Whip",
+      "ChnWhp"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Claws",
+    "aliases": [
+      "Claws",
+      "Claw",
+      "Clw"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Flail",
+    "aliases": [
+      "Flail"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Lance",
+    "aliases": [
+      "Lance",
+      "Lnc"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Mace",
+    "aliases": [
+      "Mace"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Small Vibroblade",
+    "aliases": [
+      "Small Vibroblade",
+      "ISSmallVibroBlade",
+      "SmlVbrBld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 3,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Vibroblade",
+    "aliases": [
+      "Medium Vibroblade",
+      "ISMediumVibroBlade",
+      "MedVbrBld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 5,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Large Vibroblade",
+    "aliases": [
+      "Large Vibroblade",
+      "ISLargeVibroBlade",
+      "LrgVbrBld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 7,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Spikes",
+    "aliases": [
+      "Spikes",
+      "Spk"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 4,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Small Shield",
+    "aliases": [
+      "Small Shield",
+      "ISSmallShield",
+      "SmlShld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 50,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Shield",
+    "aliases": [
+      "Medium Shield",
+      "ISMediumShield",
+      "MedShld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 135,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Large Shield",
+    "aliases": [
+      "Large Shield",
+      "ISLargeShield",
+      "LrgShld"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 263,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Backhoe",
+    "aliases": [
+      "Backhoe",
+      "BckHo"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Chainsaw",
+    "aliases": [
+      "Chainsaw",
+      "ChnSw"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Combine",
+    "aliases": [
+      "Combine",
+      "Cmbn"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Dual Saw",
+    "aliases": [
+      "Dual Saw",
+      "DualSaw",
+      "2Saw"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Duty Pile-Driver",
+    "aliases": [
+      "Heavy Duty Pile-Driver",
+      "HeavyDutyPile-Driver",
+      "HDPD"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Mining Drill",
+    "aliases": [
+      "Mining Drill",
+      "MiningDrill",
+      "MngDrl"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rock Cutter",
+    "aliases": [
+      "Rock Cutter",
+      "RockCutter",
+      "RckCut"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Salvage Arm",
+    "aliases": [
+      "Salvage Arm",
+      "SalvageArm",
+      "SlvgArm"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Spot Welder",
+    "aliases": [
+      "Spot Welder",
+      "SpotWelder",
+      "SptWeld"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 2,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Wrecking Ball",
+    "aliases": [
+      "Wrecking Ball",
+      "WreckingBall",
+      "WrkBll"
+    ],
+    "tech_base": "Mixed",
+    "category": "Physical",
+    "manual_type": "PA",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  }
+]

@@ -133,7 +133,7 @@ export function ArmorDiagram({ state, session, selectedSection, damageAmount, se
                 }`}>
                   {/* Header: label */}
                   <div className="mb-1">
-                    <div className={`flex flex-col font-mono font-bold text-[8px] leading-none ${isSelected ? 'text-primary' : 'text-secondary/70'}`} style={{ gap: '1px' }}>
+                    <div className={`flex flex-col font-mono font-bold text-[8px] leading-none ${isSelected ? 'text-primary' : 'text-secondary/70'}`} style={{ gap: '1px', textSizeAdjust: 'none', WebkitTextSizeAdjust: 'none' }}>
                       {zone.label.split('\n').map((line, i) => <span key={i}>{line}</span>)}
                     </div>
                   </div>

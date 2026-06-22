@@ -69,6 +69,14 @@ export interface Pilot {
 
   // Quirks de mech (cada uno asociado a un mech, coste 1000 XP)
   quirks: PilotQuirk[];
+  // Finanzas y Equipo Personal
+  patrimonio?: number;
+  equipoPersonal?: string;
+  rpgFinanzas?: {
+    feudoManual?: number;
+    deudaNivel?: 5 | 10 | 20;
+    añoInicio?: number;
+  };
 }
 
 export function emptyPilot(): Pilot {
@@ -95,5 +103,7 @@ export function emptyPilot(): Pilot {
     meritos:  [],
     defectos: [],
     quirks:   [],
+    patrimonio: 0,
+    equipoPersonal: '',
   };
 }

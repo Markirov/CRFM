@@ -36,8 +36,8 @@ interface AppState {
   setRosterLoading: (v: boolean) => void;
 
   /** Acción pendiente para portada Finanzas → Libro Mayor (abre modal al entrar). */
-  finanzasPendingModal: 'taller' | 'compras' | 'projector' | null;
-  setFinanzasPendingModal: (v: 'taller' | 'compras' | 'projector' | null) => void;
+  finanzasPendingModal: 'taller' | 'projector' | null;
+  setFinanzasPendingModal: (v: 'taller' | 'projector' | null) => void;
 
   /** Slot de simulador a auto-cargar cuando se abre TallerModal desde botón llave. */
   tallerAutoLoadSlot: number | null;

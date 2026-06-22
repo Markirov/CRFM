@@ -272,7 +272,7 @@ export function CombatePanel({ pilot, onSetHpDmg, onSetWeapon }: Props) {
     <div className="space-y-4 font-mono">
 
       {/* ── Estado Físico + Armamento ─── */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
         {/* Estado Físico — diagrama */}
         <div className="bg-surface-container border-t-2 border-primary-container/30 relative overflow-hidden flex flex-col">

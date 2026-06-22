@@ -1,0 +1,222 @@
+{
+  "source_book": "BattleTech: A Time of War Companion",
+  "equipment": [
+    {
+      "category": "Armas de Melé (Arcaicas y Antiguas)",
+      "name": "Archaic Sword",
+      "stats": {
+        "Ratings": "A/A-A-A/B",
+        "AP/BD": "1M/2",
+        "Range": "1M",
+        "Shots": "—",
+        "Cost/Reload": "45/—",
+        "Aff": "—",
+        "Mass/Reload": "3.5 KG / —"
+      },
+      "rules": "–1 TO ATTACK ROLL"
+    },
+    {
+      "category": "Armas de Melé (Arcaicas y Antiguas)",
+      "name": "Zweihänder Sword",
+      "stats": {
+        "Ratings": "A/A-A-A/B",
+        "AP/BD": "1M/3",
+        "Range": "2M",
+        "Shots": "—",
+        "Cost/Reload": "60/—",
+        "Aff": "—",
+        "Mass/Reload": "5.1 KG / —"
+      },
+      "rules": "–2 TO ATTACK ROLL; TWO-HANDED SWORD"
+    },
+    {
+      "category": "Arquería (Arcaica y Antigua)",
+      "name": "Primitive Bow",
+      "stats": {
+        "Ratings": "A/A-A-A/A",
+        "AP/BD": "1B/1",
+        "Range": "5/16/30/70",
+        "Shots": "1",
+        "Cost/Reload": "5/1",
+        "Aff": "—",
+        "Mass/Reload": "1 KG / 100 G"
+      },
+      "rules": "SIMPLE ACTION TO RELOAD; –1 TO ATTACK ROLL"
+    },
+    {
+      "category": "Armas Pequeñas (Antiguas)",
+      "name": "Vintage Pistol (Automatic)",
+      "stats": {
+        "Ratings": "C/C-D-D/C",
+        "AP/BD": "2B/3",
+        "Range": "8/18/40/90",
+        "Shots": "9",
+        "Cost/Reload": "500/12",
+        "Aff": "—",
+        "Mass/Reload": "500 G / 60 G"
+      },
+      "rules": "JAM ON FUMBLE"
+    },
+    {
+      "category": "Armas Pequeñas (Antiguas)",
+      "name": "Vintage Assault Rifle",
+      "stats": {
+        "Ratings": "C/C-D-D/D",
+        "AP/BD": "2B/3B",
+        "Range": "25/70/160/410",
+        "Shots": "30",
+        "Cost/Reload": "2,000/40",
+        "Aff": "—",
+        "Mass/Reload": "4.5 KG / 480 G"
+      },
+      "rules": "BURST: 10; RECOIL: –1; JAM ON FUMBLE"
+    },
+    {
+      "category": "Armas de Apoyo (Antiguas)",
+      "name": "Vintage Machine Gun",
+      "stats": {
+        "Ratings": "C/D-E-E/E",
+        "AP/BD": "3B/4B",
+        "Range": "35/90/215/485",
+        "Shots": "90",
+        "Cost/Reload": "6,000/150",
+        "Aff": "—",
+        "Mass/Reload": "11 KG / 4 KG"
+      },
+      "rules": "BURST: 15; RECOIL: –2; ENCUMBERING; JAM ON FUMBLE"
+    },
+    {
+      "category": "Armaduras Personales (Antiguas)",
+      "name": "Vintage Bulletproof Vest",
+      "stats": {
+        "Ratings": "C/B-C-D/A",
+        "BAR (M/B/E/X)": "1/4/0/2",
+        "Cost/Patch": "500/100",
+        "Aff": "—",
+        "Mass": "3.1 KG",
+        "Coverage": "TORSO"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armaduras Personales (Antiguas)",
+      "name": "SLDF Infantry Helmet",
+      "stats": {
+        "Ratings": "E/C-E-X/D",
+        "BAR (M/B/E/X)": "4/5/5/3",
+        "Cost/Patch": "1,500",
+        "Aff": "SLDF",
+        "Mass": "2.1 KG",
+        "Coverage": "HEAD"
+      },
+      "rules": "INCLUDES MILITARY COMM., IR SCANNER, NIGHT VISION, RANGEFINDER, ELECTRONIC COMPASS; AV 7 VS FLASH; +1 TO PERCEPTION AND SMALL ARMS; POWER USE: 4 PPH"
+    },
+    {
+      "category": "Armaduras Personales (Antiguas)",
+      "name": "SLDF Infantry Fatigues",
+      "stats": {
+        "Ratings": "D/B-D-F/C",
+        "BAR (M/B/E/X)": "3/4/4/3",
+        "Cost/Patch": "900/20",
+        "Aff": "SLDF",
+        "Mass": "7.8 KG",
+        "Coverage": "TORSO, ARMS, LEGS"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas de Melé (Avanzadas)",
+      "name": "Shock Staff",
+      "stats": {
+        "Ratings": "E/X-X-F/E",
+        "AP/BD": "2E/6",
+        "Range": "2M",
+        "Shots": "5 PPS",
+        "Cost/Reload": "1,500/*",
+        "Aff": "CC",
+        "Mass/Reload": "3 KG / *"
+      },
+      "rules": "AP/BD = 1M/2 WHEN UNPOWERED; SEE SPECIAL GAME RULES"
+    },
+    {
+      "category": "Armas Pequeñas (Avanzadas)",
+      "name": "Variable-Pulse Laser Rifle",
+      "stats": {
+        "Ratings": "E/X-X-E/E",
+        "AP/BD": "3E/4B",
+        "Range": "35/80/190/420",
+        "Shots": "5 PPS",
+        "Cost/Reload": "4,500/*",
+        "Aff": "FS",
+        "Mass/Reload": "6 KG / *"
+      },
+      "rules": "BURST: 10; RECOIL: 0; RANGE MODIFIERS: +0/+1/+2/+4; –1 BD PER RANGE BRACKET BEYOND SHORT"
+    },
+    {
+      "category": "Armas de Apoyo (Avanzadas)",
+      "name": "Gungnir Heavy Support Gauss Rifle",
+      "stats": {
+        "Ratings": "E/X-X-F/E",
+        "AP/BD": "7B/10",
+        "Range": "75/275/650/1400",
+        "Shots": "10, 10 PPS",
+        "Cost/Reload": "15,000/50, *",
+        "Aff": "LA",
+        "Mass/Reload": "60 KG / 20 KG"
+      },
+      "rules": "CREW: 3; RECHARGE: 1 TURN"
+    },
+    {
+      "category": "Armas de Apoyo (Avanzadas)",
+      "name": "Magpulse Harpoon Gun",
+      "stats": {
+        "Ratings": "E/X-X-F/E",
+        "AP/BD": "8B/8",
+        "Range": "80/300/975/1800",
+        "Shots": "1, 30 PPS",
+        "Cost/Reload": "12,000/1,000, *",
+        "Aff": "FW",
+        "Mass/Reload": "95 KG / 22 KG"
+      },
+      "rules": "CREW: 2; –1 TO ATTACK ROLL; SEE SPECIAL GAME RULES"
+    },
+    {
+      "category": "Armas de Apoyo (Avanzadas)",
+      "name": "Snub-Nose Support PPC",
+      "stats": {
+        "Ratings": "E/X-X-F/E",
+        "AP/BD": "5E/14S",
+        "Range": "140/450/525/675",
+        "Shots": "10 PPS",
+        "Cost/Reload": "60,000/*",
+        "Aff": "DC",
+        "Mass/Reload": "1,600 KG / *"
+      },
+      "rules": "CREW: 3; RECHARGE: 2 TURNS; MOUNTED ON WHEELED CARRIAGE; –2 BD PER RANGE BRACKET BEYOND SHORT"
+    },
+    {
+      "category": "Municiones Especiales",
+      "name": "Myomer-Catalytic Ammo",
+      "stats": {
+        "Ratings": "E/X-X-F/E",
+        "AP/BD": "+1S/–2",
+        "Cost/Reload": "X10",
+        "Aff": "CC/MC",
+        "Mass": "—"
+      },
+      "rules": "AVAILABLE TO SLUG-THROWERS ONLY; CHEMICAL CATALYST DEALS +3C DAMAGE VS. TARGETS USING MYOMER IMPLANTS (+4C VS TRIPLE-STRENGTH IMPLANTS) IF HIT DELIVERS AT LEAST 1 BD; NO ADDITIONAL EFFECT VS. OTHER TARGETS"
+    },
+    {
+      "category": "Artillería Especial",
+      "name": "Flash-Bang, Class A",
+      "stats": {
+        "Ratings": "D/B-C-C/D",
+        "AP/BD": "2S/5AD",
+        "Cost/Reload": "12",
+        "Aff": "—",
+        "Mass": "200 G"
+      },
+      "rules": "–2 BD VS ANTI-FLASH BAR HIGHER THAN AP"
+    }
+  ]
+}

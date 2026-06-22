@@ -1,0 +1,31 @@
+[
+  {
+    "item": "Flamer",
+    "aliases": [
+      "(IS) Flamer",
+      "ISFlamer",
+      "Flamer"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "flamer_dual"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

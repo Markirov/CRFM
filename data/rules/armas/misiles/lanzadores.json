@@ -1,0 +1,4925 @@
+[
+  {
+    "item": "Advanced Tactical Missile-3",
+    "aliases": [
+      "(CL) ATM-3",
+      "CLATM3",
+      "ATM3",
+      "ATM-3"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 50000,
+    "tonnage": 1.5,
+    "battle_value": 53,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Advanced Tactical Missile-6",
+    "aliases": [
+      "(CL) ATM-6",
+      "CLATM6",
+      "ATM6",
+      "ATM-6"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 3.5,
+    "battle_value": 105,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Advanced Tactical Missile-9",
+    "aliases": [
+      "(CL) ATM-9",
+      "CLATM9",
+      "ATM9",
+      "ATM-9"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 7,
+    "is_cluster": true,
+    "cost": 225000,
+    "tonnage": 5,
+    "battle_value": 147,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Advanced Tactical Missile-12",
+    "aliases": [
+      "(CL) ATM-12",
+      "CLATM12",
+      "ATM12",
+      "ATM-12"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 8,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 350000,
+    "tonnage": 7,
+    "battle_value": 212,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Advanced Tactical Missile-3",
+    "aliases": [
+      "(CL) iATM-3",
+      "CLiATM3",
+      "iATM3",
+      "iATM-3"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 1.5,
+    "battle_value": 83,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Wars of Reaving",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Advanced Tactical Missile-6",
+    "aliases": [
+      "(CL) iATM-6",
+      "CLiATM6",
+      "iATM6",
+      "iATM-6"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 3.5,
+    "battle_value": 165,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Wars of Reaving",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Advanced Tactical Missile-9",
+    "aliases": [
+      "(CL) iATM-9",
+      "CLiATM9",
+      "iATM9",
+      "iATM-9"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 7,
+    "is_cluster": true,
+    "cost": 450000,
+    "tonnage": 5,
+    "battle_value": 231,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Wars of Reaving",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Advanced Tactical Missile-12",
+    "aliases": [
+      "(CL) iATM-12",
+      "CLiATM12",
+      "iATM12",
+      "iATM-12"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 8,
+    "damage": "2",
+    "min_range": 4,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "cost": 700000,
+    "tonnage": 7,
+    "battle_value": 333,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Wars of Reaving",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-5",
+    "aliases": [
+      "(IS) Enhanced LRM-5",
+      "ISEnhancedLRM5",
+      "EnLRM5",
+      "Enhanced LRM-5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 37500,
+    "tonnage": 3,
+    "battle_value": 52,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-10",
+    "aliases": [
+      "(IS) Enhanced LRM-10",
+      "ISEnhancedLRM10",
+      "EnLRM10",
+      "Enhanced LRM-10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 6,
+    "battle_value": 104,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-15",
+    "aliases": [
+      "(IS) Enhanced LRM-15",
+      "ISEnhancedLRM15",
+      "EnLRM15",
+      "Enhanced LRM-15"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 157000,
+    "tonnage": 9,
+    "battle_value": 157,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-20",
+    "aliases": [
+      "(IS) Enhanced LRM-20",
+      "ISEnhancedLRM20",
+      "EnLRM20",
+      "Enhanced LRM-20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 312500,
+    "tonnage": 12,
+    "battle_value": 210,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-5",
+    "aliases": [
+      "(IS) Extended LRM-5",
+      "ISExtendedLRM5",
+      "ExLRM5",
+      "Extended LRM-5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": true,
+    "ammo_per_ton": 18,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 6,
+    "battle_value": 67,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-10",
+    "aliases": [
+      "(IS) Extended LRM-10",
+      "ISExtendedLRM10",
+      "ExLRM10",
+      "Extended LRM-10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": true,
+    "ammo_per_ton": 9,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 8,
+    "battle_value": 133,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-15",
+    "aliases": [
+      "(IS) Extended LRM-15",
+      "ISExtendedLRM15",
+      "ExLRM15",
+      "Extended LRM-15"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 8,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 350000,
+    "tonnage": 12,
+    "battle_value": 200,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-20",
+    "aliases": [
+      "(IS) Extended LRM-20",
+      "ISExtendedLRM20",
+      "ExLRM20",
+      "Extended LRM-20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": true,
+    "ammo_per_ton": 4,
+    "is_cluster": true,
+    "cost": 500000,
+    "tonnage": 18,
+    "battle_value": 268,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5",
+    "aliases": [
+      "(IS) LRM-5",
+      "ISLRM5",
+      "LRM5",
+      "LRM-5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 2,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5",
+    "aliases": [
+      "(CL) LRM-5",
+      "CLLRM5",
+      "LRM5",
+      "LRM-5"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 1,
+    "battle_value": 55,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10",
+    "aliases": [
+      "(IS) LRM-10",
+      "ISLRM10",
+      "LRM10",
+      "LRM-10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 5,
+    "battle_value": 90,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10",
+    "aliases": [
+      "(CL) LRM-10",
+      "CLLRM10",
+      "LRM10",
+      "LRM-10"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 2.5,
+    "battle_value": 109,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15",
+    "aliases": [
+      "(IS) LRM-15",
+      "ISLRM15",
+      "LRM15",
+      "LRM-15"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 7,
+    "battle_value": 136,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15",
+    "aliases": [
+      "(CL) LRM-15",
+      "CLLRM15",
+      "LRM15",
+      "LRM-15"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 3.5,
+    "battle_value": 164,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20",
+    "aliases": [
+      "(IS) LRM-20",
+      "ISLRM20",
+      "LRM20",
+      "LRM-20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 10,
+    "battle_value": 181,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20",
+    "aliases": [
+      "(CL) LRM-20",
+      "CLLRM20",
+      "LRM20",
+      "LRM-20"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 5,
+    "battle_value": 220,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-3",
+    "aliases": [
+      "(IS) MML-3",
+      "ISMML3",
+      "MML3",
+      "MML-3"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 40,
+    "is_cluster": true,
+    "cost": 45000,
+    "tonnage": 1.5,
+    "battle_value": 29,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-5",
+    "aliases": [
+      "(IS) MML-5",
+      "ISMML5",
+      "MML5",
+      "MML-5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 75000,
+    "tonnage": 3,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-7",
+    "aliases": [
+      "(IS) MML-7",
+      "ISMML7",
+      "MML7",
+      "MML-7"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 17,
+    "is_cluster": true,
+    "cost": 105000,
+    "tonnage": 4.5,
+    "battle_value": 67,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-9",
+    "aliases": [
+      "(IS) MML-9",
+      "ISMML9",
+      "MML9",
+      "MML-9"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 13,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 6,
+    "battle_value": 86,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-10",
+    "aliases": [
+      "(IS) MRM-10",
+      "ISMRM10",
+      "MRM10",
+      "MRM-10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 50000,
+    "tonnage": 3,
+    "battle_value": 56,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-20",
+    "aliases": [
+      "(IS) MRM-20",
+      "ISMRM20",
+      "MRM20",
+      "MRM-20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 7,
+    "battle_value": 112,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-30",
+    "aliases": [
+      "(IS) MRM-30",
+      "ISMRM30",
+      "MRM30",
+      "MRM-30"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 10,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 225000,
+    "tonnage": 10,
+    "battle_value": 168,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-40",
+    "aliases": [
+      "(IS) MRM-40",
+      "ISMRM40",
+      "MRM40",
+      "MRM-40"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 350000,
+    "tonnage": 12,
+    "battle_value": 224,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2",
+    "aliases": [
+      "(IS) SRM-2",
+      "ISSRM2",
+      "SRM2",
+      "SRM-2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": true,
+    "cost": 10000,
+    "tonnage": 1,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2",
+    "aliases": [
+      "(CL) SRM-2",
+      "CLSRM2",
+      "SRM2",
+      "SRM-2"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": true,
+    "cost": 10000,
+    "tonnage": 0.5,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4",
+    "aliases": [
+      "(IS) SRM-4",
+      "ISSRM4",
+      "SRM4",
+      "SRM-4"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 2,
+    "battle_value": 39,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4",
+    "aliases": [
+      "(CL) SRM-4",
+      "CLSRM4",
+      "SRM4",
+      "SRM-4"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 1,
+    "battle_value": 39,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6",
+    "aliases": [
+      "(IS) SRM-6",
+      "ISSRM6",
+      "SRM6",
+      "SRM-6"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 80000,
+    "tonnage": 3,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6",
+    "aliases": [
+      "(CL) SRM-6",
+      "CLSRM6",
+      "SRM6",
+      "SRM-6"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 80000,
+    "tonnage": 1.5,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-5",
+    "aliases": [
+      "(CL) Streak LRM-5",
+      "CLStreakLRM5",
+      "SLRM5",
+      "Streak LRM-5"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 75000,
+    "tonnage": 2,
+    "battle_value": 86,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-10",
+    "aliases": [
+      "(CL) Streak LRM-10",
+      "CLStreakLRM10",
+      "SLRM10",
+      "Streak LRM-10"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 225000,
+    "tonnage": 5,
+    "battle_value": 173,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-15",
+    "aliases": [
+      "(CL) Streak LRM-15",
+      "CLStreakLRM15",
+      "SLRM15",
+      "Streak LRM-15"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 400000,
+    "tonnage": 7,
+    "battle_value": 259,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-20",
+    "aliases": [
+      "(CL) Streak LRM-20",
+      "CLStreakLRM20",
+      "SLRM20",
+      "Streak LRM-20"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 600000,
+    "tonnage": 10,
+    "battle_value": 345,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2",
+    "aliases": [
+      "(IS) Streak SRM-2",
+      "ISStreakSRM2",
+      "SSRM2",
+      "Streak SRM-2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 1.5,
+    "battle_value": 30,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2",
+    "aliases": [
+      "(CL) Streak SRM-2",
+      "CLStreakSRM2",
+      "SSRM2",
+      "Streak SRM-2"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 1,
+    "battle_value": 40,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4",
+    "aliases": [
+      "(IS) Streak SRM-4",
+      "ISStreakSRM4",
+      "SSRM4",
+      "Streak SRM-4"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 90000,
+    "tonnage": 3,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype Streak Short Range Missile-4",
+    "aliases": [
+      "Streak SRM-4 CP",
+      "ISStreakSRM4",
+      "SSRM4-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 90000,
+    "tonnage": 3,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim Streak Short Range Missile-4",
+    "aliases": [
+      "Streak SRM-4 CI",
+      "ISStreakSRM4",
+      "SSRM4-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 90000,
+    "tonnage": 3,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4",
+    "aliases": [
+      "(CL) Streak SRM-4",
+      "CLStreakSRM4",
+      "SSRM4",
+      "Streak SRM-4"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 90000,
+    "tonnage": 2,
+    "battle_value": 79,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6",
+    "aliases": [
+      "(IS) Streak SRM-6",
+      "ISStreakSRM6",
+      "SSRM6",
+      "Streak SRM-6"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 4.5,
+    "battle_value": 89,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Prototype Streak Short Range Missile-6",
+    "aliases": [
+      "Streak SRM-6 CP",
+      "ISStreakSRM6",
+      "SSRM6-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 4.5,
+    "battle_value": 89,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Clan Interim Streak Short Range Missile-6",
+    "aliases": [
+      "Streak SRM-6 CI",
+      "ISStreakSRM6",
+      "SSRM6-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 4.5,
+    "battle_value": 89,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6",
+    "aliases": [
+      "(CL) Streak SRM-6",
+      "CLStreakSRM6",
+      "SSRM6",
+      "Streak SRM-6"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 120000,
+    "tonnage": 3,
+    "battle_value": 118,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rocket Launcher 10",
+    "aliases": [
+      "(IS) Rocket Launcher 10",
+      "ISRocketLauncher10",
+      "RL10",
+      "Rocket Launcher 10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 11,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 0.5,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rocket Launcher 15",
+    "aliases": [
+      "(IS) Rocket Launcher 15",
+      "ISRocketLauncher15",
+      "RL15",
+      "Rocket Launcher 15"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 9,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 1,
+    "battle_value": 23,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rocket Launcher 20",
+    "aliases": [
+      "(IS) Rocket Launcher 20",
+      "ISRocketLauncher20",
+      "RL20",
+      "Rocket Launcher 20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 45000,
+    "tonnage": 1.5,
+    "battle_value": 24,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Pentagon Power's Rocket Launcher 10",
+    "aliases": [
+      "Rocket Launcher 10 PP",
+      "ISRocketLauncher10",
+      "RL10-PP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 11,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 0.5,
+    "battle_value": 15,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Pentagon Power's Rocket Launcher 15",
+    "aliases": [
+      "Rocket Launcher 15 PP",
+      "ISRocketLauncher15",
+      "RL15-PP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 9,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 1,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Pentagon Power's Rocket Launcher 20",
+    "aliases": [
+      "Rocket Launcher 20 PP",
+      "ISRocketLauncher20",
+      "RL20-PP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 45000,
+    "tonnage": 1.5,
+    "battle_value": 19,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Long Range Missile-5",
+    "aliases": [
+      "(CL) Improved LRM-5",
+      "Improved LRM 5",
+      "iLRM5",
+      "Improved LRM-5"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 1,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Long Range Missile-10",
+    "aliases": [
+      "(CL) Improved LRM-10",
+      "Improved LRM 10",
+      "iLRM10",
+      "Improved LRM-10"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 2.5,
+    "battle_value": 90,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Long Range Missile-15",
+    "aliases": [
+      "(CL) Improved LRM-15",
+      "Improved LRM 15",
+      "iLRM15",
+      "Improved LRM-15"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 3.5,
+    "battle_value": 136,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Long Range Missile-20",
+    "aliases": [
+      "(CL) Improved LRM-20",
+      "Improved LRM 20",
+      "iLRM20",
+      "Improved LRM-20"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 5,
+    "battle_value": 181,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Short Range Missile-2",
+    "aliases": [
+      "(CL) Improved SRM-2",
+      "Improved SRM 2",
+      "iSRM2",
+      "Improved SRM-2"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 50,
+    "is_cluster": true,
+    "cost": 10000,
+    "tonnage": 1,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Short Range Missile-4",
+    "aliases": [
+      "(CL) Improved SRM-4",
+      "Improved SRM 4",
+      "iSRM4",
+      "Improved SRM-4"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 25,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 2,
+    "battle_value": 39,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Short Range Missile-6",
+    "aliases": [
+      "(CL) Improved SRM-6",
+      "Improved SRM 6",
+      "iSRM6",
+      "Improved SRM-6"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 15,
+    "is_cluster": true,
+    "cost": 80000,
+    "tonnage": 3,
+    "battle_value": 59,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-5 (One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-5 (OS)",
+      "ISNLRM5 (OS)",
+      "EnLRM5OS",
+      "NLRM-5 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 18750,
+    "tonnage": 3.5,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-10 (OS)",
+      "ISNLRM10 (OS)",
+      "EnLRM10OS",
+      "NLRM-10 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 62500,
+    "tonnage": 6.5,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-15 (One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-15 (OS)",
+      "ISNLRM15 (OS)",
+      "EnLRM15OS",
+      "NLRM-15 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 78500,
+    "tonnage": 9.5,
+    "battle_value": 31,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-20 (OS)",
+      "ISNLRM20 (OS)",
+      "EnLRM20OS",
+      "NLRM-20 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 156250,
+    "tonnage": 12.5,
+    "battle_value": 42,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-5 (One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-5 (OS)",
+      "ISELRM5 (OS)",
+      "ExLRM5OS",
+      "ELRM-5  (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 6.5,
+    "battle_value": 13,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-10 (OS)",
+      "ISELRM10 (OS)",
+      "ExLRM10OS",
+      "ELRM-10 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 8.5,
+    "battle_value": 27,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-15 (One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-15 (OS)",
+      "ISELRM15 (OS)",
+      "ExLRM15OS",
+      "ELRM-15 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 8,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 12.5,
+    "battle_value": 40,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-20 (OS)",
+      "ISELRM20 (OS)",
+      "ExLRM20OS",
+      "ELRM-20 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 18.5,
+    "battle_value": 54,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5 (One-Shot)",
+    "aliases": [
+      "(IS) LRM-5 (OS)",
+      "ISLRM5 (OS)",
+      "LRM5OS",
+      "LRM-5 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 2.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5 (One-Shot)",
+    "aliases": [
+      "(CL) LRM-5 (OS)",
+      "CLLRM5 (OS)",
+      "LRM5OS",
+      "LRM-5 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 15000,
+    "tonnage": 1.5,
+    "battle_value": 11,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(IS) LRM-10 (OS)",
+      "ISLRM10 (OS)",
+      "LRM10OS",
+      "LRM-10 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 50000,
+    "tonnage": 5.5,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(CL) LRM-10 (OS)",
+      "CLLRM10 (OS)",
+      "LRM10OS",
+      "LRM-10 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 50000,
+    "tonnage": 3,
+    "battle_value": 22,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15 (One-Shot)",
+    "aliases": [
+      "(IS) LRM-15 (OS)",
+      "ISLRM15 (OS)",
+      "LRM15OS",
+      "LRM-15 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 87500,
+    "tonnage": 7.5,
+    "battle_value": 27,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15 (One-Shot)",
+    "aliases": [
+      "(CL) LRM-15 (OS)",
+      "CLLRM15 (OS)",
+      "LRM15OS",
+      "LRM-15 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 87500,
+    "tonnage": 4,
+    "battle_value": 33,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(IS) LRM-20 (OS)",
+      "ISLRM20 (OS)",
+      "LRM20OS",
+      "LRM-20 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 10.5,
+    "battle_value": 36,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(CL) LRM-20 (OS)",
+      "CLLRM20 (OS)",
+      "LRM20OS",
+      "LRM-20 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 125000,
+    "tonnage": 5.5,
+    "battle_value": 44,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-3 (One-Shot)",
+    "aliases": [
+      "(IS) MML-3 (OS)",
+      "ISMML3 (OS)",
+      "MML3OS",
+      "MML-3 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 22500,
+    "tonnage": 2,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-5 (One-Shot)",
+    "aliases": [
+      "(IS) MML-5 (OS)",
+      "ISMML5 (OS)",
+      "MML5OS",
+      "MML-5 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 37500,
+    "tonnage": 3.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-7 (One-Shot)",
+    "aliases": [
+      "(IS) MML-7 (OS)",
+      "ISMML7 (OS)",
+      "MML7OS",
+      "MML-7 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 52500,
+    "tonnage": 5,
+    "battle_value": 13,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-9 (One-Shot)",
+    "aliases": [
+      "(IS) MML-9 (OS)",
+      "ISMML9 (OS)",
+      "MML9OS",
+      "MML-9 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 62500,
+    "tonnage": 6.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(IS) MRM-10 (OS)",
+      "ISMRM10 (OS)",
+      "MRM10OS",
+      "MRM-10 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 25000,
+    "tonnage": 3.5,
+    "battle_value": 11,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(IS) MRM-20 (OS)",
+      "ISMRM20 (OS)",
+      "MRM20OS",
+      "MRM-20 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 62500,
+    "tonnage": 7.5,
+    "battle_value": 22,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-30 (One-Shot)",
+    "aliases": [
+      "(IS) MRM-30 (OS)",
+      "ISMRM30 (OS)",
+      "MRM30OS",
+      "MRM-30 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 10,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 112500,
+    "tonnage": 10.5,
+    "battle_value": 34,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-40 (One-Shot)",
+    "aliases": [
+      "(IS) MRM-40 (OS)",
+      "ISMRM40 (OS)",
+      "MRM40OS",
+      "MRM-40 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 175000,
+    "tonnage": 12.5,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2 (One-Shot)",
+    "aliases": [
+      "(IS) SRM-2 (OS)",
+      "ISSRM2 (OS)",
+      "SRM2OS",
+      "SRM-2 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 5000,
+    "tonnage": 1.5,
+    "battle_value": 4,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2 (One-Shot)",
+    "aliases": [
+      "(CL) SRM-2 (OS)",
+      "CLSRM2 (OS)",
+      "SRM2OS",
+      "SRM-2 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 5000,
+    "tonnage": 1,
+    "battle_value": 4,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4 (One-Shot)",
+    "aliases": [
+      "(IS) SRM-4 (OS)",
+      "ISSRM4 (OS)",
+      "SRM4OS",
+      "SRM-4 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 2.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4 (One-Shot)",
+    "aliases": [
+      "(CL) SRM-4 (OS)",
+      "CLSRM4 (OS)",
+      "SRM4OS",
+      "SRM-4 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 1.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6 (One-Shot)",
+    "aliases": [
+      "(IS) SRM-6 (OS)",
+      "ISSRM6 (OS)",
+      "SRM6OS",
+      "SRM-6 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 40000,
+    "tonnage": 3.5,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6 (One-Shot)",
+    "aliases": [
+      "(CL) SRM-6 (OS)",
+      "CLSRM6 (OS)",
+      "SRM6OS",
+      "SRM-6 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 40000,
+    "tonnage": 2,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-5 (One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-5 (OS)",
+      "CLStreakLRM5 (OS)",
+      "SLRM5OS",
+      "Streak LRM-5 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 37500,
+    "tonnage": 2.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-10 (One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-10 (OS)",
+      "CLStreakLRM10 (OS)",
+      "SLRM10OS",
+      "Streak LRM-10 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 112500,
+    "tonnage": 5.5,
+    "battle_value": 35,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-15 (One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-15 (OS)",
+      "CLStreakLRM15 (OS)",
+      "SLRM15OS",
+      "Streak LRM-15 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 7.5,
+    "battle_value": 52,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-20 (One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-20 (OS)",
+      "CLStreakLRM20 (OS)",
+      "SLRM20OS",
+      "Streak LRM-20 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 300000,
+    "tonnage": 10.5,
+    "battle_value": 69,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2 (One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-2 (OS)",
+      "ISStreakSRM2 (OS)",
+      "SSRM2OS",
+      "Streak SRM-2 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 7500,
+    "tonnage": 2,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2 (One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-2 (OS)",
+      "CLStreakSRM2 (OS)",
+      "SSRM2OS",
+      "Streak SRM-2 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 7500,
+    "tonnage": 1.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4 (One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-4 (OS)",
+      "ISStreakSRM4 (OS)",
+      "SSRM4OS",
+      "Streak SRM-4 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 45000,
+    "tonnage": 3.5,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4 (One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-4 (OS)",
+      "CLStreakSRM4 (OS)",
+      "SSRM4OS",
+      "Streak SRM-4 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 45000,
+    "tonnage": 2.5,
+    "battle_value": 16,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6 (One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-6 (OS)",
+      "ISStreakSRM6 (OS)",
+      "SSRM6OS",
+      "Streak SRM-6 (OS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 5,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6 (One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-6 (OS)",
+      "CLStreakSRM6 (OS)",
+      "SSRM6OS",
+      "Streak SRM-6 (OS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 3.5,
+    "battle_value": 24,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-5 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-5 (iOS)",
+      "ISNLRM5 (iOS)",
+      "EnLRM5iOS",
+      "NLRM-5 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 30000,
+    "tonnage": 2.5,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-10 (iOS)",
+      "ISNLRM10 (iOS)",
+      "EnLRM10iOS",
+      "NLRM-10 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 5.5,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-15 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-15 (iOS)",
+      "ISNLRM15 (iOS)",
+      "EnLRM15iOS",
+      "NLRM-15 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 125600,
+    "tonnage": 8.5,
+    "battle_value": 31,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Long Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Enhanced LRM-20 (iOS)",
+      "ISNLRM20 (iOS)",
+      "EnLRM20iOS",
+      "NLRM-20 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 3,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 250000,
+    "tonnage": 11.5,
+    "battle_value": 42,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-5 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-5 (iOS)",
+      "ISELRM5 (iOS)",
+      "ExLRM5iOS",
+      "ELRM-5  (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 48000,
+    "tonnage": 5.5,
+    "battle_value": 13,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-10 (iOS)",
+      "ISELRM10 (iOS)",
+      "ExLRM10iOS",
+      "ELRM-10 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 160000,
+    "tonnage": 7.5,
+    "battle_value": 27,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-15 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-15 (iOS)",
+      "ISELRM15 (iOS)",
+      "ExLRM15iOS",
+      "ELRM-15 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 8,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 280000,
+    "tonnage": 11.5,
+    "battle_value": 40,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Long Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Extended LRM-20 (iOS)",
+      "ISELRM20 (iOS)",
+      "ExLRM20iOS",
+      "ELRM-20 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 10,
+    "short_range": 12,
+    "medium_range": 22,
+    "long_range": 38,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 400000,
+    "tonnage": 17.5,
+    "battle_value": 54,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5 (Improved One-Shot)",
+    "aliases": [
+      "(IS) LRM-5 (iOS)",
+      "ISLRM5 (iOS)",
+      "LRM5iOS",
+      "LRM-5 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 24000,
+    "tonnage": 1.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-5 (Improved One-Shot)",
+    "aliases": [
+      "(CL) LRM-5 (iOS)",
+      "CLLRM5 (iOS)",
+      "LRM5iOS",
+      "LRM-5 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 24000,
+    "tonnage": 0.5,
+    "battle_value": 11,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(IS) LRM-10 (iOS)",
+      "ISLRM10 (iOS)",
+      "LRM10iOS",
+      "LRM-10 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 80000,
+    "tonnage": 4.5,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(CL) LRM-10 (iOS)",
+      "CLLRM10 (iOS)",
+      "LRM10iOS",
+      "LRM-10 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 80000,
+    "tonnage": 2,
+    "battle_value": 22,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15 (Improved One-Shot)",
+    "aliases": [
+      "(IS) LRM-15 (iOS)",
+      "ISLRM15 (iOS)",
+      "LRM15iOS",
+      "LRM-15 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 140000,
+    "tonnage": 6.5,
+    "battle_value": 27,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-15 (Improved One-Shot)",
+    "aliases": [
+      "(CL) LRM-15 (iOS)",
+      "CLLRM15 (iOS)",
+      "LRM15iOS",
+      "LRM-15 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 140000,
+    "tonnage": 3,
+    "battle_value": 33,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(IS) LRM-20 (iOS)",
+      "ISLRM20 (iOS)",
+      "LRM20iOS",
+      "LRM-20 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 9.5,
+    "battle_value": 36,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Long Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(CL) LRM-20 (iOS)",
+      "CLLRM20 (iOS)",
+      "LRM20iOS",
+      "LRM-20 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 200000,
+    "tonnage": 4.5,
+    "battle_value": 44,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-3 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MML-3 (iOS)",
+      "ISMML3 (iOS)",
+      "MML3iOS",
+      "MML-3 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 36000,
+    "tonnage": 1,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-5 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MML-5 (iOS)",
+      "ISMML5 (iOS)",
+      "MML5iOS",
+      "MML-5 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 2.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-7 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MML-7 (iOS)",
+      "ISMML7 (iOS)",
+      "MML7iOS",
+      "MML-7 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 84000,
+    "tonnage": 4,
+    "battle_value": 13,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Multi-Missile Launcher-9 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MML-9 (iOS)",
+      "ISMML9 (iOS)",
+      "MML9iOS",
+      "MML-9 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 6,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 5.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MRM-10 (iOS)",
+      "ISMRM10 (iOS)",
+      "MRM10iOS",
+      "MRM-10 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 40000,
+    "tonnage": 2.5,
+    "battle_value": 11,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MRM-20 (iOS)",
+      "ISMRM20 (iOS)",
+      "MRM20iOS",
+      "MRM-20 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 100000,
+    "tonnage": 6.5,
+    "battle_value": 22,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-30 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MRM-30 (iOS)",
+      "ISMRM30 (iOS)",
+      "MRM30iOS",
+      "MRM-30 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 10,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 180000,
+    "tonnage": 9.5,
+    "battle_value": 34,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Range Missile-40 (Improved One-Shot)",
+    "aliases": [
+      "(IS) MRM-40 (iOS)",
+      "ISMRM40 (iOS)",
+      "MRM40iOS",
+      "MRM-40 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 12,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 280000,
+    "tonnage": 11.5,
+    "battle_value": 49,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2 (Improved One-Shot)",
+    "aliases": [
+      "(IS) SRM-2 (iOS)",
+      "ISSRM2 (iOS)",
+      "SRM2iOS",
+      "SRM-2 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 8000,
+    "tonnage": 0.5,
+    "battle_value": 4,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-2 (Improved One-Shot)",
+    "aliases": [
+      "(CL) SRM-2 (iOS)",
+      "CLSRM2 (iOS)",
+      "SRM2iOS",
+      "SRM-2 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 8000,
+    "tonnage": 0.5,
+    "battle_value": 4,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4 (Improved One-Shot)",
+    "aliases": [
+      "(IS) SRM-4 (iOS)",
+      "ISSRM4 (iOS)",
+      "SRM4iOS",
+      "SRM-4 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 48000,
+    "tonnage": 1.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-4 (Improved One-Shot)",
+    "aliases": [
+      "(CL) SRM-4 (iOS)",
+      "CLSRM4 (iOS)",
+      "SRM4iOS",
+      "SRM-4 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 48000,
+    "tonnage": 0.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6 (Improved One-Shot)",
+    "aliases": [
+      "(IS) SRM-6 (iOS)",
+      "ISSRM6 (iOS)",
+      "SRM6iOS",
+      "SRM-6 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 64000,
+    "tonnage": 2.5,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Short Range Missile-6 (Improved One-Shot)",
+    "aliases": [
+      "(CL) SRM-6 (iOS)",
+      "CLSRM6 (iOS)",
+      "SRM6iOS",
+      "SRM-6 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 64000,
+    "tonnage": 1,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-5 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-5 (iOS)",
+      "CLStreakLRM5 (iOS)",
+      "SLRM5iOS",
+      "Streak LRM-5 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 60000,
+    "tonnage": 1.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-10 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-10 (iOS)",
+      "CLStreakLRM10 (iOS)",
+      "SLRM10iOS",
+      "Streak LRM-10 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 180000,
+    "tonnage": 4.5,
+    "battle_value": 35,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-15 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-15 (iOS)",
+      "CLStreakLRM15 (iOS)",
+      "SLRM15iOS",
+      "Streak LRM-15 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 320000,
+    "tonnage": 6.5,
+    "battle_value": 52,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Long Range Missile-20 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak LRM-20 (iOS)",
+      "CLStreakLRM20 (iOS)",
+      "SLRM20iOS",
+      "Streak LRM-20 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 480000,
+    "tonnage": 9.5,
+    "battle_value": 69,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-2 (iOS)",
+      "ISStreakSRM2 (iOS)",
+      "SSRM2iOS",
+      "Streak SRM-2 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 12000,
+    "tonnage": 1,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-2 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-2 (iOS)",
+      "CLStreakSRM2 (iOS)",
+      "SSRM2iOS",
+      "Streak SRM-2 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 12000,
+    "tonnage": 0.5,
+    "battle_value": 8,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-4 (iOS)",
+      "ISStreakSRM4 (iOS)",
+      "SSRM4iOS",
+      "Streak SRM-4 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 72000,
+    "tonnage": 2.5,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-4 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-4 (iOS)",
+      "CLStreakSRM4 (iOS)",
+      "SSRM4iOS",
+      "Streak SRM-4 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 72000,
+    "tonnage": 1.5,
+    "battle_value": 16,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6 (Improved One-Shot)",
+    "aliases": [
+      "(IS) Streak SRM-6 (iOS)",
+      "ISStreakSRM6 (iOS)",
+      "SSRM6iOS",
+      "Streak SRM-6 (iOS)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 96000,
+    "tonnage": 4,
+    "battle_value": 18,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Streak Short Range Missile-6 (Improved One-Shot)",
+    "aliases": [
+      "(CL) Streak SRM-6 (iOS)",
+      "CLStreakSRM6 (iOS)",
+      "SSRM6iOS",
+      "Streak SRM-6 (iOS)"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "cost": 96000,
+    "tonnage": 2.5,
+    "battle_value": 24,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  }
+]

@@ -1,0 +1,236 @@
+{
+  "source_book": "MechWarrior: The BattleTech Role Playing Game (1607)",
+  "equipment": [
+    {
+      "category": "Armas a Distancia",
+      "name": "Pistol",
+      "stats": {
+        "skill_class": "Pistol",
+        "damage": "2D+3",
+        "range_short_hexes": "1-2",
+        "range_medium_hexes": "3-4",
+        "range_long_hexes": "5-8",
+        "ammo": 6,
+        "cost_cbills": 30
+      },
+      "rules": "Arma de fuego estándar de corto alcance."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Auto Pistol",
+      "stats": {
+        "skill_class": "Pistol",
+        "damage": "2D+3",
+        "range_short_hexes": "1-2",
+        "range_medium_hexes": "3-4",
+        "range_long_hexes": "5-8",
+        "ammo": 12,
+        "cost_cbills": 40
+      },
+      "rules": "Versión automática de la pistola estándar con mayor capacidad de munición."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Pump Shotgun",
+      "stats": {
+        "skill_class": "Rifle",
+        "damage": "3D+2",
+        "range_short_hexes": "1-3",
+        "range_medium_hexes": "4-5",
+        "range_long_hexes": "6-8",
+        "ammo": 6,
+        "cost_cbills": 50
+      },
+      "rules": "Puede disparar ambos cañones a la vez para hacer doble daño a un 'área' con un modificador de -1 al To-Hit."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "SMG (Submachine Gun)",
+      "stats": {
+        "skill_class": "Rifle",
+        "damage": "3D",
+        "range_short_hexes": "1-3",
+        "range_medium_hexes": "4-7",
+        "range_long_hexes": "8-10",
+        "ammo": 50,
+        "cost_cbills": 500
+      },
+      "rules": "Puede disparar en ráfagas de 10 balas para dañar un 'área'."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Rifle",
+      "stats": {
+        "skill_class": "Rifle",
+        "damage": "3D",
+        "range_short_hexes": "1-6",
+        "range_medium_hexes": "7-15",
+        "range_long_hexes": "16-30",
+        "ammo": 10,
+        "cost_cbills": 80
+      },
+      "rules": "Arma de fuego estándar de largo alcance."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Laser Pistol",
+      "stats": {
+        "skill_class": "Rifle",
+        "damage": "4D",
+        "range_short_hexes": "1-3",
+        "range_medium_hexes": "4-6",
+        "range_long_hexes": "7-12",
+        "ammo": 20,
+        "cost_cbills": 750
+      },
+      "rules": "Arma de energía de corto alcance. Requiere Power Packs."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Laser Rifle",
+      "stats": {
+        "skill_class": "Rifle",
+        "damage": "4D+2",
+        "range_short_hexes": "1-9",
+        "range_medium_hexes": "9-21",
+        "range_long_hexes": "22-42",
+        "ammo": 20,
+        "cost_cbills": 1250
+      },
+      "rules": "Arma de energía de largo alcance. Requiere Power Packs."
+    },
+    {
+      "category": "Armas a Distancia",
+      "name": "Sonic Stunner",
+      "stats": {
+        "skill_class": "Pistol",
+        "damage": "Special",
+        "range_short_hexes": "1-2",
+        "range_medium_hexes": "3-5",
+        "range_long_hexes": "6-8",
+        "ammo": 25,
+        "cost_cbills": 100
+      },
+      "rules": "Afecta directamente al atributo BODY del objetivo, que debe hacer una tirada de salvación para evitar el efecto."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Dagger/Knife",
+      "stats": {
+        "skill_class": "Bow/Blade",
+        "damage": "1D+1 (min 1)",
+        "ammo": null,
+        "cost_cbills": 2
+      },
+      "rules": "Arma blanca básica."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Sword",
+      "stats": {
+        "skill_class": "Bow/Blade",
+        "damage": "2D+2",
+        "ammo": null,
+        "cost_cbills": 10
+      },
+      "rules": "Arma blanca de mayor tamaño y daño."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Vibro-Blade",
+      "stats": {
+        "skill_class": "Bow/Blade",
+        "damage": "3D",
+        "ammo": 20,
+        "cost_cbills": 100
+      },
+      "rules": "Versión avanzada de una espada o cuchillo que vibra a alta frecuencia para aumentar su poder de corte. Requiere Power Packs."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Stun-Stick",
+      "stats": {
+        "skill_class": "Bow/Blade",
+        "damage": "1D-2 (Non-Lethal)",
+        "ammo": 20,
+        "cost_cbills": 200
+      },
+      "rules": "Afecta directamente al atributo BODY del objetivo. Requiere Power Packs."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Neural Whip",
+      "stats": {
+        "skill_class": "Bow/Blade",
+        "damage": "1D6 (Non-Lethal)",
+        "ammo": 20,
+        "cost_cbills": 500
+      },
+      "rules": "Látigo de alta tecnología que induce un shock neural. Afecta directamente al atributo BODY del objetivo. Requiere Power Packs."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Flak Vest",
+      "stats": {
+        "absorptive_capacity": "25 puntos",
+        "cost_cbills": 50
+      },
+      "rules": "Reduce a la mitad el daño de armas de proyectil y arcos. Detiene 2 puntos de daño de armas de energía. Protege torso y brazos. Se vuelve inútil tras absorber 25 puntos de daño."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Heavy Environment Suit",
+      "stats": {
+        "absorptive_capacity": "60 puntos",
+        "cost_cbills": 10000
+      },
+      "rules": "Proporciona protección ambiental y de combate. Reduce a la mitad la capacidad de movimiento (MP) del portador. Impone un penalizador de -4 a las tiradas de salvación contra armas aturdidoras y de tranquilizantes."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "MedKit",
+      "stats": {
+        "tech_level": "1/C",
+        "cost_cbills": 50
+      },
+      "rules": "Kit de primeros auxilios básico. Contiene férulas, gasas, antisépticos, etc. Permite realizar cuidados médicos de Nivel 2."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "Field Surgery Kit",
+      "stats": {
+        "tech_level": "2/C",
+        "cost_cbills": null
+      },
+      "rules": "Contiene dos escalpelos láser y equipo de soporte quirúrgico para cuidados médicos de Nivel 3."
+    },
+    {
+      "category": "Equipo General",
+      "name": "Rangefinder Binoculars",
+      "stats": {
+        "tech_level": "3/C",
+        "cost_cbills": 250
+      },
+      "rules": "Binoculares con telémetro que proporcionan una lectura LCD del rango aproximado de objetos con un aumento de hasta 100x."
+    },
+    {
+      "category": "Equipo General",
+      "name": "I/R Scanner",
+      "stats": {
+        "tech_level": "3/C",
+        "cost_cbills": 5000
+      },
+      "rules": "Mide la intensidad de la radiación infrarroja (calor) en un rango de hasta 10 kilómetros. Puede detectar 'firmas de calor' de 'Mechs a gran distancia."
+    },
+    {
+      "category": "Equipo General",
+      "name": "Industrial Exoskeleton",
+      "stats": {
+        "tech_level": "2/R",
+        "weight_kg": 40,
+        "cost_cbills": 15000
+      },
+      "rules": "Un exoesqueleto que triplica la fuerza del usuario para levantar, empujar o tirar. No es adecuado para el combate."
+    }
+  ]
+}

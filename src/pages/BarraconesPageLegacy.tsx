@@ -124,7 +124,7 @@ export function BarraconesPageLegacy() {
               /* Fixed slots: save to Sheets + export JSON */
               pilot && (
                 <>
-                  <button onClick={sim.sheetsSave} disabled={sim.sheetsStatus === 'loading'} title="Guardar en Sheets"
+                  <button onClick={() => sim.sheetsSave()} disabled={sim.sheetsStatus === 'loading'} title="Guardar en Sheets"
                     className={`w-8 h-9 flex items-center justify-center border transition-all disabled:opacity-40 ${
                       sim.sheetsStatus === 'ok'    ? 'border-green-500/60 text-green-400' :
                       sim.sheetsStatus === 'error' ? 'border-red-500/60  text-red-400'   :

@@ -16,7 +16,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
-import { commitLibroEntryAndTreasury, loadPersonal, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
+import { commitLibroEntryAndTreasury, loadPersonal, saveConfigBatch, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { loadLocalSnapshot, loadMechMaintenance, saveMechMaintenance } from '@/lib/simulador-persistence';
@@ -121,7 +121,7 @@ function TallerInlineWrapper({ campaignDate }: { campaignDate: string }) {
 // ══════════════════════════════════════════════════════════
 
 function PrioridadesTab() {
-  const { campaign, roster } = useAppStore();
+  const { campaign, setCampaign, roster } = useAppStore();
 
   // ── Selector unificado mech: hangar (campaña) + sim slots ──
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
@@ -715,7 +715,7 @@ function BudgetBar(p: { minutosBase: number; minutosExtra: number; minutosUsados
 // ── RepairItemList ──
 
 function RepairItemList({
-  items, resultados, onReorder,
+  items, resultados, onReorder, usandoAlmacenState, onToggleAlmacen
 }: {
   items: RepairItem[];
   resultados: ResultadoItem[];

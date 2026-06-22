@@ -8,11 +8,13 @@ import { FichaHeraldica }    from '@/components/barracones/FichaHeraldica';
 import { MechAssignmentBar } from '@/components/barracones/MechAssignmentBar';
 import { SheetsPanel }       from '@/components/barracones/SheetsPanel';
 import { CombatePanel }      from '@/components/barracones/CombatePanel';
+import { FinanzasPanel }     from '@/components/barracones/FinanzasPanel';
+import { MercadoPersonalTab } from '@/components/barracones/MercadoPersonalTab';
 import { pilotSlug } from '@/lib/roster';
 
 const BASE = import.meta.env.BASE_URL;
 
-type Tab = 'ficha' | 'combate';
+type Tab = 'ficha' | 'finanzas' | 'combate' | 'mercado';
 
 export function BarraconesPage() {
   const sim = useBarracones();
@@ -144,7 +146,7 @@ export function BarraconesPage() {
               /* Fixed slots: save to Sheets + export JSON */
               pilot && (
                 <>
-                  <button onClick={sim.sheetsSave} disabled={sim.sheetsStatus === 'loading'} title="Guardar en Sheets"
+                  <button onClick={() => sim.sheetsSave()} disabled={sim.sheetsStatus === 'loading'} title="Guardar en Sheets"
                     className={`w-8 h-9 flex items-center justify-center border transition-all disabled:opacity-40 ${
                       sim.sheetsStatus === 'ok'    ? 'border-green-500/60 text-green-400' :
                       sim.sheetsStatus === 'error' ? 'border-red-500/60  text-red-400'   :
@@ -159,7 +161,7 @@ export function BarraconesPage() {
                       {sim.sheetsMsg}
                     </span>
                   )}
-                  <button onClick={sim.exportJSON} title="Exportar JSON"
+                  <button onClick={() => sim.exportJSON()} title="Exportar JSON"
                     className="w-8 h-9 flex items-center justify-center border border-outline-variant/30 text-outline hover:text-primary hover:border-primary transition-all">
                     <Download size={14} />
                   </button>
@@ -218,7 +220,7 @@ export function BarraconesPage() {
             initialQuery=""
             onSearch={sim.sheetsSearch}
             onLoad={sim.sheetsLoad}
-            onSave={sim.sheetsSave}
+            onSave={() => sim.sheetsSave()}
             onClose={() => setShowSheets(false)}
           />
         </div>
@@ -239,8 +241,8 @@ export function BarraconesPage() {
         <div className="pb-20 max-w-7xl mx-auto">
 
           {/* Tab bar */}
-          <div className="flex gap-0 mb-5 border-b border-outline-variant/20">
-            {(['ficha', 'combate'] as Tab[]).map(t => (
+          <div className="flex flex-wrap gap-0 mb-5 border-b border-outline-variant/20">
+            {(['ficha', 'finanzas', 'combate', 'mercado'] as Tab[]).map(t => (
               <button key={t} onClick={() => setTab(t)}
                 className={`px-5 py-2 font-headline text-[11px] font-bold uppercase tracking-[2px] border-b-2 transition-all -mb-px ${
                   tab === t
@@ -272,13 +274,38 @@ export function BarraconesPage() {
             </>
           )}
 
+          {/* FINANZAS Y EQUIPO */}
+          {tab === 'finanzas' && (
+            <div className="p-6">
+              <FinanzasPanel
+                pilot={pilot}
+                onSetPatrimonio={pilot.isPj ? sim.setPatrimonio : undefined}
+                onSetEquipoPersonal={pilot.isPj ? sim.setEquipoPersonal : undefined}
+                onSetRpgFinanzas={pilot.isPj ? sim.setRpgFinanzas : undefined}
+                onSaveFirebase={pilot.isPj ? sim.sheetsSave : undefined}
+              />
+            </div>
+          )}
+
           {/* COMBATE */}
           {tab === 'combate' && (
-            <CombatePanel
-              pilot={pilot}
-              onSetHpDmg={sim.setHpDmg}
-              onSetWeapon={sim.setWeapon}
-            />
+            <div className="p-6">
+              <CombatePanel pilot={pilot} 
+                onChange={(p) => sim.updatePilot(p)} 
+              />
+            </div>
+          )}
+
+          {/* MERCADO PRIVADO */}
+          {tab === 'mercado' && (
+            <div className="p-6">
+              <MercadoPersonalTab
+                pilot={pilot}
+                onSetPatrimonio={pilot.isPj ? sim.setPatrimonio : () => {}}
+                onSetEquipoPersonal={pilot.isPj ? sim.setEquipoPersonal : () => {}}
+                onSaveFirebase={pilot.isPj ? sim.sheetsSave : undefined}
+              />
+            </div>
           )}
         </div>
       )}

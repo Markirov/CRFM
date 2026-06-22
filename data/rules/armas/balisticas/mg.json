@@ -1,0 +1,26 @@
+[
+  {
+    "item": "Machine Gun",
+    "aliases": [
+      "(IS) Machine Gun",
+      "ISMachineGun"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 0,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": true,
+    "ammo_per_ton": 200,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

@@ -1,0 +1,2655 @@
+[
+  {
+    "item": "Anti-Personnel Pod",
+    "aliases": [
+      "A-Pod",
+      "AntiPersonnelPod",
+      "APod"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1500,
+    "tonnage": 0.5,
+    "battle_value": 1,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Anti-BattleArmor Pod",
+    "aliases": [
+      "B-Pod",
+      "BPod"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 2500,
+    "tonnage": 1,
+    "battle_value": 2,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Anti-Mech Pod",
+    "aliases": [
+      "M-Pod",
+      "ISMPod",
+      "MPod"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 6000,
+    "tonnage": 1,
+    "battle_value": 5,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Angel Electronic Countermeasure Suite",
+    "aliases": [
+      "Angel ECM",
+      "AngelECM",
+      "AECM"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 750000,
+    "tonnage": 2,
+    "battle_value": 100,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Anti-Missile System",
+    "aliases": [
+      "(IS) Anti-Missile System",
+      "ISAntiMissileSystem",
+      "AMS",
+      "Anti-Missile System"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 1,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 0.5,
+    "battle_value": 32,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Anti-Missile System",
+    "aliases": [
+      "(CL) Anti-Missile System",
+      "CLAntiMissileSystem",
+      "AMS",
+      "Anti-Missile System"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 1,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 0.5,
+    "battle_value": 32,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Laser Anti-Missile System",
+    "aliases": [
+      "(IS) Laser Anti-Missile System",
+      "ISLaserAntiMissileSystem",
+      "LAMS",
+      "Laser Anti-Missile System"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 7,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 225000,
+    "tonnage": 1.5,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Laser Anti-Missile System",
+    "aliases": [
+      "(CL) Laser Anti-Missile System",
+      "CLLaserAntiMissileSystem",
+      "LAMS",
+      "Laser Anti-Missile System"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 5,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 225000,
+    "tonnage": 1,
+    "battle_value": 45,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Beagle Active Probe",
+    "aliases": [
+      "Beagle Active Probe",
+      "ISBeagleActiveProbe",
+      "BAP"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 1.5,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Beagle Active Probe",
+    "aliases": [
+      "Prototype Beagle Active Probe",
+      "BeagleActiveProbePrototype",
+      "BAP-P",
+      "Prototype BAP"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 600000,
+    "tonnage": 2,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Active Probe",
+    "aliases": [
+      "Active Probe",
+      "CLActiveProbe",
+      "BAP"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 1,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Active Probe",
+    "aliases": [
+      "Light Active Probe",
+      "LightActiveProbe",
+      "LAP"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50000,
+    "tonnage": 0.5,
+    "battle_value": 7,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Bloodhound Active Probe",
+    "aliases": [
+      "Bloodhound Active Probe",
+      "ISBloodhoundActiveProbe",
+      "BlAP"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 500000,
+    "tonnage": 2,
+    "battle_value": 25,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Computer (Master)",
+    "aliases": [
+      "C3 Computer (Master)",
+      "ISC3MasterComputer",
+      "C3M"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1500000,
+    "tonnage": 5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Computer (Slave)",
+    "aliases": [
+      "C3 Computer (Slave)",
+      "ISC3SlaveUnit",
+      "C3S"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 250000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Command/Control/Communication Computer",
+    "aliases": [
+      "Improved C3 Computer",
+      "ISImprovedC3CPU",
+      "C3I"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 750000,
+    "tonnage": 2.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Boosted Computer (Master)",
+    "aliases": [
+      "C3 Boosted Computer (Master)",
+      "ISC3MasterBoostedSystemUnit ",
+      "BC3M"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 3000000,
+    "tonnage": 6,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Boosted Computer (Slave)",
+    "aliases": [
+      "C3 Boosted Computer (Slave)",
+      "ISC3BoostedSystemSlaveUnit ",
+      "BC3S"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 500000,
+    "tonnage": 3,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Emergency Master",
+    "aliases": [
+      "C3 Emergency Master",
+      "ISEC3MasterComputer",
+      "C3EM"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 2800000,
+    "tonnage": 2,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Command/Control/Communication Remote Sensor Launcher",
+    "aliases": [
+      "C3 Remote Sensor Launcher",
+      "C3RemoteSensorLauncher",
+      "C3RLnch"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 400000,
+    "tonnage": 4,
+    "battle_value": 30,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Chaff Pod",
+    "aliases": [
+      "Chaff Pod",
+      "ChaffPod",
+      "ChfPd"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 2000,
+    "tonnage": 1,
+    "battle_value": 19,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Collapsible Command Module (CCM)",
+    "aliases": [
+      "Collapsible Command Module (CCM)",
+      "CollapsibleCommandModule",
+      "CCM"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 500000,
+    "tonnage": 16,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Communications Equipment",
+    "aliases": [
+      "Communications Equipment",
+      "CommunicationsEquipment",
+      "CommEqp",
+      "Communications Equipment (1.0 tons)"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 10000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Coolant Pod",
+    "aliases": [
+      "Coolant Pod",
+      " Coolant Pod",
+      "CoolPd"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Electronic Warfare Equipment",
+    "aliases": [
+      "Electronic Warfare Equipment",
+      "EWEquipment",
+      "EWEqp",
+      "EW Equipment"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 500000,
+    "tonnage": 7.5,
+    "battle_value": 39,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Ground Mobile Hyper Pulse Generator",
+    "aliases": [
+      "Ground Mobile HPG",
+      "ISMobileHPG",
+      "HPG"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 20,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 4000000000,
+    "tonnage": 12,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Guardian Electronic Countermeasure Suite",
+    "aliases": [
+      "Guardian ECM Suite",
+      "ISGuardianECM",
+      "ECM"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 1.5,
+    "battle_value": 61,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Guardian Electronic Countermeasure Suite",
+    "aliases": [
+      "Prototype Guardian ECM Suite",
+      "IS Prototype Guardian ECM",
+      "P-ECM",
+      "Prototype GECM Suite"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1000000,
+    "tonnage": 2,
+    "battle_value": 61,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Electronic Countermeasure Suite",
+    "aliases": [
+      "ECM Suite",
+      "CLECMSuite",
+      "ECM"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 1,
+    "battle_value": 61,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "HarJel",
+    "aliases": [
+      "HarJel",
+      "Clan HarJel",
+      "HrJl"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 120000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "HarJel II Self-Repair System",
+    "aliases": [
+      "HarJel II",
+      "HarJel II Self-Repair System",
+      "HrJl2"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 240000,
+    "tonnage": 2,
+    "battle_value": -1,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "HarJel III Self-Repair System",
+    "aliases": [
+      "HarJel III",
+      "HarJel III Self-Repair System",
+      "HrJl3"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 360000,
+    "tonnage": 3,
+    "battle_value": -2,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Target Acquisition Gear",
+    "aliases": [
+      "TAG"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Target Acquisition Gear",
+    "aliases": [
+      "Light TAG",
+      "CLLightTAG",
+      "LTAG"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 40000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Watchdog Composite Electronic Warfare System",
+    "aliases": [
+      "Watchdog CEWS",
+      "CLWatchdogECM",
+      "WDCEWS"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 600000,
+    "tonnage": 1.5,
+    "battle_value": 68,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Bridgelayer, Light",
+    "aliases": [
+      "Bridgelayer, Light",
+      "LightBridgelayer",
+      "LtBrgLyr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 40000,
+    "tonnage": 1,
+    "battle_value": 5,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Bridgelayer, Medium",
+    "aliases": [
+      "Bridgelayer, Medium",
+      "MediumBridgelayer",
+      "MdBrgLyr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 75000,
+    "tonnage": 2,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Bridgelayer, Heavy",
+    "aliases": [
+      "Bridgelayer, Heavy",
+      "HeavyBridgelayer",
+      "HvBrgLyr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 6,
+    "battle_value": 20,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Bulldozer",
+    "aliases": [
+      "Bulldozer",
+      "Dozer"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50000,
+    "tonnage": 2,
+    "battle_value": 10,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Fluid Suction System, Standard",
+    "aliases": [
+      "Fluid Suction System, Standard",
+      "StandardFluidSuctionSystem",
+      "FldSuk"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 25000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Fluid Suction System, Light",
+    "aliases": [
+      "Fluid Suction System, Light",
+      "LightFluidSuctionSystem",
+      "LFldSuk"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Fluid Suction System, Light (Vehicular)",
+    "aliases": [
+      "Fluid Suction System, Light (Vehicular)",
+      "LightFluidSuctionSystemVehicular",
+      "LFldSuk(V)",
+      "Fluid Suction System, Light (V)"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1000,
+    "tonnage": 0.02,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Lift Hoist",
+    "aliases": [
+      "Lift Hoist",
+      "LiftHoist",
+      "LftHst"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50000,
+    "tonnage": 3,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Nail Gun",
+    "aliases": [
+      "Nail Gun",
+      "NailGun",
+      "NlGn"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7000,
+    "tonnage": 0.5,
+    "battle_value": 1,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Rivet Gun",
+    "aliases": [
+      "Rivet Gun",
+      "RivetGun",
+      "RvtGn"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7000,
+    "tonnage": 0.5,
+    "battle_value": 1,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Remote Sensor Dispenser",
+    "aliases": [
+      "Remote Sensor Dispenser",
+      "RemoteSensorDispenser",
+      "RSnsDisp"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 30000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Searchlight",
+    "aliases": [
+      "Searchlight",
+      "SrchLt"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 2000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Searchlight, Handheld",
+    "aliases": [
+      "Searchlight, Handheld",
+      "Searchlight",
+      "SrchLtH",
+      "Searchlight Handheld"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 500,
+    "tonnage": 0.01,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Sprayer",
+    "aliases": [
+      "Sprayer",
+      "Spryr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Sprayer, Vehicular",
+    "aliases": [
+      "Sprayer, Vehicular",
+      "VehicularSprayer",
+      "Spryr",
+      "Sprayer"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1000,
+    "tonnage": 0.02,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo Container",
+    "aliases": [
+      "Cargo Container",
+      "CargoContainer",
+      "CrgCntnr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 10,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Standard",
+    "aliases": [
+      "Cargo, Standard",
+      "CargoStandard",
+      "StndrdCrgo"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Standard",
+    "aliases": [
+      "Cargo, Standard, Vehicular",
+      "CargoStandard",
+      "StndrdCrgo",
+      "Cargo, Standard"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Liquid",
+    "aliases": [
+      "Cargo, Liquid",
+      "CargoLiquid",
+      "LqdCrgo"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Liquid",
+    "aliases": [
+      "Cargo, Liquid, Vehicular",
+      "CargoLiquid",
+      "LqdCrgo",
+      "Cargo, Liquid"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 50,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Insulated",
+    "aliases": [
+      "Cargo, Insulated",
+      "CargoInsulated",
+      "InslCrgo"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 125,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Insulated",
+    "aliases": [
+      "Cargo, Insulated, Vehicular",
+      "CargoInsulated",
+      "InslCrgo",
+      "Cargo, Insulated"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 125,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Livestock",
+    "aliases": [
+      "Cargo, Livestock",
+      "CargoLivestock",
+      "LvStkCrgo"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1250,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Cargo, Livestock",
+    "aliases": [
+      "Cargo, Livestock, Vehicular",
+      "CargoLivestock",
+      "LvStkCrgo",
+      "Cargo, Livestock"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1250,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry, Foot Compartment (28 Troopers, Foot Infantry)",
+    "aliases": [
+      "Infantry, Foot Compartment",
+      "InfantryCompartment",
+      "InfFtComp",
+      "Foot Platoon"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 3,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry, Jump Compartment (28 Troopers, Jump Infantry)",
+    "aliases": [
+      "Infantry, Jump Compartment",
+      "InfantryCompartment",
+      "InfJmpComp",
+      "Jump Platoon"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 4,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry, Motorized Compartment (28 Troopers, Motorized Infantry)",
+    "aliases": [
+      "Infantry, Motorized Compartment",
+      "InfantryCompartment",
+      "InfMtrComp",
+      "Motor Platoon"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 6,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry, Mechanized Compartment (5 Troopers, Mechanized Infantry)",
+    "aliases": [
+      "Infantry, Mechanized Compartment",
+      "InfantryCompartment",
+      "InfMchnzdComp",
+      "Mechanized Squad"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Battle Armor Compartment",
+    "aliases": [
+      "Battle Armor Compartment",
+      "BattleArmorCompartment",
+      "BAComp",
+      "Battle Armor"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry Compartment",
+    "aliases": [
+      "Infantry Compartment",
+      "InfantryCompartment",
+      "InfComp"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Infantry Bay",
+    "aliases": [
+      "Infantry Bay",
+      "InfantryBay",
+      "InfBay"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7500,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "MechWarrior Aquatic Survival System",
+    "aliases": [
+      "MW Aquatic Survival System",
+      "MASS",
+      "M.A.S.S."
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 4000,
+    "tonnage": 1.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Nova Combined Electronic Warfare System",
+    "aliases": [
+      "Nova CEWS",
+      "NovaCEWS",
+      "NCEWS"
+    ],
+    "tech_base": "Clan",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 2,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 1100000,
+    "tonnage": 1.5,
+    "battle_value": 68,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Centurion Weapon System",
+    "aliases": [
+      "Centurion Weapon System",
+      "CWS",
+      "Centurion WS"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 4,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 0,
+    "tonnage": 5,
+    "battle_value": 190,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Conspiracies",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Field Kitchen",
+    "aliases": [
+      "Field Kitchen",
+      "FieldKitchen",
+      "Kitchen"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 25000,
+    "tonnage": 3,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Lifeboat (Maritime)",
+    "aliases": [
+      "Lifeboat (Maritime)",
+      "LifeboatMaritime",
+      "Lifeboat"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 5000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "MASH",
+    "aliases": [
+      "MASH"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 35000,
+    "tonnage": 3.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Paramedic Equipment",
+    "aliases": [
+      "Paramedic Equipment",
+      "ParamedicEquipment",
+      "Pmedic",
+      "Paramedic"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7500,
+    "tonnage": 0.25,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Refueling Drogue",
+    "aliases": [
+      "Refueling Drogue",
+      "RefuelingDrogue",
+      "Rdrogue"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "IE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 25000,
+    "tonnage": 1,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Drone Carrier Control System",
+    "aliases": [
+      "Drone Carrier Control System",
+      "DroneCarrierControlSystem",
+      "DCCS",
+      "Drone Control System"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 25000,
+    "tonnage": 2.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Recon Camera",
+    "aliases": [
+      "Recon Camera",
+      "ReconCamera",
+      "Rcam"
+    ],
+    "tech_base": "Mixed",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 10000,
+    "tonnage": 0.5,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "RISC Viral Jammer (Decoy)",
+    "aliases": [
+      "RISC Viral Jammer (Decoy)",
+      "VJ(D)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 12,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 990000,
+    "tonnage": 2.5,
+    "battle_value": 284,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Intersteller Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "RISC Viral Jammer (Homing)",
+    "aliases": [
+      "RISC Viral Jammer (Homing)",
+      "VJ(H)"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "E",
+    "heat": 12,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 990000,
+    "tonnage": 2.5,
+    "battle_value": 284,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Intersteller Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Radical Heat Sink",
+    "aliases": [
+      "Radical Heat Sink",
+      "RadicalHeatSink",
+      "RHS"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "PE",
+    "heat": 0,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 250000,
+    "tonnage": 4,
+    "battle_value": 0,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: FM3145",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "RISC Advanced Point Defense System",
+    "aliases": [
+      "RISC Advanced Point Defense System",
+      "ISAPDS",
+      "APDS",
+      "Advanced Point Defense System"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Equipment",
+    "manual_type": "PD",
+    "heat": 2,
+    "damage": "0",
+    "min_range": 0,
+    "short_range": 0,
+    "medium_range": 0,
+    "long_range": 0,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 3,
+    "battle_value": 64,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  }
+]

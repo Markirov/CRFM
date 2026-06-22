@@ -135,7 +135,7 @@ export function App() {
           : undefined
         }
         className={`
-          2xl:ml-[220px] overflow-y-auto overflow-x-hidden custom-scrollbar
+          2xl:ml-[220px] overflow-y-auto custom-scrollbar
           ${hasTabs ? '' : 'mt-12 h-[calc(100vh-48px)]'}
         `}
       >

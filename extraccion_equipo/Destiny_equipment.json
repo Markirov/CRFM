@@ -1,0 +1,232 @@
+{
+  "source_book": "MechWarrior: Destiny",
+  "equipment": [
+    {
+      "category": "Armas de Melé",
+      "name": "Artes Marciales",
+      "stats": {
+        "Damage": "2(+STR bonus)F",
+        "Close": "OK",
+        "Near": "—",
+        "Far": "—"
+      },
+      "rules": "No cuenta para el límite de armas."
+    },
+    {
+      "category": "Armas de Melé",
+      "name": "Hacha",
+      "stats": {
+        "Damage": "2(+STR bonus)",
+        "Close": "OK",
+        "Near": "—",
+        "Far": "—"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas de Melé",
+      "name": "Porra Aturdidora",
+      "stats": {
+        "Damage": "4F",
+        "Close": "OK",
+        "Near": "—",
+        "Far": "—"
+      },
+      "rules": "El daño es de tipo Fatiga (F)."
+    },
+    {
+      "category": "Armas de Melé",
+      "name": "Vibroespada",
+      "stats": {
+        "Damage": "3(+STR bonus)",
+        "Close": "OK",
+        "Near": "—",
+        "Far": "—"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas de Proyectil/Arrojadizas",
+      "name": "Arco Compuesto",
+      "stats": {
+        "Damage": "2(+STR bonus)",
+        "Close": "OK",
+        "Near": "OK",
+        "Far": "OK"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas de Proyectil/Arrojadizas",
+      "name": "Lanza",
+      "stats": {
+        "Damage": "2(+STR bonus)",
+        "Close": "OK",
+        "Near": "-2",
+        "Far": "—"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas Pequeñas (Balísticas)",
+      "name": "Pistola Automática (B)",
+      "stats": {
+        "Damage": "4",
+        "Close": "OK",
+        "Near": "OK",
+        "Far": "—"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas Pequeñas (Balísticas)",
+      "name": "Rifle de Asalto (B)",
+      "stats": {
+        "Damage": "3*",
+        "Close": "OK",
+        "Near": "OK",
+        "Far": "-2"
+      },
+      "rules": "Puede atacar hasta a dos objetivos diferentes por Narración."
+    },
+    {
+      "category": "Armas Pequeñas (Energía)",
+      "name": "Pistola Láser (E)",
+      "stats": {
+        "Damage": "3",
+        "Close": "OK",
+        "Near": "OK",
+        "Far": "OK"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas Pequeñas (Flechette)",
+      "name": "Pistola de Agujas",
+      "stats": {
+        "Damage": "5*",
+        "Close": "OK",
+        "Near": "-2",
+        "Far": "—"
+      },
+      "rules": "Cada 2 de daño reduce la Armadura del objetivo en 1 pip. Los pips del Monitor de Condición se dañan normalmente."
+    },
+    {
+      "category": "Armas Especiales",
+      "name": "Pistola de Dardos",
+      "stats": {
+        "Damage": "3F",
+        "Close": "OK",
+        "Near": "-2",
+        "Far": "—"
+      },
+      "rules": "El daño es de tipo Fatiga (F)."
+    },
+    {
+      "category": "Armas de Apoyo",
+      "name": "Ametralladora (B)",
+      "stats": {
+        "Damage": "4†",
+        "Close": "OK",
+        "Near": "OK",
+        "Far": "OK"
+      },
+      "rules": "Puede atacar hasta a dos objetivos diferentes por Narración."
+    },
+    {
+      "category": "Armas de Apoyo",
+      "name": "Lanzador de Cohetes (LAW)",
+      "stats": {
+        "Damage": "10‡",
+        "Close": "—",
+        "Near": "OK",
+        "Far": "OK"
+      },
+      "rules": "Un solo uso. Puede atacar hasta a tres objetivos diferentes por Narración."
+    },
+    {
+      "category": "Explosivos",
+      "name": "Granada de Mano",
+      "stats": {
+        "Damage": "*‡",
+        "Close": "OK",
+        "Near": "-2",
+        "Far": "—"
+      },
+      "rules": "Granada de Alto Explosivo: 8 de daño. Granada Antipersonal: 10 de daño. Puede atacar hasta a tres objetivos diferentes."
+    },
+    {
+      "category": "Explosivos",
+      "name": "Carga de Demolición C8",
+      "stats": {
+        "Damage": "*",
+        "Close": "OK",
+        "Near": "—",
+        "Far": "—"
+      },
+      "rules": "12 de daño (Combate Personal, puede atacar hasta a tres objetivos), 1 de daño (Combate a Escala de 'Mech)."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Armadura Antimetralla (Flak)",
+      "stats": {
+        "Puntos de Armadura": 10
+      },
+      "rules": "-2 de daño de armas balísticas (B)."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Armadura Ablativa",
+      "stats": {
+        "Puntos de Armadura": 10
+      },
+      "rules": "-2 de daño de armas de energía (E)."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Placa Balística",
+      "stats": {
+        "Puntos de Armadura": 12
+      },
+      "rules": "-1 a RFL, -3 de daño de armas balísticas (B)."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Traje de Infiltración",
+      "stats": {
+        "Puntos de Armadura": 8
+      },
+      "rules": "-1 de daño de armas balísticas (B) y de energía (E)."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "Botiquín Médico",
+      "stats": {},
+      "rules": "Objeto narrativo sin estadísticas definidas."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "Estimulante (Stimpatch)",
+      "stats": {},
+      "rules": "Objeto narrativo sin estadísticas definidas."
+    },
+    {
+      "category": "Equipo de Comunicaciones",
+      "name": "Comunicador Personal",
+      "stats": {},
+      "rules": "Objeto narrativo sin estadísticas definidas."
+    },
+    {
+      "category": "Equipo de Espionaje",
+      "name": "Kit de Demolición",
+      "stats": {},
+      "rules": "Objeto narrativo sin estadísticas definidas."
+    },
+    {
+      "category": "Equipo de Espionaje",
+      "name": "Kit de Ganzúas",
+      "stats": {},
+      "rules": "Objeto narrativo sin estadísticas definidas."
+    }
+  ]
+}

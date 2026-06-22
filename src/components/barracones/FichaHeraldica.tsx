@@ -57,7 +57,7 @@ const CHECK_ROW: React.CSSProperties = {
 
 // ─── Sub-componentes ────────────────────────────────────────
 
-function HandField({ label, val, big }: { label: string; val: string | number; big?: boolean }) {
+function HandField({ label, val, big }: { label: string; val: React.ReactNode; big?: boolean }) {
   return (
     <div style={{ borderBottom: '1px dotted #1a120866', paddingBottom: 2 }}>
       <div style={{

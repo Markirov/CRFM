@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { BASlot, FireTarget } from '@/lib/combat-types';
 import { BASuitGrid } from './BASuitGrid';
+import { tWeapon } from '@/lib/translator';
 
 const MOVE_LABEL: Record<string, string> = {
   stand: 'FIRME', walk: 'MARCHA', jump: 'SALTO', prone: 'CUBIERTO', swarming: 'SWARM',
@@ -133,7 +134,7 @@ export function BAPanel({ slot, targets = [], onFireWeaponAt, onNextTurn, onAppl
               <div key={w.id} className={`flex items-center gap-2 ${allExpended ? 'opacity-30' : ''}`}>
                 <div className="flex-1 min-w-0">
                   <div className="font-mono text-[10px] text-secondary truncate">
-                    {w.name}
+                    {tWeapon(w.name)}
                     {w.oneShot && <span className="ml-1 text-[7px] text-yellow-500 border border-yellow-600 px-1">OS</span>}
                     {allFired && !allExpended && <span className="ml-1 text-[7px] text-outline">(DISPARADO)</span>}
                     {allExpended && <span className="ml-1 text-[7px] text-red-500">(AGOTADO)</span>}

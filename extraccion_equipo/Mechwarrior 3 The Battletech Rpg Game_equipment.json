@@ -1,0 +1,221 @@
+{
+  "source_book": "MechWarrior, Third Edition",
+  "equipment": [
+    {
+      "category": "Armas",
+      "name": "Vibrosword",
+      "stats": {
+        "skill": "BLA",
+        "ratings": "E/C",
+        "ap": 1,
+        "damage": "1D6",
+        "damage_type": "M",
+        "range_s/m/l/e": "STR x 1/2/3/4",
+        "shots": "—",
+        "cost": "300/—",
+        "weight": "4 kg"
+      },
+      "rules": "Subduing: do not add STR"
+    },
+    {
+      "category": "Armas",
+      "name": "Auto-Pistol",
+      "stats": {
+        "skill": "PIS",
+        "ratings": "C/B",
+        "ap": 4,
+        "damage": "4D6",
+        "damage_type": "B",
+        "range_s/m/l/e": "5/20/35/105",
+        "shots": 10,
+        "cost": "50/1",
+        "weight": "1 kg"
+      },
+      "rules": "Burst (3/5); jam on a fumble"
+    },
+    {
+      "category": "Armas",
+      "name": "Federated Long Rifle",
+      "stats": {
+        "skill": "RIF",
+        "ratings": "C/B",
+        "ap": 5,
+        "damage": "5D6",
+        "damage_type": "B",
+        "range_s/m/l/e": "35/80/190/420",
+        "shots": 5,
+        "cost": "200/3",
+        "weight": "3 kg"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas",
+      "name": "Imperator RM-3/XI SMG",
+      "stats": {
+        "skill": "SMG",
+        "ratings": "C/B",
+        "ap": 3,
+        "damage": "3D6",
+        "damage_type": "B",
+        "range_s/m/l/e": "3/12/28/60",
+        "shots": 100,
+        "cost": "80/10",
+        "weight": "3 kg"
+      },
+      "rules": "Burst (10/2); jam on a fumble"
+    },
+    {
+      "category": "Armas",
+      "name": "Laser Pistol",
+      "stats": {
+        "skill": "PIS",
+        "ratings": "D/D",
+        "ap": 4,
+        "damage": "4D6",
+        "damage_type": "E",
+        "range_s/m/l/e": "15/35/80/225",
+        "shots": 21,
+        "cost": "750/—",
+        "weight": "1 kg"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas",
+      "name": "Laser Rifle",
+      "stats": {
+        "skill": "RIF",
+        "ratings": "D/D",
+        "ap": 5,
+        "damage": "5D6",
+        "damage_type": "E",
+        "range_s/m/l/e": "65/220/485/1,180",
+        "shots": 101,
+        "cost": "2,100/—",
+        "weight": "7 kg"
+      },
+      "rules": "Burst (5/2)"
+    },
+    {
+      "category": "Armas",
+      "name": "SRM Launcher",
+      "stats": {
+        "skill": "SUP",
+        "ratings": "C/C",
+        "ap": 6,
+        "damage": "7D6",
+        "damage_type": "X",
+        "range_s/m/l/e": "15/100/450/900",
+        "shots": 2,
+        "cost": "1,500/450",
+        "weight": "30 kg"
+      },
+      "rules": "Blast; encumbering"
+    },
+    {
+      "category": "Armas",
+      "name": "Man-Pack Flamer",
+      "stats": {
+        "skill": "SUP",
+        "ratings": "C/A",
+        "ap": 2,
+        "damage": "5D6",
+        "damage_type": "E",
+        "range_s/m/l/e": "8/20/35/70",
+        "shots": 12,
+        "cost": "100/2",
+        "weight": "15 kg"
+      },
+      "rules": "Splash; incendiary"
+    },
+    {
+      "category": "Armas",
+      "name": "Frag Grenade",
+      "stats": {
+        "skill": "THW",
+        "ratings": "C/A",
+        "ap": 5,
+        "damage": "10D6",
+        "damage_type": "X",
+        "range_s/m/l/e": "STR x 1/2/3/4",
+        "shots": "—",
+        "cost": "20",
+        "weight": "600 g"
+      },
+      "rules": "Indirect; blast"
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Flak Armor (Suit)",
+      "stats": {
+        "ratings": "C/A/B",
+        "av_m/b/e/x": "1/5/1/3",
+        "cost": "100/10",
+        "weight": "3.5 kg",
+        "coverage": "Torso, Arms, Legs"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Ablative Armor (Suit)",
+      "stats": {
+        "ratings": "D/B/C",
+        "av_m/b/e/x": "2/4/5/2",
+        "cost": "800/15",
+        "weight": "9.8 kg",
+        "coverage": "Torso, Arms, Legs"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Ballistic Plate Armor (Suit)",
+      "stats": {
+        "ratings": "D/C/D",
+        "av_m/b/e/x": "4/6/5/4",
+        "cost": "1,600/50",
+        "weight": "12 kg",
+        "coverage": "Torso, Arms, Legs"
+      },
+      "rules": "Encumbering"
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Inner Sphere Battle Armor",
+      "stats": {
+        "ratings": "E/E/F",
+        "av_m/b/e/x": "9/8/8/7",
+        "cost": "400,000",
+        "weight": "NA",
+        "coverage": "Full"
+      },
+      "rules": "see Battle Armor (p. 141)"
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Elemental Battle Armor",
+      "stats": {
+        "ratings": "F/C/F",
+        "av_m/b/e/x": "9/9/8/8",
+        "cost": "500,000",
+        "weight": "NA",
+        "coverage": "Full"
+      },
+      "rules": "Encumbering; see Battle Armor (p. 141)"
+    },
+    {
+      "category": "Armaduras y Ropa de Combate",
+      "name": "Combat Helmet",
+      "stats": {
+        "ratings": "C/A/B",
+        "av_m/b/e/x": "5/6/5/2",
+        "cost": "200",
+        "weight": "2 kg",
+        "coverage": "Head"
+      },
+      "rules": "+2 to Perception TNs"
+    }
+  ]
+}

@@ -155,7 +155,7 @@ export function countSystemCritHits(crits: Record<string, CritSlot[]>, state?: M
   const result = { engine: 0, gyro: 0, sensors: 0, lifeSupport: 0, heatsinks: 0, jumpJets: 0 };
   
   for (const [loc, slots] of Object.entries(crits)) {
-    const hsSize = state?.hsDouble ? (state?.tech === 'Clan' ? 2 : 3) : 1;
+    const hsSize = state?.hsDouble ? (state?.techBase?.includes('Clan') ? 2 : 3) : 1;
     
     for (let i = 0; i < slots.length; i++) {
       const s = slots[i];

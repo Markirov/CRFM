@@ -1,0 +1,99 @@
+[
+  {
+    "item": "LRM-20",
+    "aliases": [
+      "(CL) LRM-20",
+      "CLLRM20",
+      "LRM-20"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 6,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 6,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "LRM-15",
+    "aliases": [
+      "(CL) LRM-15",
+      "LRM-15"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 5,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 8,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "LRM-10",
+    "aliases": [
+      "(CL) LRM-10",
+      "LRM-10"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 4,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 12,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "LRM-5",
+    "aliases": [
+      "(CL) LRM-5",
+      "LRM-5"
+    ],
+    "tech_base": "Clan",
+    "category": "Missile",
+    "manual_type": "M",
+    "heat": 2,
+    "damage": "1",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 24,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

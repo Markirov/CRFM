@@ -5,6 +5,7 @@ import {
   vehicleGetEffectiveMP, vehicleGunneryMod,
   vehicleGetCritTable, VEHICLE_MOTIVE_CRIT_TABLE,
 } from '@/lib/combat-data';
+import { tWeapon } from '@/lib/translator';
 
 const LOC_LABEL: Record<string, string> = {
   FR: 'FRENTE', LT: 'IZQUIERDA', RT: 'DERECHA', RR: 'TRASERA',
@@ -572,7 +573,7 @@ export function VehiclePanel({
                                    : 'border-transparent hover:bg-secondary/10 text-secondary cursor-pointer'
                     }`}>
                     <div className="flex flex-col">
-                      <span className="font-bold uppercase">{w.name}</span>
+                      <span className="font-bold uppercase">{tWeapon(w.name)}</span>
                       <span className="text-[8px] text-secondary/40">{LOC_LABEL[w.loc] ?? w.loc} · {w.r}</span>
                     </div>
                     <div className="flex items-center gap-2 text-[9px]">
@@ -594,7 +595,7 @@ export function VehiclePanel({
             <div className="space-y-1">
               {Object.entries(session.ammoPools).map(([key, count]) => (
                 <div key={key} className="flex items-center justify-between text-[9px] font-mono">
-                  <span className="text-secondary/50 truncate max-w-[120px]">{key}</span>
+                  <span className="text-secondary/50 truncate max-w-[120px]">{tWeapon(key)}</span>
                   <span className={`font-bold tabular-nums ${count <= 0 ? 'text-error' : 'text-on-surface/70'}`}>{count}</span>
                 </div>
               ))}

@@ -131,7 +131,7 @@ export function FinanzasPage() {
     );
   }
 
-  const goToLibroWithModal = (modal: 'taller' | 'compras' | 'projector' | null) => {
+  const goToLibroWithModal = (modal: 'taller' | 'projector' | null) => {
     if (modal) setFinanzasPendingModal(modal);
     setActiveSubTab('libro-mayor');
   };
@@ -387,14 +387,12 @@ function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: Li
   const [editing, setEditing] = useState<LibroMayorEntry | null>(null);
   const [filterCat, setFilterCat] = useState<LibroMayorCategoria | 'all'>('all');
   const [projectorOpen, setProjectorOpen] = useState(false);
-  const [acqOpen, setAcqOpen] = useState(false);
   const [tallerOpen, setTallerOpen] = useState(false);
 
   // Consume señal de la portada — abre modal pedido al entrar
   useEffect(() => {
     if (!finanzasPendingModal) return;
     if (finanzasPendingModal === 'taller')     setTallerOpen(true);
-    else if (finanzasPendingModal === 'compras')   setAcqOpen(true);
     else if (finanzasPendingModal === 'projector') setProjectorOpen(true);
     setFinanzasPendingModal(null);
   }, [finanzasPendingModal, setFinanzasPendingModal]);
@@ -475,28 +473,7 @@ function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: Li
         ) : null}
       />
 
-      {acqOpen && (
-        <AcquisitionModal
-          campaignDate={campaignDate}
-          onClose={() => setAcqOpen(false)}
-          onCommit={async (price, label, level) => {
-            await commitLibroEntryAndTreasury({
-              id: genId('lm'),
-              fecha: campaignDate,
-              concepto: `${label} (${level})`,
-              cantidad: Math.round(price),
-              tipo: 'gasto',
-              categoria: label.toLowerCase().includes('mech') ? 'compra_mech'
-                       : label.toLowerCase().includes('repuestos') ? 'repuestos'
-                       : 'gasto_misc',
-              nota: `Adquisición tabla Hoja 28 nivel ${level}`,
-              jugador: '',
-            });
-            setAcqOpen(false);
-            refresh();
-          }}
-        />
-      )}
+
 
       {tallerOpen && (
         <TallerModal

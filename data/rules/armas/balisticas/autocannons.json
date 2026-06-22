@@ -1,0 +1,618 @@
+[
+  {
+    "item": "Autocannon/20",
+    "aliases": [
+      "(IS) Autocannon/20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Autocannon/10",
+    "aliases": [
+      "(IS) Autocannon/10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Autocannon/5",
+    "aliases": [
+      "(IS) Autocannon/5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Autocannon/2",
+    "aliases": [
+      "(IS) Autocannon/2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "AC/2",
+    "aliases": [
+      "ISAC2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/5",
+    "aliases": [
+      "ISAC5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/10",
+    "aliases": [
+      "ISAC10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/20",
+    "aliases": [
+      "ISAC20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Ultra AC/2",
+    "aliases": [
+      "ISUltraAC2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Ultra AC/5",
+    "aliases": [
+      "ISUltraAC5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Ultra AC/10",
+    "aliases": [
+      "ISUltraAC10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 4,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Ultra AC/20",
+    "aliases": [
+      "ISUltraAC20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 8,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "LBX AC/2",
+    "aliases": [
+      "ISLBXAC2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "LBX AC/5",
+    "aliases": [
+      "ISLBXAC5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "LBX AC/10",
+    "aliases": [
+      "ISLBXAC10"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "LBX AC/20",
+    "aliases": [
+      "ISLBXAC20"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Light AC/2",
+    "aliases": [
+      "ISLightAC2",
+      "ISLAC2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Light AC/5",
+    "aliases": [
+      "ISLightAC5",
+      "ISLAC5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "RAC/2",
+    "aliases": [
+      "ISRotaryAC2"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 17,
+    "long_range": 25,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "RAC/5",
+    "aliases": [
+      "ISRotaryAC5"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/2",
+    "aliases": [
+      "Autocannon/2"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 16,
+    "long_range": 24,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/5",
+    "aliases": [
+      "Autocannon/5"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/10",
+    "aliases": [
+      "Autocannon/10"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "AC/20",
+    "aliases": [
+      "Autocannon/20"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Light AC/2",
+    "aliases": [
+      "Light AC/2"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Light AC/5",
+    "aliases": [
+      "Light AC/5"
+    ],
+    "tech_base": "Mixed",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  }
+]

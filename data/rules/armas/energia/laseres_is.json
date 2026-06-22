@@ -1,0 +1,342 @@
+[
+  {
+    "item": "Medium Laser",
+    "aliases": [
+      "(IS) Medium Laser",
+      "ISMediumLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Large Laser",
+    "aliases": [
+      "(IS) Large Laser",
+      "ISLargeLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 8,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Small Laser",
+    "aliases": [
+      "(IS) Small Laser",
+      "ISSmallLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Small Laser",
+    "aliases": [
+      "Small Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "ER Small Laser",
+    "aliases": [
+      "ISERSmallLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "ER Medium Laser",
+    "aliases": [
+      "ISERMediumLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "ER Large Laser",
+    "aliases": [
+      "ISERLargeLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 19,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Medium Pulse Laser",
+    "aliases": [
+      "ISMediumPulseLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 4,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "pulse_mod",
+        "value": -2
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Large Pulse Laser",
+    "aliases": [
+      "ISLargePulseLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 10,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "pulse_mod",
+        "value": -2
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Small Pulse Laser",
+    "aliases": [
+      "ISSmallPulseLaser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [
+      {
+        "kind": "pulse_mod",
+        "value": -2
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Medium Laser",
+    "aliases": [
+      "Medium Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "Large Laser",
+    "aliases": [
+      "Large Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 8,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "ER Medium Laser",
+    "aliases": [
+      "ER Medium Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  },
+  {
+    "item": "ER Large Laser",
+    "aliases": [
+      "ER Large Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 19,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MECH_WEAPON_DB)"
+  }
+]

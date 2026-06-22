@@ -1,0 +1,163 @@
+[
+  {
+    "item": "Ultra AC/20",
+    "aliases": [
+      "(CL) Ultra AC/20",
+      "CLUltraAC20",
+      "Ultra AC/20"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 7,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": 5,
+    "is_cluster": true,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Ultra AC/10",
+    "aliases": [
+      "(CL) Ultra AC/10",
+      "Ultra AC/10"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 3,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": true,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Ultra AC/5",
+    "aliases": [
+      "(CL) Ultra AC/5",
+      "Ultra AC/5"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 21,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": true,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "Ultra AC/2",
+    "aliases": [
+      "(CL) Ultra AC/2",
+      "Ultra AC/2"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 9,
+    "medium_range": 18,
+    "long_range": 27,
+    "has_ammo": true,
+    "ammo_per_ton": 45,
+    "is_cluster": true,
+    "special_hooks": [
+      {
+        "kind": "ultra_jam"
+      }
+    ],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "LB 20-X AC",
+    "aliases": [
+      "(CL) LB 20-X AC",
+      "LB 20-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 6,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  },
+  {
+    "item": "LB 10-X AC",
+    "aliases": [
+      "(CL) LB 10-X AC",
+      "LB 10-X AC"
+    ],
+    "tech_base": "Clan",
+    "category": "Ballistic",
+    "manual_type": "DB",
+    "heat": 2,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": true,
+    "ammo_per_ton": null,
+    "is_cluster": true,
+    "special_hooks": [],
+    "house_rules": {},
+    "notes": "",
+    "enrichment_level": "minimal",
+    "source": "weapons.ts (MIN_EMBEDDED)"
+  }
+]

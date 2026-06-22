@@ -3,6 +3,7 @@ import { Wrench } from 'lucide-react';
 import type { MechState, MechSession } from '@/lib/combat-types';
 import { mechIsAmmoCrit } from '@/lib/weapons';
 import { ammoExplosionDmgPerRound, countSystemCritHits } from '@/lib/combat-data';
+import { tWeapon } from '@/lib/translator';
 
 interface Props {
   state: MechState;
@@ -114,7 +115,7 @@ export function CriticalMatrix({ state, session, onToggleCrit, sysHits, onAdjust
                           {isEmpty
                             ? <span className="text-secondary/20">-</span>
                             : <span className={`flex-1 ${s.hit ? 'line-through' : ''}`}>
-                                {s.name}
+                                {tWeapon(s.name)}
                                 {ammoBin && (
                                   <span className={`ml-1 ${ammoBin.current === 0 ? 'text-error/70' : s.hit ? 'text-error/60' : 'text-secondary/50'}`}>
                                     ({ammoBin.current})

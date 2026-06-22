@@ -200,7 +200,6 @@ export function MunicionTab() {
                       </div>
                       <div className="flex justify-between mt-1">
                         <span className="font-mono text-[10px] text-secondary/60">{current} / {max} rondas</span>
-                        <span className="font-mono text-[10px] text-secondary/60">Crit: {bin.critIndex}</span>
                       </div>
                     </div>
                     

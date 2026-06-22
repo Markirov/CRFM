@@ -250,6 +250,9 @@ async function loadRosterAsEnvelope() {
         lanza:         data.lanza ?? '',
         disparoMech:   data.disparoMech ?? pickSkillLevel(data.extraSkills, ['Disparo Mech', 'Disparar Mech']),
         pilotajeMech:  data.pilotajeMech ?? pickSkillLevel(data.extraSkills, ['Pilotar Mech', 'Pilotaje Mech']),
+        patrimonio:      data.patrimonio ?? 0,
+        equipoPersonal:  data.equipoPersonal ?? '',
+        rpgFinanzas:     data.rpgFinanzas ?? {},
       };
     }).sort((a, b) => a.order - b.order);
     return { success: true, data: { roster } };
@@ -321,7 +324,7 @@ export const deletePersonalEntry = (id: string) =>
 export type LibroMayorTipo = 'ingreso' | 'gasto';
 export type LibroMayorCategoria =
   | 'contrato_secundario' | 'compra_mech' | 'venta_mech' | 'repuestos'
-  | 'sueldo_extra' | 'soborno' | 'mantenimiento_mensual'
+  | 'sueldo_extra' | 'soborno' | 'mantenimiento_mensual' | 'transporte'
   | 'gasto_misc' | 'ingreso_misc';
 
 export interface LibroMayorEntry {

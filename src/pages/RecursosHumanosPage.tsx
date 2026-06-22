@@ -11,5 +11,5 @@ export function RecursosHumanosPage() {
   if (activeSubTab === 'barracones') return <BarraconesPage />;
   if (activeSubTab === 'logros') return <LogrosPage />;
   
-  return <PersonalTab campaignDate={campaign.fecha} />;
+  return <PersonalTab campaignDate={`${campaign.campaignYear}-${String(campaign.campaignMonth).padStart(2, '0')}-01`} />;
 }

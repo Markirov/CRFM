@@ -108,7 +108,7 @@ export function ViajesTab() {
               <span>Subtotal Coste:</span>
               <span style={{ fontFamily: '"Share Tech Mono", monospace' }}>{subtotal.toLocaleString()} ₡</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 16, fontWeight: 800, color: cubiertoPorContrato ? T.greenLight : T.bloodLight }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 16, fontWeight: 800, color: cubiertoPorContrato ? '#0f0' : T.bloodLight }}>
               <span>TOTAL:</span>
               <span style={{ fontFamily: '"Share Tech Mono", monospace' }}>{total.toLocaleString()} ₡</span>
             </div>

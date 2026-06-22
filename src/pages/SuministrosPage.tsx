@@ -3,7 +3,7 @@ import { useAppStore } from '@/lib/store';
 import { MercadoTab } from '../components/hangar/MercadoTab';
 import { ViajesTab } from '../components/logistica/ViajesTab';
 import { loadHangar } from '@/lib/firebase-service';
-import type { HangarItem } from '@/types/campaign';
+import type { HangarItem } from '@/lib/hangar-types';
 
 export function SuministrosPage() {
   const { activeSubTab } = useAppStore();

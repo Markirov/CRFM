@@ -1,393 +1,2169 @@
 [
   {
-    "nombre": "ER Large Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 12,
-    "dano": "8",
-    "rango_min": 0,
-    "rango_corto": 7,
-    "rango_medio": 14,
-    "rango_largo": 19,
-    "mod_disparo": 0
+    "item": "Small Laser",
+    "aliases": [
+      "(IS) Small Laser",
+      "ISSmallLaser",
+      "SL",
+      "Small Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Medium Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 5,
-    "dano": "5",
-    "rango_min": 0,
-    "rango_corto": 4,
-    "rango_medio": 8,
-    "rango_largo": 12,
-    "mod_disparo": 0
+    "item": "Medium Laser",
+    "aliases": [
+      "(IS) Medium Laser",
+      "ISMediumLaser",
+      "ML",
+      "Medium Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 40000,
+    "tonnage": 1,
+    "battle_value": 46,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Small Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 2,
-    "dano": "3",
-    "rango_min": 0,
-    "rango_corto": 2,
-    "rango_medio": 4,
-    "rango_largo": 5,
-    "mod_disparo": 0
+    "item": "Large Laser",
+    "aliases": [
+      "(IS) Large Laser",
+      "ISLargeLaser",
+      "LL",
+      "Large Laser"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 8,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 5,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Flamer",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE, H, AI",
-    "calor": 3,
-    "dano": "2",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 3,
-    "mod_disparo": 0,
-    "notas": "Puede infligir 2 de calor en lugar de daño."
+    "item": "Prototype Small Laser",
+    "aliases": [
+      "(IS) Prototype Small Laser",
+      "ISSmallLaser",
+      "PTSL",
+      "Prototype Small Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 9,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Large Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 8,
-    "dano": "8",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 10,
-    "rango_largo": 15,
-    "mod_disparo": 0
+    "item": "Prototype Medium Laser",
+    "aliases": [
+      "(IS) Prototype Medium Laser",
+      "ISMediumLaser",
+      "PTML",
+      "Prototype Medium Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 40000,
+    "tonnage": 1,
+    "battle_value": 46,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Medium Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 3,
-    "dano": "5",
-    "rango_min": 0,
-    "rango_corto": 3,
-    "rango_medio": 6,
-    "rango_largo": 9,
-    "mod_disparo": 0
+    "item": "Prototype Large Laser",
+    "aliases": [
+      "(IS) Prototype Large Laser",
+      "ISLargeLaser",
+      "PTLL",
+      "Prototype Large Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 5,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Small Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 1,
-    "dano": "3",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 3,
-    "mod_disparo": 0
+    "item": "Binary Laser Cannon",
+    "aliases": [
+      "(IS) Binary Laser Cannon",
+      "ISBlazer",
+      "BLC",
+      "Binary Laser Cannon"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 16,
+    "damage": "12",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 9,
+    "battle_value": 222,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Plasma Rifle",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE, H",
-    "calor": 10,
-    "dano": "10",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 10,
-    "rango_largo": 15,
-    "mod_disparo": 0,
-    "notas": "Añade 1D6 de calor a unidades que lo rastrean. Inflige 10+2D6 de daño a unidades que no lo rastrean."
+    "item": "Bombast Laser",
+    "aliases": [
+      "(IS) Bombast Laser",
+      "ISBombastLaser",
+      "BmbstLsr",
+      "Bombast Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "12",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 7,
+    "battle_value": 137,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Light PPC",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 5,
-    "dano": "5",
-    "rango_min": 3,
-    "rango_corto": 6,
-    "rango_medio": 12,
-    "rango_largo": 18,
-    "mod_disparo": 0
+    "item": "Extended Range Micro Laser",
+    "aliases": [
+      "(CL) ER Micro Laser",
+      "CLERMicroLaser",
+      "ERMcL",
+      "ER Micro Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 1,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 4,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 10000,
+    "tonnage": 0.25,
+    "battle_value": 7,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "PPC",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 10,
-    "dano": "10",
-    "rango_min": 3,
-    "rango_corto": 6,
-    "rango_medio": 12,
-    "rango_largo": 18,
-    "mod_disparo": 0
+    "item": "Extended Range Small Laser",
+    "aliases": [
+      "(IS) ER Small Laser",
+      "ISERSmallLaser",
+      "ERSL",
+      "ER Small Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 5,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Heavy PPC",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 15,
-    "dano": "15",
-    "rango_min": 3,
-    "rango_corto": 6,
-    "rango_medio": 12,
-    "rango_largo": 18,
-    "mod_disparo": 0
+    "item": "Clan Prototype Extended Range Small Laser",
+    "aliases": [
+      "ER Small Laser CP",
+      "ISERSmallLaser",
+      "ERSL-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 5,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER PPC",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE",
-    "calor": 15,
-    "dano": "10",
-    "rango_min": 0,
-    "rango_corto": 7,
-    "rango_medio": 14,
-    "rango_largo": 23,
-    "mod_disparo": 0
+    "item": "Clan Interim Extended Range Small Laser",
+    "aliases": [
+      "ER Small Laser CI",
+      "ISERSmallLaser",
+      "ERSL-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 5,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 17,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Snub-Nose PPC",
-    "tecnologia": "Inner Sphere",
-    "tipo": "DE, V",
-    "calor": 10,
-    "dano": "10/8/5",
-    "rango_min": 0,
-    "rango_corto": 9,
-    "rango_medio": 13,
-    "rango_largo": 15,
-    "mod_disparo": 0,
-    "notas": "Daño variable por rango (10 Corto, 8 Medio, 5 Largo)."
+    "item": "Extended Range Small Laser",
+    "aliases": [
+      "(CL) ER Small Laser",
+      "CLERSmallLaser",
+      "ERSL",
+      "ER Small Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 0.5,
+    "battle_value": 31,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Large Pulse Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "P",
-    "calor": 10,
-    "dano": "9",
-    "rango_min": 0,
-    "rango_corto": 3,
-    "rango_medio": 7,
-    "rango_largo": 10,
-    "mod_disparo": -2
+    "item": "Extended Range Medium Laser",
+    "aliases": [
+      "(IS) ER Medium Laser",
+      "ISERMediumLaser",
+      "ERML",
+      "ER Medium Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 80000,
+    "tonnage": 1,
+    "battle_value": 62,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Medium Pulse Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "P",
-    "calor": 4,
-    "dano": "6",
-    "rango_min": 0,
-    "rango_corto": 2,
-    "rango_medio": 4,
-    "rango_largo": 6,
-    "mod_disparo": -2
+    "item": "Clan Prototype Extended Range Medium Laser",
+    "aliases": [
+      "ER Medium Laser CP",
+      "ISERMediumLaser",
+      "ERML-CP"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 80000,
+    "tonnage": 1.5,
+    "battle_value": 62,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Small Pulse Laser",
-    "tecnologia": "Inner Sphere",
-    "tipo": "P, AI",
-    "calor": 2,
-    "dano": "3",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 3,
-    "mod_disparo": -2
+    "item": "Clan Interim Extended Range Medium Laser",
+    "aliases": [
+      "ER Medium Laser CI",
+      "ISERMediumLaser",
+      "ERML-CI"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 80000,
+    "tonnage": 1,
+    "battle_value": 62,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Operation KLONDIKE",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "TAG",
-    "tecnologia": "Inner Sphere",
-    "tipo": "E",
-    "calor": 0,
-    "dano": "0",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 9,
-    "rango_largo": 15,
-    "mod_disparo": 0,
-    "notas": "Designador de objetivos."
+    "item": "Extended Range Medium Laser",
+    "aliases": [
+      "(CL) ER Medium Laser",
+      "CLERMediumLaser",
+      "ERML",
+      "ER Medium Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "7",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 80000,
+    "tonnage": 1,
+    "battle_value": 108,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Large Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 12,
-    "dano": "10",
-    "rango_min": 0,
-    "rango_corto": 8,
-    "rango_medio": 15,
-    "rango_largo": 25,
-    "mod_disparo": 0
+    "item": "Extended Range Large Laser",
+    "aliases": [
+      "(IS) ER Large Laser",
+      "ISERLargeLaser",
+      "ERLL",
+      "ER Large Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 19,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 5,
+    "battle_value": 163,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Medium Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 5,
-    "dano": "7",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 10,
-    "rango_largo": 15,
-    "mod_disparo": 0
+    "item": "Extended Range Large Laser",
+    "aliases": [
+      "(CL) ER Large Laser",
+      "CLERLargeLaser",
+      "ERLL",
+      "ER Large Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 12,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 15,
+    "long_range": 25,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 4,
+    "battle_value": 248,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Small Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 2,
-    "dano": "5",
-    "rango_min": 0,
-    "rango_corto": 2,
-    "rango_medio": 4,
-    "rango_largo": 6,
-    "mod_disparo": 0
+    "item": "Micro Pulse Laser",
+    "aliases": [
+      "(CL) Micro Pulse Laser",
+      "CLMicroPulseLaser",
+      "McPL",
+      "Micro Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 12500,
+    "tonnage": 0.5,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER Micro Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 1,
-    "dano": "2",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 4,
-    "mod_disparo": 0
+    "item": "Small Pulse Laser",
+    "aliases": [
+      "(IS) Small Pulse Laser",
+      "ISSmallPulseLaser",
+      "SPL",
+      "Small Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 16000,
+    "tonnage": 1,
+    "battle_value": 12,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Heavy Large Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 18,
-    "dano": "16",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 10,
-    "rango_largo": 15,
-    "mod_disparo": 1
+    "item": "Small Pulse Laser",
+    "aliases": [
+      "(CL) Small Pulse Laser",
+      "CLSmallPulseLaser",
+      "SPL",
+      "Small Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 2,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 16000,
+    "tonnage": 1,
+    "battle_value": 24,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Heavy Medium Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 7,
-    "dano": "10",
-    "rango_min": 0,
-    "rango_corto": 3,
-    "rango_medio": 6,
-    "rango_largo": 9,
-    "mod_disparo": 1
+    "item": "Medium Pulse Laser",
+    "aliases": [
+      "(IS) Medium Pulse Laser",
+      "ISMediumPulseLaser",
+      "MPL",
+      "Medium Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 4,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 60000,
+    "tonnage": 2,
+    "battle_value": 48,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Heavy Small Laser",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 3,
-    "dano": "6",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 3,
-    "mod_disparo": 1
+    "item": "Medium Pulse Laser",
+    "aliases": [
+      "(CL) Medium Pulse Laser",
+      "CLMediumPulseLaser",
+      "MPL",
+      "Medium Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 4,
+    "damage": "7",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 12,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 60000,
+    "tonnage": 2,
+    "battle_value": 111,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Plasma Cannon",
-    "tecnologia": "Clan",
-    "tipo": "DE, H",
-    "calor": 7,
-    "dano": "0",
-    "rango_min": 0,
-    "rango_corto": 6,
-    "rango_medio": 12,
-    "rango_largo": 18,
-    "mod_disparo": 0,
-    "notas": "Inflige 2D6 de calor a unidades que lo rastrean. Inflige 3D6 de daño a unidades que no lo rastrean."
+    "item": "Large Pulse Laser",
+    "aliases": [
+      "(IS) Large Pulse Laser",
+      "ISLargePulseLaser",
+      "LPL",
+      "Large Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 10,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 175000,
+    "tonnage": 7,
+    "battle_value": 119,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "ER PPC",
-    "tecnologia": "Clan",
-    "tipo": "DE",
-    "calor": 15,
-    "dano": "15",
-    "rango_min": 0,
-    "rango_corto": 7,
-    "rango_medio": 14,
-    "rango_largo": 23,
-    "mod_disparo": 0
+    "item": "Large Pulse Laser",
+    "aliases": [
+      "(CL) Large Pulse Laser",
+      "CLLargePulseLaser",
+      "LPL",
+      "Large Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 6,
+    "medium_range": 14,
+    "long_range": 20,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 175000,
+    "tonnage": 6,
+    "battle_value": 265,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Large Pulse Laser",
-    "tecnologia": "Clan",
-    "tipo": "P",
-    "calor": 10,
-    "dano": "10",
-    "rango_min": 0,
-    "rango_corto": 6,
-    "rango_medio": 14,
-    "rango_largo": 20,
-    "mod_disparo": -2
+    "item": "Small X-Pulse Laser",
+    "aliases": [
+      "(IS) Small X-Pulse Laser",
+      "ISSmallXPulseLaser",
+      "SXPL",
+      "Small X-Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 3,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 5,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 31000,
+    "tonnage": 1,
+    "battle_value": 21,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Medium Pulse Laser",
-    "tecnologia": "Clan",
-    "tipo": "P",
-    "calor": 4,
-    "dano": "7",
-    "rango_min": 0,
-    "rango_corto": 4,
-    "rango_medio": 8,
-    "rango_largo": 12,
-    "mod_disparo": -2
+    "item": "Medium X-Pulse Laser",
+    "aliases": [
+      "(IS) Medium X-Pulse Laser",
+      "ISMediumXPulseLaser",
+      "MXPL",
+      "Medium X-Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 6,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 110000,
+    "tonnage": 2,
+    "battle_value": 71,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Small Pulse Laser",
-    "tecnologia": "Clan",
-    "tipo": "P, AI",
-    "calor": 2,
-    "dano": "3",
-    "rango_min": 0,
-    "rango_corto": 2,
-    "rango_medio": 4,
-    "rango_largo": 6,
-    "mod_disparo": -2
+    "item": "Large X-Pulse Laser",
+    "aliases": [
+      "(IS) Large X-Pulse Laser",
+      "ISLargeXPulseLaser",
+      "LXPL",
+      "Large X-Pulse Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 14,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 275000,
+    "tonnage": 7,
+    "battle_value": 178,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Micro Pulse Laser",
-    "tecnologia": "Clan",
-    "tipo": "P, AI",
-    "calor": 1,
-    "dano": "3",
-    "rango_min": 0,
-    "rango_corto": 1,
-    "rango_medio": 2,
-    "rango_largo": 3,
-    "mod_disparo": -2
+    "item": "Extended Range Small Pulse Laser",
+    "aliases": [
+      "(CL) ER Small Pulse Laser",
+      "CLERSmallPulseLaser",
+      "ERSPL",
+      "ER Small Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 30000,
+    "tonnage": 1.5,
+    "battle_value": 36,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "TAG",
-    "tecnologia": "Clan",
-    "tipo": "E",
-    "calor": 0,
-    "dano": "0",
-    "rango_min": 0,
-    "rango_corto": 5,
-    "rango_medio": 9,
-    "rango_largo": 15,
-    "mod_disparo": 0,
-    "notas": "Designador de objetivos."
+    "item": "Extended Range Medium Pulse Laser",
+    "aliases": [
+      "(CL) ER Medium Pulse Laser",
+      "CLERMediumPulseLaser",
+      "ERMPL",
+      "ER Medium Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 6,
+    "damage": "7",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 9,
+    "long_range": 14,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 150000,
+    "tonnage": 2,
+    "battle_value": 117,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
   },
   {
-    "nombre": "Light TAG",
-    "tecnologia": "Clan",
-    "tipo": "E",
-    "calor": 0,
-    "dano": "0",
-    "rango_min": 0,
-    "rango_corto": 3,
-    "rango_medio": 6,
-    "rango_largo": 9,
-    "mod_disparo": 0,
-    "notas": "Designador de objetivos."
+    "item": "Extended Range Large Pulse Laser",
+    "aliases": [
+      "(CL) ER Large Pulse Laser",
+      "CLERLargePulseLaser",
+      "ERLPL",
+      "ER Large Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 13,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 15,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 400000,
+    "tonnage": 6,
+    "battle_value": 272,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Small Variable Speed Pulse Laser",
+    "aliases": [
+      "(IS) Small Variable Speed Pulse Laser",
+      "ISSmallVSPLaser",
+      "SVSPL",
+      "Small VSPL"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 3,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 4,
+    "long_range": 6,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 60000,
+    "tonnage": 2,
+    "battle_value": 22,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Variable Speed Pulse Laser",
+    "aliases": [
+      "(IS) Medium Variable Speed Pulse Laser",
+      "ISMediumVSPLaser",
+      "MVSPL",
+      "Medium VSPL"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 7,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 5,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 4,
+    "battle_value": 56,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Large Variable Speed Pulse Laser",
+    "aliases": [
+      "(IS) Large Variable Speed Pulse Laser",
+      "ISLargeVSPLaser",
+      "LVSPL",
+      "Large VSPL"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 10,
+    "damage": "11",
+    "min_range": 0,
+    "short_range": 4,
+    "medium_range": 8,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 465000,
+    "tonnage": 9,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Small Laser",
+    "aliases": [
+      "(CL) Heavy Small Laser",
+      "CLHeavySmallLaser",
+      "HSL",
+      "Heavy Small Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 20000,
+    "tonnage": 0.5,
+    "battle_value": 15,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Medium Laser",
+    "aliases": [
+      "(CL) Heavy Medium Laser",
+      "CLHeavyMediumLaser",
+      "HML",
+      "Heavy Medium Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 7,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 1,
+    "battle_value": 76,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Large Laser",
+    "aliases": [
+      "(CL) Heavy Large Laser",
+      "CLHeavyLargeLaser",
+      "HLL",
+      "Heavy Large Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 18,
+    "damage": "16",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 250000,
+    "tonnage": 4,
+    "battle_value": 244,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Heavy Small Laser",
+    "aliases": [
+      "(CL) Improved Heavy Small Laser",
+      "CLImprovedHeavySmallLaser",
+      "iHSL",
+      "Imp. Hvy Small Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 30000,
+    "tonnage": 0.5,
+    "battle_value": 19,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Heavy Medium Laser",
+    "aliases": [
+      "(CL) Improved Heavy Medium Laser",
+      "CLImprovedHeavyMediumLaser",
+      "iHML",
+      "Imp. Hvy Medium Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 7,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 150000,
+    "tonnage": 1,
+    "battle_value": 93,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Heavy Large Laser",
+    "aliases": [
+      "(CL) Improved Heavy Large Laser",
+      "CLImprovedHeavyLargeLaser",
+      "iHLL",
+      "Imp. Hvy Large Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 18,
+    "damage": "16",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 400000,
+    "tonnage": 4,
+    "battle_value": 296,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Small Chemical Laser",
+    "aliases": [
+      "(CL) Small Chemical Laser",
+      "CLSmallChemLaser",
+      "SCL",
+      "Small Chem Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 1,
+    "damage": "3",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": true,
+    "ammo_per_ton": 60,
+    "is_cluster": false,
+    "cost": 10000,
+    "tonnage": 0.5,
+    "battle_value": 7,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Chemical Laser",
+    "aliases": [
+      "(CL) Medium Chemical Laser",
+      "CLMediumChemLaser",
+      "MCL",
+      "Medium Chem Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 2,
+    "damage": "5",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": true,
+    "ammo_per_ton": 30,
+    "is_cluster": false,
+    "cost": 30000,
+    "tonnage": 1,
+    "battle_value": 37,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Large Chemical Laser",
+    "aliases": [
+      "(CL) Large Chemical Laser",
+      "CLLargeChemLaser",
+      "LCL",
+      "Large Chem Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 6,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "cost": 75000,
+    "tonnage": 5,
+    "battle_value": 99,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Small Re-engineered Laser",
+    "aliases": [
+      "(IS) Small R-e Laser",
+      "ISSmallRELaser",
+      "RESL",
+      "Small R-e Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 4,
+    "damage": "4",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 25000,
+    "tonnage": 1.5,
+    "battle_value": 14,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: FM3145",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Medium Re-engineered Laser",
+    "aliases": [
+      "(IS) Medium R-e Laser",
+      "ISMediumRELaser",
+      "REML",
+      "Medium R-e Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 6,
+    "damage": "6",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 6,
+    "long_range": 9,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 2.5,
+    "battle_value": 65,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: FM3145",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Large Re-engineered Laser",
+    "aliases": [
+      "(IS) Large R-e Laser",
+      "ISLargeRELaser",
+      "RELL",
+      "Large R-e Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 9,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 250000,
+    "tonnage": 8,
+    "battle_value": 161,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: FM3145",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Light Particle Projection Cannon",
+    "aliases": [
+      "(IS) Light PPC",
+      "ISLightPPC",
+      "LPPC",
+      "Light PPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "5",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 150000,
+    "tonnage": 3,
+    "battle_value": 88,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Snub-Nose Particle Projection Cannon",
+    "aliases": [
+      "(IS) Snub-Nose PPC",
+      "ISSNPPC",
+      "SNPPC",
+      "Snub-Nose PPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 9,
+    "medium_range": 13,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 6,
+    "battle_value": 165,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Particle Projection Cannon",
+    "aliases": [
+      "(IS) PPC",
+      "ISPPC",
+      "PPC"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 7,
+    "battle_value": 176,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Prototype Particle Projection Cannon",
+    "aliases": [
+      "(IS) Prototype PPC",
+      "ISPPC",
+      "PTPPC",
+      "Prototype PPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "10",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 7,
+    "battle_value": 176,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Particle Projection Cannon",
+    "aliases": [
+      "(IS) Heavy PPC",
+      "ISHeavyPPC",
+      "HPPC",
+      "Heavy PPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "15",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 250000,
+    "tonnage": 10,
+    "battle_value": 317,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Range Particle Projection Cannon",
+    "aliases": [
+      "(IS) ER PPC",
+      "ISERPPC",
+      "ERPPC",
+      "ER PPC"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "10",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 7,
+    "battle_value": 229,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Extended Range Particle Projection Cannon",
+    "aliases": [
+      "(CL) ER PPC",
+      "CLERPPC",
+      "ERPPC",
+      "ER PPC"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "15",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 6,
+    "battle_value": 412,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Enhanced Extended Range Particle Projection Cannon",
+    "aliases": [
+      "(IS) Enhanced ER PPC",
+      "ISEHERPPC",
+      "EnERPPC",
+      "Enhanced ER PPC"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 15,
+    "damage": "12",
+    "min_range": 0,
+    "short_range": 7,
+    "medium_range": 14,
+    "long_range": 23,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 300000,
+    "tonnage": 7,
+    "battle_value": 329,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Jihad Secrets: The Blake Documents",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Particle Projection Cannon",
+    "aliases": [
+      "(CL) Improved PPC",
+      "CLIMPPPC",
+      "ImpPPC",
+      "Improved PPC"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 10,
+    "damage": "10",
+    "min_range": 3,
+    "short_range": 6,
+    "medium_range": 12,
+    "long_range": 18,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 200000,
+    "tonnage": 6,
+    "battle_value": 176,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Flamer",
+    "aliases": [
+      "(IS) Flamer",
+      "ISFlamer",
+      "Flmr",
+      "Flamer"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7500,
+    "tonnage": 1,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Flamer",
+    "aliases": [
+      "(CL) Flamer",
+      "CLFlamer",
+      "Flmr",
+      "Flamer"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 7500,
+    "tonnage": 0.5,
+    "battle_value": 6,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Vehicle Flamer",
+    "aliases": [
+      "Vehicle Flamer",
+      "VehicleFlamer",
+      "Vflmr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 3,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 1,
+    "medium_range": 2,
+    "long_range": 3,
+    "has_ammo": true,
+    "ammo_per_ton": 20,
+    "is_cluster": false,
+    "cost": 7500,
+    "tonnage": 0.5,
+    "battle_value": 5,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tech Manual",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "ER Flamer",
+    "aliases": [
+      "ER Flamer",
+      "ERFlamer",
+      "ERFlmr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 4,
+    "damage": "2",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 5,
+    "long_range": 7,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 15000,
+    "tonnage": 1,
+    "battle_value": 16,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Heavy Flamer",
+    "aliases": [
+      "Heavy Flamer",
+      "HeavyFlamer",
+      "Hflmr"
+    ],
+    "tech_base": "Mixed",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 5,
+    "damage": "4",
+    "min_range": 0,
+    "short_range": 2,
+    "medium_range": 3,
+    "long_range": 4,
+    "has_ammo": true,
+    "ammo_per_ton": 10,
+    "is_cluster": false,
+    "cost": 11250,
+    "tonnage": 1.5,
+    "battle_value": 15,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Tactical Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Large Laser",
+    "aliases": [
+      "(CL) Improved Large Laser",
+      "Improved Large Laser",
+      "iLL"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 8,
+    "damage": "8",
+    "min_range": 0,
+    "short_range": 5,
+    "medium_range": 10,
+    "long_range": 15,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 100000,
+    "tonnage": 4,
+    "battle_value": 123,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "Improved Large Pulse Laser",
+    "aliases": [
+      "(CL) Improved Large Pulse Laser",
+      "ImprovedLargePulseLaser",
+      "iLPL",
+      "Improved Large Pulse Laser"
+    ],
+    "tech_base": "Clan",
+    "category": "Energy",
+    "manual_type": "P",
+    "heat": 10,
+    "damage": "9",
+    "min_range": 0,
+    "short_range": 3,
+    "medium_range": 7,
+    "long_range": 10,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 175000,
+    "tonnage": 6,
+    "battle_value": 119,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
+  },
+  {
+    "item": "RISC Hyper Laser",
+    "aliases": [
+      "(IS) RISC Hyper Laser",
+      "ISRISCHyperLaser ",
+      "RSCHL ",
+      "RISC Hyper Laser"
+    ],
+    "tech_base": "Inner Sphere",
+    "category": "Energy",
+    "manual_type": "DE",
+    "heat": 24,
+    "damage": "20",
+    "min_range": 0,
+    "short_range": 8,
+    "medium_range": 15,
+    "long_range": 25,
+    "has_ammo": false,
+    "ammo_per_ton": null,
+    "is_cluster": false,
+    "cost": 750000,
+    "tonnage": 8,
+    "battle_value": 596,
+    "special_hooks": [],
+    "house_rules": {
+      "custom_to_hit_modifier": {
+        "active": false,
+        "value": 0,
+        "notes": ""
+      }
+    },
+    "notes": "Source: Interstellar Operations",
+    "source": "SSW JSON Export"
   }
 ]

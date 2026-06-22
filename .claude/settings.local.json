@@ -42,7 +42,11 @@
       "Bash(git fetch *)",
       "Bash(powershell -Command 'Add-Type -AssemblyName System.Drawing; foreach \\($f in Get-ChildItem '\\\\''public/pilot-*.png'\\\\''\\) { $img = [System.Drawing.Image]::FromFile\\($f.FullName\\); Write-Host \"$\\($f.Name\\): $\\($img.Width\\)x$\\($img.Height\\)\"; $img.Dispose\\(\\) }')",
       "Bash(cd \"E:/Drive/CBT/MechWarrior RPG\" && npx tsc --noEmit 2>&1 | tail -3)",
-      "Bash(git push*)"
+      "Bash(git push*)",
+      "Bash(claude --version)",
+      "Read(//c/Users/marco/.claude/**)",
+      "Bash(ls -la)",
+      "Bash(find . -maxdepth 2 -iname \"manuales*\")"
     ],
     "deny": [
       "Bash(git reset --hard*)",

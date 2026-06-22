@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { InfantrySlot, DamageFlags, FireTarget } from '@/lib/combat-types';
+import { tWeapon } from '@/lib/translator';
 import { TrooperBar } from './TrooperBar';
 
 const MOV_LABEL: Record<string, string> = {
@@ -53,7 +54,7 @@ export function InfantryPanel({ slot, targets = [], onFireAt, onNextTurn, onDire
           <div className="font-mono text-[11px] text-primary tracking-widest uppercase">{state.name}</div>
           <div className="font-mono text-[9px] text-outline tracking-widest mt-0.5">
             {state.squadCount} ESC · {MOV_LABEL[state.movement]} {state.walkMP}
-            {state.jumpMP > 0 ? `/J${state.jumpMP}` : ''} · {state.weaponClass.toUpperCase()}
+            {state.jumpMP > 0 ? `/J${state.jumpMP}` : ''} · {tWeapon(state.weaponClass).toUpperCase()}
             {state.antiMech ? ' · ANTI-MECH' : ''}
           </div>
         </div>
@@ -105,7 +106,7 @@ export function InfantryPanel({ slot, targets = [], onFireAt, onNextTurn, onDire
 
       {/* Disparo */}
       <div className="px-3 py-2 space-y-2">
-        <div className="font-mono text-[8px] text-outline tracking-widest">DISPARO · {state.weaponClass.toUpperCase()}</div>
+        <div className="font-mono text-[8px] text-outline tracking-widest">DISPARO · {tWeapon(state.weaponClass).toUpperCase()}</div>
 
         {/* Target selector */}
         {targets.length > 0 && (

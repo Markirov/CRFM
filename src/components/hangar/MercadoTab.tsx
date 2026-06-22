@@ -8,6 +8,7 @@ import { saveHangarItem, commitLibroEntryAndTreasury, saveConfigBatch } from '@/
 import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { ALMACEN_CATALOG, type AlmacenCatalogItem } from '@/lib/almacen-catalog';
+import { tWeapon } from '@/lib/translator';
 
 const fmt = (n: number) => Math.round(n).toLocaleString('es-ES') + ' ₡';
 
@@ -60,13 +61,13 @@ function MercadoMaterialTab() {
 
   const suggestions = useMemo(() => {
     if (query.trim().length < 1) return ALMACEN_CATALOG;
-    const q = query.trim().toLowerCase();
-    return ALMACEN_CATALOG.filter(c => c.nombre.toLowerCase().includes(q));
+    const q = query.toLowerCase();
+    return ALMACEN_CATALOG.filter(c => tWeapon(c.nombre).toLowerCase().includes(q) || c.nombre.toLowerCase().includes(q));
   }, [query]);
 
   const precioTotal = selected ? selected.costoBase * cantidadTons : 0;
 
-  const handleComprar = async () => {
+  const handleBuyMaterial = async () => {
     if (!selected || cantidadTons <= 0 || precioTotal <= 0) return;
     setCommitState('sending');
 
@@ -78,7 +79,7 @@ function MercadoMaterialTab() {
     await commitLibroEntryAndTreasury({
       id: genId('lm'),
       fecha: campaignDate,
-      concepto: `Compra de material: ${selected.nombre} (x${cantidadTons}${selected.tons ? ' tons' : ' uds'})`,
+      concepto: `Compra de material: ${tWeapon(selected.nombre)} (x${cantidadTons}${selected.tons ? ' tons' : ' uds'})`,
       cantidad: precioTotal,
       tipo: 'gasto',
       categoria: 'repuestos',
@@ -125,12 +126,12 @@ function MercadoMaterialTab() {
           {suggestions.map(item => (
             <button
               key={item.nombre}
-              onClick={() => { setSelected(item); setQuery(item.nombre); setCantidadTons(1); }}
+              onClick={() => { setSelected(item); setQuery(tWeapon(item.nombre)); setCantidadTons(1); }}
               className="w-full text-left px-3 py-2 border-b border-outline-variant/10 hover:bg-primary-container/10 flex justify-between items-center"
             >
               <div className="flex items-center gap-2">
                 {item.tipo === 'blindaje' ? <Shield className="w-4 h-4 text-secondary/50" /> : <Package className="w-4 h-4 text-secondary/50" />}
-                <span className="font-mono text-sm">{item.nombre}</span>
+                <span className="font-mono text-sm">{tWeapon(item.nombre)}</span>
               </div>
               <div className="flex gap-4 font-mono text-[10px] text-secondary/60 text-right">
                 <span>{fmt(item.costoBase)} / {item.tons ? 'ton' : 'ud'}</span>
@@ -144,7 +145,7 @@ function MercadoMaterialTab() {
         <div className="bg-surface border border-primary-container/20 p-4 rounded space-y-4">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-headline font-bold text-lg text-primary-container">{selected.nombre}</h3>
+              <h3 className="font-headline font-bold text-lg text-primary-container">{tWeapon(selected.nombre)}</h3>
               <div className="font-mono text-xs text-secondary/70 uppercase tracking-widest">
                 Tipo: {selected.tipo} · Coste base: {fmt(selected.costoBase)}
               </div>
@@ -176,11 +177,12 @@ function MercadoMaterialTab() {
               Coste Total: <span className="text-error font-bold text-base">{fmt(precioTotal)}</span>
             </div>
             <button
-              onClick={handleComprar}
-              disabled={commitState !== 'idle' || precioTotal <= 0}
-              className="bg-primary-container text-on-primary-container px-6 py-2 rounded font-headline text-sm font-bold uppercase tracking-widest hover:bg-primary disabled:opacity-50"
+              onClick={handleBuyMaterial}
+              disabled={commitState === 'sending'}
+              className="flex items-center gap-2 px-6 py-2 bg-primary-container text-on-primary-container font-headline font-bold uppercase tracking-widest text-sm rounded hover:brightness-110 disabled:opacity-50"
             >
-              {commitState === 'idle' ? 'Cargar a Tesorería' : commitState === 'done' ? '✓ Comprado' : 'Procesando...'}
+              {commitState === 'sending' ? <Loader className="w-4 h-4 animate-spin" /> : <DollarSign className="w-4 h-4" />}
+              Comprar {cantidadTons}x {tWeapon(selected.nombre)}
             </button>
           </div>
         </div>

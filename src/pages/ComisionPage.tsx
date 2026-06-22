@@ -15,7 +15,7 @@ import type { LogEntry } from '@/lib/barracones-log';
 import { readCronicas, loadCronicasFromSheets, sortCronicas, type CronicaEntry } from '@/lib/cronicas-store';
 import { stripMarkdownLite } from '@/lib/markdown-lite';
 import { readPartes, loadPartesFromSheets, type ParteEntry, type ParteTone } from '@/lib/parte-store';
-import { loadMovimientos, type MovimientoEntry, loadHangar } from '@/lib/firebase-service';
+import { loadMovimientos, type MovimientoEntry, loadHangar, loadLibroMayor, type LibroMayorEntry } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 import { isActivo } from '@/lib/roster';
 // IMPORTANTE: Importamos el catálogo global para que lea tonelaje y BV de modelos que no tienen .ssw
@@ -27,7 +27,7 @@ const SLOT_COUNT = 6;
 
 // ⚠️ MOCK DEL SIMULADOR ASÍNCRONO DESDE SHEETS
 // Reemplaza esto por tu función real que haga el fetch a Sheets
-// (por ejemplo: import { loadSnapshotFromSheets } from '@/lib/firebase-service';)
+// (por ejemplo: import { parseSSWBasic, type ParsedSSWBasic } from '@/lib/ssw-basic';)
 const loadSnapshotFromSheets = async (): Promise<any> => {
   return new Promise(resolve => {
     setTimeout(() => {
@@ -764,8 +764,22 @@ export function ComisionPage() {
     const n = parseCurrencyValue(v);
     return n === null ? '—' : formatCzar(n);
   }
-  const contratoFmt = fmtValor(campaign.contratoValor);
-  const valorUnidadFmt = fmtValor(campaign.valorUnidad);
+  const [realBalance, setRealBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    loadLibroMayor().then(res => {
+      if (res.success && Array.isArray((res.data as any)?.entries)) {
+        const entries = (res.data as any).entries as LibroMayorEntry[];
+        const totalIngresos = entries.filter(e => e.tipo === 'ingreso').reduce((s, e) => s + (e.cantidad || 0), 0);
+        const totalGastos   = entries.filter(e => e.tipo === 'gasto').reduce((s, e) => s + (e.cantidad || 0), 0);
+        // Real balance = ingresos - gastos.
+        setRealBalance(totalIngresos - totalGastos);
+      }
+    });
+  }, []);
+
+  const contratoFmt = realBalance !== null ? formatCzar(realBalance) : fmtValor(campaign.contratoValor);
+  const valorUnidadFmt = fmtValor(campaign.valorUnidad); // Will update this below
 
   // Load pilot slots from localStorage
   const [slots, setSlots] = useState<(Pilot | null)[]>(Array(SLOT_COUNT).fill(null));
@@ -911,19 +925,24 @@ export function ComisionPage() {
     }
   });
 
-  const ready   = mechCards.filter(c => c?.status === 'READY').length;
-  const total   = mechCards.filter(Boolean).length;
-  const inBahia = mechCards.filter(c => c?.status === 'REPARACIÓN').length;
+  const validMechCards = mechCards.filter(c => c && c.chassis !== '—');
+  const ready   = validMechCards.filter(c => c?.status === 'READY').length;
+  const total   = validMechCards.length;
+  const inBahia = validMechCards.filter(c => c?.status === 'REPARACIÓN').length;
   const lanzaStatus = inBahia > 0
     ? `${total} UNIDADES · ${ready} OPERATIVAS · ${inBahia} EN BAHÍA`
     : `${total} UNIDADES · TODAS OPERATIVAS`;
 
-  const bvTotal      = mechCards.reduce((s, c) => s + (c?.bv || 0), 0);
+  const bvTotal      = validMechCards.reduce((s, c) => s + (c?.bv || 0), 0);
+  const totalValue   = validMechCards.reduce((s, c) => s + (c?.price || 0), 0);
+  const computedValorUnidadFmt = formatCzar(totalValue);
+
   const personalAct  = roster.filter(isActivo).length;
   const personalTot  = roster.length;
   const bvTotalFmt   = new Intl.NumberFormat('es-ES').format(bvTotal);
   const mechsOpFmt   = `${ready} / ${total}`;
   const personalFmt  = `${personalAct} / ${personalTot}`;
+  const numLances    = Math.ceil(total / 4) || 1;
 
   // Bloqueo de lectura
   if (!permLoading && !readable) {
@@ -1065,8 +1084,8 @@ export function ComisionPage() {
                   ['Tesoreria',          contratoFmt],
                   ['BV Total',           bvTotalFmt],
                   ['Mechs Operativos',   mechsOpFmt],
-                  ['Valor de la Unidad', valorUnidadFmt],
-                  ['Lanza',              String(campaign.totalMechs || '—')],
+                  ['Valor de la Unidad', computedValorUnidadFmt],
+                  ['Lanzas',             String(numLances)],
                   ['Personal',           personalFmt],
                 ] as [string, string][]).map(([k, v], i) => (
                   <div key={i} style={{ minWidth: 0 }}>
@@ -1090,41 +1109,62 @@ export function ComisionPage() {
           </div>
         </div>
 
-        {/* Activos 2×2 */}
+        {/* Activos agrupados por Lanza */}
         <div style={{
           padding: isMobile ? '14px 16px 20px' : isTabletDown ? '16px 24px 20px' : '18px 32px 24px',
-          display: 'flex', flexDirection: 'column', gap: 12,
-          overflow: isTabletDown ? 'visible' : 'hidden',
+          display: 'flex', flexDirection: 'column', gap: 24,
+          overflowY: 'auto', overflowX: 'hidden',
+          flex: 1,
         }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <SmallLabel>Lanza Prime</SmallLabel>
-            <div style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: T.outline, letterSpacing: 2 }}>
-              {lanzaStatus}
-            </div>
-          </div>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr 1fr' : isTabletDown ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)',
-            gap: isMobile ? 8 : 10,
-            flex: isTabletDown ? 'none' : 1,
-            alignContent: 'start',
-          }}>
-            {mechCards.map((c, i) => c ? (
-              <MechAsset key={i}
-                pilot={c.pilot} call={c.call}
-                chassis={c.chassis} weight={c.weight} weightClass={c.weightClass} bv={c.bv} price={c.price}
-                status={c.status} damage={c.damage} simDamagePct={c.simDamagePct}
-                img={c.img} imgScale={c.imgScale} imgOffsetX={c.imgOffsetX}
-              />
-            ) : (
-              <div key={i} style={{
-                background: T.surfaceLow, borderLeft: `2px solid ${T.outlineV}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: '"Share Tech Mono", monospace', fontSize: 8.5,
-                color: T.outline, letterSpacing: 1.5, minHeight: 90,
-              }}>SLOT VACÍO</div>
-            ))}
-          </div>
+          {Array.from({ length: Math.ceil(mechCards.length / 4) || 1 }).map((_, lanceIdx) => {
+            const LANCE_NAMES = ['SCHWARZE REITER', 'KÜRASSIERE', 'TRABANTEN', 'DOPPELSÖLDNER', 'LANDSKNECHTE'];
+            const lanceName = LANCE_NAMES[lanceIdx] || `SCHWADRON ${lanceIdx + 1}`;
+            const startIndex = lanceIdx * 4;
+            const chunk = mechCards.slice(startIndex, startIndex + 4);
+            // Si la lanza tiene menos de 4, mostramos slots vacíos
+            const paddedChunk = Array.from({ length: 4 }).map((_, i) => chunk[i] || null);
+            
+            // Calculamos stats específicos de la lanza
+            const validInLance = paddedChunk.filter(c => c && c.chassis !== '—');
+            const readyInLance = validInLance.filter(c => c?.status === 'READY').length;
+            const inBahiaInLance = validInLance.filter(c => c?.status === 'REPARACIÓN').length;
+            const statusStr = validInLance.length === 0 ? 'VACÍA' : inBahiaInLance > 0 
+              ? `${validInLance.length} UNIDADES · ${readyInLance} OPERATIVAS`
+              : `${validInLance.length} UNIDADES · TODAS OPERATIVAS`;
+
+            return (
+              <div key={lanceIdx} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+                  <SmallLabel>- LANZA {lanceName} -</SmallLabel>
+                  <div style={{ fontFamily: '"Share Tech Mono", monospace', fontSize: 10, color: T.outline, letterSpacing: 2 }}>
+                    {statusStr}
+                  </div>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: isMobile ? '1fr 1fr' : isTabletDown ? 'repeat(3, 1fr)' : 'repeat(4, 1fr)',
+                  gap: isMobile ? 8 : 10,
+                  alignContent: 'start',
+                }}>
+                  {paddedChunk.map((c, i) => c && c.chassis !== '—' ? (
+                    <MechAsset key={i}
+                      pilot={c.pilot} call={c.call}
+                      chassis={c.chassis} weight={c.weight} weightClass={c.weightClass} bv={c.bv} price={c.price}
+                      status={c.status} damage={c.damage} simDamagePct={c.simDamagePct}
+                      img={c.img} imgScale={c.imgScale} imgOffsetX={c.imgOffsetX}
+                    />
+                  ) : (
+                    <div key={i} style={{
+                      background: T.surfaceLow, borderLeft: `2px solid ${T.outlineV}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontFamily: '"Share Tech Mono", monospace', fontSize: 8.5,
+                      color: T.outline, letterSpacing: 1.5, minHeight: 90,
+                    }}>SLOT VACÍO</div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

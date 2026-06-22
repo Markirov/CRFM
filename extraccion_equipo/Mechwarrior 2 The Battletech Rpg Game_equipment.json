@@ -1,0 +1,241 @@
+{
+  "source_book": "MechWarrior, The BattleTech Role Playing Game, Second Edition",
+  "equipment": [
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Cudgel/Blackjack",
+      "stats": {
+        "skill_class": "Unarmed Combat",
+        "damage": "1D6 + 1",
+        "power_usage": null
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Sword",
+      "stats": {
+        "skill_class": "Blade",
+        "damage": "1D6 + 2",
+        "power_usage": null
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Vibroblade",
+      "stats": {
+        "skill_class": "Blade",
+        "damage": "2D6",
+        "power_usage": "2/10 minutes"
+      },
+      "rules": "Arma de alta tecnología que vibra para aumentar su capacidad de corte."
+    },
+    {
+      "category": "Armas Cuerpo a Cuerpo",
+      "name": "Stunstick",
+      "stats": {
+        "skill_class": "Blade",
+        "damage": "1D6 - 2 + special",
+        "power_usage": "2/10 minutes"
+      },
+      "rules": "Puede dejar inconsciente al objetivo."
+    },
+    {
+      "category": "Armas a Distancia - Pistolas",
+      "name": "Auto-Pistol",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "2D6 + 3",
+        "range_short": "1-2",
+        "range_medium": "3-4",
+        "range_long": "5-8",
+        "ammo": "10"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas a Distancia - Pistolas",
+      "name": "Laser Pistol",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "4D6",
+        "range_short": "1-3",
+        "range_medium": "4-6",
+        "range_long": "7-12",
+        "ammo": "Pwr Use: 2"
+      },
+      "rules": "Arma de energía, no utiliza munición convencional."
+    },
+    {
+      "category": "Armas a Distancia - Rifles",
+      "name": "Rifle",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "3D6",
+        "range_short": "1-6",
+        "range_medium": "7-15",
+        "range_long": "16-30",
+        "ammo": "10"
+      },
+      "rules": "Rifle de asalto estándar."
+    },
+    {
+      "category": "Armas a Distancia - Rifles",
+      "name": "Laser Rifle",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "4D6 + 2",
+        "range_short": "1-9",
+        "range_medium": "10-21",
+        "range_long": "22-30",
+        "ammo": "Pwr Use: 5"
+      },
+      "rules": "Versión rifle de las armas de energía."
+    },
+    {
+      "category": "Armas a Distancia - Subfusiles",
+      "name": "SMG",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "3D6",
+        "range_short": "1-3",
+        "range_medium": "4-6",
+        "range_long": "7-9",
+        "ammo": "50"
+      },
+      "rules": "Capaz de realizar fuego de ráfaga."
+    },
+    {
+      "category": "Armas a Distancia - Escopetas",
+      "name": "Shotgun",
+      "stats": {
+        "skill_class": "Small Arms",
+        "damage": "3D6 + 2",
+        "range_short": "1-3",
+        "range_medium": "4",
+        "range_long": "5",
+        "ammo": "6"
+      },
+      "rules": null
+    },
+    {
+      "category": "Armas a Distancia - Armas Pesadas",
+      "name": "SRM Launcher",
+      "stats": {
+        "skill_class": "Support Weapons",
+        "damage": "5D6 + 6",
+        "range_short": "1-10",
+        "range_medium": "11-36",
+        "range_long": "37-54",
+        "ammo": "2"
+      },
+      "rules": "Lanzador de misiles de corto alcance portátil."
+    },
+    {
+      "category": "Armas a Distancia - Armas Pesadas",
+      "name": "LAW (Light Anti-Vehicle Weapon)",
+      "stats": {
+        "skill_class": "Support Weapons",
+        "damage": "4D6 + 6",
+        "range_short": "1-6",
+        "range_medium": "7-18",
+        "range_long": "19-40",
+        "ammo": "1"
+      },
+      "rules": "Arma de un solo uso diseñada contra vehículos ligeros."
+    },
+    {
+      "category": "Armas a Distancia - Granadas",
+      "name": "Minigrenade",
+      "stats": {
+        "skill_class": "N/A",
+        "damage": "3D6",
+        "range_short": "1",
+        "range_medium": "2-3",
+        "range_long": "4-6",
+        "ammo": "1"
+      },
+      "rules": "Arma de área de efecto. Daña a todos los objetivos en el hexágono de impacto y en los adyacentes."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Ablative/Flak Vest",
+      "stats": {
+        "cost": "300 C-Bills",
+        "protection": "10 puntos totales"
+      },
+      "rules": "Absorbe un total de 10 puntos de daño y reduce a la mitad el daño de armas de proyectiles y energía hasta que se agota su protección."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Ablative/Flak Body Suit",
+      "stats": {
+        "cost": "800 C-Bills",
+        "protection": "35 puntos totales"
+      },
+      "rules": "Absorbe un total de 35 puntos de daño y reduce a la mitad el daño de armas de proyectiles y energía. Reduce el movimiento del portador a la mitad."
+    },
+    {
+      "category": "Armaduras",
+      "name": "Armored Vest",
+      "stats": {
+        "cost": "50 C-Bills"
+      },
+      "rules": "Chaleco antibalas estándar, ofrece protección básica."
+    },
+    {
+      "category": "Armaduras",
+      "name": "MechWarrior Combat Suit",
+      "stats": {
+        "tech_level": "4/C"
+      },
+      "rules": "Traje multifuncional. Absorbe 1/4 del daño de energía y 4 puntos de daño de proyectiles/cuerpo a cuerpo. Su efectividad se reduce a la mitad tras recibir 16 puntos de daño. Reduce el movimiento del portador en 1/4. El neurocasco detiene 15 puntos de daño a la cabeza."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "Medipack",
+      "stats": {
+        "tech_level": "4/C",
+        "weight": "400 gramos"
+      },
+      "rules": "Dispositivo avanzado que administra automáticamente analgésicos y estimulantes. Contiene 12 dosis. Estándar para los Elementales de los Clanes."
+    },
+    {
+      "category": "Equipo Médico",
+      "name": "Medkit",
+      "stats": {
+        "tech_level": "2/A",
+        "cost": "50 C-Bills"
+      },
+      "rules": "Botiquín de primeros auxilios básico con vendas, gasas, antisépticos, etc."
+    },
+    {
+      "category": "Equipo de Espionaje/Vigilancia",
+      "name": "Electronic Camouflage Suit (Camo Sneak)",
+      "stats": {
+        "tech_level": "3/B",
+        "cost": "7,000 C-Bills"
+      },
+      "rules": "Adapta su color y emisión de luz al entorno para evitar la detección visual y electrónica. Otorga un modificador de -3 a las tiradas de la habilidad Stealth."
+    },
+    {
+      "category": "Equipo de Espionaje/Vigilancia",
+      "name": "I/R Scanner",
+      "stats": {
+        "tech_level": "3/A",
+        "cost": "100 C-Bills"
+      },
+      "rules": "Detecta radiación infrarroja (calor) a una distancia de hasta 2 kilómetros."
+    },
+    {
+      "category": "Equipo Diverso",
+      "name": "Emergency Jetpack",
+      "stats": {
+        "tech_level": "3/D",
+        "cost": "5,000 C-Bills"
+      },
+      "rules": "Mochila propulsora de un solo uso para escape o movimientos rápidos. Altitud máxima de 30 metros, distancia máxima de 1 kilómetro."
+    }
+  ]
+}
