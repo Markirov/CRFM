@@ -158,6 +158,8 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
             const selectedBinId = binChoice[w.id];
             const selectedBin = selectedBinId !== undefined ? bins.find((b: any) => b.id === selectedBinId) : undefined;
             const heatToTarget = selectedBin?.heatToTarget;
+            const isStreak = (w as any).hooks?.some((h: any) => h.kind === 'streak_all_or_nothing');
+            const fullRackDmg = isStreak ? ((w as any).rackSize ?? 0) * ((w as any).damageShort ?? 0) : 0;
 
             return (
               <div key={w.id} className="bg-surface-container-low border border-error/30 p-3 clip-chamfer flex flex-col md:flex-row gap-3 items-start md:items-center">
@@ -272,6 +274,27 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                     />
                     <span className="text-[9px] font-mono text-error/60 pr-2">DMG</span>
                   </div>
+                  {/* ── Streak SRM: HIT / MISS canon (all-or-nothing) ── */}
+                  {isStreak && (
+                    <div className="flex gap-1 justify-center mt-1">
+                      <button
+                        onClick={() => {
+                          // HIT: damage = full rack (rackSize × damageShort). Ammo se mantiene gastada.
+                          setTargets(prev => ({ ...prev, [w.id]: { ...prev[w.id], damage: fullRackDmg } }));
+                        }}
+                        title={`Streak HIT: aplica daño completo del rack (${fullRackDmg}). Ammo gastada normal.`}
+                        className="px-2 py-0.5 text-[8px] font-mono font-bold border border-emerald-400/60 text-emerald-400 hover:bg-emerald-400/20"
+                      >HIT {fullRackDmg}</button>
+                      <button
+                        onClick={() => {
+                          setTargets(prev => ({ ...prev, [w.id]: { ...prev[w.id], damage: 0 } }));
+                          sim.streakMiss(w.id);
+                        }}
+                        title="Streak MISS canon: damage 0 + refund de la munición usada."
+                        className="px-2 py-0.5 text-[8px] font-mono font-bold border border-error/60 text-error hover:bg-error/20"
+                      >MISS 0</button>
+                    </div>
+                  )}
                   {/* ── Damage grouper (house rule) — solo cluster ── */}
                   {(w as any).isCluster && t.damage > 0 && getHouseRules().damage_grouper && (() => {
                     const groups = groupMissileDamage(t.damage);

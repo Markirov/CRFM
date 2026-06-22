@@ -747,6 +747,38 @@ export function useSimulador() {
     });
   };
 
+  /**
+   * Streak SRM miss canon: refund ammo del bin (no se consume si falla la tirada).
+   * El arma sigue en activeShots para que el player vea el "missed" pero damage=0.
+   */
+  const streakMiss = (weaponId: number) => {
+    if (!mechState || !mechSession) return;
+    const w = mechState.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    updateMechSession(s => {
+      const spend = s.shotSpend[weaponId];
+      if (!spend) {
+        return {
+          ...s,
+          logs: [`> ${w.name}: STREAK MISS — no había ammo spend que devolver`, ...(s.logs || [])].slice(0, 50),
+        };
+      }
+      const bins = s.ammoBins.map(b =>
+        b.id === spend.binId
+          ? { ...b, current: Math.min(b.max, b.current + spend.amount) }
+          : b
+      );
+      const shotSpend = { ...s.shotSpend };
+      delete shotSpend[weaponId];
+      return {
+        ...s,
+        ammoBins: bins,
+        shotSpend,
+        logs: [`> ${w.name}: STREAK MISS — ${spend.amount} ammo refundida`, ...(s.logs || [])].slice(0, 50),
+      };
+    });
+  };
+
   /** Ciclo del modo del arma (Flamer dmg/heat, LBX slug/cluster, Ultra 1/2, RAC 1/2/4/6). */
   const cycleWeaponMode = (weaponId: number) => {
     if (!mechState || !mechSession) return;
@@ -1219,7 +1251,7 @@ export function useSimulador() {
     toggleWeapon, handleFire, confirmNextTurn, endTurnSummary,
     handleGlobalFire, confirmGlobalNextTurn, globalEndTurnSummary, setGlobalEndTurnSummary,
     handleDamage, applyDamageToSelected,
-    toggleCrit, setWeaponMod, setCritMod, cycleWeaponMode, rollUltraJam, rollRacCadence,
+    toggleCrit, setWeaponMod, setCritMod, cycleWeaponMode, rollUltraJam, rollRacCadence, streakMiss,
     forceReviveMech, adjustAmmo, adjustHeat,
     setMoveMode, setJumpUsed,
     setWounds, setPilot, setPilotFull, resetLog,
