@@ -4,6 +4,7 @@ import { useSimulador } from '@/hooks/useSimulador';
 import { useLiveSession } from '@/hooks/useLiveSession';
 import { tWeapon } from '@/lib/translator';
 import { groupMissileDamage } from '@/lib/weapons';
+import { getHouseRules, rollD6 } from '@/lib/house-rules';
 
 interface Props {
   isOpen: boolean;
@@ -110,6 +111,16 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
         heatToTarget = (heatToTarget ?? 0) + damage;
         damage = 0;
         variant = variant ?? 'Heat';
+      }
+
+      // ── House rule: Inferno + Flamer heat = 1d6 calor (en vez de fijo) ──
+      // Aplica si hay heatToTarget > 0 (set por Inferno bin o Flamer heat mode).
+      const rules = getHouseRules();
+      if (rules.inferno_flamer_d6 && heatToTarget && heatToTarget > 0) {
+        const rolled = rollD6();
+        console.log(`[house rule] ${w.name}: 1d6 heat → ${rolled} (reemplaza canon ${heatToTarget})`);
+        heatToTarget = rolled;
+        variant = variant ? `${variant} 1d6=${rolled}` : `Heat 1d6=${rolled}`;
       }
 
       // Inferno/Flamer heat → enviar aunque damage=0 si hay heat
@@ -262,7 +273,7 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                     <span className="text-[9px] font-mono text-error/60 pr-2">DMG</span>
                   </div>
                   {/* ── Damage grouper (house rule) — solo cluster ── */}
-                  {(w as any).isCluster && t.damage > 0 && (() => {
+                  {(w as any).isCluster && t.damage > 0 && getHouseRules().damage_grouper && (() => {
                     const groups = groupMissileDamage(t.damage);
                     return (
                       <div className="flex flex-wrap gap-px justify-center" title="Agrupación misiles (house rule). Cada grupo = un impacto a aplicar.">

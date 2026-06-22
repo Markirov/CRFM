@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { mechParseMech, vehicleParseSAW } from '@/lib/parsers';
 import { mechAmmoMetaForWeapon, cycleMode } from '@/lib/weapons';
+import { getHouseRules } from '@/lib/house-rules';
 import type { MechSlot, VehicleSlot, MechState, MechSession, MoveMode, VehicleSession, InfantrySlot, BASlot, FireTarget } from '@/lib/combat-types';
 import { INFANTRY_CATALOG, BA_CATALOG, buildInfantrySession, buildBASession } from '@/lib/infantry-catalog';
 import { infantryFire, baFire, infantryNextTurn, baNextTurn, infantryApplyDamage, baApplyDamage } from '@/lib/infantry-combat';
@@ -721,11 +722,16 @@ export function useSimulador() {
   /**
    * RAC house rule: tirada de cadencia separada (2d6).
    * Si natural 2 + cadencia > 1 → drop una tier (6→4, 4→2, 2→1). Cadencia 1 nunca cambia.
+   * Requiere house rule `rac_cadence_drop` activa (default ON).
    */
   const rollRacCadence = (weaponId: number) => {
     if (!mechState || !mechSession) return;
     const w = mechState.weapons.find(x => x.id === weaponId);
     if (!w) return;
+    if (!getHouseRules().rac_cadence_drop) {
+      alert('Regla casa RAC cadencia drop está desactivada. Actívala en Reglas Casa para tirar.');
+      return;
+    }
     const mode = (mechSession.weaponModeChoice?.[weaponId] ?? '1') as '1' | '2' | '4' | '6';
     const r = roll2d6();
     const dropMap: Record<string, string> = { '6': '4', '4': '2', '2': '1', '1': '1' };

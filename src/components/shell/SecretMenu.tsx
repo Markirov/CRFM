@@ -16,6 +16,7 @@ import {
   sendTelegramNotif,
 } from '@/lib/telegram-service';
 import { RolesPanel } from './RolesPanel';
+import { useHouseRules, HOUSE_RULES_META } from '@/lib/house-rules';
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -28,7 +29,7 @@ const COMBAT_DEFAULTS = {
   movTargetStand: 0, movTargetWalk: 1, movTargetRun: 2, movTargetJump: 3,
 };
 
-type TabKey = 'campana' | 'tesoreria' | 'pilotos' | 'prompts' | 'telegram' | 'combate' | 'diseno' | 'roles';
+type TabKey = 'campana' | 'tesoreria' | 'pilotos' | 'prompts' | 'telegram' | 'combate' | 'casa' | 'diseno' | 'roles';
 
 interface TabDef { key: TabKey; label: string; icon: typeof CalendarDays }
 
@@ -39,6 +40,7 @@ const TABS: TabDef[] = [
   { key: 'prompts',   label: 'Prompts IA', icon: Sparkles },
   { key: 'telegram',  label: 'Telegram',   icon: Bell },
   { key: 'combate',   label: 'Combate',    icon: Crosshair },
+  { key: 'casa',      label: 'Reglas Casa', icon: Crosshair },
   { key: 'diseno',    label: 'Diseño',     icon: Palette },
   { key: 'roles',     label: 'Roles',      icon: ShieldCheck },
 ];
@@ -293,6 +295,9 @@ export function SecretMenu({ open, onClose }: Props) {
                 )}
                 {tab === 'combate' && (
                   <PanelCombate combat={combat} updateCombat={updateCombat} />
+                )}
+                {tab === 'casa' && (
+                  <PanelReglasCasa />
                 )}
                 {tab === 'diseno' && (
                   <PanelDiseno useLegacyDesigns={useLegacyDesigns} setUseLegacyDesigns={setUseLegacyDesigns} />
@@ -556,6 +561,32 @@ function PanelCombate(p: { combat: typeof COMBAT_DEFAULTS; updateCombat: (k: str
       <div className="font-mono text-[8px] text-outline italic">
         Orden: rangeShort/Medium/Long · movStand/Walk/Run/Jump · movTargetStand/Walk/Run/Jump
       </div>
+    </div>
+  );
+}
+
+function PanelReglasCasa() {
+  const [rules, setRule] = useHouseRules();
+  return (
+    <div className="bg-emerald-400/5 border border-emerald-400/30 p-3 space-y-2">
+      <div className="font-mono text-[10px] font-bold text-emerald-400 uppercase tracking-[2px]">Reglas de la Casa</div>
+      <div className="font-mono text-[9px] text-on-surface-variant mb-2">
+        Toggles globales. Si desactivas, el simulador aplica regla canon (sin modificación).
+      </div>
+      {HOUSE_RULES_META.map(meta => (
+        <label key={meta.key} className="flex items-start gap-3 cursor-pointer select-none py-1 border-t border-emerald-400/10 pt-2">
+          <input
+            type="checkbox"
+            checked={rules[meta.key]}
+            onChange={e => setRule(meta.key, e.target.checked)}
+            className="w-4 h-4 accent-emerald-400 cursor-pointer mt-0.5"
+          />
+          <div className="flex-1">
+            <div className="font-mono text-[11px] text-on-surface font-bold">{meta.label}</div>
+            <div className="font-mono text-[9px] text-on-surface-variant mt-0.5">{meta.description}</div>
+          </div>
+        </label>
+      ))}
     </div>
   );
 }
