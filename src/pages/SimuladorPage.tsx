@@ -734,13 +734,31 @@ export function SimuladorPage() {
                               : b.color === 'cyan' ? 'border-primary-container/60 text-primary-container'
                               : b.color === 'green' ? 'border-emerald-400/60 text-emerald-400'
                               : 'border-amber-400/60 text-amber-400';
+                            const isJammed = ss.weaponJammed?.[w.id];
+                            const needsUltraRoll = b.kind === 'ultra_jam' && cur === '2' && !isJammed;
+                            const needsRacRoll = b.kind === 'rotary_variable' && cur !== '1';
                             return isModeBadge ? (
-                              <button
-                                key={i}
-                                onClick={(e) => { e.stopPropagation(); sim.cycleWeaponMode(w.id); }}
-                                title={b.title + ' (click para cambiar modo)'}
-                                className={`px-1 py-px text-[7px] font-bold border ${colorCls} hover:bg-secondary/10 cursor-pointer transition-colors`}
-                              >{label}</button>
+                              <span key={i} className="inline-flex items-center gap-px">
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); sim.cycleWeaponMode(w.id); }}
+                                  title={b.title + ' (click para cambiar modo)'}
+                                  className={`px-1 py-px text-[7px] font-bold border ${colorCls} hover:bg-secondary/10 cursor-pointer transition-colors ${isJammed ? 'opacity-50 line-through' : ''}`}
+                                  disabled={isJammed}
+                                >{isJammed ? 'JAM' : label}</button>
+                                {(needsUltraRoll || needsRacRoll) && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (needsUltraRoll) sim.rollUltraJam(w.id);
+                                      else if (needsRacRoll) sim.rollRacCadence(w.id);
+                                    }}
+                                    title={needsUltraRoll
+                                      ? 'Tirada de jam Ultra AC (2d6). Si sale 2 → atascada permanente.'
+                                      : 'Tirada de cadencia RAC (2d6 house). Si sale 2 + cadencia >1 → drop tier.'}
+                                    className="px-1 py-px text-[7px] font-bold border border-amber-400/60 text-amber-400 hover:bg-amber-400/20 cursor-pointer"
+                                  >🎲</button>
+                                )}
+                              </span>
                             ) : (
                               <span key={i} title={b.title} className={`px-1 py-px text-[7px] font-bold border ${colorCls}`}>{label}</span>
                             );

@@ -682,6 +682,61 @@ export function useSimulador() {
    * Ajusta el modificador manual de un arma (heat extra al disparar / dificultad extra al impactar).
    * Rango 0-5 cada uno. Valor 0 en ambos elimina la entrada del mapa.
    */
+  /** Tirada 2d6 → suma + natural. */
+  function roll2d6() {
+    const d1 = 1 + Math.floor(Math.random() * 6);
+    const d2 = 1 + Math.floor(Math.random() * 6);
+    return { d1, d2, sum: d1 + d2 };
+  }
+
+  /**
+   * Ultra AC canon jam roll. Solo cuando mode === '2'.
+   * Si natural 2 (1+1) → arma atascada permanentemente resto partida.
+   */
+  const rollUltraJam = (weaponId: number) => {
+    if (!mechState || !mechSession) return;
+    const w = mechState.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    const mode = mechSession.weaponModeChoice?.[weaponId];
+    if (mode !== '2') {
+      alert('Ultra AC: tirada de jam solo aplica si el modo es "2 disparos".');
+      return;
+    }
+    const r = roll2d6();
+    const jammed = r.sum === 2;
+    updateMechSession(s => {
+      const jammedMap = { ...(s.weaponJammed ?? {}) };
+      if (jammed) jammedMap[weaponId] = true;
+      const log = jammed
+        ? `> ${w.name}: JAM ROLL ${r.d1}+${r.d2}=${r.sum} → ⚠️ ATASCADA permanente`
+        : `> ${w.name}: JAM ROLL ${r.d1}+${r.d2}=${r.sum} → OK`;
+      return { ...s, weaponJammed: jammedMap, logs: [log, ...(s.logs || [])].slice(0, 50) };
+    });
+  };
+
+  /**
+   * RAC house rule: tirada de cadencia separada (2d6).
+   * Si natural 2 + cadencia > 1 → drop una tier (6→4, 4→2, 2→1). Cadencia 1 nunca cambia.
+   */
+  const rollRacCadence = (weaponId: number) => {
+    if (!mechState || !mechSession) return;
+    const w = mechState.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    const mode = (mechSession.weaponModeChoice?.[weaponId] ?? '1') as '1' | '2' | '4' | '6';
+    const r = roll2d6();
+    const dropMap: Record<string, string> = { '6': '4', '4': '2', '2': '1', '1': '1' };
+    const drops = r.sum === 2 && mode !== '1';
+    const next = drops ? dropMap[mode] : mode;
+    updateMechSession(s => {
+      const modes = { ...(s.weaponModeChoice ?? {}) };
+      modes[weaponId] = next;
+      const log = drops
+        ? `> ${w.name}: CADENCIA ${r.d1}+${r.d2}=${r.sum} → drop ${mode}→${next}`
+        : `> ${w.name}: CADENCIA ${r.d1}+${r.d2}=${r.sum} → mantiene ${mode}`;
+      return { ...s, weaponModeChoice: modes, logs: [log, ...(s.logs || [])].slice(0, 50) };
+    });
+  };
+
   /** Ciclo del modo del arma (Flamer dmg/heat, LBX slug/cluster, Ultra 1/2, RAC 1/2/4/6). */
   const cycleWeaponMode = (weaponId: number) => {
     if (!mechState || !mechSession) return;
@@ -1154,7 +1209,7 @@ export function useSimulador() {
     toggleWeapon, handleFire, confirmNextTurn, endTurnSummary,
     handleGlobalFire, confirmGlobalNextTurn, globalEndTurnSummary, setGlobalEndTurnSummary,
     handleDamage, applyDamageToSelected,
-    toggleCrit, setWeaponMod, setCritMod, cycleWeaponMode,
+    toggleCrit, setWeaponMod, setCritMod, cycleWeaponMode, rollUltraJam, rollRacCadence,
     forceReviveMech, adjustAmmo, adjustHeat,
     setMoveMode, setJumpUsed,
     setWounds, setPilot, setPilotFull, resetLog,
