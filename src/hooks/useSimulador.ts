@@ -279,6 +279,8 @@ export function useSimulador() {
           weapons: (parsed.weapons || []).map((w: any, i: number) => {
             const ammoMeta = mechAmmoMetaForWeapon(w);
             return {
+              ...w, // ← preserva canon fields (hooks, damageShort/Medium/Long, toHitMod,
+                    //    lookupName, isCluster, rackSize, weaponClass, techBase, hasAmmo)
               id: w.id ?? i,
               name: w.name, rawName: w.rawName || w.name, loc: w.loc,
               heat: w.heat || 0, dmg: w.dmg || '0', r: w.r || '0/0/0',
@@ -293,6 +295,8 @@ export function useSimulador() {
           }),
           crits: parsed.crits || {},
           ammoBins: (parsed.ammoBins || []).map((b: any, i: number) => ({
+            ...b, // ← preserva variant, ammoLookup, damageOverride, rangeOverride,
+                  //    toHitOverride, heatToTarget
             id: b.id ?? i, loc: b.loc, slotIdx: b.slotIdx || 0,
             familyKey: b.familyKey || '', family: b.family || '',
             perTon: b.perTon || 0, current: b.current || b.max || 0, max: b.max || 0,
