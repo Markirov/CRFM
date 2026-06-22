@@ -48,8 +48,9 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       state.weapons.forEach((w: any) => {
         if (session.activeShots[w.id]) {
           const bins = binsForWeapon(w);
-          // Auto-select primer bin con variant != Standard si existe; sino Standard.
-          const defaultBin = bins.find((b: any) => b.variant && b.variant !== 'Standard') ?? bins[0];
+          // Auto-select Standard primero (canon default). Player elige variant manual
+          // para evitar trap UX (Inferno seteaba damage 0 silencioso).
+          const defaultBin = bins.find((b: any) => !b.variant || b.variant === 'Standard') ?? bins[0];
           if (defaultBin) initialBins[w.id] = defaultBin.id;
           const baseDmg = computeInitialDamage(w, defaultBin);
           initialTargets[w.id] = { targetSessionId: '', targetUnitId: '', damage: baseDmg };
@@ -58,7 +59,10 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       setTargets(initialTargets);
       setBinChoice(initialBins);
     }
-  }, [isOpen, state, session]);
+    // Deps: solo isOpen + identidad estable de activeShots para evitar reset cuando
+    // el padre re-renderiza con nueva referencia de state/session (perdía selección
+    // a mitad de fijar blancos).
+  }, [isOpen, JSON.stringify(session?.activeShots ?? {})]);
 
   if (!isOpen || !state || !session) return null;
 
@@ -115,10 +119,11 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
 
       // ── House rule: Inferno + Flamer heat = 1d6 calor (en vez de fijo) ──
       // Aplica si hay heatToTarget > 0 (set por Inferno bin o Flamer heat mode).
+      // Para Flamer heat: el damage canon original ya fue swap→heatToTarget; aquí
+      // el d6 lo REEMPLAZA (no se suma) — comportamiento intencionado, simplificación.
       const rules = getHouseRules();
       if (rules.inferno_flamer_d6 && heatToTarget && heatToTarget > 0) {
         const rolled = rollD6();
-        console.log(`[house rule] ${w.name}: 1d6 heat → ${rolled} (reemplaza canon ${heatToTarget})`);
         heatToTarget = rolled;
         variant = variant ? `${variant} 1d6=${rolled}` : `Heat 1d6=${rolled}`;
       }

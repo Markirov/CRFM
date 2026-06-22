@@ -704,7 +704,10 @@ export function useSimulador() {
     if (!w) return;
     const mode = mechSession.weaponModeChoice?.[weaponId];
     if (mode !== '2') {
-      alert('Ultra AC: tirada de jam solo aplica si el modo es "2 disparos".');
+      updateMechSession(s => ({
+        ...s,
+        logs: [`> ${w.name}: Ultra AC jam roll requiere modo "2 disparos". Activa con badge.`, ...(s.logs || [])].slice(0, 50),
+      }));
       return;
     }
     const r = roll2d6();
@@ -729,7 +732,10 @@ export function useSimulador() {
     const w = mechState.weapons.find(x => x.id === weaponId);
     if (!w) return;
     if (!getHouseRules().rac_cadence_drop) {
-      alert('Regla casa RAC cadencia drop está desactivada. Actívala en Reglas Casa para tirar.');
+      updateMechSession(s => ({
+        ...s,
+        logs: [`> ${w.name}: regla casa RAC cadencia drop OFF — usa canon (jam roll en toHit). Activa en Reglas Casa.`, ...(s.logs || [])].slice(0, 50),
+      }));
       return;
     }
     const mode = (mechSession.weaponModeChoice?.[weaponId] ?? '1') as '1' | '2' | '4' | '6';
