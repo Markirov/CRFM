@@ -196,12 +196,44 @@ export function mechParseMTF(text: string){
   return {source:'MTF',chassis:chassis.trim(),model:model.trim(),tonnage,walkMP,runMP,jumpMP,hsCount,hsDouble,diss,configType,isQuad,armorType:kv('Armor').replace(/\(.*?\)/g,'').trim(),techBase:kv('TechBase'),era:kv('Era'),armor,is,weapons:Object.values(wMap),crits,bv:0,ammoTonsByFamily,ammoBins};
 }
 
-export function mechParseSSW(text: string){
+export function mechParseSSW(text: string, opts?: { loadoutName?: string }){
   const doc=new DOMParser().parseFromString(text,'text/xml');
   function xt(sel: string,def=''){const e=doc.querySelector(sel);return e?e.textContent?.trim()||def:def;}
   function xa(sel: string,attr: string,def=''){const e=doc.querySelector(sel);return e?(e.getAttribute(attr)||def):def;}
   const root=doc.querySelector('mech');
   if(!root){console.error('SSW: No se encontró elemento <mech>');return null;}
+
+  // ── Omni loadout selection ────────────────────────────────
+  // SSW files de omni guardan <baseloadout> (fijos) + N <loadout name="X">.
+  // Parsear todos los <equipment> mezcla configs → bug. Limitamos scope.
+  const isOmni = root.getAttribute('omnimech') === 'TRUE';
+  const baseLoadoutEl = root.querySelector(':scope > baseloadout');
+  const allLoadoutEls = Array.from(root.querySelectorAll(':scope > loadout'));
+  const loadoutNames = allLoadoutEls.map(l => l.getAttribute('name') || '').filter(Boolean);
+  let activeLoadoutEl: Element | null = null;
+  let activeLoadoutName = '';
+  if (isOmni && allLoadoutEls.length > 0) {
+    // Prefer opts.loadoutName, then "Prime", then first available
+    activeLoadoutEl =
+      (opts?.loadoutName ? allLoadoutEls.find(l => l.getAttribute('name') === opts.loadoutName) : null) ||
+      allLoadoutEls.find(l => l.getAttribute('name') === 'Prime') ||
+      allLoadoutEls[0];
+    activeLoadoutName = activeLoadoutEl?.getAttribute('name') || '';
+  } else if (!isOmni && allLoadoutEls.length === 1) {
+    // Non-omni con un solo <loadout> (formato alternativo SSW): úsalo como single source
+    activeLoadoutEl = allLoadoutEls[0];
+  }
+
+  // Scope para buscar <equipment>: base (siempre) + active loadout (si omni).
+  // Si no hay baseloadout ni loadouts → cae al root (legacy compat).
+  const equipmentScopes: Element[] = [];
+  if (baseLoadoutEl) equipmentScopes.push(baseLoadoutEl);
+  if (activeLoadoutEl) equipmentScopes.push(activeLoadoutEl);
+  if (equipmentScopes.length === 0) equipmentScopes.push(root);
+
+  function scopedEquipment(): Element[] {
+    return equipmentScopes.flatMap(s => Array.from(s.querySelectorAll('equipment')));
+  }
 
   const chassis=root.getAttribute('name')||'',model=root.getAttribute('model')||'';
   const tonnage=parseInt(root.getAttribute('tons')||'0')||0;
@@ -345,7 +377,7 @@ export function mechParseSSW(text: string){
     return 1;
   }
 
-  doc.querySelectorAll('equipment').forEach(eq=>{
+  scopedEquipment().forEach(eq=>{
     const rawName=(eq.querySelector('name')?.textContent?.trim()||'').replace(/\n/g,'');
     const name=rawName.trim();
     // Support both <location> and <splitlocation> elements
@@ -381,7 +413,7 @@ export function mechParseSSW(text: string){
   const ammoTonsByFamily: Record<string, number>={};
   const usedSlots: Record<string, Set<number>>={};
 
-  doc.querySelectorAll('equipment').forEach(eq=>{
+  scopedEquipment().forEach(eq=>{
     const rawName=(eq.querySelector('name')?.textContent?.trim()||'').replace(/\n/g,'');
     const type=(eq.querySelector('type')?.textContent?.trim()||'').toLowerCase();
     // Use same query as first pass (location + splitlocation)
@@ -459,7 +491,7 @@ export function mechParseSSW(text: string){
   const ammoBins: any[]=[];
   let binId=0;
   const usedAmmoSlots: Record<string, Set<number>>={};
-  doc.querySelectorAll('equipment').forEach(eq=>{
+  scopedEquipment().forEach(eq=>{
     const type=(eq.querySelector('type')?.textContent?.trim()||'').toLowerCase();
     if(type!=='ammunition')return;
     const rawName=(eq.querySelector('name')?.textContent?.trim()||'').replace(/\n/g,'');
@@ -525,12 +557,13 @@ export function mechParseSSW(text: string){
   return {source:'SSW',chassis:chassis,model:model,tonnage:tonnage,walkMP:walkMP,runMP:runMP,jumpMP:jumpMP,
     hsCount:hsCount,hsDouble:hsDouble,diss:diss,configType:configType,isQuad:isQuad,engineRating:engRating,
     armorType:xt('armor type'),techBase:xt('techbase'),era:xa('year','')||xt('year')||'',
-    armor:armor,is:is,weapons:Object.values(wMap),crits:crits,bv:bv,ammoTonsByFamily:ammoTonsByFamily,ammoBins:ammoBins};
+    armor:armor,is:is,weapons:Object.values(wMap),crits:crits,bv:bv,ammoTonsByFamily:ammoTonsByFamily,ammoBins:ammoBins,
+    isOmni, loadouts: loadoutNames, activeLoadout: activeLoadoutName};
 }
 
-export function mechParseMech(text: string){
+export function mechParseMech(text: string, opts?: { loadoutName?: string }){
   const t=text.trim();
-  if(t.startsWith('<?xml')||t.startsWith('<mech'))return mechParseSSW(t);
+  if(t.startsWith('<?xml')||t.startsWith('<mech'))return mechParseSSW(t, opts);
   return mechParseMTF(t);
 }
 
