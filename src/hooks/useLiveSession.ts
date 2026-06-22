@@ -20,6 +20,9 @@ export interface IncomingDamage {
   weaponName: string;
   damage: number;
   timestamp: number;
+  // ── Sprint 5.5: ammo variant payload ──
+  ammoVariant?: string;      // 'Inferno' | 'HE' | 'AP' | 'Cluster' | ...
+  heatToTarget?: number;     // Inferno SRM: calor adicional al target por hit
 }
 
 export interface LiveSession {
@@ -179,7 +182,14 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
   }, [isLive, sessionId]);
 
   // Enviar ataque a otro
-  const sendAttack = useCallback(async (targetSessionId: string, targetUnitId: string, sourceUnitName: string, weaponName: string, damage: number) => {
+  const sendAttack = useCallback(async (
+    targetSessionId: string,
+    targetUnitId: string,
+    sourceUnitName: string,
+    weaponName: string,
+    damage: number,
+    opts?: { ammoVariant?: string; heatToTarget?: number },
+  ) => {
     try {
       const attackId = `atk_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
       const payload: IncomingDamage = {
@@ -190,6 +200,8 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
         weaponName,
         damage,
         timestamp: Date.now(),
+        ...(opts?.ammoVariant ? { ammoVariant: opts.ammoVariant } : {}),
+        ...(opts?.heatToTarget ? { heatToTarget: opts.heatToTarget } : {}),
       };
       await updateDoc(doc(db, LIVE_COL, targetSessionId), {
         incomingDamage: arrayUnion(payload)

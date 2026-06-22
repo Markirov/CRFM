@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Crosshair, Send } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
 import { useLiveSession } from '@/hooks/useLiveSession';
+import { tWeapon } from '@/lib/translator';
 
 interface Props {
   isOpen: boolean;
@@ -12,24 +13,48 @@ interface Props {
 
 export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
   const [targets, setTargets] = useState<Record<number, { targetSessionId: string, targetUnitId: string, damage: number }>>({});
+  // Bin de munición seleccionado por arma (id del AmmoBin). undefined → Standard del weapon.
+  const [binChoice, setBinChoice] = useState<Record<number, number>>({});
 
   const activeTab = sim.activeTab;
   const state = activeTab === 'mechs' ? sim.mechState : sim.vehicleState;
   const session = activeTab === 'mechs' ? sim.mechSession : sim.vehicleSession;
 
+  // Helper: aplica override del bin si existe, sino devuelve damage canon del weapon.
+  const computeInitialDamage = (w: any, bin: any | undefined): number => {
+    if (bin?.damageOverride?.short !== undefined) return bin.damageOverride.short;
+    if (typeof w.damageShort === 'number') return w.damageShort;
+    return parseInt(w.dmg) || 0;
+  };
+
+  // Bins disponibles para un weapon: match por family canónica del bin con la del weapon.
+  // VehicleSession también puede tener bins (forma distinta); usamos any para unificar.
+  const binsForWeapon = (w: any): any[] => {
+    const s = session as any;
+    if (!s?.ammoBins || !w.usesAmmo) return [];
+    const wFam = (w.ammoFamilyKey?.split(':').slice(2).join(':') || w.ammoFamilyKey || w.ammoFamily || '').trim();
+    return s.ammoBins.filter((b: any) => {
+      const bFam = (b.familyKey?.split(':').slice(2).join(':') || b.familyKey || b.family || '').trim();
+      return bFam === wFam && b.current > 0;
+    });
+  };
+
   useEffect(() => {
     if (isOpen && state && session) {
-      // Inicializar el estado de daños
       const initialTargets: Record<number, { targetSessionId: string, targetUnitId: string, damage: number }> = {};
+      const initialBins: Record<number, number> = {};
       state.weapons.forEach((w: any) => {
         if (session.activeShots[w.id]) {
-          // Canon SSW: damageShort (number) preferido. Fallback parseInt(dmg).
-          // ATM con damage variable por rango: usa short como inicial (player ajusta).
-          const baseDmg = (typeof w.damageShort === 'number' ? w.damageShort : parseInt(w.dmg)) || 0;
+          const bins = binsForWeapon(w);
+          // Auto-select primer bin con variant != Standard si existe; sino Standard.
+          const defaultBin = bins.find((b: any) => b.variant && b.variant !== 'Standard') ?? bins[0];
+          if (defaultBin) initialBins[w.id] = defaultBin.id;
+          const baseDmg = computeInitialDamage(w, defaultBin);
           initialTargets[w.id] = { targetSessionId: '', targetUnitId: '', damage: baseDmg };
         }
       });
       setTargets(initialTargets);
+      setBinChoice(initialBins);
     }
   }, [isOpen, state, session]);
 
@@ -69,9 +94,17 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
 
     activeWeapons.forEach((w: any) => {
       const t = targets[w.id];
-      if (t && t.targetSessionId && t.targetUnitId && t.damage > 0) {
-        live.sendAttack(t.targetSessionId, t.targetUnitId, sourceName, w.name, t.damage);
-      }
+      if (!t || !t.targetSessionId || !t.targetUnitId) return;
+      const bin = binChoice[w.id] !== undefined ? binsForWeapon(w).find((b: any) => b.id === binChoice[w.id]) : undefined;
+      const variant = bin?.variant && bin.variant !== 'Standard' ? bin.variant : undefined;
+      const heatToTarget = bin?.heatToTarget;
+      // Inferno (damage 0 + heat) sigue enviando aunque damage=0 si hay heat
+      if (t.damage <= 0 && !heatToTarget) return;
+      const weaponLabel = variant ? `${w.name} (${variant})` : w.name;
+      live.sendAttack(
+        t.targetSessionId, t.targetUnitId, sourceName, weaponLabel, t.damage,
+        { ammoVariant: variant, heatToTarget }
+      );
     });
 
     onClose();
@@ -96,13 +129,47 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
         <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
           {activeWeapons.map((w: any) => {
             const t = targets[w.id] || { targetSessionId: '', targetUnitId: '', damage: 0 };
-            
+            const bins = binsForWeapon(w);
+            const selectedBinId = binChoice[w.id];
+            const selectedBin = selectedBinId !== undefined ? bins.find((b: any) => b.id === selectedBinId) : undefined;
+            const heatToTarget = selectedBin?.heatToTarget;
+
             return (
               <div key={w.id} className="bg-surface-container-low border border-error/30 p-3 clip-chamfer flex flex-col md:flex-row gap-3 items-start md:items-center">
-                
+
                 <div className="flex-1">
-                  <div className="font-bold text-error uppercase font-mono text-xs">{w.name}</div>
+                  <div className="font-bold text-error uppercase font-mono text-xs">{tWeapon(w.name)}</div>
                   <div className="text-[9px] text-secondary/50 font-mono uppercase">Original: {w.dmg} DMG</div>
+                  {/* ── Selector de munición / variant ── */}
+                  {bins.length > 0 && (
+                    <div className="mt-1 flex items-center gap-1">
+                      <select
+                        value={selectedBinId ?? ''}
+                        onChange={(e) => {
+                          const newBinId = parseInt(e.target.value);
+                          const newBin = bins.find((b: any) => b.id === newBinId);
+                          setBinChoice(prev => ({ ...prev, [w.id]: newBinId }));
+                          // Re-init damage según override del bin
+                          setTargets(prev => ({
+                            ...prev,
+                            [w.id]: { ...prev[w.id], damage: computeInitialDamage(w, newBin) }
+                          }));
+                        }}
+                        className="bg-surface-container-high border border-outline-variant/40 text-[9px] font-mono px-1 py-0.5 text-secondary"
+                      >
+                        {bins.map((b: any) => (
+                          <option key={b.id} value={b.id}>
+                            {b.variant && b.variant !== 'Standard' ? `${b.variant} (${b.loc})` : `Standard (${b.loc})`} — {b.current}/{b.max}
+                          </option>
+                        ))}
+                      </select>
+                      {heatToTarget && (
+                        <span className="text-[9px] font-mono text-amber-400 border border-amber-400/60 px-1" title={`Cada misil impactado: +${heatToTarget} calor al target`}>
+                          +{heatToTarget}🔥/hit
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex-1 w-full">
