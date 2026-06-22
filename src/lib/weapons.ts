@@ -250,6 +250,39 @@ export function getWeaponBadges(
 }
 
 // ════════════════════════════════════════════════════════════════
+// Damage grouper (House rule Sprint 5.5)
+// ════════════════════════════════════════════════════════════════
+
+/**
+ * Agrupa el daño total en grupos preferidos. Solo aplica a misiles cluster.
+ *
+ * Reglas casa:
+ *   - Secuencia preferida: 5 > 6 > 4 > 3 > 2 > 1
+ *   - El residuo 1 sobrante se absorbe en un grupo de 5 → 6 (única "subida")
+ *   - Cualquier otro residuo (2/3/4) queda como grupo separado de su tamaño
+ *   - Aplicado por arma individual (no acumula entre armas)
+ *
+ * Ejemplos:
+ *   5  → [5]              6  → [6]
+ *   7  → [5, 2]           8  → [5, 3]
+ *   9  → [5, 4]           10 → [5, 5]
+ *   11 → [5, 6]           12 → [5, 5, 2]
+ *   13 → [5, 5, 3]        14 → [5, 5, 4]
+ *   15 → [5, 5, 5]        16 → [5, 5, 6]
+ *   4  → [4]              3  → [3]    1 → [1]
+ */
+export function groupMissileDamage(total: number): number[] {
+  if (total <= 0) return [];
+  const Q = Math.floor(total / 5);
+  const R = total % 5;
+  if (R === 0) return Array(Q).fill(5);
+  if (R === 1 && Q >= 1) return [...Array(Q - 1).fill(5), 6];
+  // R = 2, 3, 4  → Q grupos de 5 + 1 grupo R
+  // R = 1, Q = 0 → [1] (no hay 5 al que sumar el 1)
+  return [...Array(Q).fill(5), R];
+}
+
+// ════════════════════════════════════════════════════════════════
 // Modes per weapon (Sprint 5.4)
 // ════════════════════════════════════════════════════════════════
 

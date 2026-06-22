@@ -3,6 +3,7 @@ import { Crosshair, Send } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
 import { useLiveSession } from '@/hooks/useLiveSession';
 import { tWeapon } from '@/lib/translator';
+import { groupMissileDamage } from '@/lib/weapons';
 
 interface Props {
   isOpen: boolean;
@@ -231,10 +232,10 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                   )}
                 </div>
 
-                <div className="w-full md:w-24">
+                <div className="w-full md:w-32 flex flex-col gap-1">
                   <div className="flex items-center bg-surface-container-high border border-error/40">
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min="0"
                       value={t.damage}
                       onChange={(e) => {
@@ -247,6 +248,24 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                     />
                     <span className="text-[9px] font-mono text-error/60 pr-2">DMG</span>
                   </div>
+                  {/* ── Damage grouper (house rule) — solo cluster ── */}
+                  {(w as any).isCluster && t.damage > 0 && (() => {
+                    const groups = groupMissileDamage(t.damage);
+                    return (
+                      <div className="flex flex-wrap gap-px justify-center" title="Agrupación misiles (house rule). Cada grupo = un impacto a aplicar.">
+                        {groups.map((g, gi) => (
+                          <span
+                            key={gi}
+                            className={`px-1 py-px text-[8px] font-mono font-bold border ${
+                              g === 5 ? 'border-emerald-400/60 text-emerald-400'
+                              : g === 6 ? 'border-cyan-400/60 text-cyan-400'
+                              : 'border-amber-400/60 text-amber-400'
+                            }`}
+                          >{g}</span>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
 
               </div>
