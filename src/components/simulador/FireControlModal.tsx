@@ -97,13 +97,26 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       const t = targets[w.id];
       if (!t || !t.targetSessionId || !t.targetUnitId) return;
       const bin = binChoice[w.id] !== undefined ? binsForWeapon(w).find((b: any) => b.id === binChoice[w.id]) : undefined;
-      const variant = bin?.variant && bin.variant !== 'Standard' ? bin.variant : undefined;
-      const heatToTarget = bin?.heatToTarget;
-      // Inferno (damage 0 + heat) sigue enviando aunque damage=0 si hay heat
-      if (t.damage <= 0 && !heatToTarget) return;
+      let variant = bin?.variant && bin.variant !== 'Standard' ? bin.variant : undefined;
+      let heatToTarget = bin?.heatToTarget;
+      let damage = t.damage;
+
+      // ── Flamer dual mode: si modo='heat' → swap damage por heat (canon 2/2) ──
+      const hooks = (w as any).hooks as any[] | undefined;
+      const isFlamer = hooks?.some(h => h.kind === 'flamer_dual_mode');
+      const mechSession = sim.activeTab === 'mechs' ? sim.mechSession : null;
+      const flamerMode = mechSession?.weaponModeChoice?.[w.id];
+      if (isFlamer && flamerMode === 'heat') {
+        heatToTarget = (heatToTarget ?? 0) + damage;
+        damage = 0;
+        variant = variant ?? 'Heat';
+      }
+
+      // Inferno/Flamer heat → enviar aunque damage=0 si hay heat
+      if (damage <= 0 && !heatToTarget) return;
       const weaponLabel = variant ? `${w.name} (${variant})` : w.name;
       live.sendAttack(
-        t.targetSessionId, t.targetUnitId, sourceName, weaponLabel, t.damage,
+        t.targetSessionId, t.targetUnitId, sourceName, weaponLabel, damage,
         { ammoVariant: variant, heatToTarget }
       );
     });

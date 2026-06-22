@@ -134,20 +134,40 @@ export function IncomingAttacks({ sim, live }: Props) {
               {atk.weaponName} <span className="float-right font-bold">{atk.damage} DMG</span>
             </div>
 
+            {/* ── Variant + heat target badge (Inferno SRM / Flamer heat) ── */}
+            {(atk.ammoVariant || atk.heatToTarget) && (
+              <div className="mt-1 flex gap-1 flex-wrap">
+                {atk.ammoVariant && (
+                  <span className="px-1 py-px text-[9px] font-mono border border-cyan-400/60 text-cyan-400">
+                    {atk.ammoVariant}
+                  </span>
+                )}
+                {atk.heatToTarget && atk.heatToTarget > 0 && (
+                  <span className="px-1 py-px text-[9px] font-mono border border-amber-400/60 text-amber-400" title="Calor adicional al target — se aplica al pulsar Aplicar Impacto">
+                    +{atk.heatToTarget}🔥 calor
+                  </span>
+                )}
+              </div>
+            )}
+
             <div className="mt-3 flex gap-2">
-              <button 
+              <button
                 onClick={() => {
                   if (sim.pendingIncomingAttack && sim.pendingIncomingAttack.id !== atk.id) {
                     alert('Debes aplicar el impacto pendiente en el diagrama de armadura antes de recibir otro.');
                     return;
                   }
-                  // Pre-seleccionar el slot correcto y fijar el amount de daño, para que el usuario solo clique en ArmorDiagram
+                  // Pre-seleccionar el slot correcto
                   if (mechIdx >= 0) {
                     sim.setActiveTab('mechs');
                     sim.setCurrentMechIdx(mechIdx);
                   } else if (vehIdx >= 0) {
                     sim.setActiveTab('vehicles');
                     sim.setCurrentVehicleIdx(vehIdx);
+                  }
+                  // Heat al target (Inferno / Flamer heat mode) — aplica auto al mech activo
+                  if (atk.heatToTarget && atk.heatToTarget > 0 && mechIdx >= 0) {
+                    sim.adjustHeat(atk.heatToTarget);
                   }
                   sim.setDamageAmount(atk.damage);
                   sim.setDamageSource(atk.sourceSessionName);
