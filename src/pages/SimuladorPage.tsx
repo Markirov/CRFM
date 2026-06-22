@@ -8,7 +8,7 @@ import { loadLocalSnapshot, snapshotHasUnits, extractDamageFromSession, applyDam
 import { useMechCatalog } from '@/hooks/useMechCatalog';
 import { loadRoster } from '@/lib/roster';
 import { useSimulador } from '@/hooks/useSimulador';
-import { getWeaponBadges, mechHasTargetingComputer } from '@/lib/weapons';
+import { getWeaponBadges, mechHasTargetingComputer, hasMode, getDefaultMode } from '@/lib/weapons';
 import { EndTurnSummaryModal } from '@/components/simulador/EndTurnSummaryModal';
 import { GlobalEndTurnSummaryModal } from '@/components/simulador/GlobalEndTurnSummaryModal';
 import { usePerm } from '@/hooks/usePerm';
@@ -578,9 +578,9 @@ export function SimuladorPage() {
         </div>
       ) : isMech && ms && ss ? (
         /* ── MECH LAYOUT ── */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6 pb-20 max-w-[1600px] mx-auto px-2 md:px-4 relative">
           {/* Left: Pilot + Fire + Heat */}
-          <div className="col-span-1 md:col-span-1 lg:col-span-3 space-y-4">
+          <div className="lg:col-span-5 xl:col-span-4 lg:col-start-1 lg:row-start-1 space-y-4 z-10">
             <PilotPanel
               state={ms}
               session={ss}
@@ -642,8 +642,8 @@ export function SimuladorPage() {
             )}
           </div>
 
-          {/* Center: Armor Diagram */}
-          <div className="col-span-1 md:col-span-1 lg:col-span-6">
+          {/* Center: Armor Diagram (Right side on Desktop) */}
+          <div className="lg:col-span-7 xl:col-span-8 lg:col-start-6 xl:col-start-5 lg:row-start-1 lg:row-span-2 self-start sticky top-2 md:top-4 z-20">
             <ArmorDiagram
               state={ms}
               session={ss}
@@ -658,8 +658,8 @@ export function SimuladorPage() {
             />
           </div>
 
-          {/* Right: Weapons + Log */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-3 space-y-4">
+          {/* Right: Weapons + Log (Bottom left on Desktop) */}
+          <div className="lg:col-span-5 xl:col-span-4 lg:col-start-1 lg:row-start-2 space-y-4 z-10">
             {/* Weapons */}
             <section className="bg-surface-container-low p-4 clip-chamfer border-l-2 border-primary-container/30">
               <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">
@@ -718,18 +718,33 @@ export function SimuladorPage() {
                         <span className="font-bold uppercase">{w.name}</span>
                         <span className="text-[8px] text-secondary/40 flex items-center gap-1 flex-wrap">
                           {w.loc} • {w.r}
-                          {badges.map((b, i) => (
-                            <span
-                              key={i}
-                              title={b.title}
-                              className={`px-1 py-px text-[7px] font-bold border ${
-                                b.color === 'red' ? 'border-error/60 text-error'
-                                : b.color === 'cyan' ? 'border-primary-container/60 text-primary-container'
-                                : b.color === 'green' ? 'border-emerald-400/60 text-emerald-400'
-                                : 'border-amber-400/60 text-amber-400'
-                              }`}
-                            >{b.label}</span>
-                          ))}
+                          {badges.map((b, i) => {
+                            // ¿Es el badge del hook con modo seleccionable?
+                            const modeKinds = ['flamer_dual_mode', 'lbx_cluster_mode', 'ultra_jam', 'rotary_variable'];
+                            const isModeBadge = modeKinds.includes(b.kind);
+                            const wHooks = (w as any).hooks;
+                            const cur = isModeBadge ? (ss.weaponModeChoice?.[w.id] ?? getDefaultMode(wHooks)) : null;
+                            // Sobrescribir label con el modo activo si aplica
+                            let label = b.label;
+                            if (b.kind === 'flamer_dual_mode') label = cur === 'heat' ? 'FLAMER:H' : 'FLAMER:D';
+                            else if (b.kind === 'lbx_cluster_mode') label = cur === 'cluster' ? 'LBX:CL' : 'LBX:SLUG';
+                            else if (b.kind === 'ultra_jam') label = `ULTRA:${cur ?? '1'}`;
+                            else if (b.kind === 'rotary_variable') label = `RAC:${cur ?? '1'}`;
+                            const colorCls = b.color === 'red' ? 'border-error/60 text-error'
+                              : b.color === 'cyan' ? 'border-primary-container/60 text-primary-container'
+                              : b.color === 'green' ? 'border-emerald-400/60 text-emerald-400'
+                              : 'border-amber-400/60 text-amber-400';
+                            return isModeBadge ? (
+                              <button
+                                key={i}
+                                onClick={(e) => { e.stopPropagation(); sim.cycleWeaponMode(w.id); }}
+                                title={b.title + ' (click para cambiar modo)'}
+                                className={`px-1 py-px text-[7px] font-bold border ${colorCls} hover:bg-secondary/10 cursor-pointer transition-colors`}
+                              >{label}</button>
+                            ) : (
+                              <span key={i} title={b.title} className={`px-1 py-px text-[7px] font-bold border ${colorCls}`}>{label}</span>
+                            );
+                          })}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-[9px]">

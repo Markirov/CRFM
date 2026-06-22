@@ -149,6 +149,22 @@ export interface MechSession {
 
   /** Daño recibido en el turno actual, pendiente de aplicarse al final de la fase. */
   pendingDamage?: { locKey: string; amount: number; source?: string }[];
+
+  /**
+   * Modo de disparo per arma (Sprint 5.4). Valores específicos por tipo:
+   *   Flamer:  'damage' | 'heat'                (default 'damage')
+   *   LBX:     'slug'   | 'cluster'             (default 'slug')
+   *   Ultra:   '1'      | '2'                   (default '1')
+   *   RAC:     '1'      | '2' | '4' | '6'       (default '1')
+   * Si undefined → comportamiento default.
+   */
+  weaponModeChoice?: Record<number, string>;
+
+  /**
+   * Armas atascadas permanentemente (Ultra/RAC jam canon).
+   * Una vez aquí: no se pueden disparar resto de la partida.
+   */
+  weaponJammed?: Record<number, boolean>;
 }
 
 export interface CritSlot {

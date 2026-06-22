@@ -256,6 +256,57 @@ export function getWeaponBadges(
   return out;
 }
 
+// ════════════════════════════════════════════════════════════════
+// Modes per weapon (Sprint 5.4)
+// ════════════════════════════════════════════════════════════════
+
+export type FlamerMode = 'damage' | 'heat';
+export type LBXMode = 'slug' | 'cluster';
+export type UltraMode = '1' | '2';
+export type RACMode = '1' | '2' | '4' | '6';
+export type WeaponMode = FlamerMode | LBXMode | UltraMode | RACMode;
+
+/** Modo por defecto según hooks del arma. */
+export function getDefaultMode(hooks: SpecialHook[] | undefined): WeaponMode | null {
+  if (!hooks) return null;
+  if (hooks.some(h => h.kind === 'flamer_dual_mode')) return 'damage';
+  if (hooks.some(h => h.kind === 'lbx_cluster_mode')) return 'slug';
+  if (hooks.some(h => h.kind === 'ultra_jam')) return '1';
+  if (hooks.some(h => h.kind === 'rotary_variable')) return '1';
+  return null;
+}
+
+/** Ciclo del modo al hacer click en el badge. */
+export function cycleMode(hooks: SpecialHook[] | undefined, current: WeaponMode | undefined): WeaponMode | null {
+  if (!hooks) return null;
+  if (hooks.some(h => h.kind === 'flamer_dual_mode')) {
+    return current === 'damage' ? 'heat' : 'damage';
+  }
+  if (hooks.some(h => h.kind === 'lbx_cluster_mode')) {
+    return current === 'slug' ? 'cluster' : 'slug';
+  }
+  if (hooks.some(h => h.kind === 'ultra_jam')) {
+    return current === '1' ? '2' : '1';
+  }
+  if (hooks.some(h => h.kind === 'rotary_variable')) {
+    const order: RACMode[] = ['1', '2', '4', '6'];
+    const idx = order.indexOf((current as RACMode) ?? '1');
+    return order[(idx + 1) % order.length];
+  }
+  return null;
+}
+
+/** ¿El arma tiene modo seleccionable? */
+export function hasMode(hooks: SpecialHook[] | undefined): boolean {
+  if (!hooks) return false;
+  return hooks.some(h =>
+    h.kind === 'flamer_dual_mode' ||
+    h.kind === 'lbx_cluster_mode' ||
+    h.kind === 'ultra_jam' ||
+    h.kind === 'rotary_variable'
+  );
+}
+
 /**
  * Detecta si el mech tiene Targeting Computer instalado.
  * Scan de crits en busca de "Targeting Computer".

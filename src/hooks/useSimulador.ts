@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { mechParseMech, vehicleParseSAW } from '@/lib/parsers';
-import { mechAmmoMetaForWeapon } from '@/lib/weapons';
+import { mechAmmoMetaForWeapon, cycleMode } from '@/lib/weapons';
 import type { MechSlot, VehicleSlot, MechState, MechSession, MoveMode, VehicleSession, InfantrySlot, BASlot, FireTarget } from '@/lib/combat-types';
 import { INFANTRY_CATALOG, BA_CATALOG, buildInfantrySession, buildBASession } from '@/lib/infantry-catalog';
 import { infantryFire, baFire, infantryNextTurn, baNextTurn, infantryApplyDamage, baApplyDamage } from '@/lib/infantry-combat';
@@ -368,7 +368,7 @@ export function useSimulador() {
     
     const isDamagingSources: Record<string, Set<string>> = {};
     
-    for (const pd of s.pendingDamage) {
+    for (const pd of s.pendingDamage || []) {
       totalDamageThisTurn += pd.amount;
       const res = mechApplyDamage(mechState, s, pd.locKey, pd.amount);
       s = res.session;
@@ -389,7 +389,7 @@ export function useSimulador() {
     // Asignar los críticos sumando los atacantes únicos por localización, 
     // ignorando localizaciones destruidas
     for (const loc in isDamagingSources) {
-      if (s.is[loc] > 0 && !s.destroyedLocs?.includes(loc)) {
+      if (s.is[loc] > 0) {
         critRolls[loc] = isDamagingSources[loc].size;
       }
     }
@@ -475,7 +475,7 @@ export function useSimulador() {
       const critRolls: Record<string, number> = {};
       const isDamagingSources: Record<string, Set<string>> = {};
 
-      for (const pd of s.pendingDamage) {
+      for (const pd of s.pendingDamage || []) {
         totalDamageThisTurn += pd.amount;
         const res = mechApplyDamage(ms, s, pd.locKey, pd.amount);
         s = res.session;
@@ -493,7 +493,7 @@ export function useSimulador() {
       s.pendingDamage = [];
 
       for (const loc in isDamagingSources) {
-        if (s.is[loc] > 0 && !s.destroyedLocs?.includes(loc)) {
+        if (s.is[loc] > 0) {
           critRolls[loc] = isDamagingSources[loc].size;
         }
       }
@@ -520,7 +520,7 @@ export function useSimulador() {
           pilotingCheck: totalDamageThisTurn >= 20,
           critRolls,
           destroyedLocs,
-          heatDelta: finalSession.heat - slot.session.heat,
+          heatDelta: finalSession.heat - (slot.session?.heat || 0),
           heat: finalSession.heat
         },
         nextSession: finalSession
@@ -546,7 +546,7 @@ export function useSimulador() {
       const logs: string[] = [];
       let totalDamageThisTurn = 0;
       
-      for (const pd of s.pendingDamage) {
+      for (const pd of s.pendingDamage || []) {
         totalDamageThisTurn += pd.amount;
         const res = vehicleApplyDamage(vs, s, pd.locKey, pd.amount);
         s = res.session;
@@ -649,10 +649,10 @@ export function useSimulador() {
           }
         }
         
-        let newState = { ...s, pendingDamage: pending };
+        let newState = { ...s, pendingDamage: pending } as MechSession;
         if (toHeal > 0) {
           const result = mechApplyHeal(mechState, newState, armorKey, toHeal);
-          newState = { ...result.session, logs: [...result.logs, ...result.session.logs].slice(0, 30) };
+          newState = { ...result.session, logs: [...result.logs, ...result.session.logs].slice(0, 30) } as MechSession;
         }
         return newState;
       });
@@ -682,6 +682,26 @@ export function useSimulador() {
    * Ajusta el modificador manual de un arma (heat extra al disparar / dificultad extra al impactar).
    * Rango 0-5 cada uno. Valor 0 en ambos elimina la entrada del mapa.
    */
+  /** Ciclo del modo del arma (Flamer dmg/heat, LBX slug/cluster, Ultra 1/2, RAC 1/2/4/6). */
+  const cycleWeaponMode = (weaponId: number) => {
+    if (!mechState || !mechSession) return;
+    const w = mechState.weapons.find(x => x.id === weaponId);
+    if (!w) return;
+    const hooks = (w as any).hooks;
+    updateMechSession(s => {
+      const cur = (s.weaponModeChoice ?? {})[weaponId];
+      const next = cycleMode(hooks, cur as any);
+      if (!next) return s;
+      const modes = { ...(s.weaponModeChoice ?? {}) };
+      modes[weaponId] = next;
+      return {
+        ...s,
+        weaponModeChoice: modes,
+        logs: [`> ${w.name}: modo → ${next}`, ...(s.logs || [])].slice(0, 50),
+      };
+    });
+  };
+
   const setWeaponMod = (weaponId: number, field: 'heat' | 'atk', value: number) => {
     if (!mechState || !mechSession) return;
     const w = mechState.weapons.find(x => x.id === weaponId);
@@ -839,12 +859,12 @@ export function useSimulador() {
           }
         }
         
-        let newState = { ...s, pendingDamage: pending };
+        let newState = { ...s, pendingDamage: pending } as any;
         if (toHeal > 0) {
           const r = vehicleApplyHeal(vehicleState, newState, locKey, toHeal);
           newState = r.session;
         }
-        return newState;
+        return newState as VehicleSession;
       });
     }
   };
@@ -1134,7 +1154,7 @@ export function useSimulador() {
     toggleWeapon, handleFire, confirmNextTurn, endTurnSummary,
     handleGlobalFire, confirmGlobalNextTurn, globalEndTurnSummary, setGlobalEndTurnSummary,
     handleDamage, applyDamageToSelected,
-    toggleCrit, setWeaponMod, setCritMod,
+    toggleCrit, setWeaponMod, setCritMod, cycleWeaponMode,
     forceReviveMech, adjustAmmo, adjustHeat,
     setMoveMode, setJumpUsed,
     setWounds, setPilot, setPilotFull, resetLog,
