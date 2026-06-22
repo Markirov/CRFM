@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Trash2, Loader, ArrowRightLeft, Shield, Package } from 'lucide-react';
+import { Search, Trash2, Loader, ArrowRightLeft, Shield, Package, DollarSign } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
 import { parseSSWBasic } from '@/lib/ssw-basic';

@@ -290,8 +290,10 @@ export function BarraconesPage() {
           {/* COMBATE */}
           {tab === 'combate' && (
             <div className="p-6">
-              <CombatePanel pilot={pilot} 
-                onChange={(p) => sim.updatePilot(p)} 
+              <CombatePanel
+                pilot={pilot}
+                onSetHpDmg={sim.setHpDmg}
+                onSetWeapon={sim.setWeapon}
               />
             </div>
           )}

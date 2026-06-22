@@ -81,7 +81,7 @@ export function MercadoPersonalTab({ pilot, onSetPatrimonio, onSetEquipoPersonal
     <div className="flex flex-col gap-6 animate-[fadeInUp_0.3s_ease]">
       {/* Cabecera / Info */}
       <div className="flex gap-4 p-4 rounded bg-surface-container border border-outline-variant/30">
-        <ShoppingCart size={24} color={T.primary} className="shrink-0 mt-1" />
+        <ShoppingCart size={24} color={T.gold} className="shrink-0 mt-1" />
         <div className="flex-1 text-[13px] text-secondary/90 font-sans leading-relaxed">
           <strong className="text-primary-container">Mercado Privado.</strong> Catálogo ajustado al año de campaña ({currentYear}) y al mercado local.
           <div className="mt-2 flex flex-wrap items-center gap-4">
