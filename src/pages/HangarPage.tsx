@@ -6,8 +6,10 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Trash2, Loader, AlertTriangle } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Search, Trash2, Loader, AlertTriangle, Hammer, DollarSign } from 'lucide-react';
+import { loadRoster } from '@/lib/roster';
+import { EditorPage } from '@/pages/EditorPage';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
@@ -15,19 +17,21 @@ import { commitLibroEntryAndTreasury, loadHangar, saveHangarItem, deleteHangarIt
 import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
 import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
 import { parseSSWBasic } from '@/lib/ssw-basic';
-import { MaterialTab } from '@/components/hangar/MaterialTab';
+import { MercadoMechsTab } from '@/components/hangar/MercadoTab';
+import { SalvageModal } from '@/components/taller/SalvageModal';
 
 export function HangarPage() {
-  const { activeSubTab, setActiveSubTab } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   const { readable, writable, loading: permLoading } = usePerm('hangar');
-  type View = 'unidades' | 'almacen';
+  type View = 'unidades' | 'mercado-mechs';
 
   const view: View = 
-    activeSubTab === 'almacen' ? 'almacen'
+    activeSubTab === 'mercado-mechs' ? 'mercado-mechs'
     : 'unidades';
 
   useEffect(() => {
-    if (!['unidades', 'almacen'].includes(activeSubTab)) {
+    if (!['unidades', 'mercado-mechs'].includes(activeSubTab)) {
       setActiveSubTab('unidades');
     }
   }, [activeSubTab, setActiveSubTab]);
@@ -68,7 +72,7 @@ export function HangarPage() {
       </h1>
 
       {view === 'unidades' && <UnidadesTab items={items} loading={loading} refresh={refresh} />}
-      {view === 'almacen'  && <MaterialTab />}
+      {view === 'mercado-mechs' && <MercadoMechsTab items={items} refresh={refresh} />}
     </div>
   );
 }
@@ -97,8 +101,22 @@ function Th({ children, align = 'left' }: { children: React.ReactNode; align?: '
 function UnidadesTab({ items, loading, refresh }: {
   items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
 }) {
-  const { roster } = useAppStore();
+  const roster = useAppStore(s => s.roster);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const { catalog } = useMechCatalog();
+  const navigate = useNavigate();
   const fmt = (n: number) => Math.round(n).toLocaleString('es-ES') + ' ₡';
+  
+  const catalogMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!catalog) return map;
+    for (const m of catalog.mechs) {
+      if (m.chassis && m.model) {
+        map.set(`${m.chassis} ${m.model}`, m.file);
+      }
+    }
+    return map;
+  }, [catalog]);
 
   const handleAssign = async (item: HangarItem, pilotoIdx: number | undefined) => {
     // Caso: desasignar
@@ -157,6 +175,71 @@ function UnidadesTab({ items, loading, refresh }: {
     
     // Borrar hangar
     await deleteHangarItem(item.id);
+    void refresh();
+  };
+
+  const handleVenderMech = async (item: HangarItem) => {
+    const amountStr = window.prompt(`Valor actual estimado: ${fmt(item.valorActual)}.\nIntroduzca el valor de venta del mech (₡):`, Math.round(item.valorActual * 0.5).toString());
+    if (!amountStr) return;
+    const amount = parseInt(amountStr, 10);
+    if (isNaN(amount) || amount < 0) return;
+    
+    if (!window.confirm(`¿Vender el ${item.chassis} ${item.model} por ${fmt(amount)}?`)) return;
+    
+    // Asiento
+    await commitLibroEntryAndTreasury({
+      id: genId('lm'),
+      tipo: 'ingreso',
+      cantidad: amount,
+      concepto: `Venta mech: ${item.chassis} ${item.model}`,
+      categoria: 'venta_mech',
+      fecha: getCampaignDateISO(useAppStore.getState().campaign?.campaignYear, useAppStore.getState().campaign?.campaignMonth),
+      nota: '',
+      jugador: ''
+    });
+    
+    // Borrar hangar
+    await deleteHangarItem(item.id);
+    void refresh();
+  };
+
+  const [editingMech, setEditingMech] = useState<HangarItem | null>(null);
+  const [editingXml, setEditingXml] = useState<string | null>(null);
+  const [loadingEditor, setLoadingEditor] = useState(false);
+  const [salvageMech, setSalvageMech] = useState<HangarItem | null>(null);
+
+  const openEditor = async (it: HangarItem) => {
+    if (it.sswRaw) {
+      setEditingMech(it);
+      setEditingXml(it.sswRaw);
+      return;
+    }
+    const sourceFile = it.sourceFile || catalogMap.get(`${it.chassis} ${it.model}`);
+    if (sourceFile) {
+      setLoadingEditor(true);
+      try {
+        const res = await fetch(`/assets/mechs/${sourceFile}`);
+        if (!res.ok) throw new Error('File not found');
+        const xml = await res.text();
+        setEditingMech(it);
+        setEditingXml(xml);
+      } catch (e) {
+        alert('No se pudo cargar el archivo SSW original del catálogo.');
+      } finally {
+        setLoadingEditor(false);
+      }
+    }
+  };
+
+  const handleSaveEditor = async (originalItem: HangarItem, newSswXml: string) => {
+    // In a real scenario we'd re-parse the XML to recalculate BV, cost, tons, but for now we just save the XML
+    // Assuming Editor only modifies weapons/armor, chassis/tons remain the same.
+    const updated: HangarItem = {
+      ...originalItem,
+      sswRaw: newSswXml,
+    };
+    await saveHangarItem(updated);
+    setEditingMech(null);
     void refresh();
   };
 
@@ -244,6 +327,9 @@ function UnidadesTab({ items, loading, refresh }: {
                     <td className="px-2 py-1.5 border-b border-outline-variant/20">
                       {(it.estado === 'destruido' || it.estadoPct === 0) ? (
                         <div className="flex items-center gap-2">
+                          <button onClick={() => setSalvageMech(it)} className="px-2 py-1 border border-amber-400/60 bg-surface-container hover:bg-amber-400/20 text-[9px] uppercase tracking-widest text-amber-400 transition-colors" title="Desguace fino con tiradas Technician">
+                            Desguazar
+                          </button>
                           <button onClick={() => handleVenderRestos(it)} className="px-2 py-1 border border-outline-variant/40 bg-surface-container hover:bg-surface-container-high text-[9px] uppercase tracking-widest text-error transition-colors">
                             Vender Restos
                           </button>
@@ -267,6 +353,37 @@ function UnidadesTab({ items, loading, refresh }: {
                               <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
                             ))}
                           </select>
+                          
+                          <button
+                            onClick={() => {
+                              navigate(`/taller?mech=${it.id}`);
+                            }}
+                            className="ml-2 px-2 py-0.5 border border-secondary/40 bg-secondary/10 hover:bg-secondary/20 text-secondary text-[9px] uppercase tracking-widest transition-colors flex items-center gap-1"
+                            title="Enviar a Taller para mantenimiento"
+                          >
+                            <Hammer className="w-2.5 h-2.5" />
+                            Taller
+                          </button>
+                          
+                          {(it.sswRaw || it.sourceFile || catalogMap.has(`${it.chassis} ${it.model}`)) && (
+                            <button
+                              onClick={() => openEditor(it)}
+                              disabled={loadingEditor}
+                              className="ml-1 px-2 py-0.5 border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary text-[9px] uppercase tracking-widest transition-colors"
+                              title="Modificar Loadout (Editor)"
+                            >
+                              Modificar
+                            </button>
+                          )}
+                          
+                          <button
+                            onClick={() => handleVenderMech(it)}
+                            className="ml-1 px-2 py-0.5 border border-amber-400/40 bg-amber-400/5 hover:bg-amber-400/10 text-amber-400 text-[9px] uppercase tracking-widest transition-colors flex items-center gap-1"
+                            title="Vender mech operativo/dañado"
+                          >
+                            <DollarSign className="w-2.5 h-2.5" />
+                            Vender
+                          </button>
                         </div>
                       )}
                     </td>
@@ -278,509 +395,29 @@ function UnidadesTab({ items, loading, refresh }: {
           </table>
         </div>
       )}
-    </section>
-  );
-}
-
-// ══════════════════════════════════════════════════════════
-//  COMPRAR
-// ══════════════════════════════════════════════════════════
-
-function ComprarTab({ refresh }: { refresh: () => Promise<void> }) {
-  const { campaign, setActiveSubTab, roster } = useAppStore();
-  const { catalog } = useMechCatalog();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const campaignDate = useMemo(
-    () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
-    [campaign?.campaignYear, campaign?.campaignMonth],
-  );
-
-  // Búsqueda catálogo
-  const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<CatalogMech | null>(null);
-  const [loadingSsw, setLoadingSsw] = useState(false);
-
-  // Datos resueltos del .ssw (tons/chassis/model/cost) — el catálogo
-  // solo trae name/bv2/file/year, todo lo demás viene del fichero
-  const [chassis, setChassis] = useState('');
-  const [model, setModel] = useState('');
-  const [tons, setTons] = useState(0);
-  const [hasJumpJets, setHasJumpJets] = useState(false);
-  const [hasAmmo, setHasAmmo] = useState(false);
-
-  const suggestions = useMemo(() => {
-    if (!catalog || query.trim().length < 2) return [];
-    const q = query.trim().toLowerCase();
-    return catalog.mechs.filter(m => {
-      const label = m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`;
-      return label.toLowerCase().includes(q);
-    }).slice(0, 12);
-  }, [catalog, query]);
-
-  // Compra
-  const [precio, setPrecio] = useState(0);     // precio canon detectado
-  const [factorPct, setFactorPct] = useState(100); // descuento/markup 0-200%
-  const [pilotoIdx, setPilotoIdx] = useState<number | ''>('');
-  const [notas, setNotas] = useState('');
-  const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
-
-  const precioFinal = Math.round(precio * (factorPct / 100));
-
-  // Carga el .ssw para extraer tons/cost/chassis/model
-  const loadSswDetail = async (m: CatalogMech) => {
-    setLoadingSsw(true);
-    try {
-      const base = import.meta.env.BASE_URL;
-      const res = await fetch(`${base}assets/mechs/${encodeURIComponent(m.file)}`);
-      if (!res.ok) throw new Error('No se pudo cargar el fichero');
-      const text = await res.text();
-      const p = parseSSWBasic(text);
-
-      // chassis/model: del .ssw, fallback al name del index
-      const fallback = m.name || `${m.chassis ?? ''} ${m.model ?? ''}`.trim();
-      setChassis(p.chassis || (fallback.split(' ')[0] ?? ''));
-      setModel(p.model || fallback.split(' ').slice(1).join(' '));
-      setTons(p.tons ?? m.tons ?? 0);
-      setPrecio(Math.round(p.cost ?? m.cost ?? 0));
-      setHasJumpJets(p.hasJumpJets);
-      setHasAmmo(p.hasAmmo);
-    } catch {
-      // Fallback: solo lo que viene del index
-      setChassis(m.chassis ?? m.name?.split(' ')[0] ?? '');
-      setModel(m.model ?? m.name?.split(' ').slice(1).join(' ') ?? '');
-      setTons(m.tons ?? 0);
-      setPrecio(Math.round(m.cost ?? 0));
-      setHasJumpJets(false);
-      setHasAmmo(false);
-    } finally {
-      setLoadingSsw(false);
-    }
-  };
-
-  const handleSelect = (m: CatalogMech) => {
-    setSelected(m);
-    setQuery(m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`.trim());
-    void loadSswDetail(m);
-  };
-
-  const handleClear = () => {
-    setSelected(null); setQuery(''); setPrecio(0); setPilotoIdx(''); setNotas('');
-    setChassis(''); setModel(''); setTons(0); setFactorPct(100);
-    setHasJumpJets(false); setHasAmmo(false);
-  };
-
-  // ── Prefill desde TRO: ?buy=<file.ssw> ──
-  useEffect(() => {
-    const buyFile = searchParams.get('buy');
-    if (!buyFile || !catalog || selected) return;
-    const m = catalog.mechs.find(x => x.file === buyFile);
-    if (m) {
-      handleSelect(m);
-      // Limpia el param para no re-disparar
-      searchParams.delete('buy');
-      setSearchParams(searchParams, { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [catalog, searchParams]);
-
-  const handleComprar = async () => {
-    if (!selected || precioFinal < 0 || !chassis || tons <= 0) return;
-    setCommitState('sending');
-    try {
-      const item = newHangarItem({
-        chassis,
-        model,
-        tons,
-        bv:          selected.bv2,
-        era:         selected.year ? String(selected.year) : (selected.era ? String(selected.era) : ''),
-        sourceFile:  selected.file,
-        hasJumpJets,
-        hasAmmo,
-        // precioBase = canon del mech (sin descuento). El precio pagado
-        // (precioFinal con factorPct) solo afecta a la transacción de tesorería.
-        precioBase:  precio,
-        fechaCompra: campaignDate,
-        pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,
-      });
-      const factorNote = factorPct !== 100 ? ` · factor ${factorPct}%` : '';
-      if (notas || factorPct !== 100) item.notas = `${notas}${factorNote}`.trim();
-
-      await saveHangarItem(item);
-      await commitLibroEntryAndTreasury({
-        id:        genId('lm'),
-        fecha:     campaignDate,
-        concepto:  `Compra · ${item.chassis} ${item.model}`,
-        cantidad:  precioFinal,
-        tipo:      'gasto',
-        categoria: 'compra_mech',
-        nota:      `${item.tons}t · BV ${item.bv ?? '?'}${factorNote}${notas ? ' · ' + notas : ''}`,
-        jugador:   '',
-      });
-
-      setCommitState('done');
-      await refresh();
-      setTimeout(() => {
-        setCommitState('idle');
-        handleClear();
-        setActiveSubTab('inventario');
-      }, 1500);
-    } catch {
-      setCommitState('error');
-      setTimeout(() => setCommitState('idle'), 3000);
-    }
-  };
-
-  return (
-    <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer space-y-3">
-      <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase">
-        Comprar mech
-      </h2>
-
-      {/* Buscador catálogo */}
-      <div>
-        <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-          Buscar en catálogo TRO
-        </label>
-        <div className="flex items-center gap-2 bg-surface-container border border-outline-variant/40 px-2">
-          <Search size={12} className="text-secondary/50" />
-          <input
-            value={query}
-            onChange={e => { setQuery(e.target.value); setSelected(null); }}
-            placeholder="Atlas AS7-D, Locust LCT-1V…"
-            className="flex-1 bg-transparent px-1 py-1.5 font-mono text-[11px] text-on-surface focus:outline-none"
-          />
-          {selected && (
-            <button onClick={handleClear} className="text-secondary/50 hover:text-error">
-              <Trash2 size={12} />
-            </button>
-          )}
-        </div>
-      </div>
-      {!selected && suggestions.length > 0 && (
-        <ul className="mt-1 max-h-72 overflow-y-auto bg-surface-container-high border border-primary-container/30 custom-scrollbar">
-          {suggestions.map(m => (
-            <li key={m.file} className="border-b border-outline-variant/15 last:border-b-0">
-              <button
-                onClick={() => handleSelect(m)}
-                className="w-full text-left px-3 py-2 font-mono text-[11px] text-on-surface hover:bg-primary-container/20 flex items-center justify-between gap-2"
-              >
-                <span>{m.name || m.fullName || `${m.chassis ?? ''} ${m.model ?? ''}`}</span>
-                <span className="text-secondary/60 text-[9px]">
-                  {m.bv2 ? `BV ${m.bv2}` : ''}{m.year ? ` · ${m.year}` : ''}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {selected && (
-        <div className="border border-primary-container/30 bg-primary-container/5 p-3 space-y-2">
-          <div className="font-headline text-sm font-bold text-primary-container flex items-center gap-2">
-            {chassis} {model}
-            {loadingSsw && <Loader size={12} className="animate-spin text-secondary/50" />}
-          </div>
-          <div className="grid grid-cols-3 gap-2 font-mono text-[10px] text-secondary/70">
-            <div>BV: <span className="text-secondary">{selected.bv2 ?? '—'}</span></div>
-            <div>Año: <span className="text-secondary">{selected.year ?? '—'}</span></div>
-            <div>Archivo: <span className="text-secondary truncate inline-block max-w-[120px]" title={selected.file}>{selected.file}</span></div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Chasis</label>
-              <input
-                value={chassis}
-                onChange={e => setChassis(e.target.value)}
-                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-              />
-            </div>
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Modelo</label>
-              <input
-                value={model}
-                onChange={e => setModel(e.target.value)}
-                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-              />
-            </div>
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Tons</label>
-              <input
-                type="number" min={0}
-                value={tons || ''}
-                onFocus={e => e.target.select()}
-                onChange={e => setTons(parseInt(e.target.value) || 0)}
-                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-                Precio base canon
-              </label>
-              <input
-                type="number" min={0}
-                value={precio || ''}
-                onFocus={e => e.target.select()}
-                onChange={e => setPrecio(parseInt(e.target.value) || 0)}
-                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-              />
-            </div>
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-                Asignar a piloto (opcional)
-              </label>
-              <select
-                value={pilotoIdx}
-                onChange={e => setPilotoIdx(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-              >
-                <option value="">— Reserva —</option>
-                {roster.map((r, i) => (
-                  <option key={i} value={i}>{r.apodo || r.nombre || `Piloto ${i + 1}`}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Factor descuento/markup — análogo al estadoFactPct del Taller */}
-          <div>
-            <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-              Factor compra: <span className="text-primary-container font-bold">{factorPct}%</span>
-              <span className="text-secondary/50 ml-2">
-                ({factorPct < 100 ? `−${100 - factorPct}% descuento`
-                  : factorPct > 100 ? `+${factorPct - 100}% sobreprecio`
-                  : 'canon'})
-              </span>
-            </label>
-            <input
-              type="range" min={0} max={200} step={5}
-              value={factorPct}
-              onChange={e => setFactorPct(parseInt(e.target.value) || 0)}
-              className="w-full"
-            />
-            <div className="flex justify-between font-mono text-[9px] text-secondary/50 mt-0.5">
-              <span>0%</span><span>50%</span><span>100%</span><span>150%</span><span>200%</span>
-            </div>
-          </div>
-
-          <div className="border border-primary-container/40 bg-primary-container/5 p-2 font-mono text-[10px] grid grid-cols-3 gap-2">
-            <div>
-              <div className="text-secondary/60 uppercase tracking-widest text-[8px]">Canon</div>
-              <div className="text-secondary">{Math.round(precio).toLocaleString('es-ES')} ₡</div>
-            </div>
-            <div>
-              <div className="text-secondary/60 uppercase tracking-widest text-[8px]">× Factor</div>
-              <div className="text-secondary">{factorPct}%</div>
-            </div>
-            <div>
-              <div className="text-primary-container uppercase tracking-widest text-[8px]">Final</div>
-              <div className="text-primary-container font-bold text-sm">{precioFinal.toLocaleString('es-ES')} ₡</div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-              Notas
-            </label>
-            <input
-              value={notas}
-              onChange={e => setNotas(e.target.value)}
-              placeholder="Vendedor, condición, etc."
-              className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[10px] text-secondary"
-            />
-          </div>
-
-          <button
-            onClick={handleComprar}
-            disabled={precioFinal < 0 || tons <= 0 || !chassis || commitState === 'sending' || loadingSsw}
-            className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-              precioFinal < 0 || tons <= 0 || !chassis
-                ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
-                : commitState === 'done'
-                  ? 'border-primary bg-primary/20 text-primary'
-                  : commitState === 'error'
-                    ? 'border-error bg-error/20 text-error'
-                    : 'border-primary-container bg-primary-container/15 text-primary-container hover:bg-primary-container/25'
-            }`}
-          >
-            {commitState === 'sending' ? 'Registrando…'
-              : commitState === 'done'  ? '✓ Mech añadido al hangar'
-              : commitState === 'error' ? '✗ Error — reintenta'
-              : `Comprar (${precioFinal.toLocaleString('es-ES')} ₡)`}
-          </button>
-        </div>
-      )}
-    </section>
-  );
-}
-
-// ══════════════════════════════════════════════════════════
-//  VENDER
-// ══════════════════════════════════════════════════════════
-
-function VenderTab({ items, loading, refresh }: {
-  items: HangarItem[]; loading: boolean; refresh: () => Promise<void>;
-}) {
-  const { campaign, setActiveSubTab, roster } = useAppStore();
-  const campaignDate = useMemo(
-    () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
-    [campaign?.campaignYear, campaign?.campaignMonth],
-  );
-
-  const [selected, setSelected] = useState<HangarItem | null>(null);
-  const [precio, setPrecio] = useState(0);
-  const [estadoPct, setEstadoPct] = useState(100);
-  const [notas, setNotas] = useState('');
-  const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
-
-  const handleSelect = (it: HangarItem) => {
-    setSelected(it);
-    setEstadoPct(it.estadoPct ?? 100);
-    setPrecio(Math.round((it.valorActual ?? it.precioBase) * ((it.estadoPct ?? 100) / 100)));
-    setNotas('');
-  };
-
-  // Recalcular precio cuando user cambia estadoPct
-  useEffect(() => {
-    if (!selected) return;
-    setPrecio(Math.round((selected.valorActual ?? selected.precioBase) * (estadoPct / 100)));
-  }, [estadoPct, selected]);
-
-  const handleVender = async () => {
-    if (!selected || precio < 0) return;
-    setCommitState('sending');
-    try {
-      await commitLibroEntryAndTreasury({
-        id:        genId('lm'),
-        fecha:     campaignDate,
-        concepto:  `Venta · ${selected.chassis} ${selected.model}`,
-        cantidad:  precio,
-        tipo:      'ingreso',
-        categoria: 'venta_mech',
-        nota:      notas || `Estado ${estadoPct}% · ${selected.tons}t`,
-        jugador:   '',
-      });
-      await deleteHangarItem(selected.id);
-
-      setCommitState('done');
-      await refresh();
-      setTimeout(() => {
-        setCommitState('idle');
-        setSelected(null);
-        setActiveSubTab('inventario');
-      }, 1500);
-    } catch {
-      setCommitState('error');
-      setTimeout(() => setCommitState('idle'), 3000);
-    }
-  };
-
-  if (!selected) {
-    return (
-      <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
-        <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3">
-          Vender mech — selecciona del hangar
-        </h2>
-        {loading && <p className="font-mono text-[10px] text-secondary/50 italic">Cargando…</p>}
-        {!loading && items.length === 0 && (
-          <p className="font-mono text-[10px] text-secondary/50 italic">Hangar vacío.</p>
-        )}
-        <ul className="space-y-1.5">
-          {items.map(it => (
-            <li key={it.id}>
-              <button
-                onClick={() => handleSelect(it)}
-                className="w-full text-left px-2 py-1.5 border border-outline-variant/40 hover:border-primary-container/60 hover:bg-primary-container/5 font-mono text-[10px] flex items-center gap-2"
-              >
-                <span className="text-on-surface flex-1">{it.chassis} {it.model}</span>
-                <span className="text-secondary/60">{it.tons}t</span>
-                <span className="text-primary-container">{Math.round(it.valorActual ?? it.precioBase).toLocaleString('es-ES')} ₡</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  }
-
-  return (
-    <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase">
-          Vender: {selected.chassis} {selected.model}
-        </h2>
-        <button
-          onClick={() => setSelected(null)}
-          className="font-mono text-[9px] text-secondary/60 hover:text-error uppercase tracking-widest"
-        >← Cambiar</button>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[10px] text-secondary/70">
-        <div>Tons: <span className="text-secondary">{selected.tons}</span></div>
-        <div>BV: <span className="text-secondary">{selected.bv ?? '—'}</span></div>
-        <div>Valor ref: <span className="text-secondary">{Math.round(selected.valorActual ?? selected.precioBase).toLocaleString('es-ES')} ₡</span></div>
-        <div>Piloto: <span className="text-secondary">{selected.pilotoIdx !== undefined ? pilotLabel(roster, selected.pilotoIdx) : 'Reserva'}</span></div>
-      </div>
-
-      <div>
-        <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-          Estado: <span className="text-primary-container font-bold">{estadoPct}%</span>
-        </label>
-        <input
-          type="range" min={0} max={150} step={5}
-          value={estadoPct}
-          onChange={e => setEstadoPct(parseInt(e.target.value) || 0)}
-          className="w-full"
+      
+      {editingMech && editingXml && (
+        <EditorPage
+          initialSswXml={editingXml}
+          onSave={(newXml) => handleSaveEditor(editingMech, newXml)}
+          onCancel={() => {
+            setEditingMech(null);
+            setEditingXml(null);
+          }}
         />
-      </div>
+      )}
 
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-            Precio venta
-          </label>
-          <input
-            type="number" min={0}
-            value={precio || ''}
-            onFocus={e => e.target.select()}
-            onChange={e => setPrecio(parseInt(e.target.value) || 0)}
-            className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary"
-          />
-        </div>
-        <div>
-          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-            Notas
-          </label>
-          <input
-            value={notas}
-            onChange={e => setNotas(e.target.value)}
-            placeholder="Comprador, condiciones, etc."
-            className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[10px] text-secondary"
-          />
-        </div>
-      </div>
-
-      <button
-        onClick={handleVender}
-        disabled={precio < 0 || commitState === 'sending'}
-        className={`w-full py-2 border font-mono text-[10px] uppercase tracking-widest transition-colors ${
-          precio < 0
-            ? 'border-outline-variant/30 text-secondary/30 cursor-not-allowed'
-            : commitState === 'done'
-              ? 'border-primary bg-primary/20 text-primary'
-              : commitState === 'error'
-                ? 'border-error bg-error/20 text-error'
-                : 'border-primary-container bg-primary-container/15 text-primary-container hover:bg-primary-container/25'
-        }`}
-      >
-        {commitState === 'sending' ? 'Registrando…'
-          : commitState === 'done'  ? '✓ Mech vendido'
-          : commitState === 'error' ? '✗ Error — reintenta'
-          : `Vender (${precio.toLocaleString('es-ES')} ₡)`}
-      </button>
+      {salvageMech && (
+        <SalvageModal
+          mech={salvageMech}
+          onClose={() => setSalvageMech(null)}
+          onCommit={() => {
+            setSalvageMech(null);
+            void refresh();
+          }}
+        />
+      )}
     </section>
   );
 }
+

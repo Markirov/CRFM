@@ -31,6 +31,8 @@ export interface MechSource {
   pilotShort?: string;
   pilotIdx?:  number;
   mechName:  string;
+  /** Chasis solo (sin variant/model). Usado para chassis-locked armor pool. */
+  chassis:   string;
   tons:      number;
   config:    MechRepairConfig;
   damage:    MechRepairDamage;
@@ -88,6 +90,7 @@ export function buildMechSources(
       pilotShort: pilotInitials(roster, it.pilotoIdx),
       pilotIdx:   it.pilotoIdx,
       mechName:   `${it.chassis} ${it.model}`,
+      chassis:    it.chassis,
       tons:       it.tons,
       config,
       damage:     it.damagePersist ?? emptyDamage(),
@@ -119,6 +122,7 @@ export function buildMechSources(
         shortLabel: String(idx + 1),
         accent:     'green',
         mechName:   `${st.chassis} ${st.model}`,
+        chassis:    st.chassis,
         tons:       st.tonnage,
         config,
         damage:     merged,

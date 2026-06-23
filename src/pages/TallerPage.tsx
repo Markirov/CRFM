@@ -13,9 +13,11 @@ import {
   arrayMove, SortableContext, sortableKeyboardCoordinates,
   useSortable, verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { useSearchParams } from 'react-router-dom';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
+import { CostModifierSelector } from '@/components/ui/CostModifierSelector';
 import { commitLibroEntryAndTreasury, loadPersonal, saveConfigBatch, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
@@ -26,6 +28,7 @@ import { parseSSWBasic } from '@/lib/ssw-basic';
 import type { HangarItem } from '@/lib/hangar-types';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
+import { armorKey, consumeArmor } from '@/lib/almacen-keys';
 import {
   deriveDamageFromSession, configFromCatalog,
   type MechRepairConfig, type RepairSystem,
@@ -48,7 +51,10 @@ import {
 import { MunicionTab } from '@/components/taller/MunicionTab';
 
 export function TallerPage() {
-  const { activeSubTab, setActiveSubTab, campaign, setCampaign } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const campaign = useAppStore(s => s.campaign);
+  const setCampaign = useAppStore(s => s.setCampaign);
   const { readable, writable, loading: permLoading } = usePerm('taller');
   type View = 'prioridades' | 'mantenimiento' | 'municion';
   const view: View =
@@ -121,7 +127,9 @@ function TallerInlineWrapper({ campaignDate }: { campaignDate: string }) {
 // ══════════════════════════════════════════════════════════
 
 function PrioridadesTab() {
-  const { campaign, setCampaign, roster } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const setCampaign = useAppStore(s => s.setCampaign);
+  const roster = useAppStore(s => s.roster);
 
   // ── Selector unificado mech: hangar (campaña) + sim slots ──
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
@@ -141,6 +149,20 @@ function PrioridadesTab() {
     return buildMechSources(hangarItems, snap, roster);
     // snapVersion para refrescar tras cambios externos
   }, [hangarItems, snapVersion, roster]);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const preselectMech = searchParams.get('mech');
+    if (preselectMech && sources.length > 0) {
+      const match = sources.find(s => s.key === `h:${preselectMech}`);
+      if (match) {
+        setSelectedKey(match.key);
+        searchParams.delete('mech');
+        setSearchParams(searchParams, { replace: true });
+      }
+    }
+  }, [searchParams, sources, setSearchParams]);
 
   const selectedSource = useMemo(
     () => sources.find(s => s.key === selectedKey) ?? null,
@@ -323,24 +345,42 @@ function PrioridadesTab() {
     setCommitState('sending');
     try {
       let notaExtra = '';
-      const almacenUpdates = { ...(campaign.almacen || {}) };
+      let almacenUpdates: Record<string, number> = { ...(campaign.almacen || {}) };
       let changedAlmacen = false;
+      const chassis = selectedSource?.chassis ?? '';
 
       // Restar consumibles del almacén
       for (const res of resultado.resultados) {
         if ((res.estado === 'reparado' || res.estado === 'parcial') && usandoAlmacenState[res.item.id]) {
           const cat = res.item.categoria;
           const qty = (cat === 'Blindaje') ? (res.puntosReparados || 0) : 1;
-          
-          let nombreAlmacen = '';
-          if (cat === 'Blindaje') nombreAlmacen = 'Armor (Standard)'; // simplificación por ahora
-          else if (res.item.nombre.toLowerCase().includes('heat sink')) nombreAlmacen = 'Heat Sink';
-          else if (res.item.nombre.toLowerCase().includes('jump jet')) nombreAlmacen = 'Jump Jet';
-          else nombreAlmacen = res.item.nombre; // armas
 
-          if (nombreAlmacen && almacenUpdates[nombreAlmacen] && almacenUpdates[nombreAlmacen] >= qty) {
-            almacenUpdates[nombreAlmacen] -= qty;
-            changedAlmacen = true;
+          if (cat === 'Blindaje') {
+            // Blindaje: pool dual chasis-locked + global. Prefiere chasis primero.
+            const armorType = mechCtx?.config?.blindajeType || 'Standard';
+            if (chassis && qty > 0) {
+              const cons = consumeArmor(almacenUpdates, chassis, armorType, qty);
+              if (cons.consumed > 0) {
+                almacenUpdates = cons.newAlmacen;
+                changedAlmacen = true;
+              }
+            } else {
+              const k = armorKey(armorType);
+              if (almacenUpdates[k] && almacenUpdates[k] >= qty) {
+                almacenUpdates[k] -= qty;
+                changedAlmacen = true;
+              }
+            }
+          } else {
+            let nombreAlmacen = '';
+            if (res.item.nombre.toLowerCase().includes('heat sink')) nombreAlmacen = 'Heat Sink';
+            else if (res.item.nombre.toLowerCase().includes('jump jet')) nombreAlmacen = 'Jump Jet';
+            else nombreAlmacen = res.item.nombre; // armas
+
+            if (nombreAlmacen && almacenUpdates[nombreAlmacen] && almacenUpdates[nombreAlmacen] >= qty) {
+              almacenUpdates[nombreAlmacen] -= qty;
+              changedAlmacen = true;
+            }
           }
         }
       }
@@ -941,15 +981,11 @@ function ResultsSummary(p: {
           </div>
         </div>
 
-        <div>
-          <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">
-            Estado factura: <span className="text-primary-container font-bold">{p.estadoFactPct}%</span>
-          </label>
-          <input
-            type="range" min={0} max={150} step={5}
-            value={p.estadoFactPct}
-            onChange={e => p.setEstadoFactPct(parseInt(e.target.value) || 0)}
-            className="w-full"
+        <div className="mt-2">
+          <CostModifierSelector 
+            label="Estado factura (%)" 
+            value={p.estadoFactPct} 
+            onChange={p.setEstadoFactPct} 
           />
         </div>
 
@@ -995,7 +1031,8 @@ const QUALITY_COLOR: Record<QualityRating, string> = {
 };
 
 function MantenimientoTab() {
-  const { campaign, roster } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const roster = useAppStore(s => s.roster);
 
   // ── Selector mech: solo unidades de campaña (hangar + piloto asignado) ──
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
