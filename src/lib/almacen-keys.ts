@@ -93,6 +93,89 @@ export function canTransferArmor(fromChassis: string, toChassis: string): boolea
   return fromChassis.trim().toLowerCase() === toChassis.trim().toLowerCase();
 }
 
+/** Normaliza nombre chasis para keys (lowercase, sin espacios extras). */
+export function normalizeChassis(chassis: string): string {
+  return chassis.trim().toLowerCase().replace(/\s+/g, '_');
+}
+
+/**
+ * Clave canónica para blindaje chassis-locked.
+ * Usado cuando se canibaliza armor de un mech destruido — el armor queda
+ * vinculado al chasis y sólo puede reinstalarse en otro mech del mismo chasis.
+ *
+ * @example chassisArmorKey('Griffin', 'Standard')      // → 'ArmorChassis_griffin_Standard'
+ * @example chassisArmorKey('Crusader', 'Ferro-Fibrous')// → 'ArmorChassis_crusader_Ferro-Fibrous'
+ */
+export function chassisArmorKey(chassis: string, armorType?: string): string {
+  return `ArmorChassis_${normalizeChassis(chassis)}_${armorType ?? 'Standard'}`;
+}
+
+/**
+ * Suma blindaje disponible para reparar mech del chasis dado.
+ * Combina pool global (`Armor_<type>`) + pool chasis-locked
+ * (`ArmorChassis_<chasis>_<type>`).
+ */
+export function getAvailableArmor(
+  almacen: Record<string, number>,
+  chassis: string,
+  armorType: string = 'Standard',
+): { global: number; chassisLocked: number; total: number } {
+  const global = almacen[armorKey(armorType)] ?? 0;
+  const chassisLocked = almacen[chassisArmorKey(chassis, armorType)] ?? 0;
+  return { global, chassisLocked, total: global + chassisLocked };
+}
+
+/**
+ * Consume puntos de blindaje del almacén para reparar mech del chasis dado.
+ * Prefiere pool chasis-locked primero (canibalizado), luego global.
+ * Devuelve nuevo almacén + puntos efectivamente consumidos.
+ */
+export function consumeArmor(
+  almacen: Record<string, number>,
+  chassis: string,
+  armorType: string,
+  points: number,
+): { newAlmacen: Record<string, number>; consumed: number; missing: number } {
+  const next = { ...almacen };
+  const chKey = chassisArmorKey(chassis, armorType);
+  const gKey = armorKey(armorType);
+  let remaining = Math.max(0, Math.floor(points));
+
+  const fromChassis = Math.min(remaining, next[chKey] ?? 0);
+  if (fromChassis > 0) {
+    next[chKey] = (next[chKey] ?? 0) - fromChassis;
+    remaining -= fromChassis;
+  }
+
+  const fromGlobal = Math.min(remaining, next[gKey] ?? 0);
+  if (fromGlobal > 0) {
+    next[gKey] = (next[gKey] ?? 0) - fromGlobal;
+    remaining -= fromGlobal;
+  }
+
+  return {
+    newAlmacen: next,
+    consumed: fromChassis + fromGlobal,
+    missing: remaining,
+  };
+}
+
+/**
+ * Devuelve puntos de blindaje al pool chasis-locked (canibalización).
+ * Usado al desinstalar armor de un mech destruido del chasis dado.
+ */
+export function depositChassisArmor(
+  almacen: Record<string, number>,
+  chassis: string,
+  armorType: string,
+  points: number,
+): Record<string, number> {
+  const next = { ...almacen };
+  const key = chassisArmorKey(chassis, armorType);
+  next[key] = (next[key] ?? 0) + Math.max(0, Math.floor(points));
+  return next;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    3. roundsPerShot
    ─────────────────────────────────────────────────────────────── */
