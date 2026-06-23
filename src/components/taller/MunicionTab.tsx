@@ -1,20 +1,28 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
-import { loadHangar, saveConfigBatch } from '@/lib/firebase-service';
+import { loadHangar, saveConfigBatch, saveHangarItem } from '@/lib/firebase-service';
 import { loadLocalSnapshot, saveLocalSnapshot, type SimuladorSnapshot } from '@/lib/simulador-persistence';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
 import { type HangarItem } from '@/lib/hangar-types';
 import { type AmmoBin } from '@/lib/combat-types';
-import { Database, Download, Upload } from 'lucide-react';
+import { Database, Download, Upload, ArrowRightLeft, AlertTriangle } from 'lucide-react';
+import { findAmmoStock, ammoKeyFromBin, roundsPerShot, roundsToFullRounds, familyKeyNormalize } from '@/lib/almacen-keys';
+import { calcAmmoReloadTime, type TechSkill } from '@/lib/camops-canon';
 
 export function MunicionTab() {
-  const { campaign, setCampaign, roster } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const setCampaign = useAppStore(s => s.setCampaign);
+  const roster = useAppStore(s => s.roster);
   const almacen = campaign.almacen || {};
 
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
   const [snapVersion, setSnapVersion] = useState(0);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  // CamOps recarga: skill técnico + teams + battlefield. Default regular, 1 team, no battlefield.
+  const [techSkill, setTechSkill] = useState<TechSkill>('regular');
+  const [teams, setTeams] = useState<number>(1);
+  const [onBattlefield, setOnBattlefield] = useState<boolean>(false);
 
   useEffect(() => {
     loadHangar().then(res => {
@@ -32,104 +40,152 @@ export function MunicionTab() {
 
   const selectedSource = useMemo(() => sources.find(s => s.key === selectedKey), [sources, selectedKey]);
 
-  // Munición solo se gestiona si el mech proviene del simulador (donde se guarda su estado de AmmoBins)
+  // Munición: soporta tanto sim como hangar (si tiene sessionActiva)
   const isSimSlot = selectedSource?.origin === 'sim';
   const simSlotIdx = selectedSource?.simSlotIdx;
 
+  // AmmoBins: del sim slot o del hangarItem.sessionActiva
   const ammoBins = useMemo<AmmoBin[]>(() => {
-    if (!isSimSlot || simSlotIdx === undefined || !snap) return [];
-    return (snap.mechSlots[simSlotIdx]?.session?.ammoBins || []) as AmmoBin[];
-  }, [isSimSlot, simSlotIdx, snap]);
+    if (isSimSlot && simSlotIdx !== undefined && snap) {
+      return (snap.mechSlots[simSlotIdx]?.session?.ammoBins || []) as AmmoBin[];
+    }
+    // Hangar: leer sessionActiva.ammoBins si existe
+    if (selectedSource?.origin === 'hangar' && selectedSource.hangarId) {
+      const item = hangarItems.find(h => h.id === selectedSource.hangarId);
+      if (item?.sessionActiva?.ammoBins) {
+        return item.sessionActiva.ammoBins as AmmoBin[];
+      }
+    }
+    return [];
+  }, [isSimSlot, simSlotIdx, snap, selectedSource, hangarItems]);
 
+  const canManageAmmo = ammoBins.length > 0;
+
+  /** Recarga un bin usando rondas completas desde el almacén. */
   const handleRecargarBin = async (binIdx: number) => {
-    if (!isSimSlot || simSlotIdx === undefined || !snap) return;
     const bin = ammoBins[binIdx];
     if (!bin) return;
 
     const faltante = Math.max(0, (bin.max || 0) - (bin.current || 0));
     if (faltante <= 0) return;
 
-    // Buscar tipo de munición en el almacén
-    // Bin.family suele ser "LRM", "SRM", "AC/10", etc.
-    const ammoKey = Object.keys(almacen).find(k => k.toLowerCase().includes('ammo') && k.toLowerCase().includes((bin.family || '').toLowerCase()));
-    
-    if (!ammoKey || !almacen[ammoKey] || almacen[ammoKey] < faltante) {
-      alert(`No hay suficiente munición de tipo ${bin.family} en el almacén. Necesitas ${faltante} rondas/misiles.`);
+    // Redondear a rondas completas
+    const rps = roundsPerShot(bin.familyKey);
+    const cargable = roundsToFullRounds(faltante, bin.familyKey);
+    if (cargable <= 0) {
+      alert(`Faltan ${faltante} misiles pero una ronda completa necesita ${rps}. No se puede cargar una ronda parcial.`);
       return;
     }
 
-    // Descontar del almacén
+    // Buscar stock
+    const { key: ammoKey, stock } = findAmmoStock(almacen, bin);
+    if (stock < cargable) {
+      const rondasDisponibles = roundsToFullRounds(stock, bin.familyKey);
+      if (rondasDisponibles <= 0) {
+        alert(`No hay suficiente ${familyKeyNormalize(bin.familyKey)} ${bin.variant || 'Standard'} en el almacén.\nNecesitas al menos ${rps} (1 ronda). Stock actual: ${stock}.`);
+        return;
+      }
+      // Cargar lo que se pueda
+      const ok = confirm(`Solo hay ${stock} misiles de ${familyKeyNormalize(bin.familyKey)} en stock.\nSe cargarán ${rondasDisponibles} (${rondasDisponibles / rps} rondas completas).\n\n¿Continuar?`);
+      if (!ok) return;
+      await doRecargar(binIdx, rondasDisponibles, ammoKey);
+    } else {
+      await doRecargar(binIdx, cargable, ammoKey);
+    }
+  };
+
+  /** Ejecuta la recarga real. */
+  const doRecargar = async (binIdx: number, cantidad: number, ammoKey: string) => {
     const newAlmacen = { ...almacen };
-    newAlmacen[ammoKey] -= faltante;
+    newAlmacen[ammoKey] = Math.max(0, (newAlmacen[ammoKey] || 0) - cantidad);
 
-    // Recargar bin
-    const newSnap = { ...snap };
-    if (!newSnap.mechSlots[simSlotIdx].session) return;
-    const newBins = [...(newSnap.mechSlots[simSlotIdx].session!.ammoBins || [])] as AmmoBin[];
-    newBins[binIdx] = { ...newBins[binIdx], current: newBins[binIdx].max };
-    newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBins;
+    if (isSimSlot && simSlotIdx !== undefined && snap) {
+      // Sim slot: actualizar snapshot local
+      const newSnap = { ...snap };
+      if (!newSnap.mechSlots[simSlotIdx].session) return;
+      const newBins = [...(newSnap.mechSlots[simSlotIdx].session!.ammoBins || [])] as AmmoBin[];
+      newBins[binIdx] = { ...newBins[binIdx], current: Math.min(newBins[binIdx].max, (newBins[binIdx].current || 0) + cantidad) };
+      newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBins;
+      saveLocalSnapshot(newSnap);
+    } else if (selectedSource?.origin === 'hangar' && selectedSource.hangarId) {
+      // Hangar: actualizar sessionActiva
+      const item = hangarItems.find(h => h.id === selectedSource.hangarId);
+      if (item?.sessionActiva?.ammoBins) {
+        const newBins = [...item.sessionActiva.ammoBins] as AmmoBin[];
+        newBins[binIdx] = { ...newBins[binIdx], current: Math.min(newBins[binIdx].max, (newBins[binIdx].current || 0) + cantidad) };
+        item.sessionActiva.ammoBins = newBins;
+        await saveHangarItem(item);
+        setHangarItems(prev => prev.map(h => h.id === item.id ? { ...item } : h));
+      }
+    }
 
-    // Guardar
     setCampaign({ almacen: newAlmacen });
     await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(newAlmacen) });
-    saveLocalSnapshot(newSnap);
     setSnapVersion(v => v + 1);
   };
 
+  /** Vacía un bin al fondo común del almacén. */
   const handleVaciarBin = async (binIdx: number) => {
-    if (!isSimSlot || simSlotIdx === undefined || !snap) return;
     const bin = ammoBins[binIdx];
     if (!bin || !bin.current || bin.current <= 0) return;
 
     const qty = bin.current;
-
-    // Buscar o crear tipo de munición en el almacén
-    let ammoKey = Object.keys(almacen).find(k => k.toLowerCase().includes('ammo') && k.toLowerCase().includes((bin.family || '').toLowerCase()));
-    if (!ammoKey) {
-      ammoKey = `Ammo (${bin.family || 'Desconocida'})`;
-    }
+    const ammoKey = ammoKeyFromBin(bin);
 
     const newAlmacen = { ...almacen };
     newAlmacen[ammoKey] = (newAlmacen[ammoKey] || 0) + qty;
 
-    // Vaciar bin
-    const newSnap = { ...snap };
-    if (!newSnap.mechSlots[simSlotIdx].session) return;
-    const newBins = [...(newSnap.mechSlots[simSlotIdx].session!.ammoBins || [])] as AmmoBin[];
-    newBins[binIdx] = { ...newBins[binIdx], current: 0 };
-    newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBins;
+    if (isSimSlot && simSlotIdx !== undefined && snap) {
+      const newSnap = { ...snap };
+      if (!newSnap.mechSlots[simSlotIdx].session) return;
+      const newBins = [...(newSnap.mechSlots[simSlotIdx].session!.ammoBins || [])] as AmmoBin[];
+      newBins[binIdx] = { ...newBins[binIdx], current: 0 };
+      newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBins;
+      saveLocalSnapshot(newSnap);
+    } else if (selectedSource?.origin === 'hangar' && selectedSource.hangarId) {
+      const item = hangarItems.find(h => h.id === selectedSource.hangarId);
+      if (item?.sessionActiva?.ammoBins) {
+        const newBins = [...item.sessionActiva.ammoBins] as AmmoBin[];
+        newBins[binIdx] = { ...newBins[binIdx], current: 0 };
+        item.sessionActiva.ammoBins = newBins;
+        await saveHangarItem(item);
+        setHangarItems(prev => prev.map(h => h.id === item.id ? { ...item } : h));
+      }
+    }
 
-    // Guardar
     setCampaign({ almacen: newAlmacen });
     await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(newAlmacen) });
-    saveLocalSnapshot(newSnap);
     setSnapVersion(v => v + 1);
   };
 
+  /** Vacía todos los bins al fondo común. */
   const handleVaciarTodo = async () => {
-    if (!isSimSlot || simSlotIdx === undefined || !snap) return;
     if (ammoBins.every(b => !b.current || b.current <= 0)) return;
 
     const newAlmacen = { ...almacen };
-    const newSnap = { ...snap };
-    if (!newSnap.mechSlots[simSlotIdx].session) return;
-    const newBins = [...(newSnap.mechSlots[simSlotIdx].session!.ammoBins || [])] as AmmoBin[];
+    const newBinsArr: AmmoBin[] = ammoBins.map(bin => {
+      if (!bin || !bin.current || bin.current <= 0) return bin;
+      const ammoKey = ammoKeyFromBin(bin);
+      newAlmacen[ammoKey] = (newAlmacen[ammoKey] || 0) + bin.current;
+      return { ...bin, current: 0 };
+    });
 
-    for (let i = 0; i < newBins.length; i++) {
-      const bin = newBins[i];
-      if (!bin || !bin.current || bin.current <= 0) continue;
-      const qty = bin.current;
-      let ammoKey = Object.keys(newAlmacen).find(k => k.toLowerCase().includes('ammo') && k.toLowerCase().includes((bin.family || '').toLowerCase()));
-      if (!ammoKey) ammoKey = `Ammo (${bin.family || 'Desconocida'})`;
-      newAlmacen[ammoKey] = (newAlmacen[ammoKey] || 0) + qty;
-      newBins[i] = { ...newBins[i], current: 0 };
+    if (isSimSlot && simSlotIdx !== undefined && snap) {
+      const newSnap = { ...snap };
+      if (!newSnap.mechSlots[simSlotIdx].session) return;
+      newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBinsArr;
+      saveLocalSnapshot(newSnap);
+    } else if (selectedSource?.origin === 'hangar' && selectedSource.hangarId) {
+      const item = hangarItems.find(h => h.id === selectedSource.hangarId);
+      if (item?.sessionActiva) {
+        item.sessionActiva.ammoBins = newBinsArr;
+        await saveHangarItem(item);
+        setHangarItems(prev => prev.map(h => h.id === item.id ? { ...item } : h));
+      }
     }
-
-    newSnap.mechSlots[simSlotIdx].session!.ammoBins = newBins;
 
     setCampaign({ almacen: newAlmacen });
     await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(newAlmacen) });
-    saveLocalSnapshot(newSnap);
     setSnapVersion(v => v + 1);
   };
 
@@ -146,16 +202,20 @@ export function MunicionTab() {
         />
       </section>
 
-      {selectedSource && !isSimSlot && (
+      {selectedSource && !canManageAmmo && (
         <div className="bg-surface border border-outline-variant/20 p-4 rounded text-center">
-          <p className="font-mono text-sm text-secondary/70">
-            La munición de los mechs en el hangar no se gestiona de forma individual. <br/>
-            Carga el mech en el Simulador para gestionar sus compartimentos de munición.
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <span className="font-mono text-sm text-amber-400">Sin datos de munición</span>
+          </div>
+          <p className="font-mono text-xs text-secondary/70">
+            Este mech no tiene datos de munición guardados.
+            {selectedSource.origin === 'hangar' && ' Entra al Simulador en modo campaña para generar los datos de combate.'}
           </p>
         </div>
       )}
 
-      {selectedSource && isSimSlot && (
+      {selectedSource && canManageAmmo && (
         <div className="bg-surface-container-low border border-primary-container/30 p-4 rounded-xl space-y-4">
           <div className="flex justify-between items-center border-b border-outline-variant/20 pb-3">
             <div>
@@ -164,18 +224,62 @@ export function MunicionTab() {
               </h3>
               <p className="font-mono text-xs text-secondary/60 uppercase tracking-widest mt-1">
                 {selectedSource.mechName}
+                <span className="ml-2 text-secondary/40">
+                  ({selectedSource.origin === 'sim' ? 'Simulador' : 'Hangar'})
+                </span>
               </p>
             </div>
-            {ammoBins.some(b => (b.current || 0) > 0) && (
-              <button
-                onClick={handleVaciarTodo}
-                className="flex items-center gap-2 bg-surface-container hover:bg-error/20 text-error/80 px-3 py-1.5 rounded border border-error/30 font-mono text-xs uppercase transition-colors"
-                title="Transferir toda la munición restante al almacén"
+            <div className="flex items-center gap-2">
+              {ammoBins.some(b => (b.current || 0) > 0) && (
+                <button
+                  onClick={handleVaciarTodo}
+                  className="flex items-center gap-2 bg-surface-container hover:bg-error/20 text-error/80 px-3 py-1.5 rounded border border-error/30 font-mono text-xs uppercase transition-colors"
+                  title="Transferir toda la munición restante al almacén (fondo común)"
+                >
+                  <Upload className="w-3 h-3" />
+                  Vaciar Mech
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* ── CamOps recarga: skill + teams + battlefield ── */}
+          <div className="flex flex-wrap items-center gap-3 p-2 border-y border-outline-variant/20 bg-surface/40">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-secondary/60">Recarga CamOps:</span>
+            <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1">
+              Skill:
+              <select
+                value={techSkill}
+                onChange={e => setTechSkill(e.target.value as TechSkill)}
+                className="bg-surface-container border border-outline-variant/40 text-[10px] font-mono text-cream px-1 py-0.5"
               >
-                <Upload className="w-3 h-3" />
-                Vaciar Mech
-              </button>
-            )}
+                <option value="green">Green ×1.5</option>
+                <option value="regular">Regular ×1.0</option>
+                <option value="veteran">Veteran ×0.75</option>
+                <option value="elite">Elite ×0.5</option>
+              </select>
+            </label>
+            <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1">
+              Equipos:
+              <select
+                value={teams}
+                onChange={e => setTeams(parseInt(e.target.value) || 1)}
+                className="bg-surface-container border border-outline-variant/40 text-[10px] font-mono text-cream px-1 py-0.5"
+              >
+                <option value={1}>1</option>
+                <option value={2}>2 (÷2)</option>
+                <option value={3}>3 (÷3)</option>
+              </select>
+            </label>
+            <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={onBattlefield}
+                onChange={e => setOnBattlefield(e.target.checked)}
+                className="accent-error"
+              />
+              Campo batalla ×2
+            </label>
           </div>
 
           {ammoBins.length === 0 ? (
@@ -187,19 +291,45 @@ export function MunicionTab() {
                 const max = bin.max || 0;
                 const pct = max > 0 ? (current / max) * 100 : 0;
                 const faltante = max - current;
+                const rps = roundsPerShot(bin.familyKey);
+                const rondasCargables = faltante > 0 ? Math.floor(faltante / rps) : 0;
+                const sobrante = faltante > 0 ? faltante % rps : 0;
+                const { stock } = findAmmoStock(almacen, bin);
+                const variantLabel = bin.variant && bin.variant !== 'Standard'
+                  ? ` (${bin.variant})`
+                  : '';
+                // Tons cargables = misiles cargables / misiles_por_ton (asumiendo 1 ton lleva max bin)
+                const tonsCargables = rondasCargables > 0 && max > 0 ? (rondasCargables * rps) / max : 0;
+                const tiempoRecargaMin = calcAmmoReloadTime(tonsCargables, techSkill, teams, onBattlefield);
 
                 return (
                   <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-3 bg-surface border border-outline-variant/20 rounded">
                     <div className="flex-1">
                       <div className="flex justify-between mb-1">
-                        <span className="font-mono text-sm text-cream font-bold">{bin.family || 'Munición'}</span>
+                        <span className="font-mono text-sm text-cream font-bold">
+                          {bin.family || 'Munición'}{variantLabel}
+                        </span>
                         <span className="font-mono text-xs text-secondary/80">Loc: {bin.loc}</span>
                       </div>
                       <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
                         <div className={`h-full ${pct > 50 ? 'bg-primary-container' : pct > 20 ? 'bg-amber-400' : 'bg-error'}`} style={{ width: `${pct}%` }}></div>
                       </div>
                       <div className="flex justify-between mt-1">
-                        <span className="font-mono text-[10px] text-secondary/60">{current} / {max} rondas</span>
+                        <span className="font-mono text-[10px] text-secondary/60">{current} / {max} misiles</span>
+                        <span className="font-mono text-[10px] text-secondary/40">
+                          {rps > 1 ? `${rps} por ronda` : '1 por disparo'}
+                          {rondasCargables > 0 && ` · ${rondasCargables} rondas cargables`}
+                          {sobrante > 0 && ` (${sobrante} sobran)`}
+                        </span>
+                      </div>
+                      {/* Stock del almacén */}
+                      <div className="font-mono text-[9px] text-secondary/40 mt-0.5 flex justify-between">
+                        <span>Almacén: <span className={stock > 0 ? 'text-primary' : 'text-error'}>{stock}</span> disponibles</span>
+                        {tiempoRecargaMin > 0 && (
+                          <span className="text-amber-400" title="Tiempo CamOps con skill/teams/battlefield">
+                            ⏱ {tiempoRecargaMin} min
+                          </span>
+                        )}
                       </div>
                     </div>
                     
@@ -208,15 +338,15 @@ export function MunicionTab() {
                         onClick={() => handleVaciarBin(idx)}
                         disabled={current <= 0}
                         className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase border border-outline-variant/40 rounded hover:bg-surface-container disabled:opacity-30 transition-colors"
-                        title="Vaciar al almacén"
+                        title="Vaciar al almacén (fondo común)"
                       >
                         <Upload className="w-3 h-3 text-secondary" /> Vaciar
                       </button>
                       <button
                         onClick={() => handleRecargarBin(idx)}
-                        disabled={faltante <= 0}
+                        disabled={faltante <= 0 || rondasCargables <= 0 || stock < rps}
                         className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] uppercase border border-primary-container/40 rounded hover:bg-primary-container/10 disabled:opacity-30 transition-colors text-primary-container"
-                        title={`Recargar ${faltante} rondas desde el almacén`}
+                        title={`Recargar ${rondasCargables} rondas completas (${rondasCargables * rps} misiles) desde el almacén`}
                       >
                         <Download className="w-3 h-3" /> Recargar
                       </button>
