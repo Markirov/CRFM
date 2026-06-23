@@ -1,7 +1,16 @@
 import { useState } from 'react';
-import { Crosshair, Radio, ShieldAlert } from 'lucide-react';
+import { Crosshair, Radio, ShieldAlert, Dices, ChevronDown, ChevronRight } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
 import { useLiveSession, type LiveSession, type LiveUnit, type IncomingDamage } from '@/hooks/useLiveSession';
+import { useAutorollPrefs, AUTOROLL_META, type AutorollPrefs } from '@/lib/autoroll-prefs';
+import { rollHitLocation, rollPiloting, rollInitiative, rollAmmoExplosionAvoid, rollCritical, locKeyToCritArea, type AttackDirection } from '@/lib/dice-helpers';
+
+function locKeyToArmorKey(locKey: string, rearArmor: boolean): string {
+  if (locKey === 'CT') return rearArmor ? 'CTr' : 'CTf';
+  if (locKey === 'LT') return rearArmor ? 'LTr' : 'LTf';
+  if (locKey === 'RT') return rearArmor ? 'RTr' : 'RTf';
+  return locKey;
+}
 
 interface Props {
   sim: ReturnType<typeof useSimulador>;
@@ -10,6 +19,40 @@ interface Props {
 
 export function ComputadoraCombate({ sim, live }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [autorollOpen, setAutorollOpen] = useState(false);
+  const [autorollPrefs, setAutorollPref] = useAutorollPrefs();
+  const anyAutoroll = (Object.keys(autorollPrefs) as Array<keyof AutorollPrefs>).some(k => autorollPrefs[k]);
+  const [actionLog, setActionLog] = useState<string[]>([]);
+
+  const pushLog = (msg: string) => setActionLog(prev => [msg, ...prev].slice(0, 5));
+
+  const doInitiative = () => {
+    const r = rollInitiative();
+    pushLog(`🎲 Init: yo ${r.myRoll.sum} vs op ${r.opponentRoll.sum} → ${r.tie ? 'EMPATE' : r.iWon ? 'GANO (actúa último)' : 'PIERDO (actúo primero)'}`);
+  };
+
+  const doPiloting = () => {
+    const target = sim.pilotingTotal ?? 5;
+    const r = rollPiloting(target);
+    pushLog(`🎲 Pilot ${r.roll.d1}+${r.roll.d2}=${r.roll.sum} vs ${target}+ → ${r.success ? 'PASA' : 'CAE'}`);
+  };
+
+  const doAmmoExplosion = () => {
+    const heat = sim.mechSession?.heat ?? 0;
+    const r = rollAmmoExplosionAvoid(heat);
+    if (!r) { pushLog(`Heat ${heat} < 19 → sin riesgo`); return; }
+    pushLog(`🎲 Avoid Boom heat ${heat}: ${r.roll.sum} vs ${r.threshold}+ → ${r.exploded ? '💥 EXPLOTA' : 'SAFE'}`);
+  };
+
+  const doCrit = () => {
+    const sel = sim.selectedSection;
+    if (!sel) { pushLog('Selecciona loc primero (ArmorDiagram)'); return; }
+    // Strip front/rear suffix: CTf/CTr → CT
+    const baseLoc = sel.replace(/[fr]$/, '');
+    const area = locKeyToCritArea(baseLoc);
+    const r = rollCritical(area);
+    pushLog(`🎲 Crit ${baseLoc} (${area}) ${r.roll.sum} → ${r.effect}`);
+  };
 
   return (
     <div className="relative group">
@@ -60,6 +103,89 @@ export function ComputadoraCombate({ sim, live }: Props) {
             </div>
           </div>
 
+          {/* ── Tiradas Auto (per-user prefs) ── */}
+          <div className="border-b border-outline-variant/30 bg-surface-container-low/60">
+            <button
+              onClick={() => setAutorollOpen(!autorollOpen)}
+              className="w-full px-3 py-2 flex items-center justify-between hover:bg-surface-container-high/40 transition-colors"
+            >
+              <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2">
+                <Dices size={12} /> Tiradas Auto
+                {anyAutoroll && (
+                  <span className="px-1 py-px text-[8px] font-mono border border-primary/60 text-primary">ON</span>
+                )}
+              </span>
+              {autorollOpen ? <ChevronDown size={12} className="text-secondary/60" /> : <ChevronRight size={12} className="text-secondary/60" />}
+            </button>
+            {autorollOpen && (
+              <div className="px-3 pb-3 space-y-1.5">
+                {(['combat','damage','pilot'] as const).map(cat => (
+                  <div key={cat} className="space-y-1">
+                    <div className="font-mono text-[8px] uppercase tracking-widest text-secondary/50 pt-1">
+                      {cat === 'combat' ? 'Combate' : cat === 'damage' ? 'Daño' : 'Piloto'}
+                    </div>
+                    {AUTOROLL_META.filter(m => m.category === cat).map(m => (
+                      <label
+                        key={m.key}
+                        className="flex items-start gap-2 cursor-pointer hover:bg-surface-container-high/40 px-1.5 py-1 transition-colors"
+                        title={m.description}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={autorollPrefs[m.key]}
+                          onChange={(e) => setAutorollPref(m.key, e.target.checked)}
+                          className="mt-0.5 accent-primary"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-mono text-[10px] text-secondary/90 uppercase tracking-wide">{m.label}</div>
+                          <div className="font-mono text-[8px] text-secondary/50 leading-tight">{m.description}</div>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Acciones Auto (botones visibles según prefs ON) ── */}
+          {(autorollPrefs.initiative || autorollPrefs.piloting || autorollPrefs.ammoExplosion || autorollPrefs.crit) && (
+            <div className="px-3 py-2 border-b border-outline-variant/30 bg-surface-container-low/40 space-y-2">
+              <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2">
+                <Dices size={12} /> Acciones
+              </span>
+              <div className="flex gap-1 flex-wrap">
+                {autorollPrefs.initiative && (
+                  <button onClick={doInitiative} className="px-2 py-1 text-[9px] font-mono uppercase border border-primary/60 text-primary hover:bg-primary/20">
+                    Init
+                  </button>
+                )}
+                {autorollPrefs.piloting && (
+                  <button onClick={doPiloting} disabled={!sim.mechSession} className="px-2 py-1 text-[9px] font-mono uppercase border border-primary/60 text-primary hover:bg-primary/20 disabled:opacity-30">
+                    Pilot
+                  </button>
+                )}
+                {autorollPrefs.ammoExplosion && (
+                  <button onClick={doAmmoExplosion} disabled={!sim.mechSession} className="px-2 py-1 text-[9px] font-mono uppercase border border-error/60 text-error hover:bg-error/20 disabled:opacity-30">
+                    Avoid Boom
+                  </button>
+                )}
+                {autorollPrefs.crit && (
+                  <button onClick={doCrit} disabled={!sim.selectedSection} className="px-2 py-1 text-[9px] font-mono uppercase border border-amber-400/60 text-amber-400 hover:bg-amber-400/20 disabled:opacity-30" title="Roll crit en loc seleccionada (ArmorDiagram)">
+                    Crit
+                  </button>
+                )}
+              </div>
+              {actionLog.length > 0 && (
+                <div className="space-y-px max-h-24 overflow-y-auto custom-scrollbar">
+                  {actionLog.map((l, i) => (
+                    <div key={i} className="font-mono text-[9px] text-secondary/80 leading-tight">{l}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="max-h-64 overflow-y-auto p-2 space-y-3 custom-scrollbar">
             {!live.isLive ? (
               <div className="text-center font-mono text-[10px] text-secondary/40 py-6 italic">
@@ -102,6 +228,10 @@ export function ComputadoraCombate({ sim, live }: Props) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Componente para recibir ataques
 export function IncomingAttacks({ sim, live }: Props) {
+  const [autorollPrefs] = useAutorollPrefs();
+  const [direction, setDirection] = useState<Record<string, AttackDirection>>({});
+  const [hitRoll, setHitRoll] = useState<Record<string, { locLabel: string; sum: number }>>({});
+
   if (!live.isLive || !live.mySession || !live.mySession.incomingDamage?.length) return null;
 
   return (
@@ -150,6 +280,29 @@ export function IncomingAttacks({ sim, live }: Props) {
               </div>
             )}
 
+            {/* ── Direction + hit location autoroll preview ── */}
+            {autorollPrefs.hitLocation && mechIdx >= 0 && (
+              <div className="mt-2 flex items-center gap-1 flex-wrap">
+                <span className="text-[8px] font-mono text-secondary/60 uppercase">Dir:</span>
+                {(['front','left','right','rear'] as AttackDirection[]).map(d => (
+                  <button
+                    key={d}
+                    onClick={() => setDirection(prev => ({ ...prev, [atk.id]: d }))}
+                    className={`px-1 py-px text-[8px] font-mono uppercase border ${
+                      (direction[atk.id] ?? 'front') === d
+                        ? 'border-primary bg-primary/20 text-primary'
+                        : 'border-outline-variant/40 text-secondary/60 hover:border-primary/40'
+                    }`}
+                  >{d}</button>
+                ))}
+                {hitRoll[atk.id] && (
+                  <span className="px-1 py-px text-[8px] font-mono border border-cyan-400/60 text-cyan-400">
+                    🎲{hitRoll[atk.id].sum} → {hitRoll[atk.id].locLabel}
+                  </span>
+                )}
+              </div>
+            )}
+
             <div className="mt-3 flex gap-2">
               <button
                 onClick={() => {
@@ -172,6 +325,14 @@ export function IncomingAttacks({ sim, live }: Props) {
                   sim.setDamageAmount(atk.damage);
                   sim.setDamageSource(atk.sourceSessionName);
                   sim.setPendingIncomingAttack(atk);
+                  // ── Autoroll hit location: pre-selecciona loc en ArmorDiagram ──
+                  if (autorollPrefs.hitLocation && mechIdx >= 0) {
+                    const dir = direction[atk.id] ?? 'front';
+                    const res = rollHitLocation(dir);
+                    const armorKey = locKeyToArmorKey(res.locKey, res.rearArmor);
+                    sim.setSelectedSection(armorKey);
+                    setHitRoll(prev => ({ ...prev, [atk.id]: { locLabel: res.locLabel, sum: res.roll.sum } }));
+                  }
                 }}
                 disabled={sim.pendingIncomingAttack && sim.pendingIncomingAttack.id !== atk.id}
                 className={`w-full py-2 border font-mono text-[10px] uppercase font-bold transition-colors ${

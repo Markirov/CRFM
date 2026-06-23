@@ -155,7 +155,7 @@ export function HudTacticoPage() {
   useEffect(() => {
     PLAYER_SHEET_NAMES.forEach((name, i) => {
       loadPlayer(name).then(res => {
-        const p0 = res.success && res.data?.personajes?.[0];
+        const p0 = res.success && (res.data as any)?.personajes?.[0];
         const xpTotal = Number(p0?.xpTotal) || 0;
         const nivel = getVeterancy(xpTotal).nombre;
         const rc = REROLL_CONFIG[nivel] ?? REROLL_CONFIG.Novato;

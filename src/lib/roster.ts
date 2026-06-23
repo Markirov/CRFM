@@ -32,16 +32,48 @@ export interface RosterEntry {
 const ESTADOS_VALIDOS: PilotEstado[] = ['activo', 'herido', 'hospitalizado', 'kia', 'mia', 'retirado'];
 
 /** Lee skill TN (entero >=0). null si vacio/no numerico. */
-function parseSkill(v: any): number | null {
+function parseSkill(v: unknown): number | null {
   if (v === null || v === undefined || v === '') return null;
   const n = Number(v);
   if (!Number.isFinite(n)) return null;
   return Math.max(0, Math.floor(n));
 }
 
-function normEstado(s: any): PilotEstado {
+function normEstado(s: unknown): PilotEstado {
   const v = (s ?? '').toString().trim().toLowerCase();
   return (ESTADOS_VALIDOS as string[]).includes(v) ? (v as PilotEstado) : 'activo';
+}
+
+interface RosterApiRecord {
+  order?: unknown;
+  fila?: unknown;
+  nombre?: unknown;
+  nombreDisplay?: unknown;
+  jugador?: unknown;
+  apodo?: unknown;
+  origen?: unknown;
+  afiliacion?: unknown;
+  mech?: unknown;
+  xpTotal?: unknown;
+  xpDisponible?: unknown;
+  sueldo?: unknown;
+  dinero?: unknown;
+  estado?: unknown;
+  lanza?: unknown;
+  disparoMech?: unknown;
+  disparo?: unknown;
+  gunnery?: unknown;
+  colO?: unknown;
+  pilotajeMech?: unknown;
+  pilotaje?: unknown;
+  piloting?: unknown;
+  colP?: unknown;
+}
+
+function coerceStrOrNum(v: unknown): string | number {
+  if (typeof v === 'number') return v;
+  if (typeof v === 'string') return v;
+  return '';
 }
 
 export async function loadRoster(): Promise<RosterEntry[]> {
@@ -51,13 +83,15 @@ export async function loadRoster(): Promise<RosterEntry[]> {
     console.warn('[ROSTER] sheetsGet failed', res);
     return [];
   }
-  const list = res.data?.roster;
+  const data = (res as { data?: { roster?: unknown } }).data;
+  const list = data?.roster;
   if (!Array.isArray(list)) {
-    console.warn('[ROSTER] no roster array in response. data=', res.data);
+    console.warn('[ROSTER] no roster array in response. data=', data);
     return [];
   }
   console.log('[ROSTER] loaded', list.length, 'pilots');
-  return list.map((r: any): RosterEntry => ({
+
+  return list.map((r: RosterApiRecord): RosterEntry => ({
     order:         Number(r.order) || 0,
     fila:          Number(r.fila) || 0,
     nombre:        (r.nombre || '').toString(),
@@ -69,8 +103,8 @@ export async function loadRoster(): Promise<RosterEntry[]> {
     mech:          (r.mech || '').toString(),
     xpTotal:       Number(r.xpTotal) || 0,
     xpDisponible:  Number(r.xpDisponible) || 0,
-    sueldo:        r.sueldo ?? '',
-    dinero:        r.dinero ?? '',
+    sueldo:        coerceStrOrNum(r.sueldo),
+    dinero:        coerceStrOrNum(r.dinero),
     estado:        normEstado(r.estado),
     lanza:         (r.lanza || '').toString().trim(),
     disparoMech:   parseSkill(r.disparoMech ?? r.disparo ?? r.gunnery ?? r.colO),

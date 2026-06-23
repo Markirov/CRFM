@@ -18,6 +18,7 @@ import {
   type AcquisitionKind, type MechWeightClass, type ExperienceLevel,
 } from '@/lib/asset-prices';
 import { useMechCatalog, findMechByName, type CatalogMech } from '@/hooks/useMechCatalog';
+import { CostModifierSelector } from '@/components/ui/CostModifierSelector';
 import {
   calcRepairCostBySystem, configFromCatalog, emptyDamage, deriveDamageFromSession,
   ESTADO_FACTURA_PCT, ESTADO_COLOR,
@@ -110,7 +111,11 @@ const catLabel = (k: LibroMayorCategoria) => CATEGORIAS.find(c => c.key === k)?.
 // ══════════════════════════════════════════════════════════
 
 export function FinanzasPage() {
-  const { activeSubTab, setActiveSubTab, campaign, roster, setFinanzasPendingModal } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const campaign = useAppStore(s => s.campaign);
+  const roster = useAppStore(s => s.roster);
+  const setFinanzasPendingModal = useAppStore(s => s.setFinanzasPendingModal);
   const { readable, writable, loading: permLoading } = usePerm('finanzas');
   // Defaults: si la sub-tab activa no es de Finanzas, mostramos 'home'
   const view: 'home' | 'libro-mayor' =
@@ -213,7 +218,8 @@ function FinanzasActionBar({ activeView, onHome, onLibro, onProjector, writable 
 // ══════════════════════════════════════════════════════════
 
 function FinanzasHome() {
-  const { setActiveSubTab } = useAppStore();
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const campaign = useAppStore(s => s.campaign);
   const [entries, setEntries] = useState<LibroMayorEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -269,10 +275,11 @@ function FinanzasHome() {
       </div>
 
       {/* KPIs resumen (sobre lo visible) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 22 }}>
-        <Kpi label="Ingresos visibles" value={fmtMoney(totalIngresos)} color={T.greenDeep} />
-        <Kpi label="Gastos visibles"   value={fmtMoney(totalGastos)}   color={T.bloodLight} />
-        <Kpi label="Balance"           value={fmtMoney(balance)}        color={balance >= 0 ? T.greenDeep : T.bloodLight} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 22 }}>
+        <Kpi label="Tesorería Actual"    value={campaign.contratoValor ? `${campaign.contratoValor} ₡` : '0 ₡'} color={T.gold} />
+        <Kpi label="Ingresos visibles"   value={fmtMoney(totalIngresos)} color={T.greenDeep} />
+        <Kpi label="Gastos visibles"     value={fmtMoney(totalGastos)}   color={T.bloodLight} />
+        <Kpi label="Flujo visible"       value={fmtMoney(balance)}        color={balance >= 0 ? T.greenDeep : T.bloodLight} />
       </div>
 
       {/* Editor inline */}
@@ -379,7 +386,11 @@ interface LibroMayorTabProps {
 }
 
 function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: LibroMayorTabProps) {
-  const { finanzasPendingModal, setFinanzasPendingModal, tallerAutoLoadSlot, setTallerAutoLoadSlot } = useAppStore();
+  const finanzasPendingModal = useAppStore(s => s.finanzasPendingModal);
+  const setFinanzasPendingModal = useAppStore(s => s.setFinanzasPendingModal);
+  const tallerAutoLoadSlot = useAppStore(s => s.tallerAutoLoadSlot);
+  const setTallerAutoLoadSlot = useAppStore(s => s.setTallerAutoLoadSlot);
+  const campaign = useAppStore(s => s.campaign);
   const [entries, setEntries] = useState<LibroMayorEntry[]>([]);
   const [personal, setPersonal] = useState<PersonalEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -475,27 +486,18 @@ function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: Li
 
 
 
+      {/* TallerAutonomo: componente pendiente. Placeholder seguro. */}
       {tallerOpen && (
-        <TallerModal
-          campaignDate={campaignDate}
-          initialSimSlotIdx={tallerAutoLoadSlot}
-          onClose={() => { setTallerOpen(false); setTallerAutoLoadSlot(null); }}
-          onCommit={async (total, concepto, mechName) => {
-            await commitLibroEntryAndTreasury({
-              id: genId('lm'),
-              fecha: campaignDate,
-              concepto,
-              cantidad: Math.round(total),
-              tipo: 'gasto',
-              categoria: 'repuestos',
-              nota: `Reparación ${mechName} · Taller`,
-              jugador: '',
-            });
-            setTallerOpen(false);
-            setTallerAutoLoadSlot(null);
-            refresh();
-          }}
-        />
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
+          onClick={() => { setTallerOpen(false); setTallerAutoLoadSlot(null); }}
+        >
+          <div style={{ padding: 24, background: T.surface, border: `1px solid ${T.outlineV}`, color: T.cream, fontFamily: 'monospace' }}>
+            Taller Autónomo — pendiente.<br />
+            Slot: {tallerAutoLoadSlot ?? '—'} · Fecha: {campaignDate}<br />
+            <button onClick={() => { setTallerOpen(false); setTallerAutoLoadSlot(null); refresh(); }}>Cerrar</button>
+          </div>
+        </div>
       )}
 
       {projectorOpen && (
@@ -527,10 +529,11 @@ function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: Li
       )}
 
       {/* KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
-        <Kpi label="Ingresos" value={fmtMoney(totalIngresos)} color={T.greenDeep} />
-        <Kpi label="Gastos"   value={fmtMoney(totalGastos)}   color={T.bloodLight} />
-        <Kpi label="Balance"  value={fmtMoney(balance)}      color={balance >= 0 ? T.greenDeep : T.bloodLight} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
+        <Kpi label="Tesorería Actual" value={campaign.contratoValor ? `${campaign.contratoValor} ₡` : '0 ₡'} color={T.gold} />
+        <Kpi label="Ingresos visibles" value={fmtMoney(totalIngresos)} color={T.greenDeep} />
+        <Kpi label="Gastos visibles"   value={fmtMoney(totalGastos)}   color={T.bloodLight} />
+        <Kpi label="Flujo visible"  value={fmtMoney(balance)}      color={balance >= 0 ? T.greenDeep : T.bloodLight} />
       </div>
 
       {/* Editor */}
@@ -845,11 +848,18 @@ function PersonalEditor({ entry, setEntry, onSave, onCancel }: {
 }) {
   const valid = entry.sueldoMes >= 0 && entry.cantidad >= 1;
 
+  const [factorPct, setFactorPct] = useState(100);
+
   // Auto-sueldo según rol+nivel (rule-of-thumb actual)
-  const recalcSueldo = (rol: PersonalRol, nivel: PersonalNivel) => {
+  const recalcSueldo = (rol: PersonalRol, nivel: PersonalNivel, factor: number) => {
     const base = ROLES.find(r => r.key === rol)?.sueldoDefault ?? 0;
     const mult = NIVELES.find(n => n.key === nivel)?.mult ?? 1;
-    return Math.round(base * mult);
+    return Math.round((base * mult) * (factor / 100));
+  };
+
+  const handleFactorChange = (f: number) => {
+    setFactorPct(f);
+    setEntry({ ...entry, sueldoMes: recalcSueldo(entry.rol, entry.nivel, f) });
   };
 
   // ── Calculadora canónica FM Mercs (A2 — INFORME_COSTES) ──
@@ -878,7 +888,7 @@ function PersonalEditor({ entry, setEntry, onSave, onCancel }: {
         <select value={entry.rol}
           onChange={e => {
             const rol = e.target.value as PersonalRol;
-            setEntry({ ...entry, rol, sueldoMes: recalcSueldo(rol, entry.nivel) });
+            setEntry({ ...entry, rol, sueldoMes: recalcSueldo(rol, entry.nivel, factorPct) });
           }}
           style={inputStyle}>
           {ROLES.map(r => (
@@ -892,7 +902,7 @@ function PersonalEditor({ entry, setEntry, onSave, onCancel }: {
         <select value={entry.nivel}
           onChange={e => {
             const nivel = e.target.value as PersonalNivel;
-            setEntry({ ...entry, nivel, sueldoMes: recalcSueldo(entry.rol, nivel) });
+            setEntry({ ...entry, nivel, sueldoMes: recalcSueldo(entry.rol, nivel, factorPct) });
           }}
           style={inputStyle}>
           {NIVELES.map(n => (
@@ -929,6 +939,14 @@ function PersonalEditor({ entry, setEntry, onSave, onCancel }: {
             placeholder="Especialidad, asignación, comentarios"
             style={inputStyle} />
         </div>
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <CostModifierSelector 
+          label="Multiplicador Sueldo (%)" 
+          value={factorPct} 
+          onChange={handleFactorChange} 
+        />
       </div>
 
       {/* Calculadora canónica FM Mercs */}
@@ -2132,38 +2150,12 @@ export function TallerModal({ onClose, onCommit, initialSimSlotIdx, onRestore, i
 
               <SmallLabel>Estado factura · Datos sim</SmallLabel>
               <div style={{ marginTop: 10, display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 10, alignItems: 'end' }}>
-                {/* Estado factura — IZQ */}
-                <div>
-                  <FieldLabel>Estado factura (%)</FieldLabel>
-                  <select value={estadoPct}
-                    onChange={e => {
-                      const v = parseInt(e.target.value, 10);
-                      setEstadoPct(Number.isFinite(v) ? v : 100);
-                    }}
-                    style={inputStyle}>
-                    {[...ESTADO_FACTURA_PCT].map(p => (
-                      <option key={p} value={p}>{p}% factura</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* 5 botones quick % — CENTRO */}
-                <div>
-                  <FieldLabel>Quick %</FieldLabel>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    {[0, 25, 50, 75, 100].map(p => (
-                      <button key={p}
-                        onClick={() => setEstadoPct(p)}
-                        style={{
-                          width: 36, padding: '6px 0',
-                          background: estadoPct === p ? T.gold : T.void,
-                          border: `1px solid ${T.gold}`,
-                          color: estadoPct === p ? T.void : T.gold,
-                          cursor: 'pointer',
-                          fontFamily: '"Share Tech Mono", monospace', fontSize: 10, fontWeight: 700,
-                        }}>{p}</button>
-                    ))}
-                  </div>
+                <div style={{ gridColumn: '1 / span 2' }}>
+                  <CostModifierSelector 
+                    label="Estado factura (%)" 
+                    value={estadoPct} 
+                    onChange={setEstadoPct} 
+                  />
                 </div>
 
                 {/* Muni + % daño readonly — DCHA */}

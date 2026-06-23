@@ -20,7 +20,7 @@ interface Logro {
 }
 
 export function LogrosPage() {
-  const { roster } = useAppStore();
+  const roster = useAppStore(s => s.roster);
   const { readable, writable, loading: permLoading } = usePerm('logros');
   const [logros, setLogros] = useState<Logro[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,9 +36,10 @@ export function LogrosPage() {
           setLogros([]);
           return;
         }
-        const list = res.data?.logros;
+        const data = res.data as any;
+        const list = data?.logros;
         if (!Array.isArray(list)) {
-          setErr(res.data?.msg ?? 'Respuesta inesperada');
+          setErr(data?.msg ?? 'Respuesta inesperada');
           setLogros([]);
           return;
         }

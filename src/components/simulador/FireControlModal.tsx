@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Crosshair, Send } from 'lucide-react';
+import { Crosshair, Send, Dices } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
 import { useLiveSession } from '@/hooks/useLiveSession';
 import { tWeapon } from '@/lib/translator';
 import { groupMissileDamage } from '@/lib/weapons';
 import { getHouseRules, rollD6 } from '@/lib/house-rules';
+import { useAutorollPrefs } from '@/lib/autoroll-prefs';
+import { rollToHit, rollClusterHits } from '@/lib/dice-helpers';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +19,14 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
   const [targets, setTargets] = useState<Record<number, { targetSessionId: string, targetUnitId: string, damage: number }>>({});
   // Bin de munición seleccionado por arma (id del AmmoBin). undefined → Standard del weapon.
   const [binChoice, setBinChoice] = useState<Record<number, number>>({});
+  // Mod target (lado defensor: movimiento + terreno) per-weapon. Default 0.
+  const [targetMod, setTargetMod] = useState<Record<number, number>>({});
+  // Resultado roll auto per-weapon (transient UI).
+  const [rollResult, setRollResult] = useState<Record<number, {
+    target: number; sum: number; d1: number; d2: number; hit: boolean;
+    clusterHits?: number; rackSize?: number;
+  }>>({});
+  const [autorollPrefs] = useAutorollPrefs();
 
   const activeTab = sim.activeTab;
   const state = activeTab === 'mechs' ? sim.mechState : sim.vehicleState;
@@ -41,6 +51,61 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
     });
   };
 
+  // Calcula target number toHit per-weapon: gunneryTotal + weapon mod + crit mods +
+  // arm actuator mod (si arm-mounted) + targetMod (movimiento target + terreno).
+  const computeToHitTarget = (w: any): number => {
+    const base = sim.gunneryTotal ?? 4;
+    const wMod = w.toHitMod ?? 0;
+    const critMod = sim.critModsAtkTotal ?? 0;
+    const loc: string = w.loc || w.location || '';
+    const armMod = loc === 'LA' ? (sim.armActuatorMod?.LA ?? 0)
+                 : loc === 'RA' ? (sim.armActuatorMod?.RA ?? 0)
+                 : 0;
+    const tMod = targetMod[w.id] ?? 0;
+    return base + wMod + critMod + armMod + tMod;
+  };
+
+  // Auto-roll toHit + cluster cuando user pulsa botón.
+  const handleAutoRoll = (w: any) => {
+    const target = computeToHitTarget(w);
+    const r = rollToHit(target);
+    let clusterHits: number | undefined;
+    let rackSize: number | undefined;
+    let newDmg = targets[w.id]?.damage ?? 0;
+
+    if (r.success && autorollPrefs.cluster && w.isCluster) {
+      const rs = (w.rackSize ?? 0) as number;
+      rackSize = rs;
+      if (rs > 0) {
+        const c = rollClusterHits(rs);
+        clusterHits = c.hits;
+        const perMissile = w.damageShort ?? 1;
+        newDmg = c.hits * perMissile;
+      }
+    } else if (!r.success) {
+      newDmg = 0;
+    }
+
+    setRollResult(prev => ({
+      ...prev,
+      [w.id]: {
+        target, sum: r.roll.sum, d1: r.roll.d1, d2: r.roll.d2 ?? 0,
+        hit: r.success, clusterHits, rackSize,
+      },
+    }));
+
+    setTargets(prev => ({
+      ...prev,
+      [w.id]: {
+        ...prev[w.id],
+        damage: newDmg,
+        // MISS → clear target (no envío al fallar)
+        targetSessionId: r.success ? prev[w.id]?.targetSessionId ?? '' : '',
+        targetUnitId: r.success ? prev[w.id]?.targetUnitId ?? '' : '',
+      },
+    }));
+  };
+
   useEffect(() => {
     if (isOpen && state && session) {
       const initialTargets: Record<number, { targetSessionId: string, targetUnitId: string, damage: number }> = {};
@@ -58,6 +123,8 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       });
       setTargets(initialTargets);
       setBinChoice(initialBins);
+      setRollResult({});
+      setTargetMod({});
     }
     // Deps: solo isOpen + identidad estable de activeShots para evitar reset cuando
     // el padre re-renderiza con nueva referencia de state/session (perdía selección
@@ -279,6 +346,44 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
                     />
                     <span className="text-[9px] font-mono text-error/60 pr-2">DMG</span>
                   </div>
+
+                  {/* ── Autoroll toHit (per-user pref) ── */}
+                  {autorollPrefs.toHit && sim.activeTab === 'mechs' && (
+                    <div className="mt-1 space-y-1">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[8px] font-mono text-secondary/60 uppercase">Mod tgt</span>
+                        <input
+                          type="number"
+                          value={targetMod[w.id] ?? 0}
+                          onChange={(e) => setTargetMod(prev => ({ ...prev, [w.id]: parseInt(e.target.value) || 0 }))}
+                          className="w-10 bg-surface-container-high border border-outline-variant/40 text-secondary text-center text-[10px] font-mono py-0.5"
+                          title="Movimiento target + terreno"
+                        />
+                        <span className="text-[8px] font-mono text-secondary/50">→{computeToHitTarget(w)}+</span>
+                      </div>
+                      <button
+                        onClick={() => handleAutoRoll(w)}
+                        className="w-full px-1 py-1 border border-primary/60 text-primary text-[9px] font-mono uppercase flex items-center justify-center gap-1 hover:bg-primary/20"
+                      >
+                        <Dices size={10} /> Auto-Roll
+                      </button>
+                      {rollResult[w.id] && (
+                        <div className={`text-[9px] font-mono text-center border px-1 py-0.5 ${
+                          rollResult[w.id].hit
+                            ? 'border-emerald-400/60 text-emerald-400 bg-emerald-400/10'
+                            : 'border-error/60 text-error bg-error/10'
+                        }`}>
+                          {rollResult[w.id].d1}+{rollResult[w.id].d2}={rollResult[w.id].sum} vs {rollResult[w.id].target}+
+                          <div className="font-bold">{rollResult[w.id].hit ? 'HIT' : 'MISS'}</div>
+                          {rollResult[w.id].clusterHits !== undefined && (
+                            <div className="text-cyan-400">
+                              Cluster: {rollResult[w.id].clusterHits}/{rollResult[w.id].rackSize}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {/* ── Streak SRM: HIT / MISS canon (all-or-nothing) ── */}
                   {isStreak && (
                     <div className="flex gap-1 justify-center mt-1">

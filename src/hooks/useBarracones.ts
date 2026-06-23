@@ -278,7 +278,7 @@ function saveSlots(slots: (Pilot | null)[]) {
 }
 
 export function useBarracones() {
-  const { campaign } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
   const [slots, setSlots] = useState<(Pilot | null)[]>(loadSlots);
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -538,7 +538,7 @@ export function useBarracones() {
       setSheetsMsg(res.error ?? 'Error de red');
       return;
     }
-    const data = res.data;
+    const data = res.data as any;
     if (data.result !== 'success' || !Array.isArray(data.personajes)) {
       setSheetsStatus('error');
       setSheetsMsg(data.msg || 'Sin resultados');
@@ -569,7 +569,7 @@ export function useBarracones() {
       setSheetsMsg(res.error ?? 'Error de red');
       return false;
     }
-    const data = res.data;
+    const data = res.data as any;
     if (data.result !== 'success' || !Array.isArray(data.personajes) || data.personajes.length === 0) {
       setSheetsStatus('error');
       setSheetsMsg(data.msg || 'No se encontraron pilotos');
@@ -628,7 +628,7 @@ export function useBarracones() {
       setSheetsMsg(res.error ?? 'Error de red');
       return;
     }
-    const data = res.data;
+    const data = res.data as any;
     setSheetsStatus(data.result === 'success' ? 'ok' : 'error');
     setSheetsMsg(data.msg || (data.result === 'success' ? 'Guardado correctamente' : 'Error al guardar'));
   }, [slots, activeIdx]);
