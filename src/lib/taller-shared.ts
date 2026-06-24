@@ -176,3 +176,39 @@ export function getPoolUsage(
   }
   return { teamsUsed: teams, astechsUsed: astechs };
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Sync Firestore (config/main.TALLER_SHARED_JSON)
+   ─────────────────────────────────────────────────────────────── */
+
+export interface TallerSharedSnapshot {
+  tiempoGlobal: TallerSharedState['tiempoGlobal'];
+  asignaciones: TallerSharedState['asignaciones'];
+  cola:         TallerSharedState['cola'];
+}
+
+export function serializeTaller(): string {
+  const s = useTallerShared.getState();
+  const snap: TallerSharedSnapshot = {
+    tiempoGlobal: s.tiempoGlobal,
+    asignaciones: s.asignaciones,
+    cola:         s.cola,
+  };
+  return JSON.stringify(snap);
+}
+
+export function hydrateTaller(raw: string | null | undefined): boolean {
+  if (!raw) return false;
+  try {
+    const snap = JSON.parse(raw) as Partial<TallerSharedSnapshot>;
+    useTallerShared.setState({
+      ...(snap.tiempoGlobal ? { tiempoGlobal: snap.tiempoGlobal } : {}),
+      ...(snap.asignaciones ? { asignaciones: snap.asignaciones } : {}),
+      ...(snap.cola         ? { cola:         snap.cola         } : {}),
+    });
+    return true;
+  } catch (e) {
+    console.warn('[taller-shared] hydrate failed', e);
+    return false;
+  }
+}

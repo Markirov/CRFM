@@ -10,6 +10,7 @@ import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
 import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 import { usePermissions } from '@/lib/permissions-service';
+import { useTallerSharedSync } from '@/hooks/useTallerSharedSync';
 import { migrateAlmacenKeys } from '@/lib/almacen-keys';
 import { AuthGate } from '@/components/shell/AuthGate';
 
@@ -56,6 +57,9 @@ export function App() {
   const userRole = useAppStore(s => s.userRole);
   const setPerms = useAppStore(s => s.setPerms);
   const setPermsLoading = useAppStore(s => s.setPermsLoading);
+
+  // Sync taller-shared state ↔ Firestore (hidrata al inicio + auto-save debounced)
+  useTallerSharedSync(true);
 
   // Permisos reactivos desde Firestore (onSnapshot)
   const { perms, loading: permsLoading } = usePermissions();
