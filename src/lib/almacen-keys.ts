@@ -212,6 +212,90 @@ export function depositChassisArmor(
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   2b. equipmentKey — tech split granularidad
+   ───────────────────────────────────────────────────────────────
+   Equipo de Mech (armas, equipo no-ammo) se separa por tech base
+   en el almacén porque cambia stats Y coste:
+
+     "Medium Laser (IS)"  ≠  "Medium Laser (CL)"
+
+   Esto permite contabilizar stocks/precios distintos sin
+   colisiones cuando un mech mixto monta variantes Clan/IS.
+   ─────────────────────────────────────────────────────────────── */
+
+export type EquipTech = 'IS' | 'CL' | 'Any';
+
+/** Genera key tech-split. `tech='Any'` deja el nombre sin sufijo (compat). */
+export function equipmentKey(name: string, tech: EquipTech = 'Any'): string {
+  const clean = (name || '').trim();
+  if (!clean) return '';
+  // Si ya viene con sufijo (IS)/(CL), respetar tal cual
+  if (/\((IS|CL)\)\s*$/i.test(clean)) return clean;
+  if (tech === 'Any') return clean;
+  return `${clean} (${tech})`;
+}
+
+/** Parsea key tech-split de vuelta a {name, tech}. */
+export function parseEquipmentKey(key: string): { name: string; tech: EquipTech } {
+  const m = /^(.+?)\s*\((IS|CL)\)\s*$/i.exec(key || '');
+  if (m) return { name: m[1].trim(), tech: (m[2].toUpperCase() as 'IS' | 'CL') };
+  return { name: (key || '').trim(), tech: 'Any' };
+}
+
+/**
+ * Predicado de búsqueda. Empareja una key del almacén contra una query
+ * que puede ser nombre original (EN) o traducido (ES). El caller pasa
+ * una tabla opcional de aliases ES→EN para soporte ES.
+ *
+ * @example equipmentMatchesQuery('Medium Laser (IS)', 'láser', {'láser':'laser'})
+ *          // → true
+ */
+export function equipmentMatchesQuery(
+  key: string,
+  rawQuery: string,
+  aliases?: Record<string, string>,
+): boolean {
+  if (!rawQuery) return true;
+  const q = rawQuery.trim().toLowerCase();
+  if (!q) return true;
+  const k = (key || '').toLowerCase();
+  if (k.includes(q)) return true;
+  // Substituye términos ES→EN y reintenta
+  if (aliases) {
+    let qEn = q;
+    for (const [es, en] of Object.entries(aliases)) {
+      qEn = qEn.replace(es.toLowerCase(), en.toLowerCase());
+    }
+    if (qEn !== q && k.includes(qEn)) return true;
+  }
+  return false;
+}
+
+/** Alias mínimo ES→EN para búsqueda. El caller puede ampliar. */
+export const EQUIPMENT_ALIAS_ES_EN: Record<string, string> = {
+  'láser':       'laser',
+  'laser':       'laser',
+  'medio':       'medium',
+  'pequeño':     'small',
+  'grande':      'large',
+  'pesado':      'heavy',
+  'ligero':      'light',
+  'autocañón':   'autocannon',
+  'autocannon':  'autocannon',
+  'misil':       'missile',
+  'pulso':       'pulse',
+  'gauss':       'gauss',
+  'lanzallamas': 'flamer',
+  'ametralladora': 'machine gun',
+  'mg':          'machine gun',
+  'ppc':         'ppc',
+  'cañón':       'cannon',
+  'cohete':      'rocket',
+  'lrm':         'lrm',
+  'srm':         'srm',
+};
+
+/* ═══════════════════════════════════════════════════════════════
    3. roundsPerShot
    ─────────────────────────────────────────────────────────────── */
 
