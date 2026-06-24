@@ -50,8 +50,8 @@ import {
   type Preset, type OrdenSecundario, type RepairItem, type ResultadoItem,
   type UnidadTiempo, type BayTeam,
 } from '@/lib/repair-priority';
-import { MunicionTab } from '@/components/taller/MunicionTab';
 import { ColaTab } from '@/components/taller/ColaTab';
+import { ReparacionTab } from '@/components/taller/ReparacionTab';
 
 export function TallerPage() {
   const activeSubTab = useAppStore(s => s.activeSubTab);
@@ -59,16 +59,15 @@ export function TallerPage() {
   const campaign = useAppStore(s => s.campaign);
   const setCampaign = useAppStore(s => s.setCampaign);
   const { readable, writable, loading: permLoading } = usePerm('taller');
-  type View = 'prioridades' | 'mantenimiento' | 'municion' | 'cola';
+  type View = 'reparacion' | 'mantenimiento' | 'cola';
   const view: View =
     activeSubTab === 'mantenimiento' ? 'mantenimiento'
-    : activeSubTab === 'municion' ? 'municion'
     : activeSubTab === 'cola' ? 'cola'
-    : 'prioridades';
+    : 'reparacion';
 
   useEffect(() => {
-    if (!['prioridades', 'mantenimiento', 'municion', 'cola'].includes(activeSubTab)) {
-      setActiveSubTab('prioridades');
+    if (!['reparacion', 'mantenimiento', 'cola'].includes(activeSubTab)) {
+      setActiveSubTab('reparacion');
     }
   }, [activeSubTab, setActiveSubTab]);
 
@@ -90,9 +89,8 @@ export function TallerPage() {
     );
   }
 
-  if (view === 'prioridades')   return <PrioridadesTab />;
+  if (view === 'reparacion')    return <ReparacionTab />;
   if (view === 'mantenimiento') return <MantenimientoTab />;
-  if (view === 'municion')      return <MunicionTab />;
   if (view === 'cola')          return <ColaTab />;
 
   return (

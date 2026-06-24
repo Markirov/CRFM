@@ -5,6 +5,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '@/lib/store';
 import { useViewport } from '@/hooks/useViewport';
 import { usePerm } from '@/hooks/usePerm';
@@ -386,6 +387,7 @@ interface LibroMayorTabProps {
 }
 
 function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: LibroMayorTabProps) {
+  const navigate = useNavigate();
   const finanzasPendingModal = useAppStore(s => s.finanzasPendingModal);
   const setFinanzasPendingModal = useAppStore(s => s.setFinanzasPendingModal);
   const tallerAutoLoadSlot = useAppStore(s => s.tallerAutoLoadSlot);
@@ -400,13 +402,18 @@ function LibroMayorTab({ campaignDate, campaignYear, campaignMonth, roster }: Li
   const [projectorOpen, setProjectorOpen] = useState(false);
   const [tallerOpen, setTallerOpen] = useState(false);
 
-  // Consume señal de la portada — abre modal pedido al entrar
+  // Consume señal de la portada — abre modal pedido al entrar.
+  // 'taller' ahora redirige a /taller (Sprint Unificación Fase D).
   useEffect(() => {
     if (!finanzasPendingModal) return;
-    if (finanzasPendingModal === 'taller')     setTallerOpen(true);
-    else if (finanzasPendingModal === 'projector') setProjectorOpen(true);
+    if (finanzasPendingModal === 'taller') {
+      navigate('/taller');
+      setFinanzasPendingModal(null);
+      return;
+    }
+    if (finanzasPendingModal === 'projector') setProjectorOpen(true);
     setFinanzasPendingModal(null);
-  }, [finanzasPendingModal, setFinanzasPendingModal]);
+  }, [finanzasPendingModal, setFinanzasPendingModal, navigate]);
 
   const refresh = async () => {
     setLoading(true);

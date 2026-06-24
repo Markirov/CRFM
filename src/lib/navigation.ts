@@ -53,9 +53,8 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       { id: 'taller', label: 'Taller', icon: '🔧', path: '/taller', palette: 'amber',
         tabs: [
-          { id: 'prioridades', label: 'Prioridades' },
+          { id: 'reparacion', label: 'Reparación' },
           { id: 'mantenimiento', label: 'Mantenimiento' },
-          { id: 'municion', label: 'Munición' },
           { id: 'cola', label: 'Cola' },
         ],
       },

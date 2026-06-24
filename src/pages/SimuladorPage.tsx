@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Shield, Crosshair, Cpu, Users, Eye, Target, Map as MapIcon, RotateCcw, Save, Search, Settings, AlertTriangle, AlertCircle, FileDigit, Plus, Download } from 'lucide-react';
-import { TallerModal, genId, getCampaignDateISO } from '@/pages/FinanzasPage';
+import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { commitLibroEntryAndTreasury, removeMechFromUnit, saveFuerzaCampana, loadFuerzaCampana, saveConfigBatch, loadAllFuerzaConfigSlots, saveFuerzaConfigSlot, loadHangar, saveHangarItem, type FuerzaSlot } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 import { newHangarItem } from '@/lib/hangar-types';
@@ -60,6 +61,7 @@ function gateCampaignWrite(actionLabel: string): boolean {
 }
 
 export function SimuladorPage() {
+  const navigate = useNavigate();
   const activeSubTab = useAppStore(s => s.activeSubTab);
   const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   const simuladorPortada = useAppStore(s => s.simuladorPortada);
@@ -74,7 +76,6 @@ export function SimuladorPage() {
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
   const [isFireModalOpen, setIsFireModalOpen] = useState(false);
-  const [tallerSlotIdx, setTallerSlotIdx] = useState<number | null>(null);
   const [destroyedModalOpen, setDestroyedModalOpen] = useState(false);
   const [destroyedBusy, setDestroyedBusy] = useState(false);
   // Modo campaña SIEMPRE arranca OFF. Usuario lo activa manualmente.
@@ -623,7 +624,10 @@ export function SimuladorPage() {
               onSetMoveMode={sim.setMoveMode}
               onSetJumpUsed={sim.setJumpUsed}
               onLoadPilot={p => sim.setPilotFull(p.name, p.gunnery, p.piloting)}
-              onOpenTaller={() => setTallerSlotIdx(sim.currentMechIdx)}
+              onOpenTaller={() => {
+                // Guarda snap antes de navegar para que ReparacionTab lo lea
+                navigate(`/taller?fromSim=${sim.currentMechIdx}`);
+              }}
               onHandleDestruction={() => setDestroyedModalOpen(true)}
             />
 
@@ -872,36 +876,7 @@ export function SimuladorPage() {
         />
       ) : null}
 
-      {tallerSlotIdx !== null && (
-        <TallerModal
-          campaignDate={getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth)}
-          initialSimSlotIdx={tallerSlotIdx}
-          onClose={() => setTallerSlotIdx(null)}
-          onRestore={() => {
-            // restoreMechSlotFull ya actualizó localStorage; rehidratamos el estado en RAM
-            const snap = loadLocalSnapshot();
-            if (snap) sim.hydrateFromSnapshot(snap);
-            // En modo campaña, guarda automáticamente el progreso tras reparar
-            if (campaignMode && isCampaignUnlocked()) {
-              saveCampaignProgress('Campaña auto').catch(err =>
-                console.warn('[Taller] auto-save tras reparación fallo', err));
-            }
-          }}
-          onCommit={async (total, concepto, mechName) => {
-            await commitLibroEntryAndTreasury({
-              id: genId('lm'),
-              fecha: getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
-              concepto,
-              cantidad: Math.round(total),
-              tipo: 'gasto',
-              categoria: 'repuestos',
-              nota: `Reparación ${mechName} · Taller`,
-              jugador: '',
-            });
-            setTallerSlotIdx(null);
-          }}
-        />
-      )}
+      {/* TallerModal eliminado — botón llave ahora navega a /taller?fromSim=N (Sprint Unificación Fase C) */}
 
       {destroyedModalOpen && ms && (() => {
         const fullName = `${ms.chassis} ${ms.model}`.toLowerCase().trim();
