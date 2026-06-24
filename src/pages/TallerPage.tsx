@@ -29,6 +29,7 @@ import type { HangarItem } from '@/lib/hangar-types';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
 import { armorKey, consumeArmor } from '@/lib/almacen-keys';
+import { useTallerShared } from '@/lib/taller-shared';
 import {
   deriveDamageFromSession, configFromCatalog,
   type MechRepairConfig, type RepairSystem,
@@ -169,10 +170,25 @@ function PrioridadesTab() {
     [sources, selectedKey],
   );
 
-  // ── Tiempo disponible ──
-  const [valor, setValor] = useState(3);
-  const [unidad, setUnidad] = useState<UnidadTiempo>('dias');
-  const [turnosExt, setTurnosExt] = useState(0);
+  // ── Tiempo disponible (compartido entre subtabs vía taller-shared store) ──
+  const tiempoGlobalShared = useTallerShared(s => s.tiempoGlobal);
+  const setTiempoGlobalShared = useTallerShared(s => s.setTiempoGlobal);
+  const asignacionesShared = useTallerShared(s => s.asignaciones);
+  const setMechAssignmentShared = useTallerShared(s => s.setMechAssignment);
+  const setMechTurnosExtShared = useTallerShared(s => s.setMechTurnosExt);
+  const consumeMechTimeShared = useTallerShared(s => s.consumeMechTime);
+
+  const valor = tiempoGlobalShared.valor;
+  const unidad = tiempoGlobalShared.unidad;
+  const setValor = (v: number) => setTiempoGlobalShared(v, unidad);
+  const setUnidad = (u: UnidadTiempo) => setTiempoGlobalShared(valor, u);
+
+  // Turnos extendidos per mech (no global)
+  const mechAssignment = selectedSource ? asignacionesShared[selectedSource.key] : undefined;
+  const turnosExt = mechAssignment?.turnosExt ?? 0;
+  const setTurnosExt = (n: number) => {
+    if (selectedSource) setMechTurnosExtShared(selectedSource.key, n);
+  };
 
   const tiempoCalc = useMemo(
     () => calcularMinutosDisponibles({ valor, unidad, turnosExtendidos: turnosExt }),
@@ -197,16 +213,23 @@ function PrioridadesTab() {
   const personalAgg = useMemo(() => agregarPersonal(personal), [personal]);
 
   // Bay: hasta 3 equipos (cada uno con skill + astechs propios).
+  // Almacenado en taller-shared store (persistente entre subtabs).
   const MAX_TEAMS = 3;
-  const [bayTeams, setBayTeams] = useState<BayTeam[]>([]);
+  const bayTeams = mechAssignment?.teams ?? [];
+  const setBayTeams = (teamsOrUpdater: BayTeam[] | ((prev: BayTeam[]) => BayTeam[])) => {
+    if (!selectedSource) return;
+    const next = typeof teamsOrUpdater === 'function' ? teamsOrUpdater(bayTeams) : teamsOrUpdater;
+    setMechAssignmentShared(selectedSource.key, next);
+  };
 
+  // Auto-init asignación cuando se selecciona mech nuevo y no tiene
   useEffect(() => {
-    // Por defecto: 1 equipo del mejor skill disponible con hasta 6 astechs.
+    if (!selectedSource || mechAssignment) return;
     const bestSkill: PersonalNivel = (['elite', 'veteran', 'regular', 'green'] as PersonalNivel[])
       .find(s => personalAgg.techsBySkill[s] > 0) ?? 'regular';
     const astechs = Math.min(6, personalAgg.totalAstechs);
-    setBayTeams([{ skill: bestSkill, astechs }]);
-  }, [personalAgg.techsBySkill, personalAgg.totalAstechs]);
+    setMechAssignmentShared(selectedSource.key, [{ skill: bestSkill, astechs }]);
+  }, [selectedSource, mechAssignment, personalAgg.techsBySkill, personalAgg.totalAstechs, setMechAssignmentShared]);
 
   // Skill efectivo (mejor del equipo) — solo para etiqueta informativa.
   const bayTechSkill = useMemo<PersonalNivel>(() => {
@@ -221,14 +244,26 @@ function PrioridadesTab() {
 
   const bayMult = useMemo(() => bayMultiplier(bayTeams), [bayTeams]);
 
-  // ── Mutadores de equipos ──
+  // ── Mutadores de equipos (pool global across todos los mechs) ──
   const techsRestantes = (skill: PersonalNivel, excludeIdx?: number) => {
-    const usados = bayTeams.reduce((n, t, i) => (i !== excludeIdx && t.skill === skill ? n + 1 : n), 0);
-    return Math.max(0, (personalAgg.techsBySkill[skill] ?? 0) - usados);
+    // Suma techs de este skill usados en OTROS mechs (no el actual)
+    let usadosOtrosMechs = 0;
+    for (const [key, a] of Object.entries(asignacionesShared)) {
+      if (key === selectedSource?.key) continue;
+      usadosOtrosMechs += a.teams.filter(t => t.skill === skill).length;
+    }
+    // + los del mech actual menos el excludeIdx
+    const usadosEsteMech = bayTeams.reduce((n, t, i) => (i !== excludeIdx && t.skill === skill ? n + 1 : n), 0);
+    return Math.max(0, (personalAgg.techsBySkill[skill] ?? 0) - usadosOtrosMechs - usadosEsteMech);
   };
   const astechsRestantes = (excludeIdx?: number) => {
-    const usados = bayTeams.reduce((n, t, i) => (i !== excludeIdx ? n + t.astechs : n), 0);
-    return Math.max(0, personalAgg.totalAstechs - usados);
+    let usadosOtrosMechs = 0;
+    for (const [key, a] of Object.entries(asignacionesShared)) {
+      if (key === selectedSource?.key) continue;
+      usadosOtrosMechs += a.teams.reduce((s, t) => s + t.astechs, 0);
+    }
+    const usadosEsteMech = bayTeams.reduce((n, t, i) => (i !== excludeIdx ? n + t.astechs : n), 0);
+    return Math.max(0, personalAgg.totalAstechs - usadosOtrosMechs - usadosEsteMech);
   };
 
   const updateTeam = (idx: number, patch: Partial<BayTeam>) => {
@@ -401,6 +436,12 @@ function PrioridadesTab() {
         nota:      `Taller priorizado · ${preset.nombre} · est ${estadoFactPct}%${notaExtra}`,
         jugador:   '',
       });
+
+      // Descuenta tiempo del pool del mech (shared store)
+      if (selectedSource && resultado.minutosUsadosTotal > 0) {
+        consumeMechTimeShared(selectedSource.key, resultado.minutosUsadosTotal);
+      }
+
       setCommitState('done');
       setTimeout(() => setCommitState('idle'), 2500);
     } catch {

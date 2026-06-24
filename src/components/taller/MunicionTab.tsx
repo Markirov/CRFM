@@ -9,6 +9,8 @@ import { type AmmoBin } from '@/lib/combat-types';
 import { Database, Download, Upload, ArrowRightLeft, AlertTriangle } from 'lucide-react';
 import { findAmmoStock, ammoKeyFromBin, roundsPerShot, roundsToFullRounds, familyKeyNormalize } from '@/lib/almacen-keys';
 import { calcAmmoReloadTime, type TechSkill } from '@/lib/camops-canon';
+import { useTallerShared, getMechCapacity } from '@/lib/taller-shared';
+import { calcularMinutosDisponibles, MINUTOS_EXTRA_POR_TURNO } from '@/lib/repair-priority';
 
 export function MunicionTab() {
   const campaign = useAppStore(s => s.campaign);
@@ -19,10 +21,23 @@ export function MunicionTab() {
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
   const [snapVersion, setSnapVersion] = useState(0);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  // CamOps recarga: skill técnico + teams + battlefield. Default regular, 1 team, no battlefield.
+  // CamOps recarga: skill técnico + battlefield. Default regular, no battlefield.
+  // teams ahora vienen del pool compartido per mech.
   const [techSkill, setTechSkill] = useState<TechSkill>('regular');
-  const [teams, setTeams] = useState<number>(1);
   const [onBattlefield, setOnBattlefield] = useState<boolean>(false);
+
+  // ── Pool tiempo + equipos compartido ──
+  const tiempoGlobal = useTallerShared(s => s.tiempoGlobal);
+  const asignaciones = useTallerShared(s => s.asignaciones);
+  const consumeMechTime = useTallerShared(s => s.consumeMechTime);
+  const addToCola = useTallerShared(s => s.addToCola);
+  const cola = useTallerShared(s => s.cola);
+  const removeFromCola = useTallerShared(s => s.removeFromCola);
+
+  const tiempoCalc = useMemo(
+    () => calcularMinutosDisponibles({ ...tiempoGlobal, turnosExtendidos: 0 }),
+    [tiempoGlobal],
+  );
 
   useEffect(() => {
     loadHangar().then(res => {
@@ -39,6 +54,16 @@ export function MunicionTab() {
   }, [hangarItems, snap, roster]);
 
   const selectedSource = useMemo(() => sources.find(s => s.key === selectedKey), [sources, selectedKey]);
+
+  // ── Capacidad y equipos: depende de selectedSource ──
+  const mechKey = selectedSource?.key ?? '';
+  const mechAssignment = mechKey ? asignaciones[mechKey] : undefined;
+  const capacity = useMemo(
+    () => getMechCapacity(mechAssignment, tiempoCalc.minutosBase, MINUTOS_EXTRA_POR_TURNO),
+    [mechAssignment, tiempoCalc.minutosBase],
+  );
+  // teams para CamOps mults — count desde asignación
+  const teams = Math.max(1, capacity.teamsCount);
 
   // Munición: soporta tanto sim como hangar (si tiene sessionActiva)
   const isSimSlot = selectedSource?.origin === 'sim';
@@ -86,6 +111,19 @@ export function MunicionTab() {
     const faltante = Math.max(0, (bin.max || 0) - (bin.current || 0));
     if (faltante <= 0) return;
 
+    // Sin equipos asignados → ir a cola pendiente
+    if (!capacity.canWork) {
+      const ok = confirm(`No hay equipos asignados a ${selectedSource?.mechName || 'este mech'}.\n¿Añadir recarga de ${bin.family || 'Munición'}${bin.variant ? ` (${bin.variant})` : ''} a la cola pendiente?`);
+      if (!ok) return;
+      addToCola({
+        mechKey,
+        componenteName: `Recarga ${bin.family || 'Munición'} (${bin.loc})`,
+        minutosBase: 30,
+        categoria: 'Munición',
+      });
+      return;
+    }
+
     // Redondear a rondas completas
     const rps = roundsPerShot(bin.familyKey);
     const cargable = roundsToFullRounds(faltante, bin.familyKey);
@@ -113,8 +151,32 @@ export function MunicionTab() {
 
   /** Ejecuta la recarga real. */
   const doRecargar = async (binIdx: number, cantidad: number, ammoKey: string) => {
+    // Calcular tiempo consumido CamOps según skill+teams+battlefield
+    const bin = ammoBins[binIdx];
+    const binMax = bin?.max || 1;
+    const tons = cantidad / binMax;
+    const tiempoMin = calcAmmoReloadTime(tons, techSkill, teams, onBattlefield);
+
+    // Si excede tiempo restante → ofrecer cola
+    if (tiempoMin > capacity.minutosRestantes) {
+      const ok = confirm(
+        `Recarga necesita ${tiempoMin} min pero solo quedan ${capacity.minutosRestantes} min.\n¿Añadir a cola pendiente del mech?`,
+      );
+      if (!ok) return;
+      addToCola({
+        mechKey,
+        componenteName: `Recarga ${bin?.family || 'Munición'} ×${cantidad}`,
+        minutosBase: tiempoMin,
+        categoria: 'Munición',
+      });
+      return;
+    }
+
     const newAlmacen = { ...almacen };
     newAlmacen[ammoKey] = Math.max(0, (newAlmacen[ammoKey] || 0) - cantidad);
+
+    // Descuenta tiempo del pool del mech
+    if (mechKey && tiempoMin > 0) consumeMechTime(mechKey, tiempoMin);
 
     if (isSimSlot && simSlotIdx !== undefined && snap) {
       // Sim slot: actualizar snapshot local
@@ -260,7 +322,7 @@ export function MunicionTab() {
             </div>
           </div>
 
-          {/* ── CamOps recarga: skill + teams + battlefield ── */}
+          {/* ── CamOps recarga: skill + battlefield (teams desde pool compartido) ── */}
           <div className="flex flex-wrap items-center gap-3 p-2 border-y border-outline-variant/20 bg-surface/40">
             <span className="font-mono text-[10px] uppercase tracking-widest text-secondary/60">Recarga CamOps:</span>
             <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1">
@@ -276,18 +338,6 @@ export function MunicionTab() {
                 <option value="elite">Elite ×0.5</option>
               </select>
             </label>
-            <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1">
-              Equipos:
-              <select
-                value={teams}
-                onChange={e => setTeams(parseInt(e.target.value) || 1)}
-                className="bg-surface-container border border-outline-variant/40 text-[10px] font-mono text-cream px-1 py-0.5"
-              >
-                <option value={1}>1</option>
-                <option value={2}>2 (÷2)</option>
-                <option value={3}>3 (÷3)</option>
-              </select>
-            </label>
             <label className="font-mono text-[10px] text-secondary/80 flex items-center gap-1 cursor-pointer">
               <input
                 type="checkbox"
@@ -297,7 +347,22 @@ export function MunicionTab() {
               />
               Campo batalla ×2
             </label>
+            {/* Capacidad pool del mech */}
+            <div className="ml-auto flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest">
+              <span className="text-secondary/60">Pool {selectedSource?.mechName || 'mech'}:</span>
+              <span className={capacity.canWork ? 'text-primary' : 'text-error'}>
+                {capacity.teamsCount} eq · {capacity.astechsCount} astech
+              </span>
+              <span className="text-amber-400" title="Minutos restantes pool mech">
+                {capacity.minutosRestantes}/{capacity.minutosDisponibles} min
+              </span>
+            </div>
           </div>
+          {!capacity.canWork && (
+            <div className="px-2 py-1 bg-error/10 border-l-2 border-error font-mono text-[9px] text-error">
+              ⚠ Sin equipos asignados — recarga irá a cola pendiente. Asigna en pestaña Prioridades.
+            </div>
+          )}
 
           {ammoBins.length === 0 ? (
             <p className="font-mono text-sm text-secondary/60 text-center py-4">Este mech no tiene compartimentos de munición.</p>
@@ -382,6 +447,33 @@ export function MunicionTab() {
               <span className="font-mono text-xs text-amber-400 font-bold" title="Suma tiempo CamOps recarga aplicada a stock disponible">
                 ⏱ {tiempoTotalRecargaMin} min ({(tiempoTotalRecargaMin / 60).toFixed(1)} h)
               </span>
+            </div>
+          )}
+
+          {/* ── Cola pendiente del mech ── */}
+          {mechKey && cola[mechKey] && cola[mechKey].length > 0 && (
+            <div className="mt-3 border-t border-amber-400/30 pt-3">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-amber-400 mb-2">
+                Cola pendiente ({cola[mechKey].length})
+              </div>
+              <div className="space-y-1">
+                {cola[mechKey].map(item => (
+                  <div key={item.id} className="flex items-center justify-between p-2 bg-amber-400/5 border border-amber-400/30 text-[10px] font-mono">
+                    <div className="flex-1">
+                      <span className="text-cream">{item.componenteName}</span>
+                      <span className="ml-2 text-secondary/60">[{item.categoria}]</span>
+                    </div>
+                    <span className="text-amber-400 mr-2">⏱ {item.minutosBase} min</span>
+                    <button
+                      onClick={() => removeFromCola(mechKey, item.id)}
+                      className="text-error/60 hover:text-error px-1"
+                      title="Quitar de la cola"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
