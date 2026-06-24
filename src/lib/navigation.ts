@@ -56,6 +56,7 @@ export const NAV_SECTIONS: NavSection[] = [
           { id: 'prioridades', label: 'Prioridades' },
           { id: 'mantenimiento', label: 'Mantenimiento' },
           { id: 'municion', label: 'Munición' },
+          { id: 'cola', label: 'Cola' },
         ],
       },
     ],

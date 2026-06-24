@@ -29,7 +29,7 @@ import type { HangarItem } from '@/lib/hangar-types';
 import { buildMechSources, type MechSource } from '@/lib/taller-sources';
 import { MechSourcePicker } from '@/components/taller/MechSourcePicker';
 import { armorKey, consumeArmor } from '@/lib/almacen-keys';
-import { useTallerShared } from '@/lib/taller-shared';
+import { useTallerShared, getMechCapacity } from '@/lib/taller-shared';
 import {
   deriveDamageFromSession, configFromCatalog,
   type MechRepairConfig, type RepairSystem,
@@ -46,10 +46,12 @@ import {
   PRESETS, calcularMinutosDisponibles, aplicarPreset, calcularReparaciones,
   mapearDamageARepairItemsConCoste, MINUTOS_POR_PUNTO_BLINDAJE, costoFinal,
   agregarPersonal, bayMultiplier, teamMultiplier, aplicarMultiplierBay,
+  MINUTOS_EXTRA_POR_TURNO,
   type Preset, type OrdenSecundario, type RepairItem, type ResultadoItem,
   type UnidadTiempo, type BayTeam,
 } from '@/lib/repair-priority';
 import { MunicionTab } from '@/components/taller/MunicionTab';
+import { ColaTab } from '@/components/taller/ColaTab';
 
 export function TallerPage() {
   const activeSubTab = useAppStore(s => s.activeSubTab);
@@ -57,14 +59,15 @@ export function TallerPage() {
   const campaign = useAppStore(s => s.campaign);
   const setCampaign = useAppStore(s => s.setCampaign);
   const { readable, writable, loading: permLoading } = usePerm('taller');
-  type View = 'prioridades' | 'mantenimiento' | 'municion';
+  type View = 'prioridades' | 'mantenimiento' | 'municion' | 'cola';
   const view: View =
     activeSubTab === 'mantenimiento' ? 'mantenimiento'
     : activeSubTab === 'municion' ? 'municion'
+    : activeSubTab === 'cola' ? 'cola'
     : 'prioridades';
 
   useEffect(() => {
-    if (!['prioridades', 'mantenimiento', 'municion'].includes(activeSubTab)) {
+    if (!['prioridades', 'mantenimiento', 'municion', 'cola'].includes(activeSubTab)) {
       setActiveSubTab('prioridades');
     }
   }, [activeSubTab, setActiveSubTab]);
@@ -90,6 +93,7 @@ export function TallerPage() {
   if (view === 'prioridades')   return <PrioridadesTab />;
   if (view === 'mantenimiento') return <MantenimientoTab />;
   if (view === 'municion')      return <MunicionTab />;
+  if (view === 'cola')          return <ColaTab />;
 
   return (
     <div className="p-4 sm:p-6 animate-[fadeInUp_0.3s_ease]">
@@ -1074,6 +1078,10 @@ const QUALITY_COLOR: Record<QualityRating, string> = {
 function MantenimientoTab() {
   const campaign = useAppStore(s => s.campaign);
   const roster = useAppStore(s => s.roster);
+  const consumeMechTime = useTallerShared(s => s.consumeMechTime);
+  const asignaciones = useTallerShared(s => s.asignaciones);
+  const tiempoGlobal = useTallerShared(s => s.tiempoGlobal);
+  const addToCola = useTallerShared(s => s.addToCola);
 
   // ── Selector mech: solo unidades de campaña (hangar + piloto asignado) ──
   const [hangarItems, setHangarItems] = useState<HangarItem[]>([]);
@@ -1246,6 +1254,31 @@ function MantenimientoTab() {
       extraDamage:   nuevoExtra,
       historial:     [entry, ...mant.historial].slice(0, 50),
     });
+
+    // ── Descuenta tiempo del pool del mech ──
+    if (selectedSource && tiempo > 0) {
+      const mechKey = selectedSource.key;
+      const tiempoBaseGlobal = calcularMinutosDisponibles({ ...tiempoGlobal, turnosExtendidos: 0 }).minutosBase;
+      const cap = getMechCapacity(asignaciones[mechKey], tiempoBaseGlobal, MINUTOS_EXTRA_POR_TURNO);
+      if (!cap.canWork) {
+        addToCola({
+          mechKey,
+          componenteName: `Mantenimiento rutinario ${selectedSource.mechName}`,
+          minutosBase: tiempo,
+          categoria: 'Mantenimiento',
+        });
+      } else if (tiempo > cap.minutosRestantes) {
+        addToCola({
+          mechKey,
+          componenteName: `Mantenimiento ${selectedSource.mechName} (excede pool)`,
+          minutosBase: tiempo,
+          categoria: 'Mantenimiento',
+        });
+      } else {
+        consumeMechTime(mechKey, tiempo);
+      }
+    }
+
     // Reset flow
     setLastRoll(null); setResultado(null); setPatchesPendientes([]);
     setTiradasRestantes(0); setRollManual('');
