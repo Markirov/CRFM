@@ -12,6 +12,8 @@ export interface HouseRules {
   rac_cadence_drop: boolean;
   /** Inferno SRM + Flamer heat mode: 1d6 calor al target (en vez de +2 fijo). */
   inferno_flamer_d6: boolean;
+  /** Sistema coste reparación: canon (CamOps p.205) o propio (TM crit parcial). */
+  repair_system: 'canon' | 'propio';
 }
 
 const STORAGE_KEY = 'kk_house_rules';
@@ -20,6 +22,7 @@ const DEFAULTS: HouseRules = {
   damage_grouper: true,
   rac_cadence_drop: true,
   inferno_flamer_d6: true,
+  repair_system: 'canon',
 };
 
 let cached: HouseRules | null = null;

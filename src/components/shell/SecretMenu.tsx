@@ -624,8 +624,8 @@ function PanelReglasCasa() {
         <label key={meta.key} className="flex items-start gap-3 cursor-pointer select-none py-1 border-t border-emerald-400/10 pt-2">
           <input
             type="checkbox"
-            checked={rules[meta.key]}
-            onChange={e => setRule(meta.key, e.target.checked)}
+            checked={rules[meta.key] as boolean}
+            onChange={e => setRule(meta.key, e.target.checked as any)}
             className="w-4 h-4 accent-emerald-400 cursor-pointer mt-0.5"
           />
           <div className="flex-1">
@@ -634,6 +634,22 @@ function PanelReglasCasa() {
           </div>
         </label>
       ))}
+
+      {/* Sistema de coste reparación (enum, no boolean) */}
+      <div className="border-t border-emerald-400/10 pt-3 mt-2">
+        <div className="font-mono text-[11px] text-on-surface font-bold mb-1">Sistema coste reparación</div>
+        <div className="font-mono text-[9px] text-on-surface-variant mb-2">
+          Canon (CamOps p.205) = parcial 0 ₡ sólo labor. Propio (house) = parcial 50% precio pieza.
+        </div>
+        <select
+          value={rules.repair_system}
+          onChange={e => setRule('repair_system', e.target.value as 'canon' | 'propio')}
+          className="w-full bg-surface-container border border-emerald-400/40 px-2 py-1 font-mono text-[10px] text-on-surface"
+        >
+          <option value="canon">Canon CamOps</option>
+          <option value="propio">Propio (House)</option>
+        </select>
+      </div>
     </div>
   );
 }
