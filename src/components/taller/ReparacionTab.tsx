@@ -287,11 +287,24 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   const orderedItems = useMemo(() => {
     const sorted = aplicarPreset(itemsAjustados, preset, 'asc');
     if (armorPolicy === 'manual') return sorted;
-    // Auto: items 'Blindaje' al frente para garantizar reparación parcial
-    // empieza por la armadura (dentro→afuera implícito en MINUTOS_POR_PUNTO).
-    // Estructura ya tiene su item independiente que mantiene prioridad por preset.
-    const armorItems = sorted.filter(i => i.categoria === 'Blindaje');
-    const others    = sorted.filter(i => i.categoria !== 'Blindaje');
+    // Auto: items 'Blindaje' al frente en orden inverso transferencia daño
+    // canónico BattleTech (loc críticas receptoras primero):
+    //   CT > HD > LT/RT > LA/RA > LL/RL
+    const ARMOR_PRIO: Record<string, number> = {
+      CT: 1, HD: 2, LT: 3, RT: 3, LA: 4, RA: 4, LL: 5, RL: 5,
+    };
+    // Sub-orden front-before-rear si nombre incluye "Trasero"
+    const armorItems = sorted
+      .filter(i => i.categoria === 'Blindaje')
+      .sort((a, b) => {
+        const pa = ARMOR_PRIO[a.localizacion] ?? 99;
+        const pb = ARMOR_PRIO[b.localizacion] ?? 99;
+        if (pa !== pb) return pa - pb;
+        const aRear = a.nombre.includes('Trasero') ? 1 : 0;
+        const bRear = b.nombre.includes('Trasero') ? 1 : 0;
+        return aRear - bRear;
+      });
+    const others = sorted.filter(i => i.categoria !== 'Blindaje');
     return [...armorItems, ...others];
   }, [itemsAjustados, preset, armorPolicy]);
 

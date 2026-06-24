@@ -147,6 +147,12 @@ export interface MechRepairDamage {
   estructura:   number;
   /** Puntos blindaje perdidos (0-N). Se convierten a toneladas internamente. */
   blindaje:     number;
+  /** Puntos blindaje perdidos por loc (HD/CT/LT/RT/LA/RA/LL/RL + CTr/LTr/RTr).
+   *  Si presente, ReparacionTab genera items separados per loc para política
+   *  dentro→afuera (inverso del sistema transferencia daño). */
+  blindajePerLoc?: Record<string, number>;
+  /** Puntos estructura interna perdidos por loc (mismo formato armor). */
+  estructuraPerLoc?: Record<string, number>;
   /** Cantidad miomeros dañados. */
   miomero:      number;
   /** Cantidad retros dañados. */
@@ -527,21 +533,31 @@ export function deriveDamageFromSession(
   pctDañoTotal: number;
   municionDetalle: MunicionDetalleEntry[];
 } {
-  // Armor delta
+  // Armor delta + per loc
   const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'] as const;
   let armorMax = 0, armorCur = 0;
+  const blindajePerLoc: Record<string, number> = {};
   for (const k of armorLocs) {
-    armorMax += (state.armor  as Record<string,number>)[k] ?? 0;
-    armorCur += (session.armor as Record<string,number>)[k] ?? 0;
+    const max = (state.armor  as Record<string,number>)[k] ?? 0;
+    const cur = (session.armor as Record<string,number>)[k] ?? 0;
+    armorMax += max;
+    armorCur += cur;
+    const lost = Math.max(0, max - cur);
+    if (lost > 0) blindajePerLoc[k] = lost;
   }
   const armorLost = Math.max(0, armorMax - armorCur);
 
-  // IS delta
+  // IS delta + per loc
   const isLocs = ['HD','CT','LT','RT','LA','RA','LL','RL'] as const;
   let isMax = 0, isCur = 0;
+  const estructuraPerLoc: Record<string, number> = {};
   for (const k of isLocs) {
-    isMax += (state.is   as Record<string,number>)[k] ?? 0;
-    isCur += (session.is as Record<string,number>)[k] ?? 0;
+    const max = (state.is   as Record<string,number>)[k] ?? 0;
+    const cur = (session.is as Record<string,number>)[k] ?? 0;
+    isMax += max;
+    isCur += cur;
+    const lost = Math.max(0, max - cur);
+    if (lost > 0) estructuraPerLoc[k] = lost;
   }
   const isLost = Math.max(0, isMax - isCur);
 
@@ -614,7 +630,9 @@ export function deriveDamageFromSession(
     damage: {
       ...critOut,
       estructura: isLost,
+      estructuraPerLoc: Object.keys(estructuraPerLoc).length > 0 ? estructuraPerLoc : undefined,
       blindaje:   armorLost,
+      blindajePerLoc: Object.keys(blindajePerLoc).length > 0 ? blindajePerLoc : undefined,
       miomero:    0,   // no hay slot nombrado en crits para miomero
       armas:      armasOut,
       municion:   municionCost,

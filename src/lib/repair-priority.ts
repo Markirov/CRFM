@@ -600,6 +600,53 @@ export function mapearDamageARepairItemsConCoste(
     }
   }
 
+  // ── Blindaje per loc (inverso transferencia daño BattleTech) ──
+  // Si damage.blindajePerLoc presente, reemplazar item agregado 'armor'
+  // por N items separados per loc. Orden auto canónico:
+  //   CT (front+rear) > HD > LT/RT (front+rear) > LA/RA > LL/RL
+  // (loc más críticas = receptoras de transferencia primero).
+  if (damage.blindajePerLoc && Object.keys(damage.blindajePerLoc).length > 0) {
+    // Quita item armor agregado
+    const armorIdx = items.findIndex(i => i.categoria === 'Blindaje');
+    if (armorIdx >= 0) items.splice(armorIdx, 1);
+
+    const LOC_ORDER = ['CTf', 'CTr', 'HD', 'LTf', 'LTr', 'RTf', 'RTr', 'LA', 'RA', 'LL', 'RL'] as const;
+    const LOC_LABEL: Record<string, string> = {
+      CTf: 'CT Frontal', CTr: 'CT Trasero', HD: 'Cabeza',
+      LTf: 'LT Frontal', LTr: 'LT Trasero', RTf: 'RT Frontal', RTr: 'RT Trasero',
+      LA: 'Brazo Izquierdo', RA: 'Brazo Derecho',
+      LL: 'Pierna Izquierda', RL: 'Pierna Derecha',
+    };
+    const totalArmorPts = damage.blindaje || 0;
+    const baseArmorCost = totalArmorPts > 0 ? costoBlindaje(config, totalArmorPts) : 0;
+
+    // Normalize loc con sufijo f/r al loc base para campo Localizacion
+    const baseLoc = (loc: string): Localizacion => {
+      if (loc === 'CTf' || loc === 'CTr') return 'CT';
+      if (loc === 'LTf' || loc === 'LTr') return 'LT';
+      if (loc === 'RTf' || loc === 'RTr') return 'RT';
+      return loc as Localizacion;
+    };
+    for (const loc of LOC_ORDER) {
+      const pts = damage.blindajePerLoc[loc] ?? 0;
+      if (pts <= 0) continue;
+      // Coste proporcional al peso del loc en el total
+      const costoLoc = totalArmorPts > 0
+        ? Math.round(baseArmorCost * (pts / totalArmorPts))
+        : 0;
+      items.push({
+        id: nextId('armor'),
+        nombre: `Blindaje ${LOC_LABEL[loc] ?? loc} (${pts} pts)`,
+        localizacion: baseLoc(loc),
+        categoria: 'Blindaje',
+        tiempoBase: pts * MINUTOS_POR_PUNTO_BLINDAJE,
+        divisible: true,
+        puntosDanados: pts,
+        costoBase: costoLoc,
+      });
+    }
+  }
+
   // Miomero: spec mapea pero la versión base no genera item. Añadir si hay daño.
   if (damage.miomero > 0) {
     items.push({
