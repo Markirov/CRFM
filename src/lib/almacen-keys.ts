@@ -37,8 +37,42 @@ const FAMILY_MAP: Record<string, string> = {
  * `'lrm'` → `'LRM'`, `'ac5'` → `'AC/5'`, `'lbx10'` → `'LB 10-X'`, etc.
  */
 export function familyKeyNormalize(raw: string): string {
-  const lower = raw.toLowerCase();
-  return FAMILY_MAP[lower] ?? raw.toUpperCase();
+  if (!raw) return 'UNKNOWN';
+  // El sim usa formato `tech:er:family` (ej `IS:STD:LRM-15`). Extrae cola.
+  const tail = raw.includes(':') ? raw.split(':').pop()! : raw;
+  // Normaliza: lowercase + quita guiones/espacios/barras/underscores
+  const lower = tail.toLowerCase().replace(/[-\s/_]/g, '');
+  // 1. Match directo en map
+  if (FAMILY_MAP[lower]) return FAMILY_MAP[lower];
+  // 2. Detección por substring (cubre LRM-15, LRM 15, lrm_15, etc.)
+  if (lower.startsWith('lrm')) return 'LRM';
+  if (lower.startsWith('srm')) return 'SRM';
+  if (lower.startsWith('mrm')) return 'MRM';
+  if (lower.startsWith('lbx') || lower.startsWith('lb')) {
+    const num = lower.match(/\d+/)?.[0];
+    return num ? `LB ${num}-X` : 'LB-X';
+  }
+  if (lower.startsWith('uac')) {
+    const num = lower.match(/\d+/)?.[0];
+    return num ? `UAC/${num}` : 'UAC';
+  }
+  if (lower.startsWith('rac')) {
+    const num = lower.match(/\d+/)?.[0];
+    return num ? `RAC/${num}` : 'RAC';
+  }
+  if (lower.startsWith('ac')) {
+    const num = lower.match(/\d+/)?.[0];
+    return num ? `AC/${num}` : 'AC';
+  }
+  if (lower.startsWith('atm')) return 'ATM';
+  if (lower.startsWith('streak')) return 'Streak SRM';
+  if (lower.startsWith('narc')) return 'NARC';
+  if (lower === 'mg' || lower.startsWith('machinegun')) return 'MG';
+  if (lower.startsWith('gauss')) return 'Gauss';
+  if (lower.startsWith('arrow')) return 'Arrow IV';
+  if (lower.startsWith('rocket')) return 'Rocket Launcher';
+  if (lower.startsWith('thunderbolt')) return 'Thunderbolt';
+  return raw.toUpperCase();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -56,8 +90,9 @@ export function familyKeyNormalize(raw: string): string {
  *          // → 'Ammo_AC/5_Armor-Piercing'
  */
 export function ammoKeyFromBin(bin: AmmoBin): string {
-  const family = familyKeyNormalize(bin.familyKey);
-  const variant = bin.variant ?? 'Standard';
+  const family = familyKeyNormalize(bin.familyKey || bin.family || '');
+  // Cubre null/undefined/empty string
+  const variant = (bin.variant && bin.variant.trim()) ? bin.variant : 'Standard';
   return `Ammo_${family}_${variant}`;
 }
 
@@ -203,7 +238,22 @@ const ROUNDS_MAP: Record<string, number> = {
  * @example roundsPerShot('ac5')   // → 1
  */
 export function roundsPerShot(familyKey: string): number {
-  return ROUNDS_MAP[familyKey.toLowerCase()] ?? 1;
+  if (!familyKey) return 1;
+  // El sim usa `tech:er:family` (ej `IS:STD:LRM-15`). Extrae tail.
+  const tail = familyKey.includes(':') ? familyKey.split(':').pop()! : familyKey;
+  const key = tail.toLowerCase().replace(/[-\s/_]/g, '');
+  if (ROUNDS_MAP[key] !== undefined) return ROUNDS_MAP[key];
+  // Match permisivo per family + número
+  const match = key.match(/^(lrm|srm|mrm|ac|mg|gauss)(\d+)?$/);
+  if (match) {
+    const fam = match[1];
+    const num = match[2];
+    const combined = `${fam}${num ?? ''}`;
+    if (ROUNDS_MAP[combined] !== undefined) return ROUNDS_MAP[combined];
+    // Para LRM/SRM/MRM sin sufijo num → usar fallback canónico (rack size)
+    if (fam === 'lrm' || fam === 'srm' || fam === 'mrm') return num ? parseInt(num) : 1;
+  }
+  return 1;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -315,13 +365,45 @@ export function findAmmoStock(
     return { key: canonical, stock: almacen[canonical] };
   }
 
-  // 2. Fallback legacy: `Ammo (FAMILY)`
-  const family = familyKeyNormalize(bin.familyKey);
+  const family = familyKeyNormalize(bin.familyKey || bin.family || '');
+  const variant = (bin.variant && bin.variant.trim()) ? bin.variant : 'Standard';
+
+  // 2. Variantes nombre canónico (case-insensitive, espacios, guiones)
+  const wanted = canonical.toLowerCase();
+  for (const k of Object.keys(almacen)) {
+    if (k.toLowerCase() === wanted) {
+      return { key: k, stock: almacen[k] };
+    }
+  }
+
+  // 3. Match permisivo por family + variant Standard (cubre keys Ammo_LRM)
+  if (variant === 'Standard') {
+    const shortKey = `Ammo_${family}`;
+    if (shortKey in almacen) {
+      return { key: shortKey, stock: almacen[shortKey] };
+    }
+  }
+
+  // 4. Fallback legacy: `Ammo (FAMILY)`
   const legacyKey = `Ammo (${family})`;
   if (legacyKey in almacen) {
     return { key: legacyKey, stock: almacen[legacyKey] };
   }
 
-  // 3. Nada
+  // 5. Búsqueda por substring family (ej almacén tiene `Ammo_LRM_X` cualquier
+  //    variante → suma todos si standard pedido)
+  let sumStock = 0;
+  let foundAnyKey = '';
+  const prefix = `ammo_${family.toLowerCase()}`;
+  for (const k of Object.keys(almacen)) {
+    if (k.toLowerCase().startsWith(prefix)) {
+      sumStock += almacen[k];
+      if (!foundAnyKey) foundAnyKey = k;
+    }
+  }
+  if (sumStock > 0 && variant === 'Standard') {
+    return { key: foundAnyKey, stock: sumStock };
+  }
+
   return { key: canonical, stock: 0 };
 }
