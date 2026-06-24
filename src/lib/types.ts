@@ -145,4 +145,7 @@ export interface CampaignConfig {
   almacen?:      Record<string, number>;
   /** Limite de capacidad de almacen en toneladas. Si es 0 o undefined, ilimitado. */
   almacenLímiteTon?: number;
+  /** ALMACEN_FAVORITOS_JSON: keys del almacén marcadas como favoritas. Aparecen
+   *  en MaterialTab aunque stock=0 (acceso rápido para reposición). */
+  inventarioFavoritos?: string[];
 }

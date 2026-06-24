@@ -118,6 +118,12 @@ export function App() {
       if (d['ALMACEN_LIMITE_TON'] !== undefined) {
         patch.almacenLímiteTon = parseInt(d['ALMACEN_LIMITE_TON']) || 0;
       }
+      if (d['ALMACEN_FAVORITOS_JSON']) {
+        try {
+          const favs = JSON.parse(String(d['ALMACEN_FAVORITOS_JSON']));
+          if (Array.isArray(favs)) patch.inventarioFavoritos = favs;
+        } catch {/* ignore */}
+      }
       if (Object.keys(patch).length) setCampaign(patch);
 
       if (d['USE_LEGACY_DESIGNS'] !== undefined) {
