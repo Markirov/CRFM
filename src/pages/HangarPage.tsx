@@ -207,6 +207,31 @@ function UnidadesTab({ items, loading, refresh }: {
   const [editingXml, setEditingXml] = useState<string | null>(null);
   const [loadingEditor, setLoadingEditor] = useState(false);
   const [salvageMech, setSalvageMech] = useState<HangarItem | null>(null);
+  const [salvageWeapons, setSalvageWeapons] = useState<string[] | undefined>(undefined);
+
+  /** Carga .ssw (sswRaw o catálogo) + parsea weapons antes de abrir SalvageModal. */
+  const openSalvage = async (it: HangarItem) => {
+    setSalvageMech(it);
+    setSalvageWeapons(undefined);
+    try {
+      let xml: string | null = null;
+      if (it.sswRaw) {
+        xml = it.sswRaw;
+      } else {
+        const sourceFile = it.sourceFile || catalogMap.get(`${it.chassis} ${it.model}`);
+        if (sourceFile) {
+          const res = await fetch(`/assets/mechs/${sourceFile}`);
+          if (res.ok) xml = await res.text();
+        }
+      }
+      if (xml) {
+        const parsed = parseSSWBasic(xml);
+        setSalvageWeapons(parsed.weapons);
+      }
+    } catch {
+      // Falla silenciosa — SalvageModal usa fallback count slots
+    }
+  };
 
   const openEditor = async (it: HangarItem) => {
     if (it.sswRaw) {
@@ -327,7 +352,7 @@ function UnidadesTab({ items, loading, refresh }: {
                     <td className="px-2 py-1.5 border-b border-outline-variant/20">
                       {(it.estado === 'destruido' || it.estadoPct === 0) ? (
                         <div className="flex items-center gap-2">
-                          <button onClick={() => setSalvageMech(it)} className="px-2 py-1 border border-amber-400/60 bg-surface-container hover:bg-amber-400/20 text-[9px] uppercase tracking-widest text-amber-400 transition-colors" title="Desguace fino con tiradas Technician">
+                          <button onClick={() => void openSalvage(it)} className="px-2 py-1 border border-amber-400/60 bg-surface-container hover:bg-amber-400/20 text-[9px] uppercase tracking-widest text-amber-400 transition-colors" title="Desguace fino con tiradas Technician">
                             Desguazar
                           </button>
                           <button onClick={() => handleVenderRestos(it)} className="px-2 py-1 border border-outline-variant/40 bg-surface-container hover:bg-surface-container-high text-[9px] uppercase tracking-widest text-error transition-colors">
@@ -410,9 +435,11 @@ function UnidadesTab({ items, loading, refresh }: {
       {salvageMech && (
         <SalvageModal
           mech={salvageMech}
-          onClose={() => setSalvageMech(null)}
+          weapons={salvageWeapons}
+          onClose={() => { setSalvageMech(null); setSalvageWeapons(undefined); }}
           onCommit={() => {
             setSalvageMech(null);
+            setSalvageWeapons(undefined);
             void refresh();
           }}
         />

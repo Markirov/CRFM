@@ -99,16 +99,19 @@ export function MaterialTab() {
   const entries = Object.entries(almacen).filter(([_, qty]) => qty > 0);
 
   // Agrupar por categoría
+  const armorEntries = entries.filter(([k]) => itemCategory(k) === 'armor');
   const grouped = {
     ammo: entries.filter(([k]) => itemCategory(k) === 'ammo').sort((a, b) => a[0].localeCompare(b[0])),
-    armor: entries.filter(([k]) => itemCategory(k) === 'armor').sort((a, b) => a[0].localeCompare(b[0])),
+    armorGlobal: armorEntries.filter(([k]) => !k.startsWith('ArmorChassis_')).sort((a, b) => a[0].localeCompare(b[0])),
+    armorChassis: armorEntries.filter(([k]) => k.startsWith('ArmorChassis_')).sort((a, b) => a[0].localeCompare(b[0])),
     weapon: entries.filter(([k]) => itemCategory(k) === 'weapon').sort((a, b) => a[0].localeCompare(b[0])),
     equip: entries.filter(([k]) => itemCategory(k) === 'equip').sort((a, b) => a[0].localeCompare(b[0])),
   };
 
   const sections: { key: string; label: string; items: [string, number][] }[] = [
     { key: 'ammo', label: '🔴 Munición', items: grouped.ammo },
-    { key: 'armor', label: '🛡️ Blindaje', items: grouped.armor },
+    { key: 'armorGlobal', label: '🛡️ Blindaje (Global)', items: grouped.armorGlobal },
+    { key: 'armorChassis', label: '🛡️ Blindaje (Chasis-Locked — canibalizado)', items: grouped.armorChassis },
     { key: 'weapon', label: '⚔️ Armas', items: grouped.weapon },
     { key: 'equip', label: '⚙️ Equipo', items: grouped.equip },
   ].filter(s => s.items.length > 0);

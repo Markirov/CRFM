@@ -61,6 +61,23 @@ export function MunicionTab() {
 
   const canManageAmmo = ammoBins.length > 0;
 
+  /** Tiempo total estimado para recargar TODOS los bins disponibles (skill+teams+battlefield). */
+  const tiempoTotalRecargaMin = useMemo(() => {
+    let total = 0;
+    for (const bin of ammoBins) {
+      const faltante = Math.max(0, (bin.max || 0) - (bin.current || 0));
+      if (faltante <= 0) continue;
+      const rps = roundsPerShot(bin.familyKey);
+      const cargable = roundsToFullRounds(faltante, bin.familyKey);
+      const { stock } = findAmmoStock(almacen, bin);
+      const cantidad = Math.min(cargable, roundsToFullRounds(stock, bin.familyKey));
+      if (cantidad <= 0 || !bin.max) continue;
+      const tons = cantidad / bin.max;
+      total += calcAmmoReloadTime(tons, techSkill, teams, onBattlefield);
+    }
+    return total;
+  }, [ammoBins, almacen, techSkill, teams, onBattlefield]);
+
   /** Recarga un bin usando rondas completas desde el almacén. */
   const handleRecargarBin = async (binIdx: number) => {
     const bin = ammoBins[binIdx];
@@ -354,6 +371,17 @@ export function MunicionTab() {
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {tiempoTotalRecargaMin > 0 && (
+            <div className="flex items-center justify-between p-2 mt-3 border-t border-outline-variant/30 bg-surface/40">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-secondary/60">
+                Tiempo total recarga (todos los bins):
+              </span>
+              <span className="font-mono text-xs text-amber-400 font-bold" title="Suma tiempo CamOps recarga aplicada a stock disponible">
+                ⏱ {tiempoTotalRecargaMin} min ({(tiempoTotalRecargaMin / 60).toFixed(1)} h)
+              </span>
             </div>
           )}
         </div>

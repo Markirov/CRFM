@@ -26,18 +26,20 @@ interface SalvageEntry {
 
 interface Props {
   mech: HangarItem;
+  /** Lista nombres armas reales del mech (parseado de .ssw). Opcional. */
+  weapons?: string[];
   onClose: () => void;
   onCommit: () => void;
 }
 
-export function SalvageModal({ mech, onClose, onCommit }: Props) {
+export function SalvageModal({ mech, weapons, onClose, onCommit }: Props) {
   const campaign = useAppStore(s => s.campaign);
   const setCampaign = useAppStore(s => s.setCampaign);
   const almacen = campaign.almacen || {};
 
   const [skill, setSkill] = useState<TechSkill>('regular');
   const [teams, setTeams] = useState<number>(1);
-  const [entries, setEntries] = useState<SalvageEntry[]>(() => buildEntries(mech));
+  const [entries, setEntries] = useState<SalvageEntry[]>(() => buildEntries(mech, weapons));
   const [working, setWorking] = useState(false);
 
   const totalTimeMin = entries
@@ -217,7 +219,7 @@ export function SalvageModal({ mech, onClose, onCommit }: Props) {
 }
 
 /** Construye lista de componentes recuperables del mech destruido. */
-function buildEntries(mech: HangarItem): SalvageEntry[] {
+function buildEntries(mech: HangarItem, weapons?: string[]): SalvageEntry[] {
   const entries: SalvageEntry[] = [];
   let id = 0;
 
@@ -244,24 +246,50 @@ function buildEntries(mech: HangarItem): SalvageEntry[] {
     entries.push({ id: `salv_${id++}`, componentName: 'Brazo Derecho', isArmOrLeg: true, qty: 1 });
   }
 
-  // Armas — inferir desde sessionActiva.crits no destruidos. Sin acceso a state
-  // del mech parseado aquí, dejamos un placeholder único "Armas montadas".
-  // Integración detallada requiere parsear el .ssw del mech para listar weapons.
-  const crits = mech.sessionActiva?.crits || {};
-  let weaponsLikely = 0;
-  for (const slotList of Object.values(crits)) {
-    if (!Array.isArray(slotList)) continue;
-    for (const slot of slotList) {
-      if (slot?.kind === 'weapon' && !slot?.hit) weaponsLikely++;
+  // Armas — si recibimos lista parseada del .ssw, una entrada per arma con
+  // nombre real. Filtramos las que estén marcadas como hit (destruidas) si
+  // tenemos sessionActiva.crits con kind='weapon' + hit.
+  if (weapons && weapons.length > 0) {
+    const destroyedWeaponNames = new Set<string>();
+    const crits = mech.sessionActiva?.crits || {};
+    for (const slotList of Object.values(crits)) {
+      if (!Array.isArray(slotList)) continue;
+      for (const slot of slotList) {
+        if (slot?.kind === 'weapon' && slot?.hit && typeof slot?.name === 'string') {
+          destroyedWeaponNames.add(slot.name.toLowerCase());
+        }
+      }
     }
-  }
-  if (weaponsLikely > 0) {
-    entries.push({
-      id: `salv_${id++}`,
-      componentName: `Armas montadas (${weaponsLikely})`,
-      isArmOrLeg: false,
-      qty: weaponsLikely,
-    });
+    for (const wRaw of weapons) {
+      // Strip location suffix [LT] etc del nombre
+      const wName = wRaw.replace(/\s*\[[^\]]+\]\s*$/, '').trim();
+      if (!wName) continue;
+      if (destroyedWeaponNames.has(wName.toLowerCase())) continue;
+      entries.push({
+        id: `salv_${id++}`,
+        componentName: wName,
+        isArmOrLeg: false,
+        qty: 1,
+      });
+    }
+  } else {
+    // Fallback: contar slots weapon no-hit en crits
+    const crits = mech.sessionActiva?.crits || {};
+    let weaponsLikely = 0;
+    for (const slotList of Object.values(crits)) {
+      if (!Array.isArray(slotList)) continue;
+      for (const slot of slotList) {
+        if (slot?.kind === 'weapon' && !slot?.hit) weaponsLikely++;
+      }
+    }
+    if (weaponsLikely > 0) {
+      entries.push({
+        id: `salv_${id++}`,
+        componentName: `Armas montadas (${weaponsLikely})`,
+        isArmOrLeg: false,
+        qty: weaponsLikely,
+      });
+    }
   }
 
   return entries;
