@@ -106,7 +106,51 @@ function UnidadesTab({ items, loading, refresh }: {
   const { catalog } = useMechCatalog();
   const navigate = useNavigate();
   const fmt = (n: number) => Math.round(n).toLocaleString('es-ES') + ' ₡';
-  
+
+  // ── Filtros + búsqueda ──
+  const [query, setQuery] = useState('');
+  const [filterEstado, setFilterEstado] = useState<'todos' | 'operativo' | 'danado' | 'destruido'>('todos');
+  const [filterAsig, setFilterAsig] = useState<'todos' | 'asignados' | 'reserva'>('todos');
+  const [filterClass, setFilterClass] = useState<'todos' | 'light' | 'medium' | 'heavy' | 'assault'>('todos');
+
+  // Edición inline estadoPct
+  const [editPctId, setEditPctId] = useState<string | null>(null);
+  const [editPctVal, setEditPctVal] = useState<number>(100);
+
+  const handleSetEstadoPct = async (item: HangarItem, pct: number) => {
+    const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+    const newEstado: HangarItem['estado'] = clamped === 0 ? 'destruido' : clamped >= 100 ? 'operativo' : 'danado';
+    await saveHangarItem({ ...item, estadoPct: clamped, estado: newEstado });
+    setEditPctId(null);
+    void refresh();
+  };
+
+  const classOf = (tons: number): 'light' | 'medium' | 'heavy' | 'assault' => {
+    if (tons <= 35) return 'light';
+    if (tons <= 55) return 'medium';
+    if (tons <= 75) return 'heavy';
+    return 'assault';
+  };
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return items.filter(it => {
+      if (q) {
+        const pilotName = it.pilotoIdx !== undefined ? pilotLabel(roster, it.pilotoIdx).toLowerCase() : '';
+        const hay = `${it.chassis} ${it.model} ${pilotName}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (filterEstado !== 'todos') {
+        const est = it.estado ?? (it.estadoPct === 0 ? 'destruido' : (it.estadoPct ?? 100) < 100 ? 'danado' : 'operativo');
+        if (est !== filterEstado) return false;
+      }
+      if (filterAsig === 'asignados' && it.pilotoIdx === undefined) return false;
+      if (filterAsig === 'reserva' && it.pilotoIdx !== undefined) return false;
+      if (filterClass !== 'todos' && classOf(it.tons) !== filterClass) return false;
+      return true;
+    });
+  }, [items, query, filterEstado, filterAsig, filterClass, roster]);
+
   const catalogMap = useMemo(() => {
     const map = new Map<string, string>();
     if (!catalog) return map;
@@ -283,16 +327,86 @@ function UnidadesTab({ items, loading, refresh }: {
 
   return (
     <section className="bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
-      <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3">
-        Mechs en hangar ({items.length})
-      </h2>
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <h2 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase">
+          Mechs en hangar ({filtered.length}{filtered.length !== items.length ? ` de ${items.length}` : ''})
+        </h2>
+      </div>
+
+      {/* Filtros + búsqueda */}
+      {items.length > 0 && (
+        <div className="mb-3 p-2 bg-surface border border-outline-variant/20 flex flex-wrap items-center gap-2 font-mono text-[10px]">
+          <div className="flex items-center gap-1">
+            <Search className="w-3 h-3 text-secondary/50" />
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Buscar chassis/model/piloto"
+              className="bg-surface-container border border-outline-variant/40 px-2 py-1 text-[10px] text-cream w-48"
+            />
+          </div>
+          <label className="flex items-center gap-1 text-secondary/60">
+            Estado:
+            <select
+              value={filterEstado}
+              onChange={e => setFilterEstado(e.target.value as any)}
+              className="bg-surface-container border border-outline-variant/40 px-1 py-0.5 text-[10px] text-cream"
+            >
+              <option value="todos">Todos</option>
+              <option value="operativo">Operativo</option>
+              <option value="danado">Dañado</option>
+              <option value="destruido">Destruido</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1 text-secondary/60">
+            Asignación:
+            <select
+              value={filterAsig}
+              onChange={e => setFilterAsig(e.target.value as any)}
+              className="bg-surface-container border border-outline-variant/40 px-1 py-0.5 text-[10px] text-cream"
+            >
+              <option value="todos">Todos</option>
+              <option value="asignados">Asignados</option>
+              <option value="reserva">Reserva</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1 text-secondary/60">
+            Clase:
+            <select
+              value={filterClass}
+              onChange={e => setFilterClass(e.target.value as any)}
+              className="bg-surface-container border border-outline-variant/40 px-1 py-0.5 text-[10px] text-cream"
+            >
+              <option value="todos">Todas</option>
+              <option value="light">Ligero (≤35t)</option>
+              <option value="medium">Medio (40-55t)</option>
+              <option value="heavy">Pesado (60-75t)</option>
+              <option value="assault">Asalto (80+t)</option>
+            </select>
+          </label>
+          {(query || filterEstado !== 'todos' || filterAsig !== 'todos' || filterClass !== 'todos') && (
+            <button
+              onClick={() => { setQuery(''); setFilterEstado('todos'); setFilterAsig('todos'); setFilterClass('todos'); }}
+              className="px-2 py-0.5 border border-outline-variant/40 text-secondary/60 hover:text-secondary hover:bg-surface-container-high uppercase tracking-widest"
+            >
+              Limpiar
+            </button>
+          )}
+        </div>
+      )}
+
       {loading && <p className="font-mono text-[10px] text-secondary/50 italic">Cargando…</p>}
       {!loading && items.length === 0 && (
         <p className="font-mono text-[10px] text-secondary/50 italic">
           Hangar vacío. Pestaña "Comprar" para añadir mechs.
         </p>
       )}
-      {items.length > 0 && (
+      {!loading && items.length > 0 && filtered.length === 0 && (
+        <p className="font-mono text-[10px] text-secondary/50 italic py-3 text-center">
+          Ningún mech coincide con los filtros.
+        </p>
+      )}
+      {filtered.length > 0 && (
         <div className="overflow-x-auto">
           <table className="w-full font-mono text-[10px] border-separate border-spacing-0">
             <thead>
@@ -309,7 +423,7 @@ function UnidadesTab({ items, loading, refresh }: {
               </tr>
             </thead>
             <tbody>
-              {items.map(it => {
+              {filtered.map(it => {
                 const taken = it.pilotoIdx !== undefined;
                 const pilotName = taken ? pilotLabel(roster, it.pilotoIdx!) : null;
                 return (
@@ -328,23 +442,54 @@ function UnidadesTab({ items, loading, refresh }: {
                       {it.era || '—'}
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-center">
-                      {(() => {
+                      {editPctId === it.id ? (
+                        <div className="flex items-center justify-center gap-1">
+                          <input
+                            type="number" min={0} max={100} value={editPctVal}
+                            onChange={e => setEditPctVal(parseInt(e.target.value) || 0)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter') void handleSetEstadoPct(it, editPctVal);
+                              if (e.key === 'Escape') setEditPctId(null);
+                            }}
+                            autoFocus
+                            className="w-12 bg-surface-container border border-primary-container/60 px-1 text-[10px] text-cream font-mono"
+                          />
+                          <button
+                            onClick={() => void handleSetEstadoPct(it, editPctVal)}
+                            className="text-emerald-400 hover:text-emerald-300 text-[10px]"
+                            title="Aplicar (Enter)"
+                          >✓</button>
+                          <button
+                            onClick={() => setEditPctId(null)}
+                            className="text-error/60 hover:text-error text-[10px]"
+                            title="Cancelar (Esc)"
+                          >✕</button>
+                        </div>
+                      ) : (() => {
                         if (it.estado === 'destruido' || it.estadoPct === 0) {
                           return (
-                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest text-error border-error/40 bg-error/5">
+                            <button
+                              onClick={() => { setEditPctVal(it.estadoPct ?? 0); setEditPctId(it.id); }}
+                              className="inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest text-error border-error/40 bg-error/5 hover:bg-error/10"
+                              title="Click para editar"
+                            >
                               <AlertTriangle className="w-3 h-3" />
                               <span className="font-bold">DESTRUIDO</span>
-                            </span>
+                            </button>
                           );
                         }
                         const pct = it.estadoPct ?? 100;
-                        const color = pct >= 75 ? 'text-green-400 border-green-400/40 bg-green-400/5'
-                                     : pct >= 40 ? 'text-amber-400 border-amber-400/40 bg-amber-400/5'
-                                     :             'text-error border-error/40 bg-error/5';
+                        const color = pct >= 75 ? 'text-green-400 border-green-400/40 bg-green-400/5 hover:bg-green-400/10'
+                                     : pct >= 40 ? 'text-amber-400 border-amber-400/40 bg-amber-400/5 hover:bg-amber-400/10'
+                                     :             'text-error border-error/40 bg-error/5 hover:bg-error/10';
                         return (
-                          <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest ${color}`}>
+                          <button
+                            onClick={() => { setEditPctVal(pct); setEditPctId(it.id); }}
+                            className={`inline-flex items-center gap-1 px-1.5 py-0.5 border font-mono text-[9px] tracking-widest cursor-pointer ${color}`}
+                            title="Click para editar"
+                          >
                             <span className="font-bold">{pct}%</span>
-                          </span>
+                          </button>
                         );
                       })()}
                     </td>
