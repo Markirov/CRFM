@@ -3,20 +3,40 @@ import { BY_LOOKUP, AMMO_BY_LOOKUP } from '@/lib/weapons';
 import type { WeaponRule, AmmoRule } from '@/lib/weapons-types';
 
 interface Props {
-  techBase: string; // para filtrar (ej. baseMech.techBase)
-  onAddEquipment: (item: { name: string; type: string; crits: number }) => void;
+  techBase: string; // baseMech.techBase: "Inner Sphere"|"Clan"|"Mixed"|"IS"|"CL"
+  strictTech?: boolean; // true = solo techBase del mech; false = libre (todos)
+  onAddEquipment: (item: { name: string; type: string; crits: number; location?: string }) => void;
 }
 
-export function EquipmentPicker({ techBase, onAddEquipment }: Props) {
+// Normaliza "Inner Sphere"/"IS" → 'IS', "Clan"/"CL" → 'CL'
+function normalizeTech(s: string): 'IS' | 'CL' | 'Mixed' | string {
+  const t = (s || '').trim();
+  if (t === 'IS' || t === 'CL' || t === 'Mixed') return t;
+  const low = t.toLowerCase();
+  if (low.startsWith('inner')) return 'IS';
+  if (low === 'clan' || low.startsWith('clan')) return 'CL';
+  if (low.startsWith('mix')) return 'Mixed';
+  return t;
+}
+
+export function EquipmentPicker({ techBase, strictTech = true, onAddEquipment }: Props) {
   const [filter, setFilter] = useState('');
   const [cat, setCat] = useState<'All' | 'Energy' | 'Ballistic' | 'Missile' | 'Ammunition'>('All');
 
+  const techN = normalizeTech(techBase);
+
   const items = useMemo(() => {
     const list: Array<{ name: string; type: string; crits: number; tons: number; tech: string; cat: string }> = [];
-    
+
+    const pass = (tb: string) => {
+      if (!strictTech) return true;
+      if (techN === 'Mixed') return true;
+      return tb === techN;
+    };
+
     // Armas y Equipo
     for (const w of Object.values(BY_LOOKUP) as WeaponRule[]) {
-      if (techBase !== 'Mixed' && w.techBase !== techBase && (w.techBase as string) !== 'Mixed') continue; // Simplificación
+      if (!pass(w.techBase)) continue;
       list.push({
         name: w.lookupName,
         type: w.weaponClass?.toLowerCase() || 'equipment',
@@ -29,11 +49,11 @@ export function EquipmentPicker({ techBase, onAddEquipment }: Props) {
 
     // Munición
     for (const a of Object.values(AMMO_BY_LOOKUP) as AmmoRule[]) {
-      if (techBase !== 'Mixed' && a.techBase !== techBase && (a.techBase as string) !== 'Mixed') continue;
+      if (!pass(a.techBase)) continue;
       list.push({
         name: a.lookupName,
         type: 'ammunition',
-        crits: 1, // Ammo general rule (algunas raras son más, ignorado para refits básicos)
+        crits: 1,
         tons: a.tonnage,
         tech: a.techBase,
         cat: 'Ammunition'
@@ -41,7 +61,7 @@ export function EquipmentPicker({ techBase, onAddEquipment }: Props) {
     }
 
     return list.sort((a, b) => a.name.localeCompare(b.name));
-  }, [techBase]);
+  }, [techN, strictTech]);
 
   const filtered = useMemo(() => {
     let f = items;
@@ -79,24 +99,45 @@ export function EquipmentPicker({ techBase, onAddEquipment }: Props) {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-1">
-        {filtered.map(it => (
-          <div key={it.name} className="flex flex-col bg-cyan-900/10 border border-cyan-800/30 p-1 hover:border-cyan-500/50 transition-colors group">
-            <div className="flex justify-between items-start">
-              <span className="font-bold text-slate-300 truncate pr-2" title={it.name}>{it.name}</span>
-              <button 
-                onClick={() => onAddEquipment(it)}
-                className="bg-cyan-900/40 text-cyan-400 border border-cyan-800/50 px-2 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-cyan-800"
-              >
-                Añadir
-              </button>
-            </div>
-            <div className="flex justify-between text-[9px] text-cyan-600 mt-1">
-              <span>{it.tons}t</span>
-              <span>{it.crits} crits</span>
-              <span className="uppercase text-[8px] border border-cyan-800/40 px-1">{it.tech}</span>
-            </div>
+        {filtered.length === 0 && (
+          <div className="text-cyan-700 text-[10px] italic p-2 border border-cyan-900/30 bg-cyan-950/20">
+            Sin resultados ({strictTech ? `filtro estricto ${techN}` : 'libre'}). Cambia búsqueda o categoría.
           </div>
+        )}
+        {filtered.map(it => (
+          <ItemRow key={it.name} it={it} onAdd={onAddEquipment} />
         ))}
+      </div>
+    </div>
+  );
+}
+
+const LOCS = ['HD','CT','LT','RT','LA','RA','LL','RL'] as const;
+
+function ItemRow({ it, onAdd }: { it: { name: string; type: string; crits: number; tons: number; tech: string; cat: string }; onAdd: (item: { name: string; type: string; crits: number; location?: string }) => void }) {
+  const [loc, setLoc] = useState<string>('CT');
+  return (
+    <div className="flex flex-col bg-cyan-900/10 border border-cyan-800/30 p-1 hover:border-cyan-500/50 transition-colors">
+      <div className="flex justify-between items-start gap-1">
+        <span className="font-bold text-slate-300 truncate pr-1 flex-1" title={it.name}>{it.name}</span>
+        <select
+          value={loc}
+          onChange={e => setLoc(e.target.value)}
+          className="bg-black/50 border border-cyan-800/50 text-cyan-400 text-[9px] px-1 py-0.5 outline-none focus:border-cyan-500"
+        >
+          {LOCS.map(L => <option key={L} value={L}>{L}</option>)}
+        </select>
+        <button
+          onClick={() => onAdd({ name: it.name, type: it.type, crits: it.crits, location: loc })}
+          className="bg-cyan-900/40 text-cyan-400 border border-cyan-800/50 px-2 py-0.5 hover:bg-cyan-800"
+        >
+          +
+        </button>
+      </div>
+      <div className="flex justify-between text-[9px] text-cyan-600 mt-1">
+        <span>{it.tons}t</span>
+        <span>{it.crits} crits</span>
+        <span className="uppercase text-[8px] border border-cyan-800/40 px-1">{it.tech}</span>
       </div>
     </div>
   );

@@ -67,6 +67,21 @@ export interface HangarItem {
     destroyedReason?: string;
   };
 
+  // ── Modificación pendiente ──
+  /** Solicitud de modificación del loadout. El mech sigue operando con el sswRaw
+   *  anterior hasta que DM/Admin apruebe y Taller termine la categoría 'Modificación'.
+   *  Status: 'pending' (esperando DM/Admin), 'approved' (aprobada, en taller),
+   *  'rejected' (rechazada, devuelta al PJ), 'applied' (taller terminó, sswRaw actualizado). */
+  modificacionPendiente?: {
+    sswRawNew:      string;
+    requestedBy?:   string;   // safeEmail del PJ que la pidió
+    requestedAt:    number;   // epoch ms
+    status:         'pending' | 'approved' | 'rejected' | 'applied';
+    reviewedBy?:    string;   // safeEmail del DM/Admin
+    reviewedAt?:    number;
+    comment?:       string;   // motivo de rechazo / nota
+  };
+
   // ── Meta ──
   notas?:       string;
   createdAt:    string;   // ISO timestamp

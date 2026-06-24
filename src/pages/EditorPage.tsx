@@ -6,12 +6,33 @@ import { MechEditorGrid } from '@/components/editor/MechEditorGrid';
 import { EquipmentPicker } from '@/components/editor/EquipmentPicker';
 import { ArmorEditor } from '@/components/editor/ArmorEditor';
 
-export function EditorPage({ initialSswXml, onSave, onCancel }: { initialSswXml: string, onSave: (newSsw: string) => void, onCancel: () => void }) {
+export type EditorSaveTarget = 'hangar' | 'personal';
+export type EditorMode = 'libre' | 'campaign' | 'preview-compra';
+
+interface EditorPageProps {
+  initialSswXml: string;
+  onSave: (newSsw: string, target: EditorSaveTarget) => void;
+  onCancel: () => void;
+  mode?: EditorMode;       // 'libre' = sin coste (TRO/no campaña); 'campaign' = requiere aprobación; 'preview-compra' = mercado hangar
+  strictTech?: boolean;    // true = solo techBase del mech (campaña); false = libre (simulador)
+  allowHangarSave?: boolean; // false oculta botón Hangar (ej. TRO sin destino directo)
+  allowPersonalSave?: boolean;
+}
+
+export function EditorPage({
+  initialSswXml,
+  onSave,
+  onCancel,
+  mode = 'libre',
+  strictTech = true,
+  allowHangarSave = true,
+  allowPersonalSave = true,
+}: EditorPageProps) {
   const { baseMech, state, setState, tonnageDelta, freeCritsPerLoc } = useMechEditor(initialSswXml);
-  
-  const handleSave = () => {
+
+  const handleSave = (target: EditorSaveTarget) => {
     const newXml = serializeSSW(initialSswXml, state);
-    onSave(newXml);
+    onSave(newXml, target);
   };
 
   const isArmorOverMax = () => {
@@ -42,17 +63,40 @@ export function EditorPage({ initialSswXml, onSave, onCancel }: { initialSswXml:
             Tonelaje Libre: {tonnageDelta > 0 ? '+' : ''}{tonnageDelta}t
           </span>
         </h1>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          {mode === 'campaign' && (
+            <span className="text-[10px] px-2 py-0.5 border border-amber-700 bg-amber-950/30 text-amber-400 uppercase tracking-widest">
+              Campaña · req. aprobación
+            </span>
+          )}
+          {mode === 'preview-compra' && (
+            <span className="text-[10px] px-2 py-0.5 border border-emerald-700 bg-emerald-950/30 text-emerald-400 uppercase tracking-widest">
+              Preview compra+mod
+            </span>
+          )}
           <button onClick={onCancel} className="px-4 py-2 border border-cyan-800 hover:bg-cyan-900/30 text-xs text-cyan-500 uppercase tracking-widest transition-colors">
             Cancelar
           </button>
-          <button 
-            onClick={handleSave} 
-            disabled={!canSave}
-            className="px-4 py-2 bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500 text-orange-400 font-bold text-xs uppercase tracking-widest transition-colors disabled:opacity-50 disabled:border-cyan-900 disabled:text-cyan-700"
-          >
-            Guardar SSW
-          </button>
+          {allowPersonalSave && (
+            <button
+              onClick={() => handleSave('personal')}
+              disabled={!canSave}
+              className="px-4 py-2 bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500 text-cyan-300 font-bold text-xs uppercase tracking-widest transition-colors disabled:opacity-50 disabled:border-cyan-900 disabled:text-cyan-700"
+              title="Guardar como diseño personal (customMechs)"
+            >
+              Guardar Personal
+            </button>
+          )}
+          {allowHangarSave && (
+            <button
+              onClick={() => handleSave('hangar')}
+              disabled={!canSave}
+              className="px-4 py-2 bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500 text-orange-400 font-bold text-xs uppercase tracking-widest transition-colors disabled:opacity-50 disabled:border-cyan-900 disabled:text-cyan-700"
+              title={mode === 'campaign' ? 'Solicitar modificación al mech del Hangar' : 'Guardar en Hangar'}
+            >
+              {mode === 'campaign' ? 'Solicitar Mod' : 'Guardar Hangar'}
+            </button>
+          )}
         </div>
       </div>
 
@@ -92,19 +136,15 @@ export function EditorPage({ initialSswXml, onSave, onCancel }: { initialSswXml:
         <div className="col-span-3 p-4 bg-[#050f14] flex flex-col h-full">
           <h2 className="font-bold text-slate-300 tracking-widest text-sm uppercase mb-4">Catálogo</h2>
           <div className="flex-1 min-h-0">
-            <EquipmentPicker 
-              techBase={baseMech.techBase} 
+            <EquipmentPicker
+              techBase={baseMech.techBase}
+              strictTech={strictTech}
               onAddEquipment={(item) => {
-                const loc = window.prompt(`¿Dónde instalar ${item.name}?\nEscriba: HD, CT, LT, RT, LA, RA, LL, RL`, 'CT');
-                if (!loc) return;
-                const upperLoc = loc.trim().toUpperCase();
-                if (!['HD', 'CT', 'LT', 'RT', 'LA', 'RA', 'LL', 'RL'].includes(upperLoc)) {
-                  alert('Localización inválida.');
-                  return;
-                }
+                const loc = (item.location || 'CT').toUpperCase();
+                if (!['HD', 'CT', 'LT', 'RT', 'LA', 'RA', 'LL', 'RL'].includes(loc)) return;
                 setState({
                   ...state,
-                  equipment: [...state.equipment, { name: item.name, type: item.type, location: upperLoc }]
+                  equipment: [...state.equipment, { name: item.name, type: item.type, location: loc }]
                 });
               }}
             />

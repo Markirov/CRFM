@@ -303,12 +303,39 @@ function UnidadesTab({ items, loading, refresh }: {
     }
   };
 
-  const handleSaveEditor = async (originalItem: HangarItem, newSswXml: string) => {
-    // In a real scenario we'd re-parse the XML to recalculate BV, cost, tons, but for now we just save the XML
-    // Assuming Editor only modifies weapons/armor, chassis/tons remain the same.
+  const handleSaveEditor = async (originalItem: HangarItem, newSswXml: string, target: 'hangar' | 'personal' = 'hangar') => {
+    if (target === 'personal') {
+      // Copiar a customMechs personales sin tocar el Hangar
+      try {
+        const { saveMyCustomMech } = await import('@/lib/custom-mechs-service');
+        const { parseSSWBasic } = await import('@/lib/ssw-basic');
+        const parsed = parseSSWBasic(newSswXml);
+        await saveMyCustomMech({
+          id: `${originalItem.id}-mod-${Date.now()}`,
+          name: `${originalItem.chassis} ${originalItem.model} (mod)`,
+          chassis: parsed.chassis ?? originalItem.chassis,
+          model: parsed.model ?? originalItem.model,
+          tons: parsed.tons ?? originalItem.tons,
+          bv: parsed.cost ?? undefined,
+          era: parsed.era ?? undefined,
+          sswRaw: newSswXml,
+        });
+        alert('Diseño guardado en tu espacio personal (Hangar → Diseños).');
+      } catch (err) {
+        console.error(err);
+        alert('Error guardando diseño personal.');
+      }
+      setEditingMech(null);
+      return;
+    }
+    // target === 'hangar' → solicita modificación pendiente (no aplica hasta aprobación + reparación)
     const updated: HangarItem = {
       ...originalItem,
-      sswRaw: newSswXml,
+      modificacionPendiente: {
+        sswRawNew: newSswXml,
+        requestedAt: Date.now(),
+        status: 'pending',
+      },
     };
     await saveHangarItem(updated);
     setEditingMech(null);
@@ -432,6 +459,14 @@ function UnidadesTab({ items, loading, refresh }: {
                 return (
                   <tr key={it.id} className="border-b border-outline-variant/20 hover:bg-primary-container/5 group">
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-on-surface font-bold">
+                      {it.modificacionPendiente && it.modificacionPendiente.status !== 'applied' && (
+                        <span
+                          title={`Modificación ${it.modificacionPendiente.status}: requiere aprobación + reparación`}
+                          className="inline-block align-middle mr-1"
+                        >
+                          <AlertTriangle className="inline w-3.5 h-3.5 -mt-0.5 text-amber-400" />
+                        </span>
+                      )}
                       {it.chassis} {it.model}
                     </td>
                     <td className="px-2 py-1.5 border-b border-outline-variant/20 text-center">
@@ -572,7 +607,11 @@ function UnidadesTab({ items, loading, refresh }: {
       {editingMech && editingXml && (
         <EditorPage
           initialSswXml={editingXml}
-          onSave={(newXml) => handleSaveEditor(editingMech, newXml)}
+          mode="campaign"
+          strictTech={true}
+          allowHangarSave={true}
+          allowPersonalSave={true}
+          onSave={(newXml, target) => handleSaveEditor(editingMech, newXml, target)}
           onCancel={() => {
             setEditingMech(null);
             setEditingXml(null);

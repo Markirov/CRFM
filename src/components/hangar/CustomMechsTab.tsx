@@ -116,6 +116,10 @@ export function CustomMechsTab() {
     return (
       <EditorPage
         initialSswXml={editing.sswRaw}
+        mode="libre"
+        strictTech={false}
+        allowHangarSave={false}
+        allowPersonalSave={true}
         onSave={async (newXml) => {
           const parsed = parseSSWBasic(newXml);
           await saveMyCustomMech({
