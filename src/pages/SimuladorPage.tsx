@@ -346,6 +346,14 @@ export function SimuladorPage() {
         if (!item) continue;
         newHangarBySlot[i] = item;
 
+        // Piloto fijo del slot (canon campaña): roster entry → skills/name
+        const rosterEntry = roster[rosterIdx];
+        const slotPilot = rosterEntry ? {
+          name:     rosterEntry.apodo || rosterEntry.nombre || rosterEntry.jugador || 'Piloto',
+          gunnery:  rosterEntry.disparoMech  ?? 4,
+          piloting: rosterEntry.pilotajeMech ?? 5,
+        } : null;
+
         // Mech ya cargado en el slot que coincide con el del hangar?
         const loaded: any = loadedMechSlots[i];
         const loadedName = loaded?.state
@@ -358,6 +366,8 @@ export function SimuladorPage() {
           if (item.sessionActiva && loaded.session) {
             applyDamageToSession(loaded.session, item);
           }
+          // Asigna piloto fijo siempre (sobrescribe si distinto)
+          if (slotPilot && loaded.session) loaded.session.pilot = slotPilot;
           continue;
         }
 
@@ -387,11 +397,12 @@ export function SimuladorPage() {
         }
         
         if (text) {
-          // Cargamos el texto del mech (.ssw) y aplicamos daño si hay (Integración Hangar)
+          // Cargamos el texto del mech (.ssw) y aplicamos daño + piloto fijo del slot
           sim.loadUnitText(text, fname, i, (state, session) => {
             if (item.sessionActiva) {
               applyDamageToSession(session, item);
             }
+            if (slotPilot) session.pilot = slotPilot;
           });
         } else {
           console.warn(`[Campaign] mech del hangar no encontrado en assets: ${item.chassis} ${item.model} (PJ ${handle})`);
@@ -619,6 +630,7 @@ export function SimuladorPage() {
               effectiveRunMP={sim.effectiveRunMP}
               effectiveJumpMP={sim.effectiveJumpMP}
               availablePilots={availablePilots}
+              lockedPilot={campaignMode}
               onSetPilot={sim.setPilot}
               onSetWounds={sim.setWounds}
               onSetMoveMode={sim.setMoveMode}

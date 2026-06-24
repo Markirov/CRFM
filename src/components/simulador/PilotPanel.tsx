@@ -25,9 +25,11 @@ interface Props {
   onLoadPilot: (p: AvailablePilot) => void;
   onOpenTaller?: () => void;
   onHandleDestruction?: () => void;
+  /** Modo campaña: piloto fijo + skills no editables. */
+  lockedPilot?: boolean;
 }
 
-export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, effectiveJumpMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller, onHandleDestruction }: Props) {
+export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHits, effectiveWalkMP, effectiveRunMP, effectiveJumpMP, availablePilots, onSetPilot, onSetWounds, onSetMoveMode, onSetJumpUsed, onLoadPilot, onOpenTaller, onHandleDestruction, lockedPilot }: Props) {
   return (
     <section className="bg-surface-container-low p-4 relative clip-chamfer border-l-2 border-primary-container/30">
       {/* Identity */}
@@ -62,25 +64,32 @@ export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHit
         )}
       </div>
 
-      {/* Pilot loader buttons */}
-      <div className="mb-3 flex flex-wrap gap-1">
-        {availablePilots.map(p => (
-          <button key={p.name} onClick={() => onLoadPilot(p)}
+      {/* Pilot loader buttons (oculto en modo campaña) */}
+      {!lockedPilot && (
+        <div className="mb-3 flex flex-wrap gap-1">
+          {availablePilots.map(p => (
+            <button key={p.name} onClick={() => onLoadPilot(p)}
+              className={`px-2 py-0.5 font-mono text-[9px] uppercase border transition-colors clip-chamfer ${
+                session.pilot.name === p.name
+                  ? 'bg-primary/20 border-primary text-primary'
+                  : 'border-outline-variant/40 text-secondary/60 hover:border-primary/40 hover:text-primary/80'
+              }`}
+            >{p.name}</button>
+          ))}
+          <button onClick={() => onLoadPilot({ name: 'Genérico', gunnery: 4, piloting: 5 })}
             className={`px-2 py-0.5 font-mono text-[9px] uppercase border transition-colors clip-chamfer ${
-              session.pilot.name === p.name
+              session.pilot.name === 'Genérico'
                 ? 'bg-primary/20 border-primary text-primary'
-                : 'border-outline-variant/40 text-secondary/60 hover:border-primary/40 hover:text-primary/80'
+                : 'border-outline-variant/40 text-secondary/40 hover:border-primary/40 hover:text-primary/60'
             }`}
-          >{p.name}</button>
-        ))}
-        <button onClick={() => onLoadPilot({ name: 'Genérico', gunnery: 4, piloting: 5 })}
-          className={`px-2 py-0.5 font-mono text-[9px] uppercase border transition-colors clip-chamfer ${
-            session.pilot.name === 'Genérico'
-              ? 'bg-primary/20 border-primary text-primary'
-              : 'border-outline-variant/40 text-secondary/40 hover:border-primary/40 hover:text-primary/60'
-          }`}
-        >Genérico</button>
-      </div>
+          >Genérico</button>
+        </div>
+      )}
+      {lockedPilot && session.pilot.name && (
+        <div className="mb-3 px-2 py-1 border border-primary/40 bg-primary/10 font-mono text-[10px] uppercase tracking-widest text-primary flex items-center gap-2">
+          🔒 Piloto fijo: <span className="font-bold">{session.pilot.name}</span>
+        </div>
+      )}
 
       <div className="space-y-3">
         {/* Gunnery + Piloting */}
@@ -94,9 +103,13 @@ export function PilotPanel({ state, session, gunneryTotal, pilotingTotal, sysHit
                 {total !== base && <span className="text-[9px] font-mono text-error">(base {base}, mods {total > base ? '+' : ''}{total - base})</span>}
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => onSetPilot(field, Math.max(0, base - 1))} className="text-secondary hover:text-primary text-lg">-</button>
+                {!lockedPilot && (
+                  <button onClick={() => onSetPilot(field, Math.max(0, base - 1))} className="text-secondary hover:text-primary text-lg">-</button>
+                )}
                 <span className={`text-2xl font-mono leading-none w-8 text-center ${total > base ? 'text-error' : 'text-primary'}`}>{total}</span>
-                <button onClick={() => onSetPilot(field, Math.min(8, base + 1))} className="text-secondary hover:text-primary text-lg">+</button>
+                {!lockedPilot && (
+                  <button onClick={() => onSetPilot(field, Math.min(8, base + 1))} className="text-secondary hover:text-primary text-lg">+</button>
+                )}
               </div>
             </div>
           );
