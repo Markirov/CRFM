@@ -75,8 +75,14 @@ function TradeModal({ item, displayName, currentQty, isWeapon, isArmor, isAmmo, 
   const modeSign = mode === 'sell' ? '+' : '−';
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className={`bg-surface-container border-2 border-${modeColor}/60 clip-chamfer max-w-md w-full p-5 shadow-2xl`}>
+    <div
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm"
+      onClick={() => { if (!committing) onClose(); }}
+    >
+      <div
+        className={`bg-surface-container border-2 border-${modeColor}/60 clip-chamfer max-w-md w-full p-5 shadow-2xl`}
+        onClick={e => e.stopPropagation()}
+      >
         {/* Header: título item grande + favorito + cerrar */}
         <div className="flex items-start justify-between mb-4 pb-3 border-b border-outline-variant/30 gap-3">
           <div className="flex-1 min-w-0">
