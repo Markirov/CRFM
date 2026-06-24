@@ -20,7 +20,16 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Wrench, Database, Download, AlertTriangle, ArrowLeft, Calculator, CheckCircle2, RotateCcw } from 'lucide-react';
+import { Wrench, Database, Download, AlertTriangle, ArrowLeft, Calculator, CheckCircle2, RotateCcw, GripVertical } from 'lucide-react';
+import {
+  DndContext, closestCenter, KeyboardSensor, PointerSensor,
+  useSensor, useSensors, type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove, SortableContext, sortableKeyboardCoordinates,
+  useSortable, verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useAppStore } from '@/lib/store';
 import { loadHangar, saveHangarItem, saveConfigBatch, loadPersonal, commitLibroEntryAndTreasury, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { loadLocalSnapshot, saveLocalSnapshot, type SimuladorSnapshot } from '@/lib/simulador-persistence';
@@ -57,6 +66,52 @@ const fmtMoneyExternal = (n: number) => formatCzar(n);
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 
 type RepairSystemKind = 'canon' | 'propio';
+
+/** Estilo común color border según estado item. */
+function estadoColor(estado: string): string {
+  return estado === 'reparado' ? 'border-emerald-400/60 text-emerald-400'
+    : estado === 'parcial' ? 'border-amber-400/60 text-amber-400'
+    : 'border-error/40 text-error/80';
+}
+
+/** Row item reparación sin drag (modo auto). */
+function ItemRow({ item, estado, fmtMoney }: { item: RepairItem; estado: string; fmtMoney: (n: number) => string }) {
+  return (
+    <div className={`flex items-center justify-between p-2 border ${estadoColor(estado)} text-[10px] font-mono`}>
+      <div className="flex-1">
+        <span className="text-cream">{item.nombre}</span>
+        <span className="text-secondary/40 ml-2">[{item.categoria}]</span>
+      </div>
+      <span className="text-secondary/60 mr-2">⏱ {item.tiempoBase}m</span>
+      <span className="text-secondary/60 mr-2">{fmtMoney(item.costoBase)}</span>
+      <span className="uppercase font-bold text-[9px]">{estado}</span>
+    </div>
+  );
+}
+
+/** Row sortable item armor (modo manual). */
+function SortableItemRow({ id, item, estado, fmtMoney }: { id: string; item: RepairItem; estado: string; fmtMoney: (n: number) => string }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  return (
+    <div ref={setNodeRef} style={style} className={`flex items-center justify-between p-2 border ${estadoColor(estado)} text-[10px] font-mono cursor-grab active:cursor-grabbing`}>
+      <button {...attributes} {...listeners} className="mr-2 text-secondary/40 hover:text-secondary touch-none" title="Arrastra para reordenar">
+        <GripVertical size={12} />
+      </button>
+      <div className="flex-1">
+        <span className="text-cream">{item.nombre}</span>
+        <span className="text-secondary/40 ml-2">[{item.categoria}]</span>
+      </div>
+      <span className="text-secondary/60 mr-2">⏱ {item.tiempoBase}m</span>
+      <span className="text-secondary/60 mr-2">{fmtMoney(item.costoBase)}</span>
+      <span className="uppercase font-bold text-[9px]">{estado}</span>
+    </div>
+  );
+}
 
 /** Línea factura: izq label, der valor. Color/bold opcional. */
 function FacturaRow({ label, value, color, bold }: { label: string; value: number; color?: 'amber' | 'default'; bold?: boolean }) {
@@ -281,32 +336,70 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   // ── Preset ordering (default persecucion ASC tiempo) ──
   const [presetId, setPresetId] = useState<string>('persecucion');
   const preset = PRESETS.find(p => p.id === presetId) ?? PRESETS[0];
-  // Política blindaje incompleto: 'auto' (dentro→afuera CT/IS primero) | 'manual' (preserva orden preset)
+  // Política blindaje incompleto: 'auto' (dentro→afuera CT/IS primero) | 'manual' (drag-reorder)
   const [armorPolicy, setArmorPolicy] = useState<'auto' | 'manual'>('auto');
+  // Manual: orden custom guardado per-mech (sólo items Blindaje)
+  const [manualOrder, setManualOrder] = useState<string[]>([]);
+
+  // Reset manualOrder cuando cambian items base
+  useEffect(() => {
+    if (armorPolicy !== 'manual') return;
+    const armorIds = itemsAjustados.filter(i => i.categoria === 'Blindaje').map(i => i.id);
+    setManualOrder(prev => {
+      // Preserva orden existente, añade nuevos al final
+      const kept = prev.filter(id => armorIds.includes(id));
+      const newIds = armorIds.filter(id => !kept.includes(id));
+      return [...kept, ...newIds];
+    });
+  }, [itemsAjustados, armorPolicy]);
 
   const orderedItems = useMemo(() => {
     const sorted = aplicarPreset(itemsAjustados, preset, 'asc');
-    if (armorPolicy === 'manual') return sorted;
-    // Auto: items 'Blindaje' al frente en orden inverso transferencia daño
-    // canónico BattleTech (loc críticas receptoras primero):
-    //   CT > HD > LT/RT > LA/RA > LL/RL
+    const armorItems = sorted.filter(i => i.categoria === 'Blindaje');
+    const others = sorted.filter(i => i.categoria !== 'Blindaje');
+
+    if (armorPolicy === 'manual') {
+      // Reordenar armor según manualOrder
+      const armorSorted = [...armorItems].sort((a, b) => {
+        const ia = manualOrder.indexOf(a.id);
+        const ib = manualOrder.indexOf(b.id);
+        return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      });
+      return [...armorSorted, ...others];
+    }
+
+    // Auto: orden inverso transferencia daño canónico BattleTech
+    // CT > HD > LT/RT > LA/RA > LL/RL ; front-before-rear sub-orden
     const ARMOR_PRIO: Record<string, number> = {
       CT: 1, HD: 2, LT: 3, RT: 3, LA: 4, RA: 4, LL: 5, RL: 5,
     };
-    // Sub-orden front-before-rear si nombre incluye "Trasero"
-    const armorItems = sorted
-      .filter(i => i.categoria === 'Blindaje')
-      .sort((a, b) => {
-        const pa = ARMOR_PRIO[a.localizacion] ?? 99;
-        const pb = ARMOR_PRIO[b.localizacion] ?? 99;
-        if (pa !== pb) return pa - pb;
-        const aRear = a.nombre.includes('Trasero') ? 1 : 0;
-        const bRear = b.nombre.includes('Trasero') ? 1 : 0;
-        return aRear - bRear;
-      });
-    const others = sorted.filter(i => i.categoria !== 'Blindaje');
-    return [...armorItems, ...others];
-  }, [itemsAjustados, preset, armorPolicy]);
+    const armorSorted = armorItems.sort((a, b) => {
+      const pa = ARMOR_PRIO[a.localizacion] ?? 99;
+      const pb = ARMOR_PRIO[b.localizacion] ?? 99;
+      if (pa !== pb) return pa - pb;
+      const aRear = a.nombre.includes('Trasero') ? 1 : 0;
+      const bRear = b.nombre.includes('Trasero') ? 1 : 0;
+      return aRear - bRear;
+    });
+    return [...armorSorted, ...others];
+  }, [itemsAjustados, preset, armorPolicy, manualOrder]);
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setManualOrder(prev => {
+      const oldIdx = prev.indexOf(active.id as string);
+      const newIdx = prev.indexOf(over.id as string);
+      if (oldIdx === -1 || newIdx === -1) return prev;
+      return arrayMove(prev, oldIdx, newIdx);
+    });
+  };
 
   // Resultado simulación reparación según tiempo restante del pool
   const resultadoReparacion = useMemo(() => {
@@ -536,6 +629,46 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
           } else {
             it.sessionActiva.ammoBins = mechAmmoBinsUpdated;
           }
+
+          // Reduce damagePersist per loc según items reparados (mech sin sim activo)
+          if (it.damagePersist) {
+            const dp = { ...it.damagePersist };
+            const blindajePerLoc = dp.blindajePerLoc ? { ...dp.blindajePerLoc } : undefined;
+            const estructuraPerLoc = dp.estructuraPerLoc ? { ...dp.estructuraPerLoc } : undefined;
+            let totalBlindajeReducido = 0;
+            let totalEstructuraReducida = 0;
+
+            const armorKeyFromItem = (item: { localizacion: string; nombre: string }): string => {
+              const loc = item.localizacion;
+              if (loc === 'CT' || loc === 'LT' || loc === 'RT') {
+                return item.nombre.includes('Trasero') ? `${loc}r` : `${loc}f`;
+              }
+              return loc;
+            };
+
+            for (const r of resultadoReparacion.resultados) {
+              if (r.estado !== 'reparado' && r.estado !== 'parcial') continue;
+              const pts = r.puntosReparados ?? 0;
+              if (r.item.categoria === 'Blindaje' && pts > 0 && blindajePerLoc) {
+                const k = armorKeyFromItem(r.item);
+                blindajePerLoc[k] = Math.max(0, (blindajePerLoc[k] ?? 0) - pts);
+                if (blindajePerLoc[k] === 0) delete blindajePerLoc[k];
+                totalBlindajeReducido += pts;
+              } else if (r.item.id.startsWith('is') && pts > 0 && estructuraPerLoc) {
+                const k = r.item.localizacion;
+                estructuraPerLoc[k] = Math.max(0, (estructuraPerLoc[k] ?? 0) - pts);
+                if (estructuraPerLoc[k] === 0) delete estructuraPerLoc[k];
+                totalEstructuraReducida += pts;
+              }
+            }
+
+            dp.blindaje = Math.max(0, (dp.blindaje ?? 0) - totalBlindajeReducido);
+            dp.estructura = Math.max(0, (dp.estructura ?? 0) - totalEstructuraReducida);
+            dp.blindajePerLoc = blindajePerLoc && Object.keys(blindajePerLoc).length > 0 ? blindajePerLoc : undefined;
+            dp.estructuraPerLoc = estructuraPerLoc && Object.keys(estructuraPerLoc).length > 0 ? estructuraPerLoc : undefined;
+            it.damagePersist = dp;
+          }
+
           await saveHangarItem(it);
           setHangarItems(prev => prev.map(h => h.id === it.id ? { ...it } : h));
         }
@@ -747,25 +880,29 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
                 <div className="font-mono text-xs text-secondary/40 text-center py-4 italic">
                   Sin daños registrados. {autoLoaded.state ? '' : 'Mech sin combate previo en sim.'}
                 </div>
+              ) : armorPolicy === 'manual' ? (
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <SortableContext items={orderedItems.filter(i => i.categoria === 'Blindaje').map(i => i.id)} strategy={verticalListSortingStrategy}>
+                    <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
+                      {orderedItems.map(item => {
+                        const res = resultadoReparacion.resultados.find(r => r.item.id === item.id);
+                        const estado = res?.estado ?? 'pendiente';
+                        const isArmor = item.categoria === 'Blindaje';
+                        return isArmor ? (
+                          <SortableItemRow key={item.id} id={item.id} item={item} estado={estado} fmtMoney={fmtMoney} />
+                        ) : (
+                          <ItemRow key={item.id} item={item} estado={estado} fmtMoney={fmtMoney} />
+                        );
+                      })}
+                    </div>
+                  </SortableContext>
+                </DndContext>
               ) : (
                 <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
                   {orderedItems.map(item => {
                     const res = resultadoReparacion.resultados.find(r => r.item.id === item.id);
                     const estado = res?.estado ?? 'pendiente';
-                    const color = estado === 'reparado' ? 'border-emerald-400/60 text-emerald-400'
-                      : estado === 'parcial' ? 'border-amber-400/60 text-amber-400'
-                      : 'border-error/40 text-error/80';
-                    return (
-                      <div key={item.id} className={`flex items-center justify-between p-2 border ${color} text-[10px] font-mono`}>
-                        <div className="flex-1">
-                          <span className="text-cream">{item.nombre}</span>
-                          <span className="text-secondary/40 ml-2">[{item.categoria}]</span>
-                        </div>
-                        <span className="text-secondary/60 mr-2">⏱ {item.tiempoBase}m</span>
-                        <span className="text-secondary/60 mr-2">{fmtMoney(item.costoBase)}</span>
-                        <span className="uppercase font-bold text-[9px]">{estado}</span>
-                      </div>
-                    );
+                    return <ItemRow key={item.id} item={item} estado={estado} fmtMoney={fmtMoney} />;
                   })}
                 </div>
               )}

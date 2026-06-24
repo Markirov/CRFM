@@ -197,15 +197,25 @@ export function extractDamageFromSession(state: MechState, session: MechSession)
   const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
 
   let armorMax = 0, armorCur = 0;
+  const blindajePerLoc: Record<string, number> = {};
   for (const k of armorLocs) {
-    armorMax += (state.armor as any)[k] ?? 0;
-    armorCur += session.armor[k] ?? 0;
+    const max = (state.armor as any)[k] ?? 0;
+    const cur = session.armor[k] ?? 0;
+    armorMax += max;
+    armorCur += cur;
+    const lost = Math.max(0, max - cur);
+    if (lost > 0) blindajePerLoc[k] = lost;
   }
 
   let isMax = 0, isCur = 0;
+  const estructuraPerLoc: Record<string, number> = {};
   for (const k of isLocs) {
-    isMax += (state.is as any)[k] ?? 0;
-    isCur += session.is[k] ?? 0;
+    const max = (state.is as any)[k] ?? 0;
+    const cur = session.is[k] ?? 0;
+    isMax += max;
+    isCur += cur;
+    const lost = Math.max(0, max - cur);
+    if (lost > 0) estructuraPerLoc[k] = lost;
   }
 
   const total = armorMax + isMax;
@@ -238,7 +248,9 @@ export function extractDamageFromSession(state: MechState, session: MechSession)
     soporteVida: lifeSupportHits,
     sensores: sensorsHits,
     estructura: Math.max(0, isMax - isCur),
+    estructuraPerLoc: Object.keys(estructuraPerLoc).length > 0 ? estructuraPerLoc : undefined,
     blindaje: Math.max(0, armorMax - armorCur),
+    blindajePerLoc: Object.keys(blindajePerLoc).length > 0 ? blindajePerLoc : undefined,
     miomero: 0,
     retros: 0,
     radiadores: 0,
