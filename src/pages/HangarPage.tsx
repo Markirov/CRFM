@@ -19,21 +19,23 @@ import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
 import { parseSSWBasic } from '@/lib/ssw-basic';
 import { MercadoMechsTab } from '@/components/hangar/MercadoTab';
 import { CustomMechsTab } from '@/components/hangar/CustomMechsTab';
+import { ModificacionesTab } from '@/components/hangar/ModificacionesTab';
 import { SalvageModal } from '@/components/taller/SalvageModal';
 
 export function HangarPage() {
   const activeSubTab = useAppStore(s => s.activeSubTab);
   const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   const { readable, writable, loading: permLoading } = usePerm('hangar');
-  type View = 'unidades' | 'mercado-mechs' | 'disenos';
+  type View = 'unidades' | 'mercado-mechs' | 'disenos' | 'modificaciones';
 
   const view: View =
     activeSubTab === 'mercado-mechs' ? 'mercado-mechs'
     : activeSubTab === 'disenos' ? 'disenos'
+    : activeSubTab === 'modificaciones' ? 'modificaciones'
     : 'unidades';
 
   useEffect(() => {
-    if (!['unidades', 'mercado-mechs', 'disenos'].includes(activeSubTab)) {
+    if (!['unidades', 'mercado-mechs', 'disenos', 'modificaciones'].includes(activeSubTab)) {
       setActiveSubTab('unidades');
     }
   }, [activeSubTab, setActiveSubTab]);
@@ -76,6 +78,7 @@ export function HangarPage() {
       {view === 'unidades' && <UnidadesTab items={items} loading={loading} refresh={refresh} />}
       {view === 'mercado-mechs' && <MercadoMechsTab items={items} refresh={refresh} />}
       {view === 'disenos' && <CustomMechsTab />}
+      {view === 'modificaciones' && <ModificacionesTab />}
     </div>
   );
 }
