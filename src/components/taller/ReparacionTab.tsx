@@ -54,6 +54,7 @@ import {
   type UnidadTiempo, type BayTeam, type RepairItem,
 } from '@/lib/repair-priority';
 import { useMechCatalog, findMechByName } from '@/hooks/useMechCatalog';
+import { ModificationSection } from '@/components/taller/ModificationSection';
 import {
   findAmmoStock, ammoKeyFromBin, roundsPerShot, roundsToFullRounds,
   consumeArmor, armorKey, familyKeyNormalize,
@@ -774,6 +775,8 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
           />
         </section>
       )}
+
+      <ModificationSection />
 
       {!selectedSource ? (
         <div className="bg-surface-container border border-outline-variant/20 p-8 rounded text-center font-mono text-sm text-secondary/60">
