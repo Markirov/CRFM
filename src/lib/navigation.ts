@@ -49,6 +49,7 @@ export const NAV_SECTIONS: NavSection[] = [
         tabs: [
           { id: 'unidades', label: 'Unidades' },
           { id: 'mercado-mechs', label: 'Mercado de Mechs' },
+          { id: 'disenos', label: 'Diseños Personalizados' },
         ],
       },
       { id: 'taller', label: 'Taller', icon: '🔧', path: '/taller', palette: 'amber',
