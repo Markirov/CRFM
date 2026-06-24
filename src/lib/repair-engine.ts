@@ -92,6 +92,7 @@ export const PRECIO_BLINDAJE: Record<string, number> = {
 
 // ── Modificador estado factura (Ayudas AA1:AB31, 31 niveles) ──
 export const ESTADO_FACTURA_PCT = [
+  200, 195, 190, 185, 180, 175, 170, 165, 160, 155,
   150, 145, 140, 135, 130, 125, 120, 115, 110, 105,
   100, 95, 90, 85, 80, 75, 70, 65, 60, 55,
   50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0,

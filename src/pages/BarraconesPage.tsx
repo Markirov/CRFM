@@ -23,7 +23,10 @@ export function BarraconesPage() {
   const [showSheets, setShowSheets] = useState(false);
   const [tab, setTab] = useState<Tab>('ficha');
 
-  const { barraconesPortada, setBarraconesPortada, roster, rosterLoading } = useAppStore();
+  const barraconesPortada = useAppStore(s => s.barraconesPortada);
+  const setBarraconesPortada = useAppStore(s => s.setBarraconesPortada);
+  const roster = useAppStore(s => s.roster);
+  const rosterLoading = useAppStore(s => s.rosterLoading);
   const { readable, writable, loading: permLoading } = usePerm('barracones');
 
   const FIXED_COUNT = roster.length;

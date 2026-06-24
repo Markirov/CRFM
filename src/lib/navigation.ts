@@ -35,7 +35,8 @@ export const NAV_SECTIONS: NavSection[] = [
       },
       { id: 'suministros', label: 'Suministros', icon: '📦', path: '/suministros', palette: 'amber',
         tabs: [
-          { id: 'mercado', label: 'Mercado' },
+          { id: 'mercado', label: 'Mercado de Piezas' },
+          { id: 'almacen', label: 'Almacén' },
           { id: 'viajes', label: 'Viajes y Transporte' },
         ],
       },
@@ -47,7 +48,7 @@ export const NAV_SECTIONS: NavSection[] = [
       { id: 'hangar', label: 'Hangar', icon: '🛠️', path: '/hangar', palette: 'amber',
         tabs: [
           { id: 'unidades', label: 'Unidades' },
-          { id: 'almacen', label: 'Almacén' },
+          { id: 'mercado-mechs', label: 'Mercado de Mechs' },
         ],
       },
       { id: 'taller', label: 'Taller', icon: '🔧', path: '/taller', palette: 'amber',

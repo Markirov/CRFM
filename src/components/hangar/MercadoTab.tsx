@@ -9,45 +9,13 @@ import { newHangarItem, type HangarItem } from '@/lib/hangar-types';
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 import { ALMACEN_CATALOG, type AlmacenCatalogItem } from '@/lib/almacen-catalog';
 import { tWeapon } from '@/lib/translator';
+import { CostModifierSelector } from '@/components/ui/CostModifierSelector';
 
 const fmt = (n: number) => Math.round(n).toLocaleString('es-ES') + ' ₡';
 
-export function MercadoTab({ items, refresh }: { items: HangarItem[]; refresh: () => Promise<void> }) {
-  const [mode, setMode] = useState<'mechs' | 'material'>('material');
-
-  return (
-    <div className="space-y-4">
-      <div className="flex gap-2 p-1 bg-surface-container/50 rounded-lg w-fit">
-        <button
-          onClick={() => setMode('material')}
-          className={`px-4 py-1.5 font-headline text-xs font-bold uppercase tracking-widest transition-colors rounded ${
-            mode === 'material' ? 'bg-primary-container text-on-primary-container' : 'text-secondary/60 hover:text-secondary'
-          }`}
-        >
-          Mercado de Piezas
-        </button>
-        <button
-          onClick={() => setMode('mechs')}
-          className={`px-4 py-1.5 font-headline text-xs font-bold uppercase tracking-widest transition-colors rounded ${
-            mode === 'mechs' ? 'bg-primary-container text-on-primary-container' : 'text-secondary/60 hover:text-secondary'
-          }`}
-        >
-          Compraventa de Unidades
-        </button>
-      </div>
-
-      {mode === 'material' && <MercadoMaterialTab />}
-      {mode === 'mechs' && <MercadoMechsTab items={items} refresh={refresh} />}
-    </div>
-  );
-}
-
-// ════════════════════════════════════════════════════════════
-//  MERCADO DE PIEZAS (ALMACÉN)
-// ════════════════════════════════════════════════════════════
-
-function MercadoMaterialTab() {
-  const { campaign, setCampaign } = useAppStore();
+export function MercadoTab() {
+  const campaign = useAppStore(s => s.campaign);
+  const setCampaign = useAppStore(s => s.setCampaign);
   const almacen = campaign.almacen || {};
   const campaignDate = useMemo(
     () => getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth),
@@ -57,6 +25,7 @@ function MercadoMaterialTab() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<AlmacenCatalogItem | null>(null);
   const [cantidadTons, setCantidadTons] = useState(1);
+  const [factorPct, setFactorPct] = useState(100);
   const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done'>('idle');
 
   const suggestions = useMemo(() => {
@@ -65,15 +34,16 @@ function MercadoMaterialTab() {
     return ALMACEN_CATALOG.filter(c => tWeapon(c.nombre).toLowerCase().includes(q) || c.nombre.toLowerCase().includes(q));
   }, [query]);
 
-  const precioTotal = selected ? selected.costoBase * cantidadTons : 0;
+  const precioTotal = selected ? Math.round((selected.costoBase * cantidadTons) * (factorPct / 100)) : 0;
 
   const handleBuyMaterial = async () => {
     if (!selected || cantidadTons <= 0 || precioTotal <= 0) return;
     setCommitState('sending');
 
     const yieldAmount = selected.yield ? selected.yield * cantidadTons : cantidadTons;
+    const storeKey = selected.almacenKey || selected.nombre;
     const newAlmacen = { ...almacen };
-    newAlmacen[selected.nombre] = (newAlmacen[selected.nombre] || 0) + yieldAmount;
+    newAlmacen[storeKey] = (newAlmacen[storeKey] || 0) + yieldAmount;
 
     // Asiento contable
     await commitLibroEntryAndTreasury({
@@ -83,7 +53,7 @@ function MercadoMaterialTab() {
       cantidad: precioTotal,
       tipo: 'gasto',
       categoria: 'repuestos',
-      nota: `Sumados ${yieldAmount} unidades al almacén`,
+      nota: `Sumados ${yieldAmount} unidades al almacén [${storeKey}]`,
       jugador: '',
     });
 
@@ -172,6 +142,14 @@ function MercadoMaterialTab() {
             )}
           </div>
 
+          <div className="pt-2">
+            <CostModifierSelector 
+              label="Multiplicador (%)" 
+              value={factorPct} 
+              onChange={setFactorPct} 
+            />
+          </div>
+
           <div className="pt-4 border-t border-outline-variant/20 flex items-center justify-between">
             <div className="font-mono text-xs text-secondary/80 uppercase">
               Coste Total: <span className="text-error font-bold text-base">{fmt(precioTotal)}</span>
@@ -195,8 +173,10 @@ function MercadoMaterialTab() {
 //  MERCADO DE UNIDADES (MECHS/VEHICULOS)
 // ════════════════════════════════════════════════════════════
 
-function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refresh: () => Promise<void> }) {
-  const { campaign, setActiveSubTab, roster } = useAppStore();
+export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refresh: () => Promise<void> }) {
+  const campaign = useAppStore(s => s.campaign);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const roster = useAppStore(s => s.roster);
   const { catalog } = useMechCatalog();
   const [searchParams, setSearchParams] = useSearchParams();
   const campaignDate = useMemo(
@@ -396,13 +376,12 @@ function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refresh: () 
               <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Base canon (₡)</label>
               <input type="number" value={precio} onChange={e => setPrecio(parseInt(e.target.value)||0)} className="w-full bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary" />
             </div>
-            <div>
-              <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Multiplicador (%)</label>
-              <div className="flex gap-1">
-                <input type="number" value={factorPct} onChange={e => setFactorPct(parseInt(e.target.value)||0)} className="w-16 bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-secondary text-right" />
-                <button onClick={() => setFactorPct(100)} className="px-2 bg-surface-container hover:bg-outline-variant/20 border border-outline-variant/40 text-[9px] font-mono text-secondary/60">100%</button>
-                <button onClick={() => setFactorPct(200)} className="px-2 bg-surface-container hover:bg-outline-variant/20 border border-outline-variant/40 text-[9px] font-mono text-secondary/60">200%</button>
-              </div>
+            <div className="col-span-2">
+              <CostModifierSelector 
+                label="Multiplicador (%)" 
+                value={factorPct} 
+                onChange={setFactorPct} 
+              />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 mt-2">

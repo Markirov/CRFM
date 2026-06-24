@@ -746,7 +746,8 @@ function UltimosMovimientos() {
 // ── Page ────────────────────────────────────────────────────
 
 export function ComisionPage() {
-  const { campaign, roster } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const roster = useAppStore(s => s.roster);
   const navigate = useNavigate();
   const BASE = import.meta.env.BASE_URL;
   const { isTabletDown, isMobile } = useViewport();

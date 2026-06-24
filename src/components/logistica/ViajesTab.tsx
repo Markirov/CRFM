@@ -7,7 +7,8 @@ import { genId } from '@/pages/FinanzasPage';
 import { sendTelegramNotif } from '@/lib/telegram-service';
 
 export function ViajesTab() {
-  const { campaign, roster } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const roster = useAppStore(s => s.roster);
   const [cubiertoPorContrato, setCubiertoPorContrato] = useState(false);
   
   // Basic travel costs state

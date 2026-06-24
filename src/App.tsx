@@ -7,9 +7,10 @@ import { SectionTabs } from '@/components/shell/SectionTabs';
 import { RouteErrorBoundary } from '@/components/shell/RouteErrorBoundary';
 import { useAppStore } from '@/lib/store';
 import { getPaletteForPath, getNavItemByPath } from '@/lib/navigation';
-import { loadConfig } from '@/lib/firebase-service';
+import { loadConfig, saveConfigBatch } from '@/lib/firebase-service';
 import { loadRoster } from '@/lib/roster';
 import { usePermissions } from '@/lib/permissions-service';
+import { migrateAlmacenKeys } from '@/lib/almacen-keys';
 import { AuthGate } from '@/components/shell/AuthGate';
 
 import { pageLoaders } from '@/lib/page-loaders';
@@ -35,6 +36,7 @@ const MandoPage             = lazy(() => pageLoaders['/mando']().then(m => ({ de
 const RecursosHumanosPage   = lazy(() => pageLoaders['/rrhh']().then(m => ({ default: m.RecursosHumanosPage })));
 const SuministrosPage       = lazy(() => pageLoaders['/suministros']().then(m => ({ default: m.SuministrosPage })));
 const PortadaPage           = lazy(() => pageLoaders['/portada']().then(m => ({ default: m.PortadaPage })));
+const CommandCenterPage     = lazy(() => import('@/pages/CommandCenterPage').then(m => ({ default: m.CommandCenterPage })));
 
 function RouteSpinner() {
   return (
@@ -46,7 +48,14 @@ function RouteSpinner() {
 
 export function App() {
   const location = useLocation();
-  const { setActivePalette, setCampaign, useLegacyDesigns, setRoster, setRosterLoading, userRole, setPerms, setPermsLoading } = useAppStore();
+  const setActivePalette = useAppStore(s => s.setActivePalette);
+  const setCampaign = useAppStore(s => s.setCampaign);
+  const useLegacyDesigns = useAppStore(s => s.useLegacyDesigns);
+  const setRoster = useAppStore(s => s.setRoster);
+  const setRosterLoading = useAppStore(s => s.setRosterLoading);
+  const userRole = useAppStore(s => s.userRole);
+  const setPerms = useAppStore(s => s.setPerms);
+  const setPermsLoading = useAppStore(s => s.setPermsLoading);
 
   // Permisos reactivos desde Firestore (onSnapshot)
   const { perms, loading: permsLoading } = usePermissions();
@@ -86,8 +95,19 @@ export function App() {
       }
       if (d['ALMACEN_JSON']) {
         try {
-          const map = JSON.parse(String(d['ALMACEN_JSON']));
-          if (map && typeof map === 'object') patch.almacen = map;
+          const raw = JSON.parse(String(d['ALMACEN_JSON']));
+          if (raw && typeof raw === 'object') {
+            // Migra claves legacy ("Ammo (LRM)") → granulares ("Ammo_LRM_Standard")
+            const migrated = migrateAlmacenKeys(raw);
+            patch.almacen = migrated;
+            // Persiste la migración solo si cambió algo
+            const keysChanged = Object.keys(raw).some(k => !(k in migrated)) ||
+                                Object.keys(migrated).some(k => !(k in raw));
+            if (keysChanged) {
+              saveConfigBatch({ ALMACEN_JSON: JSON.stringify(migrated) }).catch(() => {});
+              console.info('[App] Almacén migrado a claves granulares', migrated);
+            }
+          }
         } catch {/* ignore */}
       }
       if (d['ALMACEN_LIMITE_TON'] !== undefined) {
@@ -143,8 +163,9 @@ export function App() {
         <Suspense fallback={<RouteSpinner />}>
           <Routes>
             {/* Rutas Públicas */}
-            <Route path="/"               element={<Navigate to="/portada" replace />} />
+            <Route path="/"               element={<Navigate to={window.__TAURI_INTERNALS__ ? "/mando-pc" : "/portada"} replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
+            <Route path="/mando-pc"       element={<CommandCenterPage />} />
             <Route path="/tro"            element={<TROPage />} />
             <Route path="/wiki"           element={<WikiPage />} />
             <Route path="/mapa"           element={<MapaEstelarPage />} />

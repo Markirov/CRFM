@@ -8,7 +8,8 @@ interface SectionTabsProps {
 export const SUBTAB_RIGHT_SLOT_ID = 'subtab-right-slot';
 
 export function SectionTabs({ tabs }: SectionTabsProps) {
-  const { activeSubTab, setActiveSubTab } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   const ref = useRef<HTMLDivElement>(null);
 
   // Reporta su altura real a una CSS variable para que main ajuste padding-top.

@@ -493,7 +493,7 @@ function ParteSection({ writable }: { writable: boolean }) {
 // ── Page ──────────────────────────────────────────────────
 
 export function CronicasPage() {
-  const { campaign } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
   const { readable, writable, loading: permLoading } = usePerm('cronicas');
   const year  = campaign.campaignYear  ?? 3026;
   const month = campaign.campaignMonth ?? 1;

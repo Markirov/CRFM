@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { onAuthStateChanged, signInWithPopup, signOut, type User } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase-config';
 import { useAuthRole } from '@/lib/auth-roles';
 import { getRoles } from '@/lib/role-service';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
+import { invoke } from '@tauri-apps/api/core';
 
 interface Props { children?: ReactNode }
 
@@ -17,7 +18,19 @@ export function AuthGate({ children }: Props) {
   useAuthRole();
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, u => {
+    const unsub = onAuthStateChanged(auth, async u => {
+      if (!u && window.__TAURI_INTERNALS__) {
+        // Opción B: Intentar auto-login invisible si existe auth local
+        try {
+          const cfg: any = await invoke("get_config");
+          if (cfg?.admin_email && cfg?.admin_password) {
+            await signInWithEmailAndPassword(auth, cfg.admin_email, cfg.admin_password);
+            return; // onAuthStateChanged se disparará de nuevo
+          }
+        } catch (e) {
+          console.warn("No local tauri config for auto-login", e);
+        }
+      }
       setUser(u);
       setLoading(false);
     });
@@ -38,6 +51,12 @@ export function AuthGate({ children }: Props) {
   const handleLogin = async () => {
     setError('');
     try {
+      // En Tauri (aplicación de escritorio), los popups están bloqueados por seguridad.
+      if (window.__TAURI_INTERNALS__) {
+        setError('Por favor, añade admin_email y admin_password en ~/.kk-launcher/config.json');
+        return;
+      }
+
       const res = await signInWithPopup(auth, googleProvider);
       if (res?.user) {
         const email = res.user.email?.toLowerCase() ?? '';
@@ -50,7 +69,12 @@ export function AuthGate({ children }: Props) {
       }
     } catch (e: any) {
       console.error('=== ERROR EN LOGIN ===', e);
-      if (!error) setError(e?.message ?? 'Error de login');
+      if (e?.code === 'auth/popup-blocked') {
+        // Fallback automático por si falla la detección
+        await signInWithRedirect(auth, googleProvider);
+      } else {
+        if (!error) setError(e?.message ?? 'Error de login');
+      }
     }
   };
 

@@ -53,7 +53,7 @@ export function FinanzasPanel({ pilot, onSetPatrimonio, onSetEquipoPersonal, onS
   const [patrimonio, setPatrimonio] = useState(pilot.patrimonio?.toString() || '0');
   const [equipo, setEquipo] = useState(pilot.equipoPersonal || '');
   const [saving, setSaving] = useState(false);
-  const { userRole } = useAppStore();
+  const userRole = useAppStore(s => s.userRole);
   const canEditFinanzas = userRole === 'admin' || userRole === 'dm';
 
   // Sync state if pilot changes externally

@@ -28,8 +28,7 @@ import { CatalogSearch } from '@/components/simulador/CatalogSearch';
 import { SimuladorPortada } from '@/components/simulador/SimuladorPortada';
 import { FuerzaSyncBar } from '@/components/simulador/FuerzaSyncBar';
 import { SubtabRightPortal } from '@/components/shell/SubtabRightPortal';
-import { resolveAttacksForTarget } from '@/lib/sim-weapons';
-import { getCombatEffects, getActiveEffects } from '@/lib/sim-mech-effects';
+
 import { tWeapon } from '@/lib/translator';
 import { useAppStore } from '@/lib/store';
 import type { FireTarget } from '@/lib/combat-types';
@@ -61,7 +60,13 @@ function gateCampaignWrite(actionLabel: string): boolean {
 }
 
 export function SimuladorPage() {
-  const { activeSubTab, setActiveSubTab, simuladorPortada, setSimuladorPortada, roster, setRoster, campaign } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const simuladorPortada = useAppStore(s => s.simuladorPortada);
+  const setSimuladorPortada = useAppStore(s => s.setSimuladorPortada);
+  const roster = useAppStore(s => s.roster);
+  const setRoster = useAppStore(s => s.setRoster);
+  const campaign = useAppStore(s => s.campaign);
   const sim = useSimulador();
   const live = useLiveSession(sim);
   const { catalog } = useMechCatalog();
@@ -277,10 +282,16 @@ export function SimuladorPage() {
   const handleToggleCampaign = async () => {
     if (campaignMode) {
       // Salir: pregunta si guardar a FUERZACAMPAÑA
-      const choice = confirm('¿Guardar estado actual a FUERZACAMPAÑA antes de salir?\n\nOK = Guardar y salir\nCancelar = Solo salir (sin guardar)');
+      const choice = confirm('¿Qué deseas hacer?\n\n[OK] = Guardar y Pausar (Permite reanudar el combate actual después)\n[Cancelar] = Finalizar Misión (Limpia el campo de batalla, el daño persiste en el hangar)');
       if (choice) {
         const ok = await saveCampaignProgress('Campaña');
         if (!ok) return;
+      } else {
+        const confirmFinal = confirm('¿Seguro que deseas FINALIZAR LA MISIÓN?\n\nSe limpiará el campo de batalla actual, pero el daño de tus Mechs ya está guardado en el Hangar de forma permanente.');
+        if (!confirmFinal) return;
+        await saveCampaignProgress('Campaña'); // Guarda el daño actual al hangar por última vez
+        // Limpiamos FUERZACAMPAÑA para que la próxima misión empiece desde cero
+        await saveFuerzaCampana({ nombre: 'Campaña', bv: 0, snapshot: { schemaVersion: 1, updatedAt: new Date().toISOString(), activeTab: 'mechs', currentMechIdx: 0, currentVehicleIdx: 0, activeInfantryIdx: 0, activeBAIdx: 0, mechSlots: [], vehicleSlots: [], infantrySlots: [], baSlots: [] } as any });
       }
       // Limpia el simulador para dejarlo listo para partidas sueltas
       sim.resetSession();
@@ -334,35 +345,46 @@ export function SimuladorPage() {
         if (!item) continue;
         newHangarBySlot[i] = item;
 
-        // Mech ya cargado en el slot que coincide con el del hangar? saltar.
+        // Mech ya cargado en el slot que coincide con el del hangar?
         const loaded: any = loadedMechSlots[i];
         const loadedName = loaded?.state
           ? `${loaded.state.chassis || ''} ${loaded.state.model || ''}`.trim().toLowerCase()
           : '';
         const expected = `${item.chassis} ${item.model}`.trim().toLowerCase();
-        if (loadedName && (loadedName.includes(expected) || expected.includes(loadedName))) continue;
-
-        // Fetch del .ssw — prioriza sourceFile guardado en el item
-        const candidates: string[] = [];
-        if (item.sourceFile) candidates.push(item.sourceFile);
-        candidates.push(`${item.chassis} ${item.model}.ssw`);
-        candidates.push(`${item.chassis} ${item.model}.mtf`);
-
-        let text: string | null = null;
-        let fname = '';
-        for (const fn of candidates) {
-          const url = `${BASE}assets/mechs/${encodeURIComponent(fn)}`;
-          try {
-            const res = await fetch(url);
-            if (!res.ok) continue;
-            const body = await res.text();
-            const trimmed = body.trimStart().slice(0, 30).toLowerCase();
-            if (trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html')) continue;
-            text = body;
-            fname = fn;
-            break;
-          } catch {/* ignore */}
+        if (loadedName && (loadedName.includes(expected) || expected.includes(loadedName))) {
+          // El mech ya está en FUERZACAMPAÑA. Pudo haber sido reparado en el Taller mientras tanto,
+          // así que sincronizamos su sesión con la del HangarItem.
+          if (item.sessionActiva && loaded.session) {
+            applyDamageToSession(loaded.session, item);
+          }
+          continue;
         }
+
+        // Fetch del .ssw — prioriza sswRaw > sourceFile > nombre canon
+        let text: string | null = item.sswRaw || null;
+        let fname = item.sswRaw ? `${item.chassis} ${item.model} (Custom).ssw` : '';
+
+        if (!text) {
+          const candidates: string[] = [];
+          if (item.sourceFile) candidates.push(item.sourceFile);
+          candidates.push(`${item.chassis} ${item.model}.ssw`);
+          candidates.push(`${item.chassis} ${item.model}.mtf`);
+
+          for (const fn of candidates) {
+            const url = `${BASE}assets/mechs/${encodeURIComponent(fn)}`;
+            try {
+              const res = await fetch(url);
+              if (!res.ok) continue;
+              const body = await res.text();
+              const trimmed = body.trimStart().slice(0, 30).toLowerCase();
+              if (trimmed.startsWith('<!doctype html') || trimmed.startsWith('<html')) continue;
+              text = body;
+              fname = fn;
+              break;
+            } catch {/* ignore */}
+          }
+        }
+        
         if (text) {
           // Cargamos el texto del mech (.ssw) y aplicamos daño si hay (Integración Hangar)
           sim.loadUnitText(text, fname, i, (state, session) => {
@@ -471,12 +493,14 @@ export function SimuladorPage() {
     return <InfantryView sim={sim} />;
   }
 
-  const slotNames = isMech
+  const slotNames = useMemo(() => isMech
     ? sim.mechSlots.map((s, i) => {
         if (campaignPilots && campaignPilots[i]) return campaignPilots[i];
         return s.state ? `${s.state.chassis} ${s.state.model}` : `SLOT ${i + 1}`;
       })
-    : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`);
+    : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`),
+    [isMech, sim.mechSlots, sim.vehicleSlots, campaignPilots]
+  );
 
   const blockMsg = (i: number) => {
     const h = hangarBySlot[i];
@@ -581,9 +605,9 @@ export function SimuladorPage() {
         </div>
       ) : isMech && ms && ss ? (
         /* ── MECH LAYOUT ── */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 portrait:lg:grid-cols-2 gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 mech-portrait-grid gap-4 md:gap-6 pb-20 max-w-7xl mx-auto px-2 md:px-0">
           {/* Left: Pilot + Fire + Heat */}
-          <div className="col-span-1 md:col-span-1 lg:col-span-3 portrait:lg:col-span-1 portrait:lg:order-1 space-y-4">
+          <div className="col-span-1 md:col-span-1 lg:col-span-3 mech-portrait-pilot space-y-4">
             <PilotPanel
               state={ms}
               session={ss}
@@ -646,7 +670,7 @@ export function SimuladorPage() {
           </div>
 
           {/* Center: Armor Diagram */}
-          <div className="col-span-1 md:col-span-1 lg:col-span-6 portrait:lg:col-span-2 portrait:lg:order-3">
+          <div className="col-span-1 md:col-span-1 lg:col-span-6 mech-portrait-armor">
             <ArmorDiagram
               state={ms}
               session={ss}
@@ -662,14 +686,14 @@ export function SimuladorPage() {
           </div>
 
           {/* Right: Weapons + Log */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-3 portrait:lg:col-span-1 portrait:lg:order-2 space-y-4">
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 mech-portrait-weapons space-y-4">
             {/* Weapons */}
             <section className="bg-surface-container-low p-4 clip-chamfer border-l-2 border-primary-container/30">
               <h2 className="font-headline text-sm font-bold text-primary-container tracking-widest uppercase mb-3">
                 Armas
               </h2>
               <div className="space-y-1">
-                {(() => {
+                {useMemo(() => {
                   const mechHasTC = mechHasTargetingComputer(ss.crits as any);
                   if (ms.weapons.length === 0) return (
                     <div className="font-mono text-[10px] text-secondary/40 italic py-4 text-center">Sin armas</div>
@@ -804,7 +828,7 @@ export function SimuladorPage() {
                     </div>
                   );
                 });
-                })()}
+                }, [ms, ss, sim])}
               </div>
             </section>
 
@@ -812,7 +836,7 @@ export function SimuladorPage() {
           </div>
 
           {/* Bottom: Critical Matrix */}
-          <div className="col-span-1 md:col-span-12 portrait:lg:col-span-2 portrait:lg:order-4">
+          <div className="col-span-1 md:col-span-12 mech-portrait-crits">
             <CriticalMatrix
               state={ms}
               session={ss}

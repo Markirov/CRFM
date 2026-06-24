@@ -312,7 +312,7 @@ function DetailPanel({ entry, text, loading, onClose }: {
   onClose: () => void;
 }) {
   const navigate = useNavigate();
-  const { setActiveSubTab } = useAppStore();
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   // Parse rápido SSW XML para sacar datos básicos
   const parsed: ParsedSSWBasic = useMemo(() => parseSSWBasic(text ?? ''), [text]);
 

@@ -451,7 +451,9 @@ export function HojaServicioPage() {
   const [scale, setScale] = useState(1);
   const location = useLocation();
 
-  const { roster, rosterLoading, campaign } = useAppStore();
+  const roster = useAppStore(s => s.roster);
+  const rosterLoading = useAppStore(s => s.rosterLoading);
+  const campaign = useAppStore(s => s.campaign);
   const { readable, writable, loading: permLoading } = usePerm('hoja');
 
   // Pilotos PC activos (no PNJ). Configuracion.PC_JUGADORES filtra; si vacía → todos activos.

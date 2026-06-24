@@ -21,7 +21,7 @@ interface Props {
 }
 
 export function ReadOnlyBanner({ readOnly, sectionLabel }: Props) {
-  const { userRole } = useAppStore();
+  const userRole = useAppStore(s => s.userRole);
   if (!readOnly) return null;
 
   const roleLabel = userRole ? (ROLE_LABEL[userRole] ?? userRole) : 'Sin rol';

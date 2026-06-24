@@ -32,7 +32,9 @@ export function BarraconesPageLegacy() {
   const [showSheets, setShowSheets] = useState(false);
   const [tab, setTab] = useState<Tab>('ficha');
 
-  const { barraconesPortada, setBarraconesPortada, campaign } = useAppStore();
+  const barraconesPortada = useAppStore(s => s.barraconesPortada);
+  const setBarraconesPortada = useAppStore(s => s.setBarraconesPortada);
+  const campaign = useAppStore(s => s.campaign);
   const { readable, writable, loading: permLoading } = usePerm('barracones');
   const fixedPlayers = DEFAULT_FIXED_PLAYERS.map((fallback, i) => {
     const fromConfig = campaign.pilotNames?.[i]?.trim();

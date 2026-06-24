@@ -34,15 +34,15 @@ import { db, auth } from './firebase-config';
 import type { SimuladorSnapshot } from './simulador-persistence';
 
 // ── Helpers envelope ────────────────────────────────────────────
-type Envelope<T = any> = { success: boolean; data?: T; error?: string };
+type Envelope<T = unknown> = { success: boolean; data?: T; error?: string };
 
 async function safe<T>(fn: () => Promise<T>): Promise<Envelope<T>> {
   try {
     const data = await fn();
     return { success: true, data };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('[firebase] error:', e);
-    return { success: false, error: e?.message ?? String(e) };
+    return { success: false, error: e instanceof Error ? e.message : String(e) };
   }
 }
 
@@ -77,7 +77,7 @@ export async function sheetsGet(params: Record<string, string>) {
   return { success: false, error: `Acción no soportada en Firebase: ${action}` };
 }
 
-export async function sheetsPost(_body: Record<string, any>) {
+export async function sheetsPost(_body: Record<string, unknown>) {
   console.warn('[firebase] sheetsPost legacy llamado, no-op:', _body);
   return { success: false, error: 'sheetsPost legacy no soportado — usar funciones directas firebase-service' };
 }
@@ -117,21 +117,21 @@ function isSimKey(key: string): boolean {
   return false;
 }
 
-export const loadConfig = async (): Promise<{ success: boolean; data?: { config: Record<string, any> }; error?: string }> => {
+export const loadConfig = async (): Promise<{ success: boolean; data?: { config: Record<string, unknown> }; error?: string }> => {
   try {
     const [mainSnap, simSnap] = await Promise.all([getDoc(CONFIG_MAIN_REF()), getDoc(CONFIG_SIM_REF())]);
-    const main: Record<string, any> = mainSnap.exists() ? (mainSnap.data() as any) : {};
-    const sim:  Record<string, any> = simSnap.exists()  ? (simSnap.data()  as any) : {};
+    const main: Record<string, unknown> = mainSnap.exists() ? (mainSnap.data() as Record<string, unknown>) : {};
+    const sim:  Record<string, unknown> = simSnap.exists()  ? (simSnap.data()  as Record<string, unknown>) : {};
     // Defensa en profundidad: del doc sim solo aceptamos keys SIM_* o las
     // FUERZA_<email>_<slot> que matchean por prefijo. Si alguien escribe
     // CONTRATO_VALOR en config/sim por error/maliciosamente, lo ignoramos.
-    const simFiltered: Record<string, any> = {};
+    const simFiltered: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(sim)) if (isSimKey(k)) simFiltered[k] = v;
     const config = { ...main, ...simFiltered };
     return { success: true, data: { config } };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('[firebase] loadConfig:', e);
-    return { success: false, error: e?.message ?? String(e) };
+    return { success: false, error: e instanceof Error ? e.message : String(e) };
   }
 };
 
@@ -142,7 +142,7 @@ export const saveConfigBatch = (config: Record<string, string>) =>
     for (const [k, v] of Object.entries(config)) {
       (isSimKey(k) ? simPatch : mainPatch)[k] = v;
     }
-    const ops: Promise<any>[] = [];
+    const ops: Promise<unknown>[] = [];
     if (Object.keys(mainPatch).length) ops.push(setDoc(CONFIG_MAIN_REF(), mainPatch, { merge: true }));
     if (Object.keys(simPatch).length)  ops.push(setDoc(CONFIG_SIM_REF(),  simPatch,  { merge: true }));
     await Promise.all(ops);
@@ -156,7 +156,7 @@ export const saveConfigBatch = (config: Record<string, string>) =>
 const PERSONAJES_COL = () => collection(db, 'personajes');
 
 /** Lee un jugador por nombre (= doc id). Devuelve envelope shape Apps Script. */
-export const loadPlayer = (name: string): Promise<Envelope<any>> =>
+export const loadPlayer = (name: string): Promise<Envelope<unknown>> =>
   safe(async () => {
     const snap = await getDoc(doc(PERSONAJES_COL(), name));
     if (!snap.exists()) return { result: 'success', msg: '', personajes: [], jugador: name };
@@ -164,12 +164,12 @@ export const loadPlayer = (name: string): Promise<Envelope<any>> =>
     return { result: 'success', msg: '', personajes: [obj], ...obj };
   });
 
-export const searchPilots = (name: string): Promise<Envelope<any>> => loadPlayer(name);
+export const searchPilots = (name: string): Promise<Envelope<unknown>> => loadPlayer(name);
 
 /** Hoja de unidad — col Q (mech asignado) + datos base. */
-export const loadUnitSheet = (name: string): Promise<Envelope<any>> => loadPlayer(name);
+export const loadUnitSheet = (name: string): Promise<Envelope<unknown>> => loadPlayer(name);
 
-export const savePlayer = (data: any): Promise<Envelope<any>> =>
+export const savePlayer = (data: Record<string, unknown>): Promise<Envelope<unknown>> =>
   safe(async () => {
     const id = String(data.jugador ?? data.nombre ?? '').trim();
     if (!id) throw new Error('savePlayer: falta jugador/nombre');
@@ -177,7 +177,7 @@ export const savePlayer = (data: any): Promise<Envelope<any>> =>
     return { id, result: 'success', msg: 'Guardado' };
   });
 
-export const savePilot = (data: any): Promise<Envelope<any>> => savePlayer(data);
+export const savePilot = (data: Record<string, unknown>): Promise<Envelope<unknown>> => savePlayer(data);
 
 /** Migración: borra mech asignado del piloto en config/main
  *  (PILOTO_N_MECH) y en cada doc de `personajes/` (campo `mech`).
@@ -198,7 +198,7 @@ export const resetLegacyMechAssignments = () =>
     const ops: Promise<unknown>[] = [];
     let touched = 0;
     snap.forEach(d => {
-      const data = d.data() as any;
+      const data = d.data() as Record<string, unknown>;
       if (data?.mech) {
         ops.push(setDoc(doc(PERSONAJES_COL(), d.id), { mech: '' }, { merge: true }));
         touched++;
@@ -212,9 +212,9 @@ export const resetLegacyMechAssignments = () =>
 
 const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
 
-function pickSkillLevel(extraSkills: any, names: string[]): number | null {
+function pickSkillLevel(extraSkills: unknown, names: string[]): number | null {
   if (!Array.isArray(extraSkills)) return null;
-  for (const s of extraSkills) {
+  for (const s of extraSkills as Record<string, unknown>[]) {
     if (!s?.name) continue;
     const n = String(s.name).toLowerCase();
     if (names.some(target => n === target.toLowerCase())) {
@@ -229,7 +229,7 @@ async function loadRosterAsEnvelope() {
   try {
     const snap = await getDocs(PERSONAJES_COL());
     const roster = snap.docs.map(d => {
-      const data = d.data() as any;
+      const data = d.data() as Record<string, unknown>;
       const jugador = String(data.jugador ?? d.id);
       const orderIdx = CAMPAIGN_PILOT_ORDER.indexOf(jugador);
       return {
@@ -256,9 +256,9 @@ async function loadRosterAsEnvelope() {
       };
     }).sort((a, b) => a.order - b.order);
     return { success: true, data: { roster } };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error('[firebase] loadRoster:', e);
-    return { success: false, error: e?.message ?? String(e) };
+    return { success: false, error: e instanceof Error ? e.message : String(e) };
   }
 }
 
@@ -342,7 +342,7 @@ const LIBRO_COL = () => collection(db, 'libroMayor');
 
 export const loadLibroMayor = () =>
   safe(async () => {
-    const snap = await getDocs(query(LIBRO_COL(), orderBy('fecha', 'desc')));
+    const snap = await getDocs(query(LIBRO_COL(), orderBy('fecha', 'desc'), fsLimit(30)));
     const entries = snap.docs.map(d => ({ id: d.id, ...d.data() })) as LibroMayorEntry[];
     return { entries, libro: entries };
   });
@@ -433,11 +433,11 @@ async function readConfigField(key: string): Promise<string | null> {
   const primary  = isSimKey(key) ? CONFIG_SIM_REF() : CONFIG_MAIN_REF();
   const fallback = isSimKey(key) ? CONFIG_MAIN_REF() : CONFIG_SIM_REF();
   const snap = await getDoc(primary);
-  const v = snap.exists() ? (snap.data() as any)?.[key] : undefined;
+  const v = snap.exists() ? (snap.data() as Record<string, unknown>)?.[key] : undefined;
   if (typeof v === 'string') return v;
   // Fallback al otro doc (compat con datos legacy pre-split)
   const fb = await getDoc(fallback);
-  const fv = fb.exists() ? (fb.data() as any)?.[key] : undefined;
+  const fv = fb.exists() ? (fb.data() as Record<string, unknown>)?.[key] : undefined;
   return typeof fv === 'string' ? fv : null;
 }
 
@@ -489,7 +489,7 @@ export async function loadAllFuerzaConfigSlots(): Promise<Record<FuerzaSlot, Fue
   const out: Record<FuerzaSlot, FuerzaConfigEntry | null> = { 1: null, 2: null, 3: null, 4: null, 5: null };
   // FUERZA_* vive en config/sim. Fallback a config/main por compat legacy.
   const [simSnap, mainSnap] = await Promise.all([getDoc(CONFIG_SIM_REF()), getDoc(CONFIG_MAIN_REF())]);
-  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as any : {}), ...(simSnap.exists() ? simSnap.data() as any : {}) };
+  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as Record<string, unknown> : {}), ...(simSnap.exists() ? simSnap.data() as Record<string, unknown> : {}) };
   ([1, 2, 3, 4, 5] as FuerzaSlot[]).forEach(s => {
     const raw = cfg?.[fuerzaKey(s)];
     if (typeof raw === 'string' && raw) {
@@ -673,7 +673,7 @@ export async function loadAllEnemigoConfigSlots(): Promise<Record<EnemigoSlot, E
   const out: Record<EnemigoSlot, EnemigoConfigEntry | null> = { 1: null, 2: null, 3: null, 4: null, 5: null };
   // ENEMIGO* vive en config/sim. Fallback a config/main por compat legacy.
   const [simSnap, mainSnap] = await Promise.all([getDoc(CONFIG_SIM_REF()), getDoc(CONFIG_MAIN_REF())]);
-  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as any : {}), ...(simSnap.exists() ? simSnap.data() as any : {}) };
+  const cfg = { ...(mainSnap.exists() ? mainSnap.data() as Record<string, unknown> : {}), ...(simSnap.exists() ? simSnap.data() as Record<string, unknown> : {}) };
   ([1, 2, 3, 4, 5] as EnemigoSlot[]).forEach(s => {
     const raw = cfg?.[enemigoKey(s)];
     if (typeof raw === 'string' && raw) {
@@ -706,7 +706,7 @@ export const loadHistorial = () =>
     return { entries, historial: entries };
   });
 
-export const loadLogros = (): Promise<Envelope<any>> =>
+export const loadLogros = (): Promise<Envelope<unknown>> =>
   safe(async () => {
     const snap = await getDocs(LOGROS_COL());
     const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));

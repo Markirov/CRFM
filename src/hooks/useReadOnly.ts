@@ -14,7 +14,8 @@
 import { useAppStore } from '@/lib/store';
 
 export function useReadOnly(sectionId: string, propOverride?: boolean): boolean {
-  const { userRole, perms } = useAppStore();
+  const userRole = useAppStore(s => s.userRole);
+  const perms = useAppStore(s => s.perms);
 
   // Si App.tsx ya calculó y pasó el prop, úsalo directamente
   if (propOverride !== undefined) return propOverride;
@@ -33,7 +34,8 @@ export function useReadOnly(sectionId: string, propOverride?: boolean): boolean 
 
 /** Devuelve true si el usuario puede ver la sección (read o write). */
 export function useCanRead(sectionId: string): boolean {
-  const { userRole, perms } = useAppStore();
+  const userRole = useAppStore(s => s.userRole);
+  const perms = useAppStore(s => s.perms);
   if (userRole === 'admin') return true;
   if (!userRole) return false;
   const perm = perms.find(p => p.id === sectionId);

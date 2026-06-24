@@ -5,7 +5,8 @@ import { LogrosPage } from './LogrosPage';
 import { PersonalTab } from './FinanzasPage';
 
 export function RecursosHumanosPage() {
-  const { activeSubTab, campaign } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const campaign = useAppStore(s => s.campaign);
 
   if (activeSubTab === 'reclutamiento') return <ReclutamientoPage />;
   if (activeSubTab === 'barracones') return <BarraconesPage />;

@@ -16,7 +16,7 @@ interface MercadoPersonalTabProps {
 export function MercadoPersonalTab({ pilot, onSetPatrimonio, onSetEquipoPersonal, onSaveFirebase }: MercadoPersonalTabProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('Vestimenta');
   const [selectedLocation, setSelectedLocation] = useState<'Esfera Interior' | 'Clanes'>('Esfera Interior');
-  const { campaign } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
   const currentYear = campaign?.campaignYear || 3025;
   
   const currentFunds = pilot.patrimonio || 0;

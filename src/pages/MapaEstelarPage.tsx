@@ -75,7 +75,9 @@ function SystemSearch({
 // ── Page ─────────────────────────────────────────────────────────────────────
 export function MapaEstelarPage() {
   const { readable, writable, loading: permLoading } = usePerm('mapa');
-  const { campaign, activeSubTab, setActiveSubTab } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const activeSubTab = useAppStore(s => s.activeSubTab);
+  const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
   const { db }        = useStarSystems();
   const defaultYear   = closestSucsYear(campaign.campaignYear);
 

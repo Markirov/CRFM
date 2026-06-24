@@ -85,7 +85,7 @@ interface Props {
 }
 
 export function BarraconesPortada({ onSelect, pilotSlots }: Props) {
-  const { roster } = useAppStore();
+  const roster = useAppStore(s => s.roster);
 
   // Agrupa roster por col V "Lanza" preservando orden sheet
   // Cada item lleva su slot index original para mapear a pilotSlots

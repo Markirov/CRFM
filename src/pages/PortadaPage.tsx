@@ -112,7 +112,7 @@ const C = {
 // ── Componente principal ───────────────────────────────────────
 export function PortadaPage() {
   const navigate  = useNavigate();
-  const { campaign } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
   const BASE = import.meta.env.BASE_URL;
   const { readable, writable, loading: permLoading } = usePerm('comision');
 

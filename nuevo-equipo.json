@@ -982,5 +982,136 @@
     "introYear": 2000,
     "faccion": "General",
     "peso": 5.1
+  },
+  {
+    "id": "ablative-armor-suit",
+    "nombre": "Ablative Armor (Suit)",
+    "descripcion": "Sin descripción.",
+    "precio": 1000,
+    "categoria": "Vestimenta",
+    "introYear": 2000,
+    "faccion": "General",
+    "peso": 6.3
+  },
+  {
+    "id": "auto-pistol",
+    "nombre": "Auto-Pistol",
+    "descripcion": "Sin descripción.",
+    "precio": 0,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "ballistic-plate-armor-suit",
+    "nombre": "Ballistic Plate Armor (Suit)",
+    "descripcion": "Encumbering. Cannot be patched if any BAR is reduced below half.",
+    "precio": 1600,
+    "categoria": "Vestimenta",
+    "introYear": 2000,
+    "faccion": "General",
+    "peso": 22.0
+  },
+  {
+    "id": "i-r-scanner",
+    "nombre": "I/R Scanner",
+    "descripcion": "Mide la intensidad de la radiación infrarroja (calor) en un rango de hasta 10 kilómetros. Puede detectar 'firmas de calor' de 'Mechs a gran distancia.",
+    "precio": 5000,
+    "categoria": "Equipo",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "industrial-exoskeleton",
+    "nombre": "Industrial Exoskeleton",
+    "descripcion": "Un exoesqueleto que triplica la fuerza del usuario para levantar, empujar o tirar. No es adecuado para el combate.",
+    "precio": 15000,
+    "categoria": "Equipo",
+    "introYear": 2000,
+    "faccion": "General",
+    "peso": 40.0
+  },
+  {
+    "id": "katana",
+    "nombre": "Katana",
+    "descripcion": "-1 TN on attack rolls.",
+    "precio": 250,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "Esfera Interior",
+    "peso": 2.5
+  },
+  {
+    "id": "laser-pistol",
+    "nombre": "Laser Pistol",
+    "descripcion": "Arma de energía de corto alcance. Requiere Power Packs.",
+    "precio": 750,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "laser-rifle",
+    "nombre": "Laser Rifle",
+    "descripcion": "Arma de energía de largo alcance. Requiere Power Packs.",
+    "precio": 1250,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "mechwarrior-combat-suit",
+    "nombre": "MechWarrior Combat Suit",
+    "descripcion": "Traje multifuncional. Absorbe 1/4 del daño de energía y 4 puntos de daño de proyectiles/cuerpo a cuerpo. Su efectividad se reduce a la mitad tras recibir 16 puntos de daño. Reduce el movimiento del portador en 1/4. El neurocasco detiene 15 puntos de daño a la cabeza.",
+    "precio": 0,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "medkit",
+    "nombre": "MedKit",
+    "descripcion": "Kit de primeros auxilios básico. Contiene férulas, gasas, antisépticos, etc. Permite realizar cuidados médicos de Nivel 2.",
+    "precio": 50,
+    "categoria": "Médico",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "rifle",
+    "nombre": "Rifle",
+    "descripcion": "Arma de fuego estándar de largo alcance.",
+    "precio": 80,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "srm-launcher",
+    "nombre": "SRM Launcher",
+    "descripcion": "Lanzador de misiles de corto alcance portátil.",
+    "precio": 0,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "sword",
+    "nombre": "Sword",
+    "descripcion": "Arma blanca de mayor tamaño y daño.",
+    "precio": 10,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General"
+  },
+  {
+    "id": "vibroblade",
+    "nombre": "Vibroblade",
+    "descripcion": "-1 TN on attack rolls. Uses Power Packs.",
+    "precio": 0,
+    "categoria": "Armas",
+    "introYear": 2000,
+    "faccion": "General",
+    "peso": 3.0
   }
 ]

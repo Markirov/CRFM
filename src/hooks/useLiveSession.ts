@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { collection, doc, onSnapshot, setDoc, getDocs, updateDoc, arrayUnion, arrayRemove, deleteDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, setDoc, getDocs, updateDoc, arrayUnion, arrayRemove, deleteDoc, query, where } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase-config';
 import { useSimulador } from './useSimulador';
 import { useAppStore } from '@/lib/store';
@@ -42,7 +42,7 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
   const [mySession, setMySession] = useState<LiveSession | null>(null);
   const [isLive, setIsLive] = useState<boolean>(!!sessionStorage.getItem('liveSessionId'));
 
-  const { roster } = useAppStore();
+  const roster = useAppStore(s => s.roster);
 
   // Inicializa playerName basado en el usuario logueado o un nombre por defecto
   useEffect(() => {
@@ -147,7 +147,8 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
       setMySession(null);
       return;
     }
-    const unsub = onSnapshot(collection(db, LIVE_COL), (snap) => {
+    const fourHoursAgo = Date.now() - 4 * 60 * 60 * 1000;
+    const unsub = onSnapshot(query(collection(db, LIVE_COL), where('updatedAt', '>=', fourHoursAgo)), (snap) => {
       const all: LiveSession[] = [];
       const now = Date.now();
       snap.forEach(docSnap => {

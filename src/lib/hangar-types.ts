@@ -25,6 +25,9 @@ export interface HangarItem {
   techRating?:  string;   // 'A'..'F' (alimenta MechMaintenanceState)
   /** Nombre del .ssw en public/assets/mechs/ (clave para fetch en Simulador). */
   sourceFile?:  string;
+  /** XML modificado y serializado del Mech, si ha sido editado por el usuario in-app. 
+   * Tiene precedencia sobre sourceFile. */
+  sswRaw?:      string;
   /** True si el mech tiene jump jets (afecta 'Mech Damage Status Table). */
   hasJumpJets?: boolean;
   /** True si el mech tiene armas con munición (afecta 'Mech Damage Status Table). */

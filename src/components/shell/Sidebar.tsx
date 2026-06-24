@@ -10,7 +10,13 @@ import { canRead } from '@/lib/permissions-service';
 
 export function Sidebar() {
   const location = useLocation();
-  const { sidebarOpen, setSidebarOpen, setSimuladorPortada, setBarraconesPortada, userRole, perms, permsLoading } = useAppStore();
+  const sidebarOpen = useAppStore(s => s.sidebarOpen);
+  const setSidebarOpen = useAppStore(s => s.setSidebarOpen);
+  const setSimuladorPortada = useAppStore(s => s.setSimuladorPortada);
+  const setBarraconesPortada = useAppStore(s => s.setBarraconesPortada);
+  const userRole = useAppStore(s => s.userRole);
+  const perms = useAppStore(s => s.perms);
+  const permsLoading = useAppStore(s => s.permsLoading);
 
   return (
     <>

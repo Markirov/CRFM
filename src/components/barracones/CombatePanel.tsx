@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { Pilot } from '@/lib/barracones-types';
 import { calcHp, calcAttrAvg, calcTIR, ARMOR_TABLE } from '@/lib/barracones-data';
 import { INFANTRY_WEAPON_TABLE, getWeaponSkillCandidates, getWeaponMod, resolveWeaponName } from '@/lib/barracones-weapons';
@@ -85,20 +85,23 @@ export function CombatePanel({ pilot, onSetHpDmg, onSetWeapon }: Props) {
   const baseDes = pilot.des - (pilot.attrUpgrades?.des ?? 0);
   const baseInt = pilot.int - (pilot.attrUpgrades?.int ?? 0);
   const baseCar = pilot.car - (pilot.attrUpgrades?.car ?? 0);
-  const attrAvg = calcAttrAvg(baseFue, baseDes, baseInt, baseCar);
-  const hpLocs    = calcHp(pilot.fue);
-  const armorByLoc = calcArmorByLoc(pilot);
+  
+  const attrAvg = useMemo(() => calcAttrAvg(baseFue, baseDes, baseInt, baseCar), [baseFue, baseDes, baseInt, baseCar]);
+  const hpLocs    = useMemo(() => calcHp(pilot.fue), [pilot.fue]);
+  const armorByLoc = useMemo(() => calcArmorByLoc(pilot), [pilot]);
 
   // Defensive fallbacks for legacy saves that may lack these fields
-  const armas = Array.isArray(pilot.armas) ? pilot.armas : [];
-  const habs  = Array.isArray(pilot.habilidades) ? pilot.habilidades : [];
+  const armas = useMemo(() => Array.isArray(pilot.armas) ? pilot.armas : [], [pilot.armas]);
+  const habs  = useMemo(() => Array.isArray(pilot.habilidades) ? pilot.habilidades : [], [pilot.habilidades]);
 
   // Skills sorted: combat first
-  const skills = [...habs].sort((a, b) => {
-    const aC = COMBAT_SKILLS.some(s => a.nombre.toLowerCase().includes(s)) ? 1 : 0;
-    const bC = COMBAT_SKILLS.some(s => b.nombre.toLowerCase().includes(s)) ? 1 : 0;
-    return bC - aC;
-  });
+  const skills = useMemo(() => {
+    return [...habs].sort((a, b) => {
+      const aC = COMBAT_SKILLS.some(s => a.nombre.toLowerCase().includes(s)) ? 1 : 0;
+      const bC = COMBAT_SKILLS.some(s => b.nombre.toLowerCase().includes(s)) ? 1 : 0;
+      return bC - aC;
+    });
+  }, [habs]);
 
   const [selectedSkill,   setSelectedSkill]   = useState<string | null>(null);
   const [selectedWeapon,  setSelectedWeapon]  = useState<number | null>(null);
@@ -127,9 +130,11 @@ export function CombatePanel({ pilot, onSetHpDmg, onSetWeapon }: Props) {
   }, [pilot.id]);
 
   // ── Melee detection ───────────────────────────────────────
-  const selectedWeaponDef = selectedWeapon !== null
-    ? INFANTRY_WEAPON_TABLE.find(w => w.name === resolveWeaponName(armas[selectedWeapon]?.nombre || ''))
-    : null;
+  const selectedWeaponDef = useMemo(() => {
+    return selectedWeapon !== null
+      ? INFANTRY_WEAPON_TABLE.find(w => w.name === resolveWeaponName(armas[selectedWeapon]?.nombre || ''))
+      : null;
+  }, [selectedWeapon, armas]);
   const isMelee = selectedWeaponDef?.tipo === 'Melee' || selectedWeaponDef?.tipo === 'Espada';
 
   // ── Skill / TN calculation ──────────────────────────────────

@@ -14,7 +14,7 @@ import { loadHangar, saveHangarItem } from '@/lib/firebase-service';
 import type { HangarItem } from '@/lib/hangar-types';
 
 export function MechAssignmentBar({ pilotIdx, variant = 'bar' }: { pilotIdx: number; variant?: 'bar' | 'parchment' }) {
-  const { roster } = useAppStore();
+  const roster = useAppStore(s => s.roster);
   const pilotEntry = roster[pilotIdx];
   const pilotName = pilotEntry?.apodo || pilotEntry?.nombre || `Piloto ${pilotIdx + 1}`;
 
@@ -55,7 +55,7 @@ export function MechAssignmentBar({ pilotIdx, variant = 'bar' }: { pilotIdx: num
       try {
         await saveHangarItem({ ...current, pilotoIdx: undefined });
         await refresh();
-      } catch (e: any) { setErr(e?.message ?? 'Error al guardar'); }
+      } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'Error al guardar'); }
       finally { setSaving(false); }
       return;
     }
@@ -94,7 +94,7 @@ export function MechAssignmentBar({ pilotIdx, variant = 'bar' }: { pilotIdx: num
       ops.push(saveHangarItem({ ...target, pilotoIdx: pilotIdx }));
       await Promise.all(ops);
       await refresh();
-    } catch (e: any) { setErr(e?.message ?? 'Error al guardar'); }
+    } catch (e: unknown) { setErr(e instanceof Error ? e.message : 'Error al guardar'); }
     finally { setSaving(false); }
   };
 

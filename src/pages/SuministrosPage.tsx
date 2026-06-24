@@ -1,31 +1,18 @@
-import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { MercadoTab } from '../components/hangar/MercadoTab';
 import { ViajesTab } from '../components/logistica/ViajesTab';
-import { loadHangar } from '@/lib/firebase-service';
-import type { HangarItem } from '@/lib/hangar-types';
+import { MaterialTab } from '../components/hangar/MaterialTab';
 
 export function SuministrosPage() {
-  const { activeSubTab } = useAppStore();
-  const [items, setItems] = useState<HangarItem[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const refresh = async () => {
-    setLoading(true);
-    try {
-      const res = await loadHangar();
-      if (res.success && Array.isArray(res.data?.items)) {
-        setItems(res.data.items as HangarItem[]);
-      }
-    } finally { setLoading(false); }
-  };
-
-  useEffect(() => { void refresh(); }, []);
+  const activeSubTab = useAppStore(s => s.activeSubTab);
 
   if (activeSubTab === 'viajes') {
     return <ViajesTab />;
   }
+  if (activeSubTab === 'almacen') {
+    return <MaterialTab />;
+  }
 
   // Por defecto, Mercado
-  return <MercadoTab items={items} refresh={refresh} />;
+  return <MercadoTab />;
 }

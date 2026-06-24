@@ -3,7 +3,7 @@ import { ComisionPage } from './ComisionPage';
 import { HojaServicioPage } from './HojaServicioPage';
 
 export function MandoPage() {
-  const { activeSubTab } = useAppStore();
+  const activeSubTab = useAppStore(s => s.activeSubTab);
 
   if (activeSubTab === 'hoja') {
     return <HojaServicioPage />;

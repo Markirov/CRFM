@@ -6,7 +6,9 @@ import { SecretMenu } from './SecretMenu';
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] as const;
 
 export function Header() {
-  const { campaign, toggleSidebar, userRole } = useAppStore();
+  const campaign = useAppStore(s => s.campaign);
+  const toggleSidebar = useAppStore(s => s.toggleSidebar);
+  const userRole = useAppStore(s => s.userRole);
   const [secretOpen, setSecretOpen] = useState(false);
 
   return (

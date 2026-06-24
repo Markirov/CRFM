@@ -50,7 +50,11 @@ const TABS: TabDef[] = [
 interface Props { open: boolean; onClose: () => void }
 
 export function SecretMenu({ open, onClose }: Props) {
-  const { setCampaign, useLegacyDesigns, setUseLegacyDesigns, userRole, roster } = useAppStore();
+  const setCampaign = useAppStore(s => s.setCampaign);
+  const useLegacyDesigns = useAppStore(s => s.useLegacyDesigns);
+  const setUseLegacyDesigns = useAppStore(s => s.setUseLegacyDesigns);
+  const userRole = useAppStore(s => s.userRole);
+  const roster = useAppStore(s => s.roster);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<TabKey>('campana');
@@ -356,24 +360,67 @@ function PanelCampana(p: {
 }
 
 function PanelTesoreria(p: { treasury: number; setTreasury: (n: number) => void }) {
+  const [inject, setInject] = useState('');
+
   return (
-    <div className="bg-red-400/5 border border-red-400/30 p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">Tesorería · Override directo</div>
-        <div className="font-mono text-[8px] text-red-400/60 uppercase tracking-widest">
-          ⚠ No crea asiento · No aparece en libro mayor
+    <div className="bg-red-400/5 border border-red-400/30 p-3 space-y-4">
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <div className="font-mono text-[10px] font-bold text-red-400 uppercase tracking-[2px]">Tesorería · Override directo</div>
+          <div className="font-mono text-[8px] text-red-400/60 uppercase tracking-widest">
+            ⚠ No crea asiento · No aparece en libro mayor
+          </div>
+        </div>
+        <Label>Saldo absoluto (₡)</Label>
+        <input
+          type="number"
+          value={p.treasury}
+          onChange={e => p.setTreasury(parseInt(e.target.value) || 0)}
+          onFocus={e => e.target.select()}
+          className="w-full h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
+        />
+        <div className="font-mono text-[9px] text-outline mt-1">
+          Equivalente formateado: {formatCzar(p.treasury)}
         </div>
       </div>
-      <Label>Saldo actual (₡)</Label>
-      <input
-        type="number"
-        value={p.treasury}
-        onChange={e => p.setTreasury(parseInt(e.target.value) || 0)}
-        onFocus={e => e.target.select()}
-        className="w-full h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
-      />
-      <div className="font-mono text-[9px] text-outline">
-        Equivalente formateado: {formatCzar(p.treasury)}
+
+      <div className="border-t border-red-400/20 pt-3">
+        <Label>Inyectar cantidad (₡)</Label>
+        <div className="flex gap-2 mt-1">
+          <input
+            type="text"
+            value={inject}
+            onChange={e => setInject(e.target.value)}
+            onFocus={e => e.target.select()}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                const val = parseInt(inject.replace(/[^\d+-]/g, '')) || 0;
+                if (val !== 0) {
+                  p.setTreasury(Number(p.treasury) + val);
+                  setInject('');
+                }
+              }
+            }}
+            placeholder="+1000 o -500"
+            className="flex-1 h-9 bg-surface-container-lowest border border-red-400/30 px-2 font-mono text-[12px] text-red-400 focus:outline-none focus:border-red-400"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              const val = parseInt(inject.replace(/[^\d+-]/g, '')) || 0;
+              if (val !== 0) {
+                p.setTreasury(Number(p.treasury) + val);
+                setInject('');
+              }
+            }}
+            className="px-4 h-9 bg-red-400/20 text-red-400 border border-red-400 hover:bg-red-400/30 font-mono text-[10px] uppercase tracking-widest transition-colors"
+          >
+            Aplicar
+          </button>
+        </div>
+        <div className="font-mono text-[9px] text-outline mt-1">
+          Suma o resta la cantidad al saldo actual.
+        </div>
       </div>
     </div>
   );
