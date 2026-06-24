@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Trash2, Loader, ArrowRightLeft, Shield, Package, DollarSign } from 'lucide-react';
+import { Search, Trash2, Loader, ArrowRightLeft, Shield, Package, DollarSign, Wrench } from 'lucide-react';
+import { EditorPage } from '@/pages/EditorPage';
 import { useAppStore } from '@/lib/store';
 import { useMechCatalog, type CatalogMech } from '@/hooks/useMechCatalog';
 import { parseSSWBasic } from '@/lib/ssw-basic';
@@ -197,6 +198,9 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
   const [pilotoIdx, setPilotoIdx] = useState<number | ''>('');
   const [notas, setNotas] = useState('');
   const [commitState, setCommitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+  const [baseSswText, setBaseSswText] = useState<string>('');
+  const [editedSsw, setEditedSsw] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
 
   const precioFinal = Math.round(precio * (factorPct / 100));
 
@@ -217,6 +221,8 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
       if (!res.ok) throw new Error('No se pudo cargar el fichero');
       const text = await res.text();
       const p = parseSSWBasic(text);
+      setBaseSswText(text);
+      setEditedSsw(null);
 
       const fallback = m.name || `${m.chassis ?? ''} ${m.model ?? ''}`.trim();
       setChassis(p.chassis || (fallback.split(' ')[0] ?? ''));
@@ -247,6 +253,7 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
     setSelected(null); setQuery(''); setPrecio(0); setPilotoIdx(''); setNotas('');
     setChassis(''); setModel(''); setTons(0); setFactorPct(100);
     setHasJumpJets(false); setHasAmmo(false);
+    setBaseSswText(''); setEditedSsw(null); setEditing(false);
   };
 
   useEffect(() => {
@@ -278,17 +285,28 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
         pilotoIdx:   pilotoIdx === '' ? undefined : pilotoIdx,
       });
       const factorNote = factorPct !== 100 ? ` · factor ${factorPct}%` : '';
-      if (notas || factorPct !== 100) item.notas = `${notas}${factorNote}`.trim();
+      const modNote = editedSsw ? ' · MOD pendiente DM/Admin' : '';
+      if (notas || factorPct !== 100 || editedSsw) item.notas = `${notas}${factorNote}${modNote}`.trim();
+
+      // sswRaw = SSW original (loadout canon). La mod queda pendiente para aprobación.
+      if (baseSswText) item.sswRaw = baseSswText;
+      if (editedSsw) {
+        item.modificacionPendiente = {
+          sswRawNew:   editedSsw,
+          requestedAt: Date.now(),
+          status:      'pending',
+        };
+      }
 
       await saveHangarItem(item);
       await commitLibroEntryAndTreasury({
         id:        genId('lm'),
         fecha:     campaignDate,
-        concepto:  `Compra · ${item.chassis} ${item.model}`,
+        concepto:  `Compra · ${item.chassis} ${item.model}${modNote}`,
         cantidad:  precioFinal,
         tipo:      'gasto',
         categoria: 'compra_mech',
-        nota:      `${item.tons}t · BV ${item.bv ?? '?'}${factorNote}${notas ? ' · ' + notas : ''}`,
+        nota:      `${item.tons}t · BV ${item.bv ?? '?'}${factorNote}${notas ? ' · ' + notas : ''}${modNote}`,
         jugador:   '',
       });
 
@@ -406,6 +424,16 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
               <div className="font-mono text-[9px] uppercase tracking-widest text-secondary/60">Total a pagar</div>
               <div className="font-headline text-lg font-black text-error">{fmt(precioFinal)}</div>
             </div>
+            {baseSswText && (
+              <button
+                onClick={() => setEditing(true)}
+                disabled={commitState !== 'idle'}
+                className="mr-2 px-3 py-1.5 font-headline text-xs font-bold tracking-widest uppercase border border-cyan-400/60 text-cyan-400 hover:bg-cyan-400/10 flex items-center gap-1"
+                title="Editar loadout antes de comprar (requiere aprobación DM/Admin)"
+              >
+                <Wrench size={12} /> {editedSsw ? 'Mod editada ✓' : 'Modificar'}
+              </button>
+            )}
             <button
               onClick={handleComprar}
               disabled={commitState !== 'idle' || precioFinal < 0}
@@ -424,6 +452,21 @@ export function MercadoMechsTab({ items, refresh }: { items: HangarItem[]; refre
             </button>
           </div>
         </div>
+      )}
+
+      {editing && baseSswText && (
+        <EditorPage
+          initialSswXml={editedSsw || baseSswText}
+          mode="preview-compra"
+          strictTech={true}
+          allowHangarSave={false}
+          allowPersonalSave={false}
+          onSave={(newXml) => {
+            setEditedSsw(newXml);
+            setEditing(false);
+          }}
+          onCancel={() => setEditing(false)}
+        />
       )}
     </section>
   );

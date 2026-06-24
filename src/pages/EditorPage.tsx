@@ -97,6 +97,16 @@ export function EditorPage({
               {mode === 'campaign' ? 'Solicitar Mod' : 'Guardar Hangar'}
             </button>
           )}
+          {mode === 'preview-compra' && !allowHangarSave && !allowPersonalSave && (
+            <button
+              onClick={() => handleSave('hangar')}
+              disabled={!canSave}
+              className="px-4 py-2 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-500 text-emerald-400 font-bold text-xs uppercase tracking-widest transition-colors disabled:opacity-50"
+              title="Aplicar mod a la compra (queda pendiente de DM/Admin)"
+            >
+              Aplicar Mod a Compra
+            </button>
+          )}
         </div>
       </div>
 
