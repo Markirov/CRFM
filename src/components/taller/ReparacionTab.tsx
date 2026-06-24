@@ -321,8 +321,11 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   // ── Items reparación con tiempos canon ──
   const baseItems = useMemo<RepairItem[]>(() => {
     if (!autoLoaded.config) return [];
+    // Suprime item agregado "Reposición de munición" — la recarga ammo
+    // granular (panel ammo + costeMunicionFactura) ya cubre munición.
+    const damageSinAmmoAgregado = { ...autoLoaded.damage, municion: 0 };
     return mapearDamageARepairItemsConCoste(
-      autoLoaded.damage,
+      damageSinAmmoAgregado,
       autoLoaded.config,
       system,
       selectedSource?.tons,
@@ -482,9 +485,13 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   // ── Factura $ ──
   const facturaRepair = useMemo(() => {
     if (!autoLoaded.config) return { breakdown: null, total: 0 };
+    // damage.municion (teórico = reponer todo lo gastado) se ignora aquí.
+    // El coste real de munición viene de costeMunicionFactura (compra ton
+    // si stock 0). Esto evita doble cobro.
+    const damageSinAmmo = { ...autoLoaded.damage, municion: 0 };
     const breakdown = system === 'canon'
-      ? calcRepairCostCanon(autoLoaded.config, autoLoaded.damage, estadoFactPct, autoLoaded.pctDañoTotal)
-      : calcRepairCost(autoLoaded.config, autoLoaded.damage, estadoFactPct);
+      ? calcRepairCostCanon(autoLoaded.config, damageSinAmmo, estadoFactPct, autoLoaded.pctDañoTotal)
+      : calcRepairCost(autoLoaded.config, damageSinAmmo, estadoFactPct);
     return { breakdown, total: breakdown.total };
   }, [autoLoaded, system, estadoFactPct]);
 
