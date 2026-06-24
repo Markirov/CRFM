@@ -26,6 +26,7 @@ const SimuladorPage         = lazy(() => pageLoaders['/simulador']().then(m => (
 const FinanzasPage          = lazy(() => pageLoaders['/finanzas']().then(m => ({ default: m.FinanzasPage })));
 const HangarPage            = lazy(() => pageLoaders['/hangar']().then(m => ({ default: m.HangarPage })));
 const TallerPage            = lazy(() => pageLoaders['/taller']().then(m => ({ default: m.TallerPage })));
+const TallerLegacyPage      = lazy(() => pageLoaders['/taller-legacy']().then(m => ({ default: m.TallerLegacyPage })));
 const HudTacticoPage        = lazy(() => pageLoaders['/hud']().then(m => ({ default: m.HudTacticoPage })));
 const AyudasPage            = lazy(() => pageLoaders['/ayudas']().then(m => ({ default: m.AyudasPage })));
 const TROPage               = lazy(() => pageLoaders['/tro']().then(m => ({ default: m.TROPage })));
@@ -187,6 +188,7 @@ export function App() {
               <Route path="/finanzas"       element={<FinanzasPage />} />
               <Route path="/hangar"         element={<HangarPage />} />
               <Route path="/taller"         element={<TallerPage />} />
+              <Route path="/taller-legacy"  element={<TallerLegacyPage />} />
               <Route path="/hud"            element={<HudTacticoPage />} />
               <Route path="/ayudas"         element={<AyudasPage />} />
               <Route path="/logros"         element={<LogrosPage />} />

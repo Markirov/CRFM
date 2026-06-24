@@ -16,6 +16,7 @@ export const pageLoaders = {
   '/finanzas':             () => import('@/pages/FinanzasPage'),
   '/hangar':               () => import('@/pages/HangarPage'),
   '/taller':               () => import('@/pages/TallerPage'),
+  '/taller-legacy':        () => import('@/pages/TallerLegacyPage'),
   '/hud':                  () => import('@/pages/HudTacticoPage'),
   '/ayudas':               () => import('@/pages/AyudasPage'),
   '/tro':                  () => import('@/pages/TROPage'),

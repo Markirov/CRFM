@@ -656,7 +656,7 @@ function PanelReglasCasa() {
 
 function PanelDiseno(p: { useLegacyDesigns: boolean; setUseLegacyDesigns: (b: boolean) => void }) {
   return (
-    <div className="bg-amber-400/5 border border-amber-400/30 p-3 space-y-2">
+    <div className="bg-amber-400/5 border border-amber-400/30 p-3 space-y-3">
       <div className="font-mono text-[10px] font-bold text-amber-400 uppercase tracking-[2px]">Diseño UI</div>
       <label className="flex items-center gap-3 cursor-pointer select-none py-2">
         <input
@@ -674,6 +674,33 @@ function PanelDiseno(p: { useLegacyDesigns: boolean; setUseLegacyDesigns: (b: bo
       </label>
       <div className="font-mono text-[9px] text-outline">
         Off → diseños nuevos (P2 Medallón / P3 Two-Tone). On → versiones P1 originales.
+      </div>
+
+      {/* Páginas Legacy accesibles standalone */}
+      <div className="border-t border-amber-400/20 pt-2 mt-2">
+        <div className="font-mono text-[9px] text-outline uppercase tracking-widest mb-1">
+          Accesos directos Legacy
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <a
+            href="/taller-legacy"
+            className="px-2 py-1 border border-amber-400/40 bg-amber-400/5 text-amber-400 font-mono text-[10px] uppercase tracking-widest hover:bg-amber-400/15"
+          >
+            Taller Legacy
+          </a>
+          <a
+            href="/barracones-legacy"
+            className="px-2 py-1 border border-amber-400/40 bg-amber-400/5 text-amber-400 font-mono text-[10px] uppercase tracking-widest hover:bg-amber-400/15"
+          >
+            Barracones Legacy
+          </a>
+          <a
+            href="/hoja-servicio-legacy"
+            className="px-2 py-1 border border-amber-400/40 bg-amber-400/5 text-amber-400 font-mono text-[10px] uppercase tracking-widest hover:bg-amber-400/15"
+          >
+            Hoja Servicio Legacy
+          </a>
+        </div>
       </div>
     </div>
   );
