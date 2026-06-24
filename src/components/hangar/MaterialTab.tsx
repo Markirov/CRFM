@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useAppStore } from '@/lib/store';
-import { saveConfigBatch } from '@/lib/firebase-service';
-import { Package, Trash2, Shield, Flame, Crosshair } from 'lucide-react';
+import { saveConfigBatch, commitLibroEntryAndTreasury } from '@/lib/firebase-service';
+import { Package, Trash2, Shield, Flame, Crosshair, DollarSign } from 'lucide-react';
 import { usePerm } from '@/hooks/usePerm';
 import { tWeapon } from '@/lib/translator';
+import { weaponPriceFromName } from '@/lib/weapon-prices';
+import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 
 /** Convierte clave granular del almacén a nombre legible para UI. */
 function displayName(key: string): string {
@@ -72,6 +74,8 @@ export function MaterialTab() {
   const { writable } = usePerm('hangar');
   const almacen = campaign.almacen || {};
 
+  const campaignDate = getCampaignDateISO(campaign?.campaignYear, campaign?.campaignMonth);
+
   const handleRemove = async (item: string) => {
     if (!writable) return;
     const ok = window.confirm(`¿Descartar todo el stock de ${displayName(item)}?`);
@@ -79,6 +83,46 @@ export function MaterialTab() {
 
     const newAlmacen = { ...almacen };
     delete newAlmacen[item];
+
+    setCampaign({ almacen: newAlmacen });
+    await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(newAlmacen) });
+  };
+
+  /** Vender stock (canon CamOps salvage = 30% precio nuevo). */
+  const handleSell = async (item: string, qty: number) => {
+    if (!writable) return;
+    const cat = itemCategory(item);
+    // Precio sugerido: solo armas (canon weapon prices ×30%). Resto = manual.
+    let priceSugerido = 0;
+    if (cat === 'weapon') {
+      const basePrice = weaponPriceFromName(item);
+      priceSugerido = Math.round(basePrice * 0.3 * qty);
+    }
+    const qtyStr = window.prompt(`Vender ${displayName(item)} — Cantidad (max ${qty}):`, qty.toString());
+    if (!qtyStr) return;
+    const cantidad = parseInt(qtyStr, 10);
+    if (isNaN(cantidad) || cantidad <= 0 || cantidad > qty) return;
+    const adjPrice = cat === 'weapon' ? Math.round(weaponPriceFromName(item) * 0.3 * cantidad) : priceSugerido;
+    const totalStr = window.prompt(`Precio venta total (₡):`, adjPrice.toString());
+    if (!totalStr) return;
+    const total = parseInt(totalStr, 10);
+    if (isNaN(total) || total < 0) return;
+    if (!window.confirm(`Vender ${cantidad}× ${displayName(item)} por ${total.toLocaleString('es-ES')} ₡?`)) return;
+
+    const newAlmacen = { ...almacen };
+    newAlmacen[item] = Math.max(0, (newAlmacen[item] ?? 0) - cantidad);
+    if (newAlmacen[item] === 0) delete newAlmacen[item];
+
+    await commitLibroEntryAndTreasury({
+      id: genId('lm'),
+      fecha: campaignDate,
+      concepto: `Venta ${cantidad}× ${displayName(item)}`,
+      cantidad: total,
+      tipo: 'ingreso',
+      categoria: 'ingreso_misc',
+      nota: `Mercado · venta inventario`,
+      jugador: '',
+    });
 
     setCampaign({ almacen: newAlmacen });
     await saveConfigBatch({ ALMACEN_JSON: JSON.stringify(newAlmacen) });
@@ -147,12 +191,21 @@ export function MaterialTab() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3">
                         <div className="font-mono text-lg font-black text-primary-container">{qty.toLocaleString('es-ES')}</div>
                         {writable && (
-                          <button onClick={() => handleRemove(name)} className="p-1.5 hover:bg-error/10 text-error/60 hover:text-error rounded transition-colors" title="Descartar">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handleSell(name, qty)}
+                              className="p-1.5 hover:bg-emerald-400/10 text-emerald-400/60 hover:text-emerald-400 rounded transition-colors"
+                              title="Vender (canon 30% si arma; manual resto)"
+                            >
+                              <DollarSign className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleRemove(name)} className="p-1.5 hover:bg-error/10 text-error/60 hover:text-error rounded transition-colors" title="Descartar">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>

@@ -4,6 +4,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import { useEffect, useMemo, useState } from 'react';
+import { useAppStore as useAppStoreNav } from '@/lib/store';
 import { getCampaignDateISO } from '@/pages/FinanzasPage';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
@@ -81,8 +82,10 @@ const QUALITY_COLOR: Record<string, string> = {
 };
 
 function MantenimientoTab() {
+  const setActiveSubTab = useAppStoreNav(s => s.setActiveSubTab);
   const campaign = useAppStore(s => s.campaign);
   const roster = useAppStore(s => s.roster);
+  const [hayDanosNuevos, setHayDanosNuevos] = useState<boolean>(false);
   const consumeMechTime = useTallerShared(s => s.consumeMechTime);
   const asignaciones = useTallerShared(s => s.asignaciones);
   const tiempoGlobal = useTallerShared(s => s.tiempoGlobal);
@@ -284,6 +287,13 @@ function MantenimientoTab() {
       }
     }
 
+    // Detecta si hay daños relevantes para Taller Reparación
+    const hayDanios = patchesPendientes.some(p =>
+      (p.blindaje ?? 0) > 0 || (p.reactor ?? 0) > 0 || (p.gyro ?? 0) > 0 ||
+      (p.retros ?? 0) > 0 || (p.radiadores ?? 0) > 0 || (p.sensores ?? 0) > 0,
+    );
+    setHayDanosNuevos(hayDanios);
+
     // Reset flow
     setLastRoll(null); setResultado(null); setPatchesPendientes([]);
     setTiradasRestantes(0); setRollManual('');
@@ -294,6 +304,30 @@ function MantenimientoTab() {
       <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase mb-4">
         Mantenimiento rutinario
       </h1>
+
+      {/* Banner cross-system: chequeo generó daños → llevar a Reparación */}
+      {hayDanosNuevos && (
+        <div className="mb-4 p-3 bg-amber-400/10 border-l-4 border-amber-400 flex items-center justify-between gap-3 animate-[fadeInUp_0.3s_ease]">
+          <div className="font-mono text-[10px] text-amber-400 uppercase tracking-widest">
+            ⚠ Chequeo generó daños. Ir a Reparación para asignar tiempo + material.
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setHayDanosNuevos(false); setActiveSubTab('reparacion'); }}
+              className="px-3 py-1 border border-amber-400 bg-amber-400/20 text-amber-400 hover:bg-amber-400/40 font-mono text-[10px] uppercase tracking-widest"
+            >
+              Ir a Reparación
+            </button>
+            <button
+              onClick={() => setHayDanosNuevos(false)}
+              className="px-2 py-1 text-secondary/60 hover:text-secondary font-mono text-[10px]"
+              title="Descartar aviso"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Selector mech: solo unidades de campaña (hangar + piloto) */}
       <section className="mb-4 bg-surface-container-low border-l-2 border-primary-container/30 p-3 clip-chamfer">
