@@ -100,6 +100,24 @@ export function CustomMechsTab() {
     URL.revokeObjectURL(url);
   };
 
+  const handleToggleTroVisible = async (d: CustomMechDesign) => {
+    if (userRole !== 'admin') return;
+    await saveMyCustomMech({
+      id: d.id,
+      name: d.name,
+      chassis: d.chassis,
+      model: d.model,
+      tons: d.tons,
+      bv: d.bv,
+      era: d.era,
+      sswRaw: d.sswRaw,
+      notes: d.notes,
+      sentBy: d.sentBy,
+      troVisible: !d.troVisible,
+    });
+    void refresh();
+  };
+
   const handleLoadToGeneral = (d: CustomMechDesign) => {
     if (userRole !== 'admin') return;
     // No hay endpoint deploy hot, instruyo
@@ -183,6 +201,7 @@ export function CustomMechsTab() {
               onDownload={() => handleDownload(d)}
               onSend={(target) => handleSendToUser(d, target)}
               onLoadGeneral={() => handleLoadToGeneral(d)}
+              onToggleTroVisible={() => handleToggleTroVisible(d)}
             />
           ))}
         </div>
@@ -200,7 +219,7 @@ export function CustomMechsTab() {
 
 // ─── Row ─────────────────────────────────────────────────────────
 
-function DesignRow({ design, users, isAdmin, onDelete, onEdit, onLoadHangar, onDownload, onSend, onLoadGeneral }: {
+function DesignRow({ design, users, isAdmin, onDelete, onEdit, onLoadHangar, onDownload, onSend, onLoadGeneral, onToggleTroVisible }: {
   design: CustomMechDesign;
   users: PublicRoleEntry[];
   isAdmin: boolean;
@@ -210,6 +229,7 @@ function DesignRow({ design, users, isAdmin, onDelete, onEdit, onLoadHangar, onD
   onDownload: () => void;
   onSend: (target: string) => void;
   onLoadGeneral: () => void;
+  onToggleTroVisible: () => void;
 }) {
   const [sendTarget, setSendTarget] = useState('');
   return (
@@ -266,13 +286,26 @@ function DesignRow({ design, users, isAdmin, onDelete, onEdit, onLoadHangar, onD
           <Send size={10} /> Enviar
         </button>
         {isAdmin && (
-          <button
-            onClick={onLoadGeneral}
-            className="ml-auto px-2 py-1 border border-amber-400/60 text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 font-mono text-[9px] uppercase tracking-widest flex items-center gap-1"
-            title="Solo admin: cargar al catálogo general del proyecto"
-          >
-            <Server size={10} /> A Memoria General
-          </button>
+          <>
+            <button
+              onClick={onToggleTroVisible}
+              className={`ml-auto px-2 py-1 border font-mono text-[9px] uppercase tracking-widest flex items-center gap-1 ${
+                design.troVisible
+                  ? 'border-cyan-400/60 text-cyan-400 bg-cyan-400/10 hover:bg-cyan-400/20'
+                  : 'border-outline-variant/40 text-secondary hover:bg-surface-container-high'
+              }`}
+              title="Admin: marcar visible en catálogo TRO con badge 🛠 Custom"
+            >
+              {design.troVisible ? '🛠 TRO Visible' : 'Ocultar TRO'}
+            </button>
+            <button
+              onClick={onLoadGeneral}
+              className="px-2 py-1 border border-amber-400/60 text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 font-mono text-[9px] uppercase tracking-widest flex items-center gap-1"
+              title="Solo admin: cargar al catálogo general del proyecto"
+            >
+              <Server size={10} /> A Memoria General
+            </button>
+          </>
         )}
       </div>
     </div>

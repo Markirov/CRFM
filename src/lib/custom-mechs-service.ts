@@ -46,6 +46,8 @@ export interface CustomMechDesign {
   updatedAt: string;       // ISO
   /** safeEmail del sender si recibido. Undefined si lo creó owner. */
   sentBy?:   string;
+  /** Admin-only. Si true, el design aparece en TRO con badge "🛠 Custom". */
+  troVisible?: boolean;
 }
 
 export const CUSTOM_MECHS_LIMIT_DEFAULT = 25;

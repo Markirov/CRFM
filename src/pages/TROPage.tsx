@@ -5,10 +5,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, X, Loader, ShoppingCart } from 'lucide-react';
+import { Search, X, Loader, ShoppingCart, Wrench } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { usePerm } from '@/hooks/usePerm';
 import { parseSSWBasic, type ParsedSSWBasic } from '@/lib/ssw-basic';
+import { EditorPage } from '@/pages/EditorPage';
+import { saveMyCustomMech } from '@/lib/custom-mechs-service';
 
 type UnitKind = 'mechs' | 'vehicles' | 'infantry' | 'battlearmor';
 
@@ -313,8 +315,38 @@ function DetailPanel({ entry, text, loading, onClose }: {
 }) {
   const navigate = useNavigate();
   const setActiveSubTab = useAppStore(s => s.setActiveSubTab);
+  const [editing, setEditing] = useState(false);
   // Parse rápido SSW XML para sacar datos básicos
   const parsed: ParsedSSWBasic = useMemo(() => parseSSWBasic(text ?? ''), [text]);
+
+  if (editing && text) {
+    return (
+      <EditorPage
+        initialSswXml={text}
+        mode="libre"
+        strictTech={false}
+        allowHangarSave={false}
+        allowPersonalSave={true}
+        onSave={async (newXml) => {
+          const p = parseSSWBasic(newXml);
+          await saveMyCustomMech({
+            id: `tro_${entry.file.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}`,
+            name: `${p.chassis ?? entry.name} (mod TRO)`,
+            chassis: p.chassis ?? entry.name,
+            model: p.model ?? '',
+            tons: p.tons ?? entry.tons ?? 0,
+            bv: p.cost ?? undefined,
+            era: p.era ?? entry.era,
+            sswRaw: newXml,
+            notes: `Editado desde TRO · base: ${entry.file}`,
+          });
+          alert('Guardado en Hangar → Diseños Personalizados.');
+          setEditing(false);
+        }}
+        onCancel={() => setEditing(false)}
+      />
+    );
+  }
 
   return (
     <div style={{
@@ -435,6 +467,19 @@ function DetailPanel({ entry, text, loading, onClose }: {
           fontSize: 10, letterSpacing: 2, fontWeight: 700,
           cursor: text ? 'pointer' : 'not-allowed', opacity: text ? 1 : 0.4,
         }}>ENVIAR A SIMULADOR →</button>
+
+        {entry.kind === 'mechs' && text && (
+          <button onClick={() => setEditing(true)} style={{
+            width: '100%', padding: '8px 12px',
+            background: 'transparent', color: '#bdf4ff',
+            border: '1px solid #bdf4ff', fontFamily: '"Share Tech Mono", monospace',
+            fontSize: 10, letterSpacing: 2, fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          }}>
+            <Wrench size={12} /> EDITAR (DISEÑO PERSONAL)
+          </button>
+        )}
 
         {entry.kind === 'mechs' && (
           <button onClick={() => {
