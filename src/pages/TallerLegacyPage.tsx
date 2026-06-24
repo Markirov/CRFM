@@ -238,8 +238,18 @@ export function TallerLegacyPage({ initialSimSlotIdx, onClose, onCommit, onResto
       width: '100%', maxWidth: 1100, margin: '0 auto',
       padding: isMobile ? 12 : 20,
       background: T.surface, border: `1px solid ${T.outlineV}`,
+      borderTop: `4px solid ${T.bronze}`,
       fontFamily: 'Inter, sans-serif', color: T.cream,
     }}>
+      <div style={{
+        marginBottom: 12, padding: '8px 12px',
+        background: T.bronze + '20', border: `1px solid ${T.bronze}`,
+        display: 'flex', alignItems: 'center', gap: 8,
+        fontFamily: '"Share Tech Mono", monospace', fontSize: 10,
+        color: T.bronze, letterSpacing: 2, textTransform: 'uppercase',
+      }}>
+        ⚠ Vista Legacy — sólo factura. NO descuenta almacén, pool tiempo ni recarga granular.
+      </div>
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <SmallLabel>Taller · Legacy</SmallLabel>

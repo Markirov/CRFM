@@ -44,6 +44,7 @@ import {
   type MunicionDetalleEntry,
 } from '@/lib/repair-engine';
 import { TelegramToggle } from '@/components/ui/TelegramToggle';
+import { CostModifierSelector } from '@/components/ui/CostModifierSelector';
 import { restoreMechSlotFull } from '@/lib/simulador-persistence';
 import {
   calcularMinutosDisponibles, MINUTOS_EXTRA_POR_TURNO,
@@ -837,12 +838,7 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
               <div className="font-mono text-sm text-cream font-bold uppercase">{system === 'canon' ? 'Canon CamOps' : 'Propio (House)'}</div>
               <div className="font-mono text-[9px] text-secondary/50 mt-1">Cambiar en SecretMenu · Reglas Casa</div>
               <div className="mt-3">
-                <label className="block font-mono text-[9px] uppercase tracking-widest text-secondary/60 mb-1">Estado factura %</label>
-                <input
-                  type="number" min={0} max={200} value={estadoFactPct}
-                  onChange={e => setEstadoFactPct(Math.max(0, Math.min(200, parseInt(e.target.value) || 100)))}
-                  className="w-full bg-surface-container-high border border-outline-variant/40 px-2 py-1 font-mono text-sm text-cream"
-                />
+                <CostModifierSelector value={estadoFactPct} onChange={setEstadoFactPct} label="Estado factura %" />
               </div>
             </div>
 
@@ -877,8 +873,16 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
                 <Database size={14} /> Reparaciones ({orderedItems.length})
               </h3>
               {orderedItems.length === 0 ? (
-                <div className="font-mono text-xs text-secondary/40 text-center py-4 italic">
-                  Sin daños registrados. {autoLoaded.state ? '' : 'Mech sin combate previo en sim.'}
+                <div className="bg-emerald-400/5 border border-emerald-400/30 p-4 text-center">
+                  <CheckCircle2 size={24} className="mx-auto mb-2 text-emerald-400" />
+                  <div className="font-mono text-[11px] text-emerald-400 uppercase tracking-widest font-bold">
+                    Sin daños · Mech operativo
+                  </div>
+                  <div className="font-mono text-[9px] text-secondary/60 mt-1">
+                    {selectedSource?.origin === 'hangar'
+                      ? 'No hay daño persistente ni sesión activa de combate.'
+                      : 'Sesión del simulador sin daños registrados.'}
+                  </div>
                 </div>
               ) : armorPolicy === 'manual' ? (
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

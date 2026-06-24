@@ -110,6 +110,7 @@ export function ColaTab() {
             const cap = getMechCapacity(asignaciones[mechKey], tiempoCalc.minutosBase, MINUTOS_EXTRA_POR_TURNO);
             const totalPending = items.reduce((s, i) => s + i.minutosBase, 0);
 
+            const totalCabe = totalPending <= cap.minutosRestantes;
             return (
               <div key={mechKey} className="bg-surface-container border border-outline-variant/30 p-3 clip-chamfer">
                 <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2 mb-2">
@@ -118,6 +119,11 @@ export function ColaTab() {
                     <span className="ml-2 text-[9px] font-mono text-secondary/50 normal-case">
                       ({source?.origin === 'sim' ? 'Simulador' : 'Hangar'})
                     </span>
+                    {totalCabe && cap.canWork && (
+                      <span className="ml-2 px-1.5 py-0.5 text-[8px] font-mono uppercase tracking-widest bg-emerald-400/20 border border-emerald-400/40 text-emerald-400">
+                        Cabe en pool actual
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-3 font-mono text-[10px]">
                     <span className={cap.canWork ? 'text-primary' : 'text-error'}>
@@ -126,6 +132,21 @@ export function ColaTab() {
                     <span className="text-amber-400" title="Minutos restantes pool">
                       {cap.minutosRestantes}/{cap.minutosDisponibles} min
                     </span>
+                    {totalCabe && cap.canWork && items.length > 1 && (
+                      <button
+                        onClick={() => {
+                          if (!confirm(`¿Ejecutar TODOS los ${items.length} items pendientes de ${source?.mechName ?? mechKey}? Descuenta ${totalPending} min del pool.`)) return;
+                          items.forEach(item => {
+                            consumeMechTime(mechKey, item.minutosBase);
+                            removeFromCola(mechKey, item.id);
+                          });
+                        }}
+                        className="px-2 py-0.5 border border-emerald-400/60 text-emerald-400 hover:bg-emerald-400/20 uppercase tracking-widest text-[9px]"
+                        title="Ejecutar todos los items pendientes"
+                      >
+                        <Play size={10} className="inline" /> Todos
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         if (confirm(`¿Borrar toda la cola de ${source?.mechName ?? mechKey}?`)) {
