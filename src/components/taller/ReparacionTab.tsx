@@ -465,14 +465,65 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
       if (selectedSource.origin === 'sim' && selectedSource.simSlotIdx !== undefined && snap) {
         const newSnap = { ...snap };
         const slotIdx = selectedSource.simSlotIdx;
-        if (newSnap.mechSlots[slotIdx]?.session) {
-          newSnap.mechSlots[slotIdx].session!.ammoBins = mechAmmoBinsUpdated;
-          // Aplicar reparaciones al sim: restaurar armor/IS de items reparados
+        const slot = newSnap.mechSlots[slotIdx];
+        if (slot?.session && slot.state) {
+          slot.session.ammoBins = mechAmmoBinsUpdated;
+
+          // Aplica reparaciones al sim per loc (canon BattleTech)
+          const stateArmor = slot.state.armor as Record<string, number>;
+          const stateIs = slot.state.is as Record<string, number>;
+          const sessArmor = { ...(slot.session.armor as Record<string, number>) };
+          const sessIs = { ...(slot.session.is as Record<string, number>) };
+
+          // Helper: deriva armor key con sufijo f/r del nombre del item
+          const armorKeyFromItem = (item: { localizacion: string; nombre: string }): string => {
+            const loc = item.localizacion;
+            if (loc === 'CT' || loc === 'LT' || loc === 'RT') {
+              return item.nombre.includes('Trasero') ? `${loc}r` : `${loc}f`;
+            }
+            return loc;
+          };
+
           for (const r of resultadoReparacion.resultados) {
             if (r.estado !== 'reparado' && r.estado !== 'parcial') continue;
-            // Restauración del armor: distribuir según armorPolicy
-            // (delegado a future iteration; aquí logueamos sólo)
+            const cat = r.item.categoria;
+            const pts = r.puntosReparados ?? 0;
+            if (cat === 'Blindaje' && pts > 0) {
+              const armorK = armorKeyFromItem(r.item);
+              const cap = stateArmor[armorK] ?? Infinity;
+              sessArmor[armorK] = Math.min(cap, (sessArmor[armorK] ?? 0) + pts);
+            } else if (r.item.id.startsWith('is') && pts > 0) {
+              // Estructura interna per loc base (HD/CT/LT/RT/LA/RA/LL/RL)
+              const loc = r.item.localizacion;
+              const cap = stateIs[loc] ?? Infinity;
+              sessIs[loc] = Math.min(cap, (sessIs[loc] ?? 0) + pts);
+            }
+            // Armas + sistemas críticos: marcar slot crit hit=false en la loc
+            // del arma. Búsqueda por nombre del slot.
+            if (r.estado === 'reparado' && (r.item.id.startsWith('arma') || r.item.id.startsWith('reactor') || r.item.id.startsWith('gyro') || r.item.id.startsWith('sensores'))) {
+              const itemName = r.item.nombre.replace(/\s*\(.*\)$/, '').trim();
+              for (const locKey of Object.keys(slot.session.crits ?? {})) {
+                const slotsLoc = (slot.session.crits as Record<string, Array<{ name?: string; hit?: boolean }>>)[locKey];
+                if (!Array.isArray(slotsLoc)) continue;
+                for (const sl of slotsLoc) {
+                  if (sl?.hit && sl?.name && itemName.toLowerCase().includes(sl.name.toLowerCase())) {
+                    sl.hit = false;
+                  }
+                }
+              }
+            }
           }
+
+          slot.session.armor = sessArmor;
+          slot.session.is = sessIs;
+
+          // Si CT/HD IS restaurado y mech estaba destroyed por esa razón, despertar
+          // (chequeo simple: si todo HD/CT IS > 0 ahora → no destroyed)
+          if (slot.session.destroyed && (sessIs.HD ?? 0) > 0 && (sessIs.CT ?? 0) > 0) {
+            slot.session.destroyed = false;
+            slot.session.destroyedReason = '';
+          }
+
           saveLocalSnapshot(newSnap);
         }
       } else if (selectedSource.origin === 'hangar' && selectedSource.hangarId) {
