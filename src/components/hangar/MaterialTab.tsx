@@ -11,13 +11,15 @@ import { PRECIO_BLINDAJE } from '@/lib/repair-engine';
 type TradeMode = 'buy' | 'sell';
 
 /** Modal compra+venta granular item del almacén. */
-function TradeModal({ item, displayName, currentQty, isWeapon, isArmor, isAmmo, onClose, onConfirm }: {
+function TradeModal({ item, displayName, currentQty, isWeapon, isArmor, isAmmo, isFavorite, onToggleFavorite, onClose, onConfirm }: {
   item: string;
   displayName: string;
   currentQty: number;
   isWeapon: boolean;
   isArmor: boolean;
   isAmmo: boolean;
+  isFavorite: boolean;
+  onToggleFavorite: () => void;
   onClose: () => void;
   onConfirm: (mode: TradeMode, cantidad: number, total: number) => Promise<void>;
 }) {
@@ -75,13 +77,33 @@ function TradeModal({ item, displayName, currentQty, isWeapon, isArmor, isAmmo, 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
       <div className={`bg-surface-container border-2 border-${modeColor}/60 clip-chamfer max-w-md w-full p-5 shadow-2xl`}>
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/30">
-          <h3 className={`font-headline text-lg text-${modeColor} font-bold uppercase tracking-widest flex items-center gap-2`}>
-            {mode === 'sell' ? <DollarSign size={18} /> : <ShoppingCart size={18} />} {modeLabel} material
-          </h3>
-          <button onClick={onClose} className="text-secondary hover:text-error">
-            <X size={18} />
-          </button>
+        {/* Header: título item grande + favorito + cerrar */}
+        <div className="flex items-start justify-between mb-4 pb-3 border-b border-outline-variant/30 gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="text-secondary/60 text-[10px] uppercase tracking-widest mb-1 font-mono">Material</div>
+            <h3 className="font-headline text-lg text-cream font-bold leading-tight break-words">
+              {displayName}
+            </h3>
+            <div className="text-[10px] text-secondary/60 mt-1 font-mono">
+              Stock: <span className="text-primary-container font-bold">{currentQty}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={onToggleFavorite}
+              className={`p-1.5 rounded transition-colors ${
+                isFavorite
+                  ? 'text-amber-400 hover:bg-amber-400/10'
+                  : 'text-secondary/40 hover:text-amber-400/60 hover:bg-amber-400/5'
+              }`}
+              title={isFavorite ? 'Quitar favorito' : 'Marcar favorito (aparece aunque stock=0)'}
+            >
+              <Star className="w-5 h-5" fill={isFavorite ? 'currentColor' : 'none'} />
+            </button>
+            <button onClick={onClose} className="text-secondary hover:text-error p-1.5">
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Tabs Compra / Venta */}
@@ -108,12 +130,6 @@ function TradeModal({ item, displayName, currentQty, isWeapon, isArmor, isAmmo, 
           >
             <ShoppingCart size={12} /> Comprar
           </button>
-        </div>
-
-        <div className="font-mono text-sm text-cream mb-4">
-          <div className="text-secondary/60 text-[10px] uppercase tracking-widest mb-1">Item</div>
-          <div className="font-bold">{displayName}</div>
-          <div className="text-[10px] text-secondary/60 mt-1">Stock actual: <span className="text-primary-container">{currentQty}</span></div>
         </div>
 
         <div className="space-y-3 mb-4">
@@ -391,44 +407,31 @@ export function MaterialTab() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {section.items.map(([name, qty]) => (
-                    <div key={name} className="flex items-center justify-between p-3 bg-surface border border-outline-variant/20 rounded-lg">
-                      <div className="flex items-center gap-3">
+                    <button
+                      key={name}
+                      onClick={() => writable && setTradeModal({ item: name, qty })}
+                      disabled={!writable}
+                      className="flex items-center justify-between p-3 bg-surface border border-outline-variant/20 rounded-lg w-full text-left hover:border-primary-container/60 hover:bg-primary-container/5 transition-colors disabled:cursor-default disabled:hover:border-outline-variant/20 disabled:hover:bg-surface"
+                      title={writable ? 'Click para comprar/vender' : ''}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
                         {getIcon(name)}
-                        <div>
-                          <div className="font-mono text-sm text-cream">{displayName(name)}</div>
+                        <div className="min-w-0">
+                          <div className="font-mono text-sm text-cream truncate flex items-center gap-1.5">
+                            {favoritos.includes(name) && (
+                              <Star className="w-3 h-3 text-amber-400 shrink-0" fill="currentColor" />
+                            )}
+                            <span>{displayName(name)}</span>
+                          </div>
                           <div className="font-mono text-[10px] text-secondary/70 uppercase">
                             {unitLabel(name)}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <div className={`font-mono text-lg font-black ${qty > 0 ? 'text-primary-container' : 'text-secondary/30'}`}>
-                          {qty.toLocaleString('es-ES')}
-                        </div>
-                        {writable && (
-                          <>
-                            <button
-                              onClick={() => toggleFavorito(name)}
-                              className={`p-1.5 rounded transition-colors ${
-                                favoritos.includes(name)
-                                  ? 'text-amber-400 hover:bg-amber-400/10'
-                                  : 'text-secondary/40 hover:text-amber-400/60 hover:bg-amber-400/5'
-                              }`}
-                              title={favoritos.includes(name) ? 'Quitar favorito' : 'Marcar favorito (aparece aunque stock=0)'}
-                            >
-                              <Star className="w-4 h-4" fill={favoritos.includes(name) ? 'currentColor' : 'none'} />
-                            </button>
-                            <button
-                              onClick={() => setTradeModal({ item: name, qty })}
-                              className="p-1.5 hover:bg-emerald-400/10 text-emerald-400/60 hover:text-emerald-400 rounded transition-colors"
-                              title="Comprar / Vender"
-                            >
-                              <DollarSign className="w-4 h-4" />
-                            </button>
-                          </>
-                        )}
+                      <div className={`font-mono text-lg font-black shrink-0 ml-3 ${qty > 0 ? 'text-primary-container' : 'text-secondary/30'}`}>
+                        {qty.toLocaleString('es-ES')}
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -445,6 +448,8 @@ export function MaterialTab() {
           isWeapon={itemCategory(tradeModal.item) === 'weapon'}
           isArmor={itemCategory(tradeModal.item) === 'armor'}
           isAmmo={itemCategory(tradeModal.item) === 'ammo'}
+          isFavorite={favoritos.includes(tradeModal.item)}
+          onToggleFavorite={() => toggleFavorito(tradeModal.item)}
           onClose={() => setTradeModal(null)}
           onConfirm={handleConfirmTrade}
         />
