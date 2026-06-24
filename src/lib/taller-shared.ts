@@ -51,6 +51,8 @@ interface TallerSharedState {
   setMechTurnosExt:  (mechKey: string, turnosExt: number) => void;
   consumeMechTime:   (mechKey: string, minutos: number) => void;
   resetMech:         (mechKey: string) => void;
+  /** Resetea minutosUsados de TODOS los mechs (cierra periodo, abre uno nuevo). */
+  resetAllMechTimes: () => void;
 
   /** Cola pendientes per mech. */
   cola: Record<string, ColaItem[]>;
@@ -94,6 +96,13 @@ export const useTallerShared = create<TallerSharedState>()(
       resetMech: (mechKey) => set((s) => ({
         asignaciones: { ...s.asignaciones, [mechKey]: { teams: [], turnosExt: 0, minutosUsados: 0 } },
       })),
+      resetAllMechTimes: () => set((s) => {
+        const next: Record<string, MechAssignment> = {};
+        for (const [k, a] of Object.entries(s.asignaciones)) {
+          next[k] = { ...a, minutosUsados: 0 };
+        }
+        return { asignaciones: next };
+      }),
 
       cola: {},
       addToCola: (item) => set((s) => {

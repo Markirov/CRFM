@@ -20,7 +20,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Wrench, Database, Download, AlertTriangle, ArrowLeft, Calculator, CheckCircle2 } from 'lucide-react';
+import { Wrench, Database, Download, AlertTriangle, ArrowLeft, Calculator, CheckCircle2, RotateCcw } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { loadHangar, saveHangarItem, saveConfigBatch, loadPersonal, commitLibroEntryAndTreasury, type PersonalEntry, type PersonalNivel } from '@/lib/firebase-service';
 import { loadLocalSnapshot, saveLocalSnapshot, type SimuladorSnapshot } from '@/lib/simulador-persistence';
@@ -191,6 +191,7 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   const setMechTurnosExtShared = useTallerShared(s => s.setMechTurnosExt);
   const consumeMechTimeShared = useTallerShared(s => s.consumeMechTime);
   const addToCola = useTallerShared(s => s.addToCola);
+  const resetAllMechTimes = useTallerShared(s => s.resetAllMechTimes);
 
   const valor = tiempoGlobal.valor;
   const unidad = tiempoGlobal.unidad;
@@ -280,13 +281,19 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
   // ── Preset ordering (default persecucion ASC tiempo) ──
   const [presetId, setPresetId] = useState<string>('persecucion');
   const preset = PRESETS.find(p => p.id === presetId) ?? PRESETS[0];
-  const orderedItems = useMemo(
-    () => aplicarPreset(itemsAjustados, preset, 'asc'),
-    [itemsAjustados, preset],
-  );
-
-  // Política blindaje incompleto: 'auto' (dentro→afuera) | 'manual' (preserva orden user)
+  // Política blindaje incompleto: 'auto' (dentro→afuera CT/IS primero) | 'manual' (preserva orden preset)
   const [armorPolicy, setArmorPolicy] = useState<'auto' | 'manual'>('auto');
+
+  const orderedItems = useMemo(() => {
+    const sorted = aplicarPreset(itemsAjustados, preset, 'asc');
+    if (armorPolicy === 'manual') return sorted;
+    // Auto: items 'Blindaje' al frente para garantizar reparación parcial
+    // empieza por la armadura (dentro→afuera implícito en MINUTOS_POR_PUNTO).
+    // Estructura ya tiene su item independiente que mantiene prioridad por preset.
+    const armorItems = sorted.filter(i => i.categoria === 'Blindaje');
+    const others    = sorted.filter(i => i.categoria !== 'Blindaje');
+    return [...armorItems, ...others];
+  }, [itemsAjustados, preset, armorPolicy]);
 
   // Resultado simulación reparación según tiempo restante del pool
   const resultadoReparacion = useMemo(() => {
@@ -527,14 +534,26 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
         <h1 className="font-headline text-xl font-black text-primary-container tracking-tighter uppercase flex items-center gap-2">
           <Wrench size={20} /> Taller · Reparación Unificada
         </h1>
-        {effectiveShowReturn && (
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate('/simulador')}
-            className="px-3 py-1.5 border border-primary text-primary bg-primary/10 hover:bg-primary/20 font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5"
+            onClick={() => {
+              if (!confirm('¿Cerrar periodo? Resetea minutosUsados de TODOS los mechs a 0. No afecta asignaciones de equipos ni cola.')) return;
+              resetAllMechTimes();
+            }}
+            title="Cierra el periodo actual y abre uno nuevo. Reset minutos usados de todos los mechs."
+            className="px-3 py-1.5 border border-amber-400/60 text-amber-400 bg-amber-400/10 hover:bg-amber-400/20 font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5"
           >
-            <ArrowLeft size={12} /> Volver al Simulador
+            <RotateCcw size={12} /> Nuevo Periodo
           </button>
-        )}
+          {effectiveShowReturn && (
+            <button
+              onClick={() => navigate('/simulador')}
+              className="px-3 py-1.5 border border-primary text-primary bg-primary/10 hover:bg-primary/20 font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5"
+            >
+              <ArrowLeft size={12} /> Volver al Simulador
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Selector mech standalone (oculto si fromSim) */}
