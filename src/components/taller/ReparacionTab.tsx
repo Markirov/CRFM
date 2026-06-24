@@ -30,10 +30,12 @@ import { type HangarItem } from '@/lib/hangar-types';
 import { type AmmoBin, type MechState, type MechSession } from '@/lib/combat-types';
 import {
   emptyDamage, deriveDamageFromSession, configFromCatalog,
-  calcRepairCostCanon, calcRepairCost,
+  calcRepairCostCanon, calcRepairCost, ESTADO_COLOR,
   type MechRepairConfig, type MechRepairDamage,
   type MunicionDetalleEntry,
 } from '@/lib/repair-engine';
+import { TelegramToggle } from '@/components/ui/TelegramToggle';
+import { restoreMechSlotFull } from '@/lib/simulador-persistence';
 import {
   calcularMinutosDisponibles, MINUTOS_EXTRA_POR_TURNO,
   mapearDamageARepairItemsConCoste, aplicarPreset, calcularReparaciones,
@@ -51,9 +53,22 @@ import { useTallerShared, getMechCapacity, getPoolUsage } from '@/lib/taller-sha
 import { useHouseRules } from '@/lib/house-rules';
 import { formatCzar } from '@/lib/currency-utils';
 const fmtMoney = (n: number) => formatCzar(n);
+const fmtMoneyExternal = (n: number) => formatCzar(n);
 import { genId, getCampaignDateISO } from '@/pages/FinanzasPage';
 
 type RepairSystemKind = 'canon' | 'propio';
+
+/** Línea factura: izq label, der valor. Color/bold opcional. */
+function FacturaRow({ label, value, color, bold }: { label: string; value: number; color?: 'amber' | 'default'; bold?: boolean }) {
+  const valueClass = color === 'amber' ? 'text-amber-400' : value > 0 ? 'text-cream' : 'text-secondary/40';
+  const valueText = value > 0 ? fmtMoneyExternal(value) : '—';
+  return (
+    <div className={`flex justify-between items-center py-0.5 ${bold ? 'text-[12px]' : ''}`}>
+      <span className="text-secondary/70">{label}</span>
+      <span className={`${valueClass} ${bold ? 'font-bold' : ''}`}>{valueText}</span>
+    </div>
+  );
+}
 
 interface Props {
   /** Si presente, auto-carga slot del sim y oculta picker. */
@@ -638,9 +653,9 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
             </div>
           </section>
 
-          {/* Cuerpo: Daños+Factura izq · Recarga ammo der */}
+          {/* Cuerpo: Reparaciones izq · Factura desglosada der */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Daños declarados (auto-cargados) + items reparación con tiempos */}
+            {/* IZQ: items reparación con tiempos canon + estado */}
             <div className="bg-surface-container border border-outline-variant/30 p-4 clip-chamfer">
               <h3 className="font-headline text-sm font-bold text-cream uppercase tracking-wider mb-3 flex items-center gap-2">
                 <Database size={14} /> Reparaciones ({orderedItems.length})
@@ -673,77 +688,170 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
               )}
               <div className="mt-3 pt-3 border-t border-outline-variant/20 font-mono text-[10px] flex justify-between">
                 <span className="text-secondary/60">Min usados: <span className="text-primary">{resultadoReparacion.minutosUsadosTotal}</span></span>
-                <span className="text-secondary/60">Coste reparación: <span className="text-amber-400">{fmtMoney(facturaRepair.total)}</span></span>
+                <span className="text-secondary/60">Subtotal reparación: <span className="text-amber-400">{fmtMoney(facturaRepair.total)}</span></span>
               </div>
             </div>
 
-            {/* Recarga ammo */}
+            {/* DER: Factura desglosada completa (paridad con TallerModal antigua) */}
             <div className="bg-surface-container border border-outline-variant/30 p-4 clip-chamfer">
               <h3 className="font-headline text-sm font-bold text-cream uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Download size={14} /> Recarga Munición ({ammoBins.length})
+                <Calculator size={14} /> Factura Desglosada
               </h3>
-              <div className="flex flex-wrap items-center gap-2 mb-3 p-2 bg-surface/40 border-y border-outline-variant/20 font-mono text-[10px]">
-                <label className="flex items-center gap-1">
-                  Skill:
-                  <select
-                    value={techSkillAmmo}
-                    onChange={e => setTechSkillAmmo(e.target.value as TechSkill)}
-                    className="bg-surface-container-high border border-outline-variant/40 text-[10px] px-1 py-0.5 text-cream"
-                  >
-                    <option value="green">Green</option>
-                    <option value="regular">Regular</option>
-                    <option value="veteran">Veteran</option>
-                    <option value="elite">Elite</option>
-                  </select>
-                </label>
-                <label className="flex items-center gap-1 cursor-pointer">
-                  <input type="checkbox" checked={onBattlefield} onChange={e => setOnBattlefield(e.target.checked)} />
-                  Campo batalla ×2
-                </label>
-              </div>
-              {ammoBins.length === 0 ? (
-                <div className="font-mono text-xs text-secondary/40 text-center py-4 italic">Sin compartimentos de munición.</div>
-              ) : (
-                <div className="space-y-1 max-h-96 overflow-y-auto custom-scrollbar">
-                  {ammoBins.map((bin, idx) => {
-                    const cur = bin.current || 0;
-                    const max = bin.max || 0;
-                    const faltante = max - cur;
-                    const rps = roundsPerShot(bin.familyKey);
-                    const cargableMax = roundsToFullRounds(faltante, bin.familyKey);
-                    const { stock } = findAmmoStock(almacen, bin);
-                    const cargarActual = recargaSelecc[idx] ?? 0;
-                    const variantLabel = bin.variant && bin.variant !== 'Standard' ? ` (${bin.variant})` : '';
-                    return (
-                      <div key={idx} className="p-2 bg-surface border border-outline-variant/20 text-[10px] font-mono">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-cream font-bold">{bin.family || 'Munición'}{variantLabel}</span>
-                          <span className="text-secondary/60">[{bin.loc}] {cur}/{max}</span>
+              {facturaRepair.breakdown ? (
+                <div className="space-y-1 font-mono text-[10px] max-h-96 overflow-y-auto custom-scrollbar">
+                  <FacturaRow label="Reactor"      value={facturaRepair.breakdown.reactor} />
+                  <FacturaRow label="Gyro"         value={facturaRepair.breakdown.gyro} />
+                  <FacturaRow label="Cabina"       value={facturaRepair.breakdown.cabina} />
+                  <FacturaRow label="Soporte vida" value={facturaRepair.breakdown.soporteVida} />
+                  <FacturaRow label="Sensores"     value={facturaRepair.breakdown.sensores} />
+                  <FacturaRow label="Estructura"   value={facturaRepair.breakdown.estructura} />
+                  <FacturaRow label="Blindaje"     value={facturaRepair.breakdown.blindaje} />
+                  <FacturaRow label="Miomero"      value={facturaRepair.breakdown.miomero} />
+                  <FacturaRow label="Actuadores"   value={facturaRepair.breakdown.actuadores} />
+                  <FacturaRow label="Retros"       value={facturaRepair.breakdown.retros} />
+                  <FacturaRow label="Radiadores"   value={facturaRepair.breakdown.radiadores} />
+                  <FacturaRow label="Armas"        value={facturaRepair.breakdown.armas} />
+                  {(autoLoaded.damage.armas?.length ?? 0) > 0 && (
+                    <div className="ml-3 pl-2 border-l-2 border-outline-variant/40 text-[9px] text-secondary/60 space-y-0.5">
+                      {(autoLoaded.damage.armas ?? []).map((a, i) => (
+                        <div key={i} className="flex justify-between">
+                          <span className={a.status === 'destruida' ? 'text-error' : 'text-cream'}>
+                            {a.name} <span className="text-secondary/40">[{a.loc} {a.slotsHit}/{a.slotsTotal}]</span>
+                          </span>
+                          <span>{fmtMoney(a.cost)}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="range"
-                            min={0} max={cargableMax} step={rps}
-                            value={cargarActual}
-                            onChange={e => setRecargaSelecc(prev => ({ ...prev, [idx]: parseInt(e.target.value) }))}
-                            className="flex-1 accent-primary"
-                          />
-                          <span className="text-primary w-20 text-right">{cargarActual} disp</span>
+                      ))}
+                    </div>
+                  )}
+                  <FacturaRow label="Munición consumida (combate)" value={facturaRepair.breakdown.municion} />
+                  {autoLoaded.municionDetalle.length > 0 && (
+                    <div className="ml-3 pl-2 border-l-2 border-outline-variant/40 text-[9px] text-secondary/60 space-y-0.5">
+                      {autoLoaded.municionDetalle.map((d, i) => (
+                        <div key={i} className="flex justify-between">
+                          <span>{d.family} ({d.spent} disp · {d.tons}t)</span>
+                          <span>{fmtMoney(d.cost)}</span>
                         </div>
-                        <div className="flex justify-between mt-1 text-[9px] text-secondary/60">
-                          <span>Stock: <span className={stock > 0 ? 'text-primary' : 'text-error'}>{stock}</span></span>
-                          <span>{cargarActual > stock && <span className="text-amber-400">⚠ requiere comprar {Math.ceil((cargarActual - stock) / Math.max(1, max))} ton</span>}</span>
-                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {costeMunicionFactura.total > 0 && (
+                    <>
+                      <FacturaRow label="Compra ton (recarga)" value={costeMunicionFactura.total} />
+                      <div className="ml-3 pl-2 border-l-2 border-amber-400/40 text-[9px] text-amber-400/80 space-y-0.5">
+                        {costeMunicionFactura.detalles.map(d => (
+                          <div key={d.binIdx} className="flex justify-between">
+                            <span>{d.family} ×{d.tonsComprar} ton</span>
+                            <span>{fmtMoney(d.cost)}</span>
+                          </div>
+                        ))}
                       </div>
-                    );
-                  })}
+                    </>
+                  )}
+                  <div className="border-t border-outline-variant/40 pt-2 mt-2">
+                    <FacturaRow label="Subtotal" value={facturaRepair.breakdown.subtotal + costeMunicionFactura.total} color="amber" bold />
+                  </div>
+                  <div className="text-[9px] text-secondary/60 py-1">
+                    Estado factura: {estadoFactPct}%
+                  </div>
+                  {/* Badge estado mech */}
+                  <div
+                    className="mt-2 px-3 py-2 flex items-center justify-between border"
+                    style={{
+                      background: `${ESTADO_COLOR[facturaRepair.breakdown.estadoMech]}15`,
+                      borderColor: ESTADO_COLOR[facturaRepair.breakdown.estadoMech],
+                    }}
+                  >
+                    <span className="text-[9px] text-secondary/60 uppercase tracking-widest">Estado Mech</span>
+                    <span
+                      className="text-[11px] font-bold uppercase tracking-widest"
+                      style={{ color: ESTADO_COLOR[facturaRepair.breakdown.estadoMech] }}
+                    >
+                      {facturaRepair.breakdown.estadoMech}
+                    </span>
+                  </div>
+                  {facturaRepair.breakdown.destruido && (
+                    <div className="mt-2 px-2 py-1 border-l-2 border-error bg-error/10 text-[9px] text-error">
+                      ⚠ Reactor=3 → mech destruido. Reparación parcial sólo restaura componentes individuales.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="font-mono text-xs text-secondary/40 text-center py-4 italic">
+                  Sin config — selecciona un mech para calcular factura.
                 </div>
               )}
-              <div className="mt-3 pt-3 border-t border-outline-variant/20 font-mono text-[10px] flex justify-between">
-                <span className="text-secondary/60">Tiempo recarga: <span className="text-amber-400">⏱ {tiempoRecargaTotal}m</span></span>
-                <span className="text-secondary/60">Coste compra ton: <span className="text-amber-400">{fmtMoney(costeMunicionFactura.total)}</span></span>
-              </div>
             </div>
+          </section>
+
+          {/* Recarga ammo (full width abajo) */}
+          <section className="bg-surface-container border border-outline-variant/30 p-4 clip-chamfer">
+            <h3 className="font-headline text-sm font-bold text-cream uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Download size={14} /> Recarga Munición Granular ({ammoBins.length})
+            </h3>
+            <div className="flex flex-wrap items-center gap-2 mb-3 p-2 bg-surface/40 border-y border-outline-variant/20 font-mono text-[10px]">
+              <label className="flex items-center gap-1">
+                Skill:
+                <select
+                  value={techSkillAmmo}
+                  onChange={e => setTechSkillAmmo(e.target.value as TechSkill)}
+                  className="bg-surface-container-high border border-outline-variant/40 text-[10px] px-1 py-0.5 text-cream"
+                >
+                  <option value="green">Green</option>
+                  <option value="regular">Regular</option>
+                  <option value="veteran">Veteran</option>
+                  <option value="elite">Elite</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input type="checkbox" checked={onBattlefield} onChange={e => setOnBattlefield(e.target.checked)} />
+                Campo batalla ×2
+              </label>
+              <span className="ml-auto text-secondary/60">
+                Tiempo recarga: <span className="text-amber-400">⏱ {tiempoRecargaTotal}m</span>
+                {' · '}
+                Coste compra ton: <span className="text-amber-400">{fmtMoney(costeMunicionFactura.total)}</span>
+              </span>
+            </div>
+            {ammoBins.length === 0 ? (
+              <div className="font-mono text-xs text-secondary/40 text-center py-4 italic">Sin compartimentos de munición.</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {ammoBins.map((bin, idx) => {
+                  const cur = bin.current || 0;
+                  const max = bin.max || 0;
+                  const faltante = max - cur;
+                  const rps = roundsPerShot(bin.familyKey);
+                  const cargableMax = roundsToFullRounds(faltante, bin.familyKey);
+                  const { stock } = findAmmoStock(almacen, bin);
+                  const cargarActual = recargaSelecc[idx] ?? 0;
+                  const variantLabel = bin.variant && bin.variant !== 'Standard' ? ` (${bin.variant})` : '';
+                  return (
+                    <div key={idx} className="p-2 bg-surface border border-outline-variant/20 text-[10px] font-mono">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-cream font-bold">{bin.family || 'Munición'}{variantLabel}</span>
+                        <span className="text-secondary/60">[{bin.loc}] {cur}/{max}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="range"
+                          min={0} max={cargableMax} step={rps}
+                          value={cargarActual}
+                          onChange={e => setRecargaSelecc(prev => ({ ...prev, [idx]: parseInt(e.target.value) }))}
+                          className="flex-1 accent-primary"
+                        />
+                        <span className="text-primary w-20 text-right">{cargarActual} disp</span>
+                      </div>
+                      <div className="flex justify-between mt-1 text-[9px] text-secondary/60">
+                        <span>Stock: <span className={stock > 0 ? 'text-primary' : 'text-error'}>{stock}</span></span>
+                        {cargarActual > stock && (
+                          <span className="text-amber-400">⚠ compra {Math.ceil((cargarActual - stock) / Math.max(1, max))}t</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </section>
 
           {/* Footer: factura total + botones */}
@@ -767,6 +875,10 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
               </div>
             </div>
 
+            <div className="mb-3 flex items-center justify-end">
+              <TelegramToggle context="compras" />
+            </div>
+
             <div className="flex gap-3">
               <button
                 onClick={handleCalcular}
@@ -785,6 +897,20 @@ export function ReparacionTab({ fromSimSlotIdx, showReturnToSim }: Props = {}) {
                   : stage === 'error' ? <>Error — reintentar</>
                   : <><CheckCircle2 size={14} /> Confirmar y Aplicar</>}
               </button>
+              {selectedSource?.origin === 'sim' && selectedSource.simSlotIdx !== undefined && (
+                <button
+                  onClick={() => {
+                    if (selectedSource.simSlotIdx === undefined) return;
+                    restoreMechSlotFull(selectedSource.simSlotIdx);
+                    setSnapVersion(v => v + 1);
+                  }}
+                  disabled={stage === 'committing'}
+                  title="Restaura el mech a 100% en el sim. NO asienta gasto. Útil sólo para reset rápido."
+                  className="flex-1 py-3 border border-amber-400/60 text-amber-400 hover:bg-amber-400/10 font-mono uppercase tracking-widest text-[11px] disabled:opacity-30"
+                >
+                  Restaurar SIM (sólo aplicado)
+                </button>
+              )}
             </div>
 
             {!capacity.canWork && (
