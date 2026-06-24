@@ -25,14 +25,19 @@ export function MechSourcePicker({ sources, selectedKey, onSelect }: Props) {
     );
   }
 
+  const selected = selectedKey ? sources.find(s => s.key === selectedKey) ?? null : null;
+
   return (
     <div className="space-y-2">
-      {/* HANGAR (campaña) */}
+      {/* HANGAR ordenado como Simulador */}
       {hangarSources.length > 0 && (
         <Group
           icon={<Warehouse size={10} />}
           label={`Hangar (${hangarSources.length})`}
           accent="amber"
+          selectedName={selected?.origin === 'hangar' ? selected.label : null}
+          selectedTons={selected?.origin === 'hangar' ? selected.tons : null}
+          selectedPilot={selected?.origin === 'hangar' ? selected.pilotShort : null}
         >
           {hangarSources.map(s => (
             <SourceButton key={s.key} source={s} active={selectedKey === s.key} onSelect={onSelect} />
@@ -46,30 +51,15 @@ export function MechSourcePicker({ sources, selectedKey, onSelect }: Props) {
           icon={<Crosshair size={10} />}
           label={`Simulador (${simSources.length})`}
           accent="green"
+          selectedName={selected?.origin === 'sim' ? selected.label : null}
+          selectedTons={selected?.origin === 'sim' ? selected.tons : null}
+          selectedPilot={selected?.origin === 'sim' ? selected.pilotShort : null}
         >
           {simSources.map(s => (
             <SourceButton key={s.key} source={s} active={selectedKey === s.key} onSelect={onSelect} />
           ))}
         </Group>
       )}
-
-      {/* Etiqueta del seleccionado */}
-      {selectedKey && (() => {
-        const selected = sources.find(s => s.key === selectedKey);
-        if (!selected) return null;
-        return (
-          <div className="mt-2 pt-2 border-t border-outline-variant/30 font-mono text-[10px]">
-            <span className="text-secondary/60 uppercase tracking-widest text-[8px]">
-              Seleccionado:
-            </span>{' '}
-            <span className="text-primary-container font-bold">{selected.label}</span>
-            <span className="text-secondary/50 ml-2">{selected.tons}t</span>
-            {selected.pilotShort && (
-              <span className="text-amber-400 ml-2">· {selected.pilotShort}</span>
-            )}
-          </div>
-        );
-      })()}
     </div>
   );
 }
@@ -77,24 +67,38 @@ export function MechSourcePicker({ sources, selectedKey, onSelect }: Props) {
 // ── Helpers ─────────────────────────────────────────────────
 
 function Group({
-  icon, label, accent, children,
+  icon, label, accent, children, selectedName, selectedTons, selectedPilot,
 }: {
   icon: React.ReactNode;
   label: string;
   accent: 'amber' | 'green';
   children: React.ReactNode;
+  selectedName?: string | null;
+  selectedTons?: number | null;
+  selectedPilot?: string | null;
 }) {
-  const colorClass = accent === 'amber'
-    ? 'text-amber-400/70'
-    : 'text-green-400/70';
+  const colorClass = accent === 'amber' ? 'text-amber-400/70' : 'text-green-400/70';
+  const nameClass = accent === 'amber' ? 'text-amber-400' : 'text-green-400';
   return (
     <div>
       <div className={`flex items-center gap-1 mb-1 font-mono text-[8px] uppercase tracking-widest ${colorClass}`}>
         {icon}
         <span>{label}</span>
       </div>
-      <div className="flex flex-wrap gap-1 bg-surface-container-low p-1 clip-chamfer">
-        {children}
+      <div className="flex items-center gap-3 bg-surface-container-low p-1 clip-chamfer">
+        <div className="flex flex-wrap gap-1 shrink-0">
+          {children}
+        </div>
+        {selectedName && (
+          <div className="flex-1 min-w-0 pl-2 border-l border-outline-variant/30">
+            <div className={`font-headline text-lg font-black truncate ${nameClass}`}>
+              {selectedName}
+            </div>
+            <div className="font-mono text-[10px] text-secondary/60 mt-0.5">
+              {selectedTons}t{selectedPilot ? ` · ${selectedPilot}` : ''}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

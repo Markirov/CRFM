@@ -61,7 +61,8 @@ function defaultWalkMP(tons: number): number {
 }
 
 /** Construye lista combinada de fuentes seleccionables en Taller.
- *  Orden: hangar (campaña) primero, sim slots después. */
+ *  Orden hangar: igual que Simulador (por pilotoIdx asc, reserva al final).
+ *  Sim slots después. */
 export function buildMechSources(
   hangarItems: HangarItem[],
   snap: SimuladorSnapshot | null,
@@ -69,8 +70,16 @@ export function buildMechSources(
 ): MechSource[] {
   const sources: MechSource[] = [];
 
-  // ── HANGAR (campaña / persistente) ──
-  for (const it of hangarItems) {
+  // ── HANGAR ordenado por pilotoIdx asc (reserva → final) ──
+  const hangarOrdered = [...hangarItems].sort((a, b) => {
+    const ai = a.pilotoIdx ?? 999;
+    const bi = b.pilotoIdx ?? 999;
+    if (ai !== bi) return ai - bi;
+    // Tie-break por chassis para estabilidad
+    return `${a.chassis} ${a.model}`.localeCompare(`${b.chassis} ${b.model}`);
+  });
+
+  for (const it of hangarOrdered) {
     // TODO: filtrar destruidos/desguazados cuando exista HangarItem.estado.
 
     const config = configFromCatalog({
