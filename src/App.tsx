@@ -13,6 +13,7 @@ import { usePermissions } from '@/lib/permissions-service';
 import { useTallerSharedSync } from '@/hooks/useTallerSharedSync';
 import { migrateAlmacenKeys } from '@/lib/almacen-keys';
 import { AuthGate } from '@/components/shell/AuthGate';
+import { useAuthRole } from '@/lib/auth-roles';
 
 import { pageLoaders } from '@/lib/page-loaders';
 
@@ -59,16 +60,19 @@ export function App() {
   const setPerms = useAppStore(s => s.setPerms);
   const setPermsLoading = useAppStore(s => s.setPermsLoading);
 
-  // Sync taller-shared state ↔ Firestore (hidrata al inicio + auto-save debounced)
-  useTallerSharedSync(true);
+  useAuthRole();
+
+  // Sync taller-shared state ↔ Firestore solo para usuarios de campaña.
+  useTallerSharedSync(!!userRole);
 
   // Permisos reactivos desde Firestore (onSnapshot)
-  const { perms, loading: permsLoading } = usePermissions();
+  const { perms, loading: permsLoading } = usePermissions(!!userRole);
   useEffect(() => { setPerms(perms); }, [perms, setPerms]);
   useEffect(() => { setPermsLoading(permsLoading); }, [permsLoading, setPermsLoading]);
 
   // Cargar config de campaña desde Firestore al iniciar.
   useEffect(() => {
+    if (!userRole) return;
     loadConfig().then(res => {
       if (!res.success) return;
       const d: Record<string, any> = (res.data?.config ?? res.data ?? {}) as Record<string, any>;
@@ -132,15 +136,20 @@ export function App() {
         localStorage.setItem('useLegacyDesigns', useLegacy ? '1' : '0');
       }
     }).catch(() => {});
-  }, [setCampaign]);
+  }, [setCampaign, userRole]);
 
   // Cargar Roster al arrancar
   useEffect(() => {
+    if (!userRole) {
+      setRoster([]);
+      setRosterLoading(false);
+      return;
+    }
     setRosterLoading(true);
     loadRoster()
       .then(setRoster)
       .catch(() => setRosterLoading(false));
-  }, [setRoster, setRosterLoading]);
+  }, [setRoster, setRosterLoading, userRole]);
 
   // Sync palette to current route
   useEffect(() => {
@@ -176,12 +185,12 @@ export function App() {
             {/* Rutas Públicas */}
             <Route path="/"               element={<Navigate to={window.__TAURI_INTERNALS__ ? "/mando-pc" : "/portada"} replace />} />
             <Route path="/portada"        element={<PortadaPage />} />
-            <Route path="/mando-pc"       element={<CommandCenterPage />} />
+            <Route path="/mando-pc"       element={window.__TAURI_INTERNALS__ ? <CommandCenterPage /> : <Navigate to="/portada" replace />} />
             <Route path="/tro"            element={<TROPage />} />
             <Route path="/wiki"           element={<WikiPage />} />
             <Route path="/mapa"           element={<MapaEstelarPage />} />
-            <Route path="/cronicas"       element={<CronicasPage />} />
             <Route path="/simulador"      element={<SimuladorPage />} />
+            <Route path="/ayudas"         element={<AyudasPage />} />
 
             {/* Rutas Privadas (Requieren Auth y Roles) */}
             <Route element={<AuthGate />}>
@@ -196,7 +205,7 @@ export function App() {
               <Route path="/taller"         element={<TallerPage />} />
               <Route path="/taller-legacy"  element={<TallerLegacyPage />} />
               <Route path="/hud"            element={<HudTacticoPage />} />
-              <Route path="/ayudas"         element={<AyudasPage />} />
+              <Route path="/cronicas"       element={<CronicasPage />} />
               <Route path="/logros"         element={<LogrosPage />} />
               <Route path="/mando"          element={<MandoPage />} />
               <Route path="/rrhh"           element={<RecursosHumanosPage />} />

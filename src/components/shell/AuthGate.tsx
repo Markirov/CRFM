@@ -1,7 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase-config';
-import { useAuthRole } from '@/lib/auth-roles';
 import { getRoles } from '@/lib/role-service';
 import { LogIn, ShieldAlert, Loader } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
@@ -14,8 +13,6 @@ export function AuthGate({ children }: Props) {
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState<string>('');
   const [authorized, setAuthorized]   = useState<boolean | null>(null);
-
-  useAuthRole();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async u => {

@@ -1,11 +1,23 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { collection, doc, onSnapshot, setDoc, getDocs, updateDoc, arrayUnion, arrayRemove, deleteDoc, query, where } from 'firebase/firestore';
+import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { collection, doc, onSnapshot, query, where, type Timestamp } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { db, auth } from '@/lib/firebase-config';
 import { useSimulador } from './useSimulador';
 import { useAppStore } from '@/lib/store';
 
+export type LiveRoomId = 'alpha' | 'beta' | 'delta';
+export const LIVE_ROOM_IDS: LiveRoomId[] = ['alpha', 'beta', 'delta'];
+
+export interface LiveRoom {
+  id: LiveRoomId;
+  status: 'active' | 'closed' | 'missing';
+  generation: string | null;
+  expiresAt: number | null;
+}
+
 export interface LiveUnit {
-  id: string; // e.g. "mech_0" o "vehicle_1"
+  id: string;
   name: string;
   pilot: string;
   hpPercent: number;
@@ -20,9 +32,15 @@ export interface IncomingDamage {
   weaponName: string;
   damage: number;
   timestamp: number;
-  // ── Sprint 5.5: ammo variant payload ──
-  ammoVariant?: string;      // 'Inferno' | 'HE' | 'AP' | 'Cluster' | ...
-  heatToTarget?: number;     // Inferno SRM: calor adicional al target por hit
+  ammoVariant?: string;
+  heatToTarget?: number;
+}
+
+interface LiveAttack extends IncomingDamage {
+  senderUid: string;
+  targetUid: string;
+  status: 'pending' | 'resolved' | 'cancelled';
+  generation: string;
 }
 
 export interface LiveSession {
@@ -31,158 +49,340 @@ export interface LiveSession {
   updatedAt: number;
   units: LiveUnit[];
   incomingDamage: IncomingDamage[];
+  generation: string;
 }
 
-const LIVE_COL = 'live_sessions';
+const functions = getFunctions();
+const callOpenRoom = httpsCallable<{ roomId: LiveRoomId }, { generation: string }>(functions, 'openLiveRoom');
+const callCloseRoom = httpsCallable<{ roomId: LiveRoomId }, unknown>(functions, 'closeLiveRoom');
+const callUpsertSession = httpsCallable<
+  { roomId: LiveRoomId; playerName: string; units: LiveUnit[] },
+  { generation: string }
+>(functions, 'upsertLiveSession');
+const callLeaveRoom = httpsCallable<{ roomId: LiveRoomId }, unknown>(functions, 'leaveLiveRoom');
+const callSendAttack = httpsCallable(functions, 'sendLiveAttack');
+const callResolveAttack = httpsCallable<{ roomId: LiveRoomId; attackId: string }, unknown>(functions, 'resolveLiveAttack');
+const callCancelAttack = httpsCallable<{ roomId: LiveRoomId; attackId: string }, unknown>(functions, 'cancelLiveAttack');
+
+function timestampMillis(value: unknown): number {
+  return value && typeof (value as Timestamp).toMillis === 'function'
+    ? (value as Timestamp).toMillis()
+    : 0;
+}
+
+function roomStorageValue(): LiveRoomId {
+  const value = sessionStorage.getItem('liveRoomId');
+  return LIVE_ROOM_IDS.includes(value as LiveRoomId) ? value as LiveRoomId : 'alpha';
+}
+
+function liveErrorMessage(error: unknown): string {
+  const code = typeof error === 'object' && error !== null && 'code' in error
+    ? String((error as { code?: unknown }).code)
+    : '';
+  if (code === 'auth/admin-restricted-operation') {
+    return 'El acceso Live todavía no está habilitado en Firebase Auth.';
+  }
+  if (code.includes('failed-precondition')) return 'La sala no está activa o acaba de caducar.';
+  if (code.includes('permission-denied')) return 'No tienes permiso para realizar esta acción Live.';
+  if (code.includes('unauthenticated')) return 'No se pudo crear la identidad temporal para Live.';
+  return error instanceof Error ? error.message : String(error);
+}
 
 export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
-  const [sessionId, setSessionId] = useState<string | null>(() => sessionStorage.getItem('liveSessionId'));
-  const [playerName, setPlayerName] = useState<string>('');
+  const [playerName, setPlayerName] = useState('');
+  const [rooms, setRooms] = useState<LiveRoom[]>(LIVE_ROOM_IDS.map(id => ({
+    id, status: 'missing', generation: null, expiresAt: null,
+  })));
+  const [selectedRoomId, setSelectedRoomIdState] = useState<LiveRoomId>(roomStorageValue);
+  const [activeRoomId, setActiveRoomId] = useState<LiveRoomId | null>(
+    () => sessionStorage.getItem('liveJoined') === '1' ? roomStorageValue() : null,
+  );
+  const [activeGeneration, setActiveGeneration] = useState<string | null>(null);
   const [sessions, setSessions] = useState<LiveSession[]>([]);
   const [mySession, setMySession] = useState<LiveSession | null>(null);
-  const [isLive, setIsLive] = useState<boolean>(!!sessionStorage.getItem('liveSessionId'));
-
+  const [incomingAttacks, setIncomingAttacks] = useState<LiveAttack[]>([]);
+  const [outgoingAttacks, setOutgoingAttacks] = useState<LiveAttack[]>([]);
+  const [authReady, setAuthReady] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const roster = useAppStore(s => s.roster);
+  const userRole = useAppStore(s => s.userRole);
+  const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Inicializa playerName basado en el usuario logueado o un nombre por defecto
+  const ensureIdentity = useCallback(async () => {
+    if (auth.currentUser) return auth.currentUser;
+    return (await signInAnonymously(auth)).user;
+  }, []);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async user => {
+      if (user) {
+        setAuthReady(true);
+        return;
+      }
+      try {
+        await signInAnonymously(auth);
+      } catch (e) {
+        setError(liveErrorMessage(e));
+        setAuthReady(false);
+      }
+    });
+    return unsub;
+  }, []);
+
   useEffect(() => {
     if (!playerName) {
       const email = auth.currentUser?.email;
-      const pj = roster.find(r => r.jugador && email && r.jugador.toLowerCase() === email.split('@')[0].toLowerCase());
-      if (pj) setPlayerName(pj.nombre || pj.jugador || 'Comandante');
-      else setPlayerName(auth.currentUser?.displayName || 'Piloto Local');
+      const pj = roster.find(r => r.jugador && email &&
+        r.jugador.toLowerCase() === email.split('@')[0].toLowerCase());
+      setPlayerName(pj?.nombre || pj?.jugador || auth.currentUser?.displayName || 'Piloto Local');
     }
   }, [roster, playerName]);
 
-  // Genera las unidades a partir del estado local de Simulador
-  const buildUnits = useCallback(() => {
+  const buildUnits = useCallback((): LiveUnit[] => {
     const units: LiveUnit[] = [];
-    sim.mechSlots.forEach((s, i) => {
-      if (s.state && s.session) {
-        const ms = s.state; const ss = s.session;
-        const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
-        const isLocs    = ['HD','CT','LT','RT','LA','RA','LL','RL'];
-        const armorMax = armorLocs.reduce((acc,k) => acc + (((ms.armor as Record<string, number>) || {})[k] ?? 0), 0);
-        const armorCur = armorLocs.reduce((acc,k) => acc + (((ss.armor as Record<string, number>) || {})[k] ?? 0), 0);
-        const isMax    = isLocs.reduce((acc,k) => acc + (((ms.is as Record<string, number>) || {})[k] ?? 0), 0);
-        const isCur    = isLocs.reduce((acc,k) => acc + (((ss.is as Record<string, number>) || {})[k] ?? 0), 0);
-        const total = armorMax + isMax;
-        const pct = ss.destroyed || total <= 0 ? 0 : Math.round(((armorCur + isCur) / total) * 100);
-
-        units.push({
-          id: `mech_${i}`,
-          name: `${ms.chassis} ${ms.model}`,
-          pilot: ss.pilot.name || `Slot ${i + 1}`,
-          hpPercent: pct,
-          isDestroyed: ss.destroyed,
-        });
-      }
+    sim.mechSlots.forEach((slot, index) => {
+      if (!slot.state || !slot.session) return;
+      const state = slot.state;
+      const session = slot.session;
+      const armorLocs = ['HD','CTf','CTr','LTf','LTr','RTf','RTr','LA','RA','LL','RL'];
+      const isLocs = ['HD','CT','LT','RT','LA','RA','LL','RL'];
+      const armorMax = armorLocs.reduce((sum, key) => sum + ((state.armor as Record<string, number>)[key] ?? 0), 0);
+      const armorCur = armorLocs.reduce((sum, key) => sum + ((session.armor as Record<string, number>)[key] ?? 0), 0);
+      const isMax = isLocs.reduce((sum, key) => sum + ((state.is as Record<string, number>)[key] ?? 0), 0);
+      const isCur = isLocs.reduce((sum, key) => sum + ((session.is as Record<string, number>)[key] ?? 0), 0);
+      const total = armorMax + isMax;
+      units.push({
+        id: `mech_${index}`,
+        name: `${state.chassis} ${state.model}`.trim().slice(0, 80),
+        pilot: (session.pilot.name || `Slot ${index + 1}`).slice(0, 80),
+        hpPercent: session.destroyed || total <= 0 ? 0 : Math.max(0, Math.min(100, Math.round(((armorCur + isCur) / total) * 100))),
+        isDestroyed: session.destroyed,
+      });
     });
-
-    sim.vehicleSlots.forEach((s, i) => {
-      if (s.state && s.session) {
-        const ms = s.state; const ss = s.session;
-        const armorLocs = Object.keys(ms.locations || {});
-        const armorMax = armorLocs.reduce((acc,k) => acc + ((ms.locations.find((l:any) => l.key === k)?.maxArmor) ?? 0), 0);
-        const armorCur = armorLocs.reduce((acc,k) => acc + ((ss.armor || {})[k] ?? 0), 0);
-        const isMax    = armorLocs.reduce((acc,k) => acc + ((ms.locations.find((l:any) => l.key === k)?.maxIS) ?? 0), 0);
-        const isCur    = armorLocs.reduce((acc,k) => acc + ((ss.is || {})[k] ?? 0), 0);
-        const total = armorMax + isMax;
-        const pct = ss.destroyed || total <= 0 ? 0 : Math.round(((armorCur + isCur) / total) * 100);
-
-        units.push({
-          id: `vehicle_${i}`,
-          name: ms.name,
-          pilot: ss.pilot.name || `Vehículo ${i + 1}`,
-          hpPercent: pct,
-          isDestroyed: ss.destroyed,
-        });
-      }
+    sim.vehicleSlots.forEach((slot, index) => {
+      if (!slot.state || !slot.session) return;
+      const state = slot.state;
+      const session = slot.session;
+      const locations = Array.isArray(state.locations) ? state.locations : [];
+      const armorMax = locations.reduce((sum, loc) => sum + (loc.maxArmor ?? 0), 0);
+      const armorCur = locations.reduce((sum, loc) => sum + ((session.armor ?? {})[loc.key] ?? 0), 0);
+      const isMax = locations.reduce((sum, loc) => sum + (loc.maxIS ?? 0), 0);
+      const isCur = locations.reduce((sum, loc) => sum + ((session.is ?? {})[loc.key] ?? 0), 0);
+      const total = armorMax + isMax;
+      units.push({
+        id: `vehicle_${index}`,
+        name: state.name.slice(0, 80),
+        pilot: (session.pilot.name || `Vehículo ${index + 1}`).slice(0, 80),
+        hpPercent: session.destroyed || total <= 0 ? 0 : Math.max(0, Math.min(100, Math.round(((armorCur + isCur) / total) * 100))),
+        isDestroyed: session.destroyed,
+      });
     });
     return units;
   }, [sim.mechSlots, sim.vehicleSlots]);
 
-  // Actualiza Firebase con nuestro estado actual
+  useEffect(() => {
+    if (!authReady) return;
+    const unsubs = LIVE_ROOM_IDS.map(roomId => onSnapshot(doc(db, 'live_rooms', roomId), snap => {
+      const data = snap.data();
+      const expiresAt = timestampMillis(data?.expiresAt) || null;
+      const expired = expiresAt !== null && expiresAt <= Date.now();
+      setRooms(prev => prev.map(room => room.id === roomId ? {
+        id: roomId,
+        status: snap.exists() && data?.status === 'active' && !expired ? 'active'
+          : snap.exists() ? 'closed' : 'missing',
+        generation: typeof data?.generation === 'string' ? data.generation : null,
+        expiresAt,
+      } : room));
+    }, e => setError(e.message)));
+    return () => unsubs.forEach(unsub => unsub());
+  }, [authReady]);
+
   const pushState = useCallback(async () => {
-    if (!isLive || !sessionId) return;
-    const units = buildUnits();
+    if (!activeRoomId) return;
     try {
-      await setDoc(doc(db, LIVE_COL, sessionId), {
-        id: sessionId,
-        playerName,
-        updatedAt: Date.now(),
-        units,
-        // No sobrescribimos incomingDamage entero para no borrar lo que nos mandan
-      }, { merge: true });
+      const user = await ensureIdentity();
+      const result = await callUpsertSession({
+        roomId: activeRoomId,
+        playerName: playerName.trim().slice(0, 40) || `Piloto ${user.uid.slice(0, 6)}`,
+        units: buildUnits(),
+      });
+      setActiveGeneration(result.data.generation);
+      setError(null);
     } catch (e) {
-      console.error("Error pushing live state", e);
+      setError(liveErrorMessage(e));
     }
-  }, [isLive, sessionId, playerName, buildUnits]);
+  }, [activeRoomId, playerName, buildUnits, ensureIdentity]);
 
-  const toggleLive = useCallback(async () => {
-    if (isLive) {
-      if (sessionId) {
-        try { await deleteDoc(doc(db, LIVE_COL, sessionId)); } catch {}
-      }
-      setIsLive(false);
-      setSessionId(null);
-      sessionStorage.removeItem('liveSessionId');
-    } else {
-      const newId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-      setSessionId(newId);
-      sessionStorage.setItem('liveSessionId', newId);
-      setIsLive(true);
+  const joinRoom = useCallback(async (roomId: LiveRoomId = selectedRoomId) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await ensureIdentity();
+      const result = await callUpsertSession({
+        roomId,
+        playerName: playerName.trim().slice(0, 40) || 'Piloto Local',
+        units: buildUnits(),
+      });
+      setSelectedRoomIdState(roomId);
+      setActiveRoomId(roomId);
+      setActiveGeneration(result.data.generation);
+      sessionStorage.setItem('liveRoomId', roomId);
+      sessionStorage.setItem('liveJoined', '1');
+    } catch (e) {
+      setError(liveErrorMessage(e));
+    } finally {
+      setBusy(false);
     }
-  }, [isLive, sessionId]);
+  }, [selectedRoomId, playerName, buildUnits, ensureIdentity]);
 
-  // Push state cada vez que cambian los slots localmente
-  useEffect(() => {
-    if (isLive) pushState();
-  }, [isLive, pushState, sim.mechSlots, sim.vehicleSlots]);
-
-  // Suscribirse a las sesiones
-  useEffect(() => {
-    if (!isLive) {
+  const leaveRoom = useCallback(async () => {
+    if (!activeRoomId) return;
+    setBusy(true);
+    try {
+      await callLeaveRoom({ roomId: activeRoomId });
+    } catch (e) {
+      setError(liveErrorMessage(e));
+    } finally {
+      setActiveRoomId(null);
+      setActiveGeneration(null);
       setSessions([]);
       setMySession(null);
-      return;
+      setIncomingAttacks([]);
+      setOutgoingAttacks([]);
+      sessionStorage.removeItem('liveJoined');
+      setBusy(false);
     }
-    const fourHoursAgo = Date.now() - 4 * 60 * 60 * 1000;
-    const unsub = onSnapshot(query(collection(db, LIVE_COL), where('updatedAt', '>=', fourHoursAgo)), (snap) => {
-      const all: LiveSession[] = [];
-      const now = Date.now();
-      snap.forEach(docSnap => {
-        const data = docSnap.data() as LiveSession;
-        // Ignorar sesiones muy viejas (> 4 horas)
-        if (now - data.updatedAt < 4 * 60 * 60 * 1000) {
-          all.push(data);
-        }
-      });
-      setSessions(all.filter(s => s.id !== sessionId));
-      setMySession(all.find(s => s.id === sessionId) || null);
-    });
-    return () => unsub();
-  }, [isLive, sessionId]);
+  }, [activeRoomId]);
 
-  // Limpiar sesión al desmontar
+  const toggleLive = useCallback(async () => {
+    if (activeRoomId) await leaveRoom();
+    else await joinRoom();
+  }, [activeRoomId, joinRoom, leaveRoom]);
+
+  const setSelectedRoomId = useCallback((roomId: LiveRoomId) => {
+    if (activeRoomId) return;
+    setSelectedRoomIdState(roomId);
+    sessionStorage.setItem('liveRoomId', roomId);
+  }, [activeRoomId]);
+
+  const openRoom = useCallback(async (roomId: LiveRoomId) => {
+    if (!userRole) return;
+    setBusy(true);
+    try {
+      await callOpenRoom({ roomId });
+      setSelectedRoomId(roomId);
+      setError(null);
+    } catch (e) {
+      setError(liveErrorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }, [userRole, setSelectedRoomId]);
+
+  const closeRoom = useCallback(async (roomId: LiveRoomId) => {
+    if (!userRole) return;
+    setBusy(true);
+    try {
+      await callCloseRoom({ roomId });
+      if (activeRoomId === roomId) await leaveRoom();
+      setError(null);
+    } catch (e) {
+      setError(liveErrorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }, [userRole, activeRoomId, leaveRoom]);
+
   useEffect(() => {
-    const handleUnload = () => {
-      if (isLive && sessionId) {
-        // Fallback síncrono al descargar
-        const data = new Blob([JSON.stringify({ delete: true })], { type: 'application/json' });
-        navigator.sendBeacon(`https://firestore.googleapis.com/v1/projects/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/databases/(default)/documents/${LIVE_COL}/${sessionId}?currentDocument.exists=true`, data);
-      }
-    };
-    window.addEventListener('beforeunload', handleUnload);
+    if (!activeRoomId) return;
+    if (pushTimer.current) clearTimeout(pushTimer.current);
+    pushTimer.current = setTimeout(() => void pushState(), 300);
     return () => {
-      window.removeEventListener('beforeunload', handleUnload);
-      if (isLive && sessionId) {
-        deleteDoc(doc(db, LIVE_COL, sessionId)).catch(() => {});
-      }
+      if (pushTimer.current) clearTimeout(pushTimer.current);
     };
-  }, [isLive, sessionId]);
+  }, [activeRoomId, pushState, sim.mechSlots, sim.vehicleSlots]);
 
-  // Enviar ataque a otro
+  useEffect(() => {
+    if (!activeRoomId || !activeGeneration || !auth.currentUser) return;
+    const uid = auth.currentUser.uid;
+    const sessionsQuery = query(
+      collection(db, 'live_rooms', activeRoomId, 'sessions'),
+      where('generation', '==', activeGeneration),
+    );
+    return onSnapshot(sessionsQuery, snap => {
+      const all = snap.docs.map(item => {
+        const data = item.data();
+        return {
+          id: item.id,
+          playerName: String(data.playerName ?? 'Piloto'),
+          updatedAt: timestampMillis(data.updatedAt),
+          units: Array.isArray(data.units) ? data.units as LiveUnit[] : [],
+          incomingDamage: [],
+          generation: String(data.generation ?? ''),
+        } satisfies LiveSession;
+      });
+      setSessions(all.filter(session => session.id !== uid));
+      setMySession(all.find(session => session.id === uid) ?? null);
+    }, e => setError(e.message));
+  }, [activeRoomId, activeGeneration]);
+
+  useEffect(() => {
+    if (!activeRoomId || !activeGeneration || !auth.currentUser) return;
+    const uid = auth.currentUser.uid;
+    const incomingQuery = query(
+      collection(db, 'live_rooms', activeRoomId, 'attacks'),
+      where('generation', '==', activeGeneration),
+      where('targetUid', '==', uid),
+      where('status', '==', 'pending'),
+    );
+    const outgoingQuery = query(
+      collection(db, 'live_rooms', activeRoomId, 'attacks'),
+      where('generation', '==', activeGeneration),
+      where('senderUid', '==', uid),
+      where('status', '==', 'pending'),
+    );
+    const mapAttack = (item: { id: string; data: () => Record<string, unknown> }): LiveAttack => {
+      const data = item.data();
+      return {
+        id: item.id,
+        senderUid: String(data.senderUid ?? ''),
+        targetUid: String(data.targetUid ?? ''),
+        sourceSessionName: String(data.sourceSessionName ?? 'Piloto'),
+        sourceUnitName: String(data.sourceUnitName ?? ''),
+        targetUnitId: String(data.targetUnitId ?? ''),
+        weaponName: String(data.weaponName ?? ''),
+        damage: Number(data.damage ?? 0),
+        timestamp: timestampMillis(data.createdAt),
+        ammoVariant: typeof data.ammoVariant === 'string' ? data.ammoVariant : undefined,
+        heatToTarget: Number(data.heatToTarget ?? 0) || undefined,
+        status: 'pending',
+        generation: String(data.generation ?? ''),
+      };
+    };
+    const unsubIncoming = onSnapshot(incomingQuery, snap => setIncomingAttacks(snap.docs.map(mapAttack)), e => setError(e.message));
+    const unsubOutgoing = onSnapshot(outgoingQuery, snap => setOutgoingAttacks(snap.docs.map(mapAttack)), e => setError(e.message));
+    return () => {
+      unsubIncoming();
+      unsubOutgoing();
+    };
+  }, [activeRoomId, activeGeneration]);
+
+  useEffect(() => {
+    setMySession(current => current ? { ...current, incomingDamage: incomingAttacks } : current);
+  }, [incomingAttacks]);
+
+  useEffect(() => {
+    if (!activeRoomId) return;
+    const room = rooms.find(item => item.id === activeRoomId);
+    if (room && (
+      room.status !== 'active' ||
+      (activeGeneration !== null && room.generation !== null && room.generation !== activeGeneration)
+    )) {
+      void leaveRoom();
+    }
+  }, [rooms, activeRoomId, activeGeneration, leaveRoom]);
+
   const sendAttack = useCallback(async (
     targetSessionId: string,
     targetUnitId: string,
@@ -191,60 +391,57 @@ export function useLiveSession(sim: ReturnType<typeof useSimulador>) {
     damage: number,
     opts?: { ammoVariant?: string; heatToTarget?: number },
   ) => {
+    if (!activeRoomId) return;
     try {
-      const attackId = `atk_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-      const payload: IncomingDamage = {
-        id: attackId,
-        sourceSessionName: playerName,
-        sourceUnitName,
+      await callSendAttack({
+        roomId: activeRoomId,
+        targetUid: targetSessionId,
         targetUnitId,
+        sourceUnitName,
         weaponName,
         damage,
-        timestamp: Date.now(),
-        ...(opts?.ammoVariant ? { ammoVariant: opts.ammoVariant } : {}),
-        ...(opts?.heatToTarget ? { heatToTarget: opts.heatToTarget } : {}),
-      };
-      await updateDoc(doc(db, LIVE_COL, targetSessionId), {
-        incomingDamage: arrayUnion(payload)
+        ammoVariant: opts?.ammoVariant,
+        heatToTarget: opts?.heatToTarget ?? 0,
       });
+      setError(null);
     } catch (e) {
-      console.error("Error sending attack", e);
+      setError(liveErrorMessage(e));
     }
-  }, [playerName]);
+  }, [activeRoomId]);
 
-  // Resolver ataque recibido
   const resolveAttack = useCallback(async (attack: IncomingDamage) => {
-    if (!sessionId) return;
+    if (!activeRoomId) return;
     try {
-      await updateDoc(doc(db, LIVE_COL, sessionId), {
-        incomingDamage: arrayRemove(attack)
-      });
+      await callResolveAttack({ roomId: activeRoomId, attackId: attack.id });
     } catch (e) {
-      console.error("Error resolving attack", e);
+      setError(liveErrorMessage(e));
     }
-  }, [sessionId]);
+  }, [activeRoomId]);
 
-  // Retirar ataques enviados por una unidad específica en este turno
   const revokeMyAttacks = useCallback(async (sourceUnitName: string) => {
-    if (!sessions) return;
-    for (const sess of sessions) {
-      if (!sess.incomingDamage) continue;
-      const myAttacks = sess.incomingDamage.filter(atk => atk.sourceUnitName === sourceUnitName);
-      if (myAttacks.length > 0) {
-        try {
-          await updateDoc(doc(db, LIVE_COL, sess.id), {
-            incomingDamage: arrayRemove(...myAttacks)
-          });
-        } catch (e) {
-          console.error("Error revoking attacks", e);
-        }
-      }
-    }
-  }, [sessions]);
+    if (!activeRoomId) return;
+    const matches = outgoingAttacks.filter(attack => attack.sourceUnitName === sourceUnitName);
+    await Promise.all(matches.map(attack =>
+      callCancelAttack({ roomId: activeRoomId, attackId: attack.id }).catch(e => {
+        setError(liveErrorMessage(e));
+      })
+    ));
+  }, [activeRoomId, outgoingAttacks]);
 
   return {
-    isLive,
+    isLive: activeRoomId !== null,
     toggleLive,
+    joinRoom,
+    leaveRoom,
+    rooms,
+    selectedRoomId,
+    setSelectedRoomId,
+    activeRoomId,
+    openRoom,
+    closeRoom,
+    canManageRooms: userRole !== null,
+    busy,
+    error,
     playerName,
     setPlayerName,
     sessions,

@@ -114,7 +114,7 @@ export function PortadaPage() {
   const navigate  = useNavigate();
   const campaign = useAppStore(s => s.campaign);
   const BASE = import.meta.env.BASE_URL;
-  const { readable, writable, loading: permLoading } = usePerm('comision');
+  const { readable, loading: permLoading } = usePerm('portada');
 
   const n = ICONIC_MECHS.length; // 5
 

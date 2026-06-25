@@ -165,6 +165,7 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
     // Retiramos los envíos previos de esta unidad este turno para no duplicar si se editan y reenvían
     await live.revokeMyAttacks(sourceName);
 
+    const sends: Promise<void>[] = [];
     activeWeapons.forEach((w: any) => {
       const t = targets[w.id];
       if (!t || !t.targetSessionId || !t.targetUnitId) return;
@@ -198,12 +199,13 @@ export function FireControlModal({ isOpen, onClose, sim, live }: Props) {
       // Inferno/Flamer heat → enviar aunque damage=0 si hay heat
       if (damage <= 0 && !heatToTarget) return;
       const weaponLabel = variant ? `${w.name} (${variant})` : w.name;
-      live.sendAttack(
+      sends.push(live.sendAttack(
         t.targetSessionId, t.targetUnitId, sourceName, weaponLabel, damage,
         { ammoVariant: variant, heatToTarget }
-      );
+      ));
     });
 
+    await Promise.all(sends);
     onClose();
   };
 

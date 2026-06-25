@@ -1,7 +1,7 @@
 import { usePerm } from '@/hooks/usePerm';
 
 export function WikiPage() {
-  const { readable, loading } = usePerm('tro'); // Usamos el mismo permiso que el TRO
+  const { readable, loading } = usePerm('wiki');
 
   if (loading) return null;
   if (!readable) {

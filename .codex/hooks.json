@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -ExecutionPolicy Bypass -File 'E:\\Drive\\CBT\\CFRM-firebase\\.codex\\hooks\\auto-review-reminder.ps1'"
+          }
+        ]
+      }
+    ]
+  }
+}

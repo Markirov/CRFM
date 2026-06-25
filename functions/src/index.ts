@@ -15,10 +15,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { onCall, onRequest, HttpsError } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { defineSecret } from 'firebase-functions/params';
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { randomUUID } from 'node:crypto';
 
 initializeApp();
 
@@ -29,6 +31,298 @@ const TG_AUTHORIZED_IDS        = defineSecret('TG_AUTHORIZED_IDS');
 
 const VALID_ROLES = ['admin', 'dm', 'pj'] as const;
 type Role = typeof VALID_ROLES[number];
+
+const LIVE_ROOM_IDS = ['alpha', 'beta', 'delta'] as const;
+type LiveRoomId = typeof LIVE_ROOM_IDS[number];
+const LIVE_ROOM_TTL_MS = 60 * 60 * 1000;
+const LIVE_CALLABLE_CORS = [
+  'https://battletechalicante.es',
+  'https://legadometalico.com',
+  'https://crfm-dc873.web.app',
+  'https://crfm-dc873.firebaseapp.com',
+  /localhost:\d+$/,
+];
+
+interface LiveUnitPayload {
+  id: string;
+  name: string;
+  pilot: string;
+  hpPercent: number;
+  isDestroyed: boolean;
+}
+
+function parseLiveRoomId(value: unknown): LiveRoomId {
+  if (typeof value !== 'string' || !LIVE_ROOM_IDS.includes(value as LiveRoomId)) {
+    throw new HttpsError('invalid-argument', 'Sala inválida. Usa alpha, beta o delta.');
+  }
+  return value as LiveRoomId;
+}
+
+function requireLiveUser(request: { auth?: { uid: string; token: Record<string, unknown> } | null }): string {
+  if (!request.auth?.uid) {
+    throw new HttpsError('unauthenticated', 'Se requiere una identidad Firebase.');
+  }
+  return request.auth.uid;
+}
+
+function hasCampaignRole(token: Record<string, unknown> | undefined): boolean {
+  const role = token?.role;
+  const founder = token?.email === 'marcosfenollar@gmail.com' && token?.email_verified === true;
+  return founder || role === 'admin' || role === 'dm' || role === 'pj';
+}
+
+function requireCampaignRole(request: { auth?: { uid: string; token: Record<string, unknown> } | null }): string {
+  const uid = requireLiveUser(request);
+  if (!hasCampaignRole(request.auth?.token)) {
+    throw new HttpsError('permission-denied', 'Solo un usuario con rol puede gestionar salas Live.');
+  }
+  return uid;
+}
+
+function validateLiveUnits(value: unknown): LiveUnitPayload[] {
+  if (!Array.isArray(value) || value.length > 12) {
+    throw new HttpsError('invalid-argument', 'La sesión admite un máximo de 12 unidades.');
+  }
+  return value.map((raw, index) => {
+    if (!raw || typeof raw !== 'object') {
+      throw new HttpsError('invalid-argument', `Unidad ${index + 1} inválida.`);
+    }
+    const unit = raw as Record<string, unknown>;
+    const id = typeof unit.id === 'string' ? unit.id.trim() : '';
+    const name = typeof unit.name === 'string' ? unit.name.trim() : '';
+    const pilot = typeof unit.pilot === 'string' ? unit.pilot.trim() : '';
+    const hpPercent = unit.hpPercent;
+    if (!/^(mech|vehicle)_\d{1,2}$/.test(id) || name.length < 1 || name.length > 80 ||
+        pilot.length < 1 || pilot.length > 80 || !Number.isInteger(hpPercent) ||
+        Number(hpPercent) < 0 || Number(hpPercent) > 100 || typeof unit.isDestroyed !== 'boolean') {
+      throw new HttpsError('invalid-argument', `Datos inválidos en la unidad ${index + 1}.`);
+    }
+    return {
+      id,
+      name,
+      pilot,
+      hpPercent: Number(hpPercent),
+      isDestroyed: unit.isDestroyed,
+    };
+  });
+}
+
+function roomIsActive(data: Record<string, unknown> | undefined, now: Timestamp): boolean {
+  return data?.status === 'active' &&
+    data.expiresAt instanceof Timestamp &&
+    data.expiresAt.toMillis() > now.toMillis();
+}
+
+export const openLiveRoom = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const openedByUid = requireCampaignRole(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const db = getFirestore();
+    const roomRef = db.collection('live_rooms').doc(roomId);
+    const now = Timestamp.now();
+    const expiresAt = Timestamp.fromMillis(now.toMillis() + LIVE_ROOM_TTL_MS);
+    const generation = randomUUID();
+
+    // Una reapertura inicia una ejecución limpia y elimina subcolecciones antiguas.
+    await db.recursiveDelete(roomRef);
+    await roomRef.set({
+      roomId,
+      generation,
+      status: 'active',
+      openedByUid,
+      createdAt: now,
+      lastAttackAt: null,
+      expiresAt,
+    });
+
+    return { roomId, generation, expiresAt: expiresAt.toMillis() };
+  },
+);
+
+export const cleanupExpiredLiveRooms = onSchedule('every 15 minutes', async () => {
+  const db = getFirestore();
+  const now = Timestamp.now();
+  for (const roomId of LIVE_ROOM_IDS) {
+    const roomRef = db.collection('live_rooms').doc(roomId);
+    const snap = await roomRef.get();
+    if (!snap.exists) continue;
+    const data = snap.data() as Record<string, unknown>;
+    if (data.expiresAt instanceof Timestamp && data.expiresAt.toMillis() <= now.toMillis()) {
+      await db.recursiveDelete(roomRef);
+    }
+  }
+});
+
+export const closeLiveRoom = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    requireCampaignRole(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const roomRef = getFirestore().collection('live_rooms').doc(roomId);
+    const snap = await roomRef.get();
+    if (!snap.exists) throw new HttpsError('not-found', 'La sala no existe.');
+    await roomRef.update({ status: 'closed', expiresAt: Timestamp.now() });
+    return { roomId, closed: true };
+  },
+);
+
+export const upsertLiveSession = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const uid = requireLiveUser(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const playerName = typeof request.data?.playerName === 'string' ? request.data.playerName.trim() : '';
+    if (playerName.length < 1 || playerName.length > 40) {
+      throw new HttpsError('invalid-argument', 'El nombre debe tener entre 1 y 40 caracteres.');
+    }
+    const units = validateLiveUnits(request.data?.units);
+    const db = getFirestore();
+    const roomRef = db.collection('live_rooms').doc(roomId);
+    const sessionRef = roomRef.collection('sessions').doc(uid);
+    const now = Timestamp.now();
+
+    const generation = await db.runTransaction(async tx => {
+      const roomSnap = await tx.get(roomRef);
+      const roomData = roomSnap.data() as Record<string, unknown> | undefined;
+      if (!roomSnap.exists || !roomIsActive(roomData, now) || typeof roomData?.generation !== 'string') {
+        throw new HttpsError('failed-precondition', 'La sala no está activa.');
+      }
+      tx.set(sessionRef, {
+        ownerUid: uid,
+        generation: roomData.generation,
+        playerName,
+        updatedAt: now,
+        expiresAt: roomData.expiresAt,
+        units,
+      });
+      return roomData.generation;
+    });
+
+    return { roomId, generation };
+  },
+);
+
+export const leaveLiveRoom = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const uid = requireLiveUser(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    await getFirestore().collection('live_rooms').doc(roomId).collection('sessions').doc(uid).delete();
+    return { roomId, left: true };
+  },
+);
+
+export const sendLiveAttack = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const senderUid = requireLiveUser(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const targetUid = typeof request.data?.targetUid === 'string' ? request.data.targetUid : '';
+    const targetUnitId = typeof request.data?.targetUnitId === 'string' ? request.data.targetUnitId : '';
+    const sourceUnitName = typeof request.data?.sourceUnitName === 'string' ? request.data.sourceUnitName.trim() : '';
+    const weaponName = typeof request.data?.weaponName === 'string' ? request.data.weaponName.trim() : '';
+    const ammoVariant = typeof request.data?.ammoVariant === 'string' ? request.data.ammoVariant.trim() : '';
+    const damage = Number(request.data?.damage);
+    const heatToTarget = Number(request.data?.heatToTarget ?? 0);
+
+    if (!targetUid || !/^(mech|vehicle)_\d{1,2}$/.test(targetUnitId) ||
+        sourceUnitName.length < 1 || sourceUnitName.length > 80 ||
+        weaponName.length < 1 || weaponName.length > 80 ||
+        ammoVariant.length > 40 || !Number.isInteger(damage) || damage < 0 || damage > 1000 ||
+        !Number.isInteger(heatToTarget) || heatToTarget < 0 || heatToTarget > 100 ||
+        (damage === 0 && heatToTarget === 0)) {
+      throw new HttpsError('invalid-argument', 'Datos de ataque inválidos.');
+    }
+
+    const db = getFirestore();
+    const roomRef = db.collection('live_rooms').doc(roomId);
+    const senderRef = roomRef.collection('sessions').doc(senderUid);
+    const targetRef = roomRef.collection('sessions').doc(targetUid);
+    const attackRef = roomRef.collection('attacks').doc(randomUUID());
+    const now = Timestamp.now();
+    const expiresAt = Timestamp.fromMillis(now.toMillis() + LIVE_ROOM_TTL_MS);
+
+    await db.runTransaction(async tx => {
+      const [roomSnap, senderSnap, targetSnap] = await Promise.all([
+        tx.get(roomRef),
+        tx.get(senderRef),
+        tx.get(targetRef),
+      ]);
+      const room = roomSnap.data() as Record<string, unknown> | undefined;
+      const sender = senderSnap.data() as Record<string, unknown> | undefined;
+      const target = targetSnap.data() as Record<string, unknown> | undefined;
+      if (!roomSnap.exists || !roomIsActive(room, now) || typeof room?.generation !== 'string') {
+        throw new HttpsError('failed-precondition', 'La sala no está activa.');
+      }
+      if (!senderSnap.exists || sender?.generation !== room.generation ||
+          !targetSnap.exists || target?.generation !== room.generation) {
+        throw new HttpsError('failed-precondition', 'Remitente u objetivo no pertenece a la sala activa.');
+      }
+      const senderUnits = Array.isArray(sender?.units) ? sender.units as LiveUnitPayload[] : [];
+      const targetUnits = Array.isArray(target?.units) ? target.units as LiveUnitPayload[] : [];
+      if (!senderUnits.some(unit => unit.name === sourceUnitName) ||
+          !targetUnits.some(unit => unit.id === targetUnitId && !unit.isDestroyed)) {
+        throw new HttpsError('failed-precondition', 'La unidad atacante u objetivo ya no está disponible.');
+      }
+
+      tx.create(attackRef, {
+        generation: room.generation,
+        senderUid,
+        targetUid,
+        sourceSessionName: String(sender?.playerName ?? 'Piloto'),
+        sourceUnitName,
+        targetUnitId,
+        weaponName,
+        damage,
+        ammoVariant: ammoVariant || null,
+        heatToTarget,
+        status: 'pending',
+        createdAt: now,
+        expiresAt,
+      });
+      tx.update(roomRef, { lastAttackAt: now, expiresAt });
+      tx.update(senderRef, { expiresAt, updatedAt: now });
+      tx.update(targetRef, { expiresAt });
+    });
+
+    return { id: attackRef.id, timestamp: now.toMillis(), expiresAt: expiresAt.toMillis() };
+  },
+);
+
+export const resolveLiveAttack = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const uid = requireLiveUser(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const attackId = typeof request.data?.attackId === 'string' ? request.data.attackId : '';
+    if (!attackId) throw new HttpsError('invalid-argument', 'attackId requerido.');
+    const ref = getFirestore().collection('live_rooms').doc(roomId).collection('attacks').doc(attackId);
+    const snap = await ref.get();
+    if (!snap.exists) return { resolved: true };
+    const attack = snap.data();
+    if (attack?.targetUid !== uid) throw new HttpsError('permission-denied', 'Solo el objetivo puede resolver el ataque.');
+    if (attack?.status === 'pending') await ref.update({ status: 'resolved', resolvedAt: Timestamp.now() });
+    return { resolved: true };
+  },
+);
+
+export const cancelLiveAttack = onCall(
+  { cors: LIVE_CALLABLE_CORS },
+  async (request) => {
+    const uid = requireLiveUser(request);
+    const roomId = parseLiveRoomId(request.data?.roomId);
+    const attackId = typeof request.data?.attackId === 'string' ? request.data.attackId : '';
+    if (!attackId) throw new HttpsError('invalid-argument', 'attackId requerido.');
+    const ref = getFirestore().collection('live_rooms').doc(roomId).collection('attacks').doc(attackId);
+    const snap = await ref.get();
+    if (!snap.exists) return { cancelled: true };
+    const attack = snap.data();
+    if (attack?.senderUid !== uid) throw new HttpsError('permission-denied', 'Solo el remitente puede cancelar el ataque.');
+    if (attack?.status === 'pending') await ref.update({ status: 'cancelled', cancelledAt: Timestamp.now() });
+    return { cancelled: true };
+  },
+);
 
 // ── setUserRole ──────────────────────────────────────────────
 // Caller debe ser admin (verificado por Custom Claim en el JWT).

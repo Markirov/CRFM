@@ -42,24 +42,6 @@ const TAB_MAP: Record<string, string> = { mechs: 'mechs', vehicles: 'vehiculos' 
 // Orden fijo PJs (8 slots simulador en modo campaña). Match contra roster.jugador.
 const CAMPAIGN_PILOT_ORDER = ['Jaime', 'Marcos', 'Joan', 'Alex', 'Erik', 'Zhao', 'Val', 'Tariq'];
 
-const CAMPAIGN_UNLOCK_KEY = 'kk_campaign_unlock';
-const CAMPAIGN_PASSWORD = 'Mark';
-
-function isCampaignUnlocked(): boolean {
-  return sessionStorage.getItem(CAMPAIGN_UNLOCK_KEY) === '1';
-}
-function gateCampaignWrite(actionLabel: string): boolean {
-  if (isCampaignUnlocked()) return true;
-  const pwd = prompt(`Modo Campaña (${actionLabel}): introduce la clave`);
-  if (pwd === null) return false;
-  if (pwd === CAMPAIGN_PASSWORD) {
-    sessionStorage.setItem(CAMPAIGN_UNLOCK_KEY, '1');
-    return true;
-  }
-  alert('Clave incorrecta');
-  return false;
-}
-
 export function SimuladorPage() {
   const navigate = useNavigate();
   const activeSubTab = useAppStore(s => s.activeSubTab);
@@ -72,7 +54,8 @@ export function SimuladorPage() {
   const sim = useSimulador();
   const live = useLiveSession(sim);
   const { catalog } = useMechCatalog();
-  const { readable, writable, loading: permLoading } = usePerm('simulador');
+  const { readable, loading: permLoading } = usePerm('simulador');
+  const userRole = useAppStore(s => s.userRole);
   const [allowClan, setAllowClan] = useState(false);
   const [limitToYear, setLimitToYear] = useState(true);
   const [isFireModalOpen, setIsFireModalOpen] = useState(false);
@@ -300,8 +283,11 @@ export function SimuladorPage() {
       setHangarBySlot(Array(8).fill(null));
       return;
     }
-    // Entrar: pide clave + carga FUERZACAMPAÑA
-    if (!gateCampaignWrite('cargar FUERZACAMPAÑA')) return;
+    // Entrar: la autorización real depende del rol Firebase.
+    if (!userRole) {
+      alert('El modo Campaña requiere iniciar sesión con un rol autorizado.');
+      return;
+    }
     try {
       // Si hay una partida suelta en curso, respaldarla antes de sobrescribir
       const currentSnap = loadLocalSnapshot();
@@ -505,14 +491,12 @@ export function SimuladorPage() {
     return <InfantryView sim={sim} />;
   }
 
-  const slotNames = useMemo(() => isMech
+  const slotNames = isMech
     ? sim.mechSlots.map((s, i) => {
         if (campaignPilots && campaignPilots[i]) return campaignPilots[i];
         return s.state ? `${s.state.chassis} ${s.state.model}` : `SLOT ${i + 1}`;
       })
-    : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`),
-    [isMech, sim.mechSlots, sim.vehicleSlots, campaignPilots]
-  );
+    : sim.vehicleSlots.map((s, i) => s.state ? s.state.name : `SLOT ${i + 1}`);
 
   const blockMsg = (i: number) => {
     const h = hangarBySlot[i];
@@ -598,7 +582,7 @@ export function SimuladorPage() {
           clearCurrentUnit={sim.clearCurrentUnit}
           markSynced={sim.markSynced}
           campaignMode={campaignMode}
-          onToggleCampaignMode={handleToggleCampaign}
+          onToggleCampaignMode={userRole ? handleToggleCampaign : undefined}
           onSaveCampaign={campaignMode ? () => saveCampaignProgress('Campaña') : undefined}
           onRequestSaveSlot={requestSaveSlot}
           bvTotal={
@@ -709,7 +693,7 @@ export function SimuladorPage() {
                 Armas
               </h2>
               <div className="space-y-1">
-                {useMemo(() => {
+                {(() => {
                   const mechHasTC = mechHasTargetingComputer(ss.crits as any);
                   if (ms.weapons.length === 0) return (
                     <div className="font-mono text-[10px] text-secondary/40 italic py-4 text-center">Sin armas</div>
@@ -844,7 +828,7 @@ export function SimuladorPage() {
                     </div>
                   );
                 });
-                }, [ms, ss, sim])}
+                })()}
               </div>
             </section>
 

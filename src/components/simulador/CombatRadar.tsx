@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Crosshair, Radio, ShieldAlert, Dices, ChevronDown, ChevronRight } from 'lucide-react';
 import { useSimulador } from '@/hooks/useSimulador';
-import { useLiveSession, type LiveSession, type LiveUnit, type IncomingDamage } from '@/hooks/useLiveSession';
+import { useLiveSession, type IncomingDamage, type LiveRoomId } from '@/hooks/useLiveSession';
 import { useAutorollPrefs, AUTOROLL_META, type AutorollPrefs } from '@/lib/autoroll-prefs';
 import { rollHitLocation, rollPiloting, rollInitiative, rollAmmoExplosionAvoid, rollCritical, locKeyToCritArea, type AttackDirection } from '@/lib/dice-helpers';
 
@@ -78,16 +78,73 @@ export function ComputadoraCombate({ sim, live }: Props) {
             <span className="font-headline text-[10px] uppercase tracking-widest text-primary-container flex items-center gap-2 mb-1">
               <Crosshair size={12} /> Ajustes
             </span>
+            <input
+              type="text"
+              value={live.playerName}
+              onChange={event => live.setPlayerName(event.target.value.slice(0, 40))}
+              disabled={live.isLive}
+              maxLength={40}
+              placeholder="Nombre en el radar"
+              className="w-full bg-background/50 border border-outline-variant/30 px-2 py-1 font-mono text-[9px] text-secondary focus:border-primary focus:outline-none disabled:opacity-50"
+            />
+            <div className="grid grid-cols-3 gap-1">
+              {live.rooms.map(room => {
+                const selected = live.activeRoomId === room.id ||
+                  (!live.activeRoomId && live.selectedRoomId === room.id);
+                return (
+                  <div key={room.id} className="flex flex-col gap-1">
+                    <button
+                      onClick={() => live.setSelectedRoomId(room.id as LiveRoomId)}
+                      disabled={live.isLive}
+                      className={`px-1 py-1 border font-mono text-[8px] uppercase tracking-wider transition-colors ${
+                        selected
+                          ? 'border-primary text-primary bg-primary/15'
+                          : 'border-outline-variant/30 text-secondary/60'
+                      } disabled:cursor-default`}
+                    >
+                      {room.id}
+                      <span className={`block text-[7px] ${
+                        room.status === 'active' ? 'text-emerald-400' : 'text-secondary/30'
+                      }`}>
+                        {room.status === 'active' ? 'activa' : 'cerrada'}
+                      </span>
+                    </button>
+                    {live.canManageRooms && (
+                      room.status === 'active' ? (
+                        <button
+                          onClick={() => live.closeRoom(room.id)}
+                          disabled={live.busy}
+                          className="border border-error/30 text-error/70 font-mono text-[7px] uppercase py-0.5 hover:bg-error/10 disabled:opacity-40"
+                        >
+                          Cerrar
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => live.openRoom(room.id)}
+                          disabled={live.busy}
+                          className="border border-emerald-400/30 text-emerald-400/80 font-mono text-[7px] uppercase py-0.5 hover:bg-emerald-400/10 disabled:opacity-40"
+                        >
+                          Abrir
+                        </button>
+                      )
+                    )}
+                  </div>
+                );
+              })}
+            </div>
             <div className="flex gap-2">
               <button 
                 onClick={live.toggleLive}
+                disabled={live.busy || (!live.isLive && live.rooms.find(r => r.id === live.selectedRoomId)?.status !== 'active')}
                 className={`flex-1 px-2 py-1.5 font-mono text-[9px] uppercase tracking-widest clip-chamfer transition-colors border ${
                   live.isLive 
                     ? 'bg-error/20 border-error/50 text-error hover:bg-error/40' 
                     : 'bg-primary/20 border-primary/50 text-primary hover:bg-primary/40'
-                }`}
+                } disabled:opacity-30 disabled:cursor-not-allowed`}
               >
-                {live.isLive ? 'Radar: ON' : 'Radar: OFF'}
+                {live.busy ? 'Conectando…' : live.isLive
+                  ? `Salir de ${live.activeRoomId}`
+                  : `Entrar en ${live.selectedRoomId}`}
               </button>
               <button
                 onClick={() => sim.setIsSimultaneousCombat(!sim.isSimultaneousCombat)}
@@ -101,6 +158,11 @@ export function ComputadoraCombate({ sim, live }: Props) {
                 {sim.isSimultaneousCombat ? 'Simultáneo: ON' : 'Simultáneo: OFF'}
               </button>
             </div>
+            {live.error && (
+              <div className="font-mono text-[8px] text-error border border-error/30 bg-error/10 px-2 py-1">
+                {live.error}
+              </div>
+            )}
           </div>
 
           {/* ── Tiradas Auto (per-user prefs) ── */}
@@ -189,7 +251,7 @@ export function ComputadoraCombate({ sim, live }: Props) {
           <div className="max-h-64 overflow-y-auto p-2 space-y-3 custom-scrollbar">
             {!live.isLive ? (
               <div className="text-center font-mono text-[10px] text-secondary/40 py-6 italic">
-                Radar desconectado.<br/><br/>Enciéndelo para compartir telemetría y ver unidades enemigas en red.
+                Radar desconectado.<br/><br/>Selecciona una sala activa para compartir telemetría.
               </div>
             ) : live.sessions.length === 0 ? (
               <div className="text-center font-mono text-[10px] text-secondary/40 py-4 italic">Buscando señales...</div>

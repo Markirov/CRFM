@@ -1,4 +1,23 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "attacks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "generation", "order": "ASCENDING" },
+        { "fieldPath": "targetUid", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "attacks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "generation", "order": "ASCENDING" },
+        { "fieldPath": "senderUid", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

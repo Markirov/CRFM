@@ -12,6 +12,7 @@ import { signOut } from 'firebase/auth';
 import { db, auth } from './firebase-config';
 import { useEffect, useRef, useState } from 'react';
 import type { UserRole } from './store';
+import { getPublicAccess } from './access-policy';
 
 export type PermLevel = 'write' | 'read' | 'none';
 
@@ -64,7 +65,7 @@ export async function savePermissions(perms: SectionPerm[]): Promise<void> {
 }
 
 // ── Hook reactivo ────────────────────────────────────────────
-export function usePermissions(): {
+export function usePermissions(enabled = true): {
   perms: SectionPerm[];
   loading: boolean;
 } {
@@ -74,6 +75,14 @@ export function usePermissions(): {
   const initialLoadRef = useRef(true);
 
   useEffect(() => {
+    if (!enabled) {
+      prevPermsRef.current = null;
+      initialLoadRef.current = true;
+      setPerms(DEFAULT_PERMISSIONS);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
     const unsub = onSnapshot(PERMISOS_DOC(), snap => {
       let newPerms: SectionPerm[];
       if (!snap.exists()) {
@@ -120,19 +129,17 @@ export function usePermissions(): {
       setLoading(false);
     });
     return unsub;
-  }, []);
+  }, [enabled]);
 
   return { perms, loading };
 }
 
 // ── Helper: nivel de permiso para el rol actual ──────────────
 export function getPermLevel(perms: SectionPerm[], sectionId: string, role: UserRole): PermLevel {
+  const publicAccess = getPublicAccess(sectionId);
+  if (publicAccess) return publicAccess;
   if (role === 'admin') return 'write';
-  if (!role) {
-    const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador', 'ayudas'];
-    if (PUBLIC_ROUTES.includes(sectionId)) return sectionId === 'simulador' ? 'write' : 'read';
-    return 'none';
-  }
+  if (!role) return 'none';
   const section = perms.find(p => p.id === sectionId);
   if (!section) return 'none';
   return section[role as 'dm' | 'pj'];
