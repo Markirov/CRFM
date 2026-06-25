@@ -96,9 +96,10 @@ export function ReclutamientoPage() {
                   onChange={e => r.setCampaign({ id: e.target.value as CampaignId })}
                   className="bg-surface-container border border-outline-variant/40 px-2 py-1 font-mono text-[11px] text-cream"
                 >
-                  <option value="ELH">Eridani Light Horse (ELH)</option>
-                  <option value="IS">Esfera Interior (IS)</option>
-                  <option value="KKK">King Karl's Kürassiers (KKK · por peso)</option>
+                  <option value="ELH">Eridani Light Horse (ELH · 1d16)</option>
+                  <option value="IS">Esfera Interior (IS · 2d6 grupo)</option>
+                  <option value="KKK">King Karl's Kürassiers (KKK · 2d6 por peso)</option>
+                  <option value="MERC">Mercenary/Periphery (MERC · 1d20)</option>
                 </select>
               </label>
               <label className="flex flex-col gap-1">

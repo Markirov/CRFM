@@ -121,17 +121,53 @@ export const MECH_CATALOG_BY_TONS: Record<number, string[]> = {
   100: ['Atlas', 'BattleMaster (variante)', 'Annihilator'],
 };
 
+// ══════════════════════════════════════════════════════════════
+//  MERC — Tabla 1d20 columna Mercenary/Periphery (RANDOM 'MECH
+//  ASSIGNMENT TABLE: INNER SPHERE 2). 5 mechs per clase, mezclados.
+//  1-5 = ligeros, 6-10 = medianos, 11-15 = pesados, 16-20 = asalto.
+//  Tirada plana 1d20, mods [-3..+3] desplazan al peso vecino.
+// ══════════════════════════════════════════════════════════════
+
+export const MECH_TABLE_MERC: Record<number, MechTableEntry> = {
+  // ── Ligeros (20-35t) ──
+  1:  { model: 'LCT-1V Locust',         tons: 20 },
+  2:  { model: 'WSP-1A Wasp',           tons: 20 },
+  3:  { model: 'STG-3G Stinger',        tons: 20 },
+  4:  { model: 'JVN-10F Javelin',       tons: 30 },
+  5:  { model: 'PTN-9R Panther',        tons: 35 },
+  // ── Medianos (40-55t) ──
+  6:  { model: 'HBK-4G Hunchback',      tons: 50 },
+  7:  { model: 'GRF-1N Griffin',        tons: 55 },
+  8:  { model: 'SHD-2H Shadow Hawk',    tons: 55 },
+  9:  { model: 'WVR-6R Wolverine',      tons: 55 },
+  10: { model: 'CN9-A Centurion',       tons: 50 },
+  // ── Pesados (60-75t) ──
+  11: { model: 'TDR-5SE Thunderbolt',   tons: 65 },
+  12: { model: 'ARC-2R Archer',         tons: 70 },
+  13: { model: 'CRD-3R Crusader',       tons: 65 },
+  14: { model: 'WHM-6R Warhammer',      tons: 70 },
+  15: { model: 'ON1-K Orion',           tons: 75 },
+  // ── Asalto (80-100t) ──
+  16: { model: 'BLR-1G BattleMaster',   tons: 85 },
+  17: { model: 'VTR-9B Victor',         tons: 80 },
+  18: { model: 'AWS-8R Awesome',        tons: 80 },
+  19: { model: 'STK-3F Stalker',        tons: 85 },
+  20: { model: 'BNC-3E Banshee',        tons: 95 },
+};
+
 // ── Modificadores permitidos por campaña ─────────────────────
 export const ALLOWED_MODIFIERS: Record<CampaignId, readonly number[]> = {
-  ELH: [-2, -1, 0, 1, 2],
-  IS:  [-3, -2, -1, 0, 1, 2, 3],
-  KKK: [-3, -2, -1, 0, 1, 2, 3],
+  ELH:  [-2, -1, 0, 1, 2],
+  IS:   [-3, -2, -1, 0, 1, 2, 3],
+  KKK:  [-3, -2, -1, 0, 1, 2, 3],
+  MERC: [-3, -2, -1, 0, 1, 2, 3],
 };
 
 export const ROLL_BOUNDS: Record<CampaignId, { min: number; max: number }> = {
-  ELH: { min: 1, max: 16 },
-  IS:  { min: -1, max: 15 },
-  KKK: { min: 2, max: 12 },
+  ELH:  { min: 1, max: 16 },
+  IS:   { min: -1, max: 15 },
+  KKK:  { min: 2, max: 12 },
+  MERC: { min: 1, max: 20 },
 };
 
 // ── RNG injectable ───────────────────────────────────────────
@@ -171,6 +207,8 @@ export function rollMech(
   let rawRoll: number;
   if (campaign === 'ELH') {
     rawRoll = rng.integer(1, 16);
+  } else if (campaign === 'MERC') {
+    rawRoll = rng.integer(1, 20);
   } else {
     rawRoll = rng.d6() + rng.d6();
   }
@@ -179,6 +217,9 @@ export function rollMech(
 
   if (campaign === 'ELH') {
     const e = MECH_TABLE_ELH[finalRoll];
+    return { modifier, rawRoll, finalRoll, model: e?.model ?? null, tons: e?.tons ?? null };
+  } else if (campaign === 'MERC') {
+    const e = MECH_TABLE_MERC[finalRoll];
     return { modifier, rawRoll, finalRoll, model: e?.model ?? null, tons: e?.tons ?? null };
   } else if (campaign === 'IS') {
     const g = MECH_TABLE_IS[finalRoll];
