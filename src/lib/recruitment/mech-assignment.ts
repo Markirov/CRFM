@@ -65,15 +65,73 @@ export const MECH_TABLE_IS: Record<number, MechTableGroup> = {
   [15]: { groupModels: ['Battlemaster', 'Stalker', 'Longbow'], tons: 85 },
 };
 
+// ══════════════════════════════════════════════════════════════
+//  KKK — Tabla nueva por peso (scaffold rellenable)
+//  La tirada da un PESO; el jugador después elige el modelo
+//  concreto de la lista disponible para ese peso.
+//
+//  Tirada: 2d6 + mod, clamp [2, 12]. Cada fila → tonelaje.
+//  Catálogo de modelos por peso vive en MECH_CATALOG_BY_TONS.
+//
+//  TODO usuario: rellenar MECH_TABLE_KKK + MECH_CATALOG_BY_TONS
+//  con los datos definitivos. Por ahora pesos estándar BattleTech.
+// ══════════════════════════════════════════════════════════════
+
+export interface MechTonsResult {
+  tons: number;
+  /** Texto descriptivo de clase/peso. */
+  label: string;
+}
+
+export const MECH_TABLE_KKK: Record<number, MechTonsResult> = {
+  2:  { tons: 100, label: 'Asalto pesado' },
+  3:  { tons: 90,  label: 'Asalto' },
+  4:  { tons: 85,  label: 'Asalto ligero' },
+  5:  { tons: 75,  label: 'Pesado' },
+  6:  { tons: 65,  label: 'Pesado ligero' },
+  7:  { tons: 55,  label: 'Mediano' },
+  8:  { tons: 45,  label: 'Mediano ligero' },
+  9:  { tons: 40,  label: 'Mediano bajo' },
+  10: { tons: 35,  label: 'Ligero pesado' },
+  11: { tons: 25,  label: 'Ligero' },
+  12: { tons: 20,  label: 'Explorador' },
+};
+
+/**
+ * Modelos disponibles para cada peso (BattleMechs canon).
+ * Se filtra por `tons` exacto al elegir modelo concreto.
+ * Lista pre-rellenada con clásicos; admin puede ampliar.
+ */
+export const MECH_CATALOG_BY_TONS: Record<number, string[]> = {
+  20:  ['Locust', 'Wasp', 'Stinger', 'Flea'],
+  25:  ['Commando', 'Mongoose'],
+  30:  ['Spider', 'Javelin', 'Valkyrie', 'Urbanmech'],
+  35:  ['Firestarter', 'Jenner', 'Panther', 'Ostscout', 'Firebee'],
+  40:  ['Assassin', 'Cicada', 'Clint', 'Hermes II', 'Vulcan', 'Whitworth', 'Icarus II'],
+  45:  ['Blackjack', 'Hatchetman', 'Vindicator', 'Phoenix Hawk'],
+  50:  ['Centurion', 'Enforcer', 'Hunchback', 'Trebuchet'],
+  55:  ['Griffin', 'Shadow Hawk', 'Wolverine', 'Scorpion', 'Dervish', 'Gladiator'],
+  60:  ['Dragon', 'Ostroc', 'Ostsol', 'Rifleman', 'Quickdraw'],
+  65:  ['Catapult', 'Jagermech', 'Thunderbolt', 'Crusader'],
+  70:  ['Archer', 'Warhammer', 'Grasshopper', 'Battleaxe'],
+  75:  ['Marauder', 'Orion'],
+  80:  ['Awesome', 'Charger', 'Victor', 'Goliath', 'Zeus'],
+  85:  ['Battlemaster', 'Stalker', 'Longbow'],
+  90:  ['Cyclops', 'Highlander'],
+  100: ['Atlas', 'BattleMaster (variante)', 'Annihilator'],
+};
+
 // ── Modificadores permitidos por campaña ─────────────────────
 export const ALLOWED_MODIFIERS: Record<CampaignId, readonly number[]> = {
   ELH: [-2, -1, 0, 1, 2],
   IS:  [-3, -2, -1, 0, 1, 2, 3],
+  KKK: [-3, -2, -1, 0, 1, 2, 3],
 };
 
 export const ROLL_BOUNDS: Record<CampaignId, { min: number; max: number }> = {
   ELH: { min: 1, max: 16 },
   IS:  { min: -1, max: 15 },
+  KKK: { min: 2, max: 12 },
 };
 
 // ── RNG injectable ───────────────────────────────────────────
@@ -122,17 +180,48 @@ export function rollMech(
   if (campaign === 'ELH') {
     const e = MECH_TABLE_ELH[finalRoll];
     return { modifier, rawRoll, finalRoll, model: e?.model ?? null, tons: e?.tons ?? null };
-  } else {
+  } else if (campaign === 'IS') {
     const g = MECH_TABLE_IS[finalRoll];
     if (!g) return { modifier, rawRoll, finalRoll, model: null, tons: null };
-    // Para IS devolvemos el primer modelo del grupo; UI debe permitir
-    // afinar la elección llamando a pickModelFromGroup.
     return {
       modifier, rawRoll, finalRoll,
       model: g.groupModels[0] ?? null,
       tons:  g.tons,
     };
+  } else {
+    // KKK: tirada → tonelaje. Modelo se elige después (pickModelByTons).
+    const k = MECH_TABLE_KKK[finalRoll];
+    if (!k) return { modifier, rawRoll, finalRoll, model: null, tons: null };
+    return {
+      modifier, rawRoll, finalRoll,
+      model: null,         // sin modelo aún
+      tons:  k.tons,
+    };
   }
+}
+
+/** KKK: tirada produce tonelaje + modelos disponibles para ese peso. */
+export function rollMechKKK(modifier: number, rng: Rng = defaultRng()):
+  AssignedMech & { tonsLabel: string | null; candidates: string[] }
+{
+  const base = rollMech('KKK', modifier, rng);
+  const k = base.finalRoll !== null ? MECH_TABLE_KKK[base.finalRoll] : null;
+  return {
+    ...base,
+    tonsLabel:  k?.label ?? null,
+    candidates: base.tons !== null ? (MECH_CATALOG_BY_TONS[base.tons] ?? []) : [],
+  };
+}
+
+/** Devuelve modelos disponibles para un peso dado (KKK). */
+export function getModelsByTons(tons: number | null): string[] {
+  if (tons === null) return [];
+  return MECH_CATALOG_BY_TONS[tons] ?? [];
+}
+
+/** Selecciona modelo concreto dentro del peso (KKK). */
+export function pickModelByTons(assigned: AssignedMech, model: string): AssignedMech {
+  return { ...assigned, model };
 }
 
 /** Devuelve modelos disponibles para refinar tras una tirada IS. */

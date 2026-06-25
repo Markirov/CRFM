@@ -98,6 +98,7 @@ export function ReclutamientoPage() {
                 >
                   <option value="ELH">Eridani Light Horse (ELH)</option>
                   <option value="IS">Esfera Interior (IS)</option>
+                  <option value="KKK">King Karl's Kürassiers (KKK · por peso)</option>
                 </select>
               </label>
               <label className="flex flex-col gap-1">

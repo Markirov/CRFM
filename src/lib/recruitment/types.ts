@@ -10,7 +10,7 @@
 //   · Presupuesto base = 150. Coste positivo gasta, negativo devuelve.
 // ══════════════════════════════════════════════════════════════
 
-export type CampaignId = 'ELH' | 'IS';
+export type CampaignId = 'ELH' | 'IS' | 'KKK';
 export type AttributeId = 'FUE' | 'DES' | 'INT' | 'CAR';
 
 export const ATTRIBUTES: readonly AttributeId[] = ['FUE', 'DES', 'INT', 'CAR'];

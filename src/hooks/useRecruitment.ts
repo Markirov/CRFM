@@ -55,11 +55,12 @@ function syncGrantsFromEducation(draft: CharacterDraft): CharacterDraft {
   };
 }
 
-/** Aplica reglas de campaña (ELH fuerza Mercenario). */
+/** Aplica reglas de campaña (ELH fuerza Mercenario; KKK libre). */
 function syncCampaignRules(draft: CharacterDraft): CharacterDraft {
   if (draft.campaign.id === 'ELH') {
     return { ...draft, background: { ...draft.background, affiliationId: 'mercenario' } };
   }
+  // IS, KKK: afiliación libre
   return draft;
 }
 

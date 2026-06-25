@@ -20,13 +20,16 @@ import {
   markRequestApplied, type RecruitmentRequest,
 } from '@/lib/recruitment-requests-service';
 import { loadRoster, type RosterEntry } from '@/lib/roster';
-import { savePlayer, loadPlayer } from '@/lib/firebase-service';
+import { savePlayer, loadPlayer, loadReservas, deletePlayer } from '@/lib/firebase-service';
+import { Archive, ArrowUp } from 'lucide-react';
 import { draftToPersonaje } from '@/lib/recruitment/draft-to-personaje';
+import { pnjCandidatesForReplacement } from '@/lib/recruitment/pj-pnj-helpers';
 
 export function RecruitmentRequestsTab() {
   const { writable, loading: permLoading } = usePerm('rrhh');
   const [requests, setRequests] = useState<RecruitmentRequest[]>([]);
   const [roster, setRoster] = useState<RosterEntry[]>([]);
+  const [reservas, setReservas] = useState<Array<Record<string, any> & { id: string }>>([]);
   const [loading, setLoading] = useState(false);
   const [rejecting, setRejecting] = useState<string | null>(null);
   const [approving, setApproving] = useState<string | null>(null);
@@ -36,9 +39,11 @@ export function RecruitmentRequestsTab() {
   const refresh = async () => {
     setLoading(true);
     try {
-      const [reqs, r] = await Promise.all([loadAllRequests(), loadRoster()]);
+      const [reqs, r, res] = await Promise.all([loadAllRequests(), loadRoster(), loadReservas()]);
       setRequests(reqs);
       setRoster(r);
+      const lst = (res?.success && Array.isArray(res?.data?.reservas)) ? res.data.reservas : [];
+      setReservas(lst);
     } finally { setLoading(false); }
   };
   useEffect(() => { void refresh(); }, []);
@@ -48,14 +53,8 @@ export function RecruitmentRequestsTab() {
   const rechazadas = useMemo(() => requests.filter(r => r.status === 'rejected'), [requests]);
   const aplicadas  = useMemo(() => requests.filter(r => r.status === 'applied'), [requests]);
 
-  // Candidatos PNJ: doc con pnj===true. Heurística: estado != 'reserva' tampoco aplica.
-  const npcCandidates = useMemo(() => {
-    // Roster expone subset. Necesitamos cargar info pnj per doc → derivado en backend.
-    // Aquí simplificación: cualquiera no marcado como PJ confirmado.
-    // En la práctica: filtramos manualmente — todos los activos cuyo jugador
-    // no esté en la lista de PJ humanos puede ser PNJ. Admin decide.
-    return roster.filter(r => r.estado !== 'reserva');
-  }, [roster]);
+  // Solo PNJs (heurística pnj:true OR legacy fallback) excluyendo reserva/baja.
+  const npcCandidates = useMemo(() => pnjCandidatesForReplacement(roster), [roster]);
 
   if (permLoading) return <div className="p-4 text-secondary/60 text-xs">Cargando…</div>;
   if (!writable) {
@@ -113,6 +112,63 @@ export function RecruitmentRequestsTab() {
     setRejecting(null);
     setComment('');
     void refresh();
+  };
+
+  const handleRestoreReserva = async (reserva: Record<string, any> & { id: string }) => {
+    // Doc id ej: "Zhao__reserva_xyz" o "Zhao__pj_reserva_xyz"
+    const m = reserva.id.match(/^(.+?)__(?:reserva|pj_reserva)_/);
+    const slotOriginal = m ? m[1] : (reserva.jugador as string);
+    if (!slotOriginal) { alert('No se puede inferir el slot original.'); return; }
+    if (!confirm(`Restaurar "${reserva.nombre ?? slotOriginal}" al slot "${slotOriginal}"?\n\nSi hay alguien ocupando ese slot, será archivado a su propia reserva.`)) return;
+
+    try {
+      // 1. Si slot ocupado → archivar ocupante actual
+      const cur = await loadPlayer(slotOriginal);
+      const curData: any = (cur as any)?.personajes?.[0];
+      const exists = curData && Object.keys(curData).length > 1;
+      if (exists) {
+        const isPj = curData.pnj === false;
+        const archiveId = `${slotOriginal}__${isPj ? 'pj_reserva' : 'reserva'}_${Date.now().toString(36)}`;
+        await savePlayer({
+          ...curData,
+          jugador:    archiveId,
+          estado:     'reserva',
+          archivedAt: new Date().toISOString(),
+        });
+      }
+
+      // 2. Restaurar reserva → slot original (estado activo)
+      const restored: Record<string, any> = {
+        ...reserva,
+        jugador:    slotOriginal,
+        estado:     'activo',
+      };
+      delete restored.id;
+      delete restored.archivedAt;
+      delete restored.replacedByRequestId;
+      delete restored.replacedByPlayer;
+      delete restored.revertedFromRequestId;
+      await savePlayer(restored);
+
+      // 3. Borra el doc espejo
+      await deletePlayer(reserva.id);
+
+      void refresh();
+      alert('Restaurado.');
+    } catch (e) {
+      console.error(e);
+      alert('Error: ' + (e instanceof Error ? e.message : String(e)));
+    }
+  };
+
+  const handleDeleteReserva = async (reserva: Record<string, any> & { id: string }) => {
+    if (!confirm(`BORRAR definitivamente la reserva "${reserva.nombre ?? reserva.id}"? No se puede deshacer.`)) return;
+    try {
+      await deletePlayer(reserva.id);
+      void refresh();
+    } catch (e) {
+      alert('Error: ' + (e instanceof Error ? e.message : String(e)));
+    }
   };
 
   const handleRevert = async (req: RecruitmentRequest) => {
@@ -212,6 +268,51 @@ export function RecruitmentRequestsTab() {
           ))}
         </Section>
       )}
+
+      {/* ── Reservas (espejos PJ archivado o PNJ desplazado) ── */}
+      <div className="mt-6 pt-4 border-t border-outline-variant/30">
+        <h3 className="font-headline text-xs font-bold text-primary-container tracking-widest uppercase mb-3 flex items-center gap-2">
+          <Archive size={14} /> Reservas ({reservas.length})
+        </h3>
+        {reservas.length === 0
+          ? <Empty>Sin archivados.</Empty>
+          : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {reservas.map(r => {
+                const isPj = r.pnj === false;
+                const slotInfer = r.id.match(/^(.+?)__/)?.[1] ?? r.jugador;
+                return (
+                  <div key={r.id} className={`font-mono text-[10px] p-2 bg-surface border-l-2 ${isPj ? 'border-cyan-500/50' : 'border-amber-500/50'}`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div>
+                        <span className="font-bold text-on-surface">{r.nombre ?? slotInfer}</span>
+                        <span className="text-secondary/60"> · slot original: <b>{slotInfer}</b></span>
+                      </div>
+                      <span className={`text-[9px] px-1 ${isPj ? 'text-cyan-400 border border-cyan-500/40' : 'text-amber-400 border border-amber-500/40'}`}>
+                        {isPj ? 'PJ' : 'PNJ'}
+                      </span>
+                    </div>
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => handleRestoreReserva(r)}
+                        className="flex items-center gap-1 px-2 py-0.5 border border-green-500/60 text-green-400 hover:bg-green-500/10 text-[9px]"
+                      >
+                        <ArrowUp size={10} /> Restaurar al slot
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReserva(r)}
+                        className="flex items-center gap-1 px-2 py-0.5 border border-red-500/60 text-red-400 hover:bg-red-500/10 text-[9px]"
+                      >
+                        <X size={10} /> Borrar
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
+        }
+      </div>
     </section>
   );
 }

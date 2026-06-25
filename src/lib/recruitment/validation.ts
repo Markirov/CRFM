@@ -56,7 +56,7 @@ export function validateDraft(draft: CharacterDraft): ValidationIssue[] {
     push({ code: 'affiliation-unknown', path: 'background.affiliationId', severity: 'error', message: 'Afiliación desconocida.' });
   }
 
-  // ELH fuerza Mercenario
+  // ELH fuerza Mercenario (KKK no — afiliación libre)
   if (draft.campaign.id === 'ELH' && draft.background.affiliationId && draft.background.affiliationId !== 'mercenario') {
     push({ code: 'affiliation-elh', path: 'background.affiliationId', severity: 'error', message: 'En campaña ELH la afiliación debe ser Mercenario.' });
   }

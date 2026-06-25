@@ -179,6 +179,24 @@ export const savePlayer = (data: Record<string, unknown>): Promise<Envelope<unkn
 
 export const savePilot = (data: Record<string, unknown>): Promise<Envelope<unknown>> => savePlayer(data);
 
+/** Lista todos los personajes archivados como reserva (PJ ó PNJ).
+ *  Convención: doc id contiene "__reserva_" ó "__pj_reserva_". */
+export const loadReservas = (): Promise<Envelope<{ reservas: Array<Record<string, unknown> & { id: string }> }>> =>
+  safe(async () => {
+    const snap = await getDocs(PERSONAJES_COL());
+    const reservas = snap.docs
+      .filter(d => d.id.includes('__reserva_') || d.id.includes('__pj_reserva_'))
+      .map(d => ({ id: d.id, ...d.data() }));
+    return { reservas };
+  });
+
+/** Borra doc personajes/{id}. Admin-only en rules. */
+export const deletePlayer = (id: string): Promise<Envelope<{ id: string }>> =>
+  safe(async () => {
+    await deleteDoc(doc(PERSONAJES_COL(), id));
+    return { id };
+  });
+
 /** Migración: borra mech asignado del piloto en config/main
  *  (PILOTO_N_MECH) y en cada doc de `personajes/` (campo `mech`).
  *  Hangar ahora es la fuente única; legacy se purga. */
@@ -250,6 +268,7 @@ async function loadRosterAsEnvelope() {
         lanza:         data.lanza ?? '',
         disparoMech:   data.disparoMech ?? pickSkillLevel(data.extraSkills, ['Disparo Mech', 'Disparar Mech']),
         pilotajeMech:  data.pilotajeMech ?? pickSkillLevel(data.extraSkills, ['Pilotar Mech', 'Pilotaje Mech']),
+        pnj:           typeof data.pnj === 'boolean' ? data.pnj : undefined,
         patrimonio:      data.patrimonio ?? 0,
         equipoPersonal:  data.equipoPersonal ?? '',
         rpgFinanzas:     data.rpgFinanzas ?? {},

@@ -27,6 +27,8 @@ export interface RosterEntry {
   disparoMech:   number | null;
   /** Personajes col P — habilidad Pilotaje Mech ya calculada (TN BT). */
   pilotajeMech:  number | null;
+  /** True = PNJ, false = PJ humano. Undefined cuando no migrado todavía. */
+  pnj?:          boolean;
 }
 
 const ESTADOS_VALIDOS: PilotEstado[] = ['activo', 'herido', 'hospitalizado', 'kia', 'mia', 'retirado', 'reserva'];
@@ -68,6 +70,7 @@ interface RosterApiRecord {
   pilotaje?: unknown;
   piloting?: unknown;
   colP?: unknown;
+  pnj?: unknown;
 }
 
 function coerceStrOrNum(v: unknown): string | number {
@@ -109,6 +112,7 @@ export async function loadRoster(): Promise<RosterEntry[]> {
     lanza:         (r.lanza || '').toString().trim(),
     disparoMech:   parseSkill(r.disparoMech ?? r.disparo ?? r.gunnery ?? r.colO),
     pilotajeMech:  parseSkill(r.pilotajeMech ?? r.pilotaje ?? r.piloting ?? r.colP),
+    pnj:           typeof r.pnj === 'boolean' ? r.pnj : undefined,
   }));
 }
 

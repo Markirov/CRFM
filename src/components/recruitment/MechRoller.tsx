@@ -2,6 +2,7 @@
 import type { AssignedMech, CampaignId } from '@/lib/recruitment/types';
 import {
   rollMech, clearMechAssignment, ALLOWED_MODIFIERS, getISGroupModels, pickModelFromGroup,
+  getModelsByTons, pickModelByTons,
 } from '@/lib/recruitment/mech-assignment';
 
 export function MechRoller({
@@ -12,8 +13,12 @@ export function MechRoller({
   onChange:   (a: AssignedMech) => void;
 }) {
   const mods = ALLOWED_MODIFIERS[campaignId];
-  const groupModels = campaignId === 'IS' ? getISGroupModels(assigned.finalRoll) : [];
-  const needsPick = campaignId === 'IS' && groupModels.length > 1;
+  const groupModels =
+    campaignId === 'IS'  ? getISGroupModels(assigned.finalRoll) :
+    campaignId === 'KKK' ? getModelsByTons(assigned.tons) :
+    [];
+  const needsPick = (campaignId === 'IS' || campaignId === 'KKK') && groupModels.length > 0;
+  const pickFn = campaignId === 'KKK' ? pickModelByTons : pickModelFromGroup;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[auto_auto_1fr] gap-2 items-end">
@@ -51,12 +56,15 @@ export function MechRoller({
       </div>
       {needsPick && (
         <label className="flex flex-col gap-1 md:col-span-3">
-          <span className="font-mono text-[9px] uppercase tracking-widest text-amber-400">Elige modelo del grupo</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest text-amber-400">
+            {campaignId === 'KKK' ? `Elige modelo para ${assigned.tons}t` : 'Elige modelo del grupo'}
+          </span>
           <select
             value={assigned.model ?? ''}
-            onChange={e => onChange(pickModelFromGroup(assigned, e.target.value))}
+            onChange={e => onChange(pickFn(assigned, e.target.value))}
             className="bg-surface-container border border-amber-400/40 px-2 py-1 font-mono text-[11px] text-cream"
           >
+            <option value="">-- Elige --</option>
             {groupModels.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
         </label>

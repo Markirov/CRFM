@@ -16,7 +16,7 @@ export function BackgroundPicker({
     [intValue],
   );
 
-  const elhLocked = campaignId === 'ELH';
+  const elhLocked = campaignId === 'ELH';   // KKK e IS libres
   const affiliationValue = elhLocked ? 'mercenario' : (background.affiliationId ?? '');
 
   return (
