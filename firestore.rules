@@ -25,6 +25,30 @@ service cloud.firestore {
     function isPJ()       { return claimRole() == 'pj'; }
     function isStaff()    { return isAdmin() || isDM(); }
     function hasAnyRole() { return isAdmin() || isDM() || isPJ(); }
+    function isAuthenticated() { return request.auth != null; }
+
+    function isLiveRoomId(roomId) {
+      return roomId == 'alpha' || roomId == 'beta' || roomId == 'delta';
+    }
+
+    function liveRoom(roomId) {
+      return get(/databases/$(database)/documents/live_rooms/$(roomId));
+    }
+
+    function isActiveLiveRoom(roomId) {
+      return isLiveRoomId(roomId)
+        && liveRoom(roomId).data.status == 'active'
+        && liveRoom(roomId).data.expiresAt is timestamp
+        && liveRoom(roomId).data.expiresAt > request.time;
+    }
+
+    function isLiveParticipant(roomId) {
+      return isAuthenticated()
+        && isActiveLiveRoom(roomId)
+        && exists(/databases/$(database)/documents/live_rooms/$(roomId)/sessions/$(request.auth.uid))
+        && get(/databases/$(database)/documents/live_rooms/$(roomId)/sessions/$(request.auth.uid)).data.generation
+          == liveRoom(roomId).data.generation;
+    }
 
     // ── Permisos UI (matriz editable desde SecretMenu) ────────
     // PJ y DM leen para que la app aplique readOnly en tiempo real.
@@ -94,6 +118,18 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
+    // ── Recruitment requests: cualquier autenticado crea,
+    //    autor + staff leen, solo staff actualiza/borra ─────────
+    match /recruitmentPending/{id} {
+      allow create: if isAuthenticated()
+                    && request.resource.data.createdByEmail is string
+                    && request.resource.data.status == 'pending';
+      allow read:   if isStaff()
+                    || (isAuthenticated()
+                        && resource.data.createdByEmail == request.auth.token.email);
+      allow update, delete: if isStaff();
+    }
+
     // ── Roles: admin escribe, autenticados leen (para AuthGate) ──
     match /roles/{doc} {
       allow read:  if request.auth != null;
@@ -111,9 +147,29 @@ service cloud.firestore {
       allow read, write: if hasAnyRole();
     }
 
-    // ── Live Sessions (Simulador Radar): público R+W ────────
+    // ── Live Rooms (Alpha / Beta / Delta) ───────────────────
+    // Todas las escrituras pasan por Cloud Functions. El cliente
+    // solo puede leer el estado de las tres salas y, tras unirse,
+    // las sesiones/ataques de su sala activa.
+    match /live_rooms/{roomId} {
+      allow get: if isAuthenticated() && isLiveRoomId(roomId);
+      allow list, create, update, delete: if false;
+
+      match /sessions/{sessionUid} {
+        allow read: if isLiveParticipant(roomId);
+        allow write: if false;
+      }
+
+      match /attacks/{attackId} {
+        allow read: if isLiveParticipant(roomId);
+        allow write: if false;
+      }
+    }
+
+    // Colección legacy cerrada. Se conserva temporalmente para que
+    // una migración coordinada no reutilice accidentalmente sus datos.
     match /live_sessions/{doc} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
 
     // ── Colecciones varias: staff R+W, PJ solo R ─────────────

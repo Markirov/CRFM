@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { NAV_SECTIONS } from '@/lib/navigation';
 import { useAppStore } from '@/lib/store';
 import { preloadByPath } from '@/lib/page-loaders';
@@ -7,6 +8,8 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
 import { LogOut } from 'lucide-react';
 import { canRead } from '@/lib/permissions-service';
+import { isPublicSection } from '@/lib/access-policy';
+import { subscribePendingRequests } from '@/lib/recruitment-requests-service';
 
 export function Sidebar() {
   const location = useLocation();
@@ -17,6 +20,17 @@ export function Sidebar() {
   const userRole = useAppStore(s => s.userRole);
   const perms = useAppStore(s => s.perms);
   const permsLoading = useAppStore(s => s.permsLoading);
+
+  // Badge solicitudes reclutamiento pendientes (admin/DM)
+  const [pendingRequests, setPendingRequests] = useState(0);
+  useEffect(() => {
+    if (!userRole || (userRole !== 'admin' && userRole !== 'dm')) {
+      setPendingRequests(0);
+      return;
+    }
+    const unsub = subscribePendingRequests(n => setPendingRequests(n));
+    return () => unsub();
+  }, [userRole]);
 
   return (
     <>
@@ -53,9 +67,8 @@ export function Sidebar() {
 
         {/* Nav sections */}
         {NAV_SECTIONS.map((section) => {
-          const PUBLIC_ROUTES = ['portada', 'tro', 'mapa', 'cronicas', 'simulador'];
           const visibleItems = section.items.filter(item => {
-            if (!userRole) return PUBLIC_ROUTES.includes(item.id);
+            if (!userRole) return isPublicSection(item.id);
             return permsLoading || canRead(perms, item.id, userRole);
           });
           if (visibleItems.length === 0) return null;
@@ -90,7 +103,15 @@ export function Sidebar() {
                     `}
                   >
                     <span className="text-[16px] w-5 text-center flex-shrink-0">{item.icon}</span>
-                    {item.label}
+                    <span className="flex-1">{item.label}</span>
+                    {item.id === 'rrhh' && pendingRequests > 0 && (
+                      <span
+                        className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold bg-amber-500 text-black rounded-full"
+                        title={`${pendingRequests} solicitud(es) de reclutamiento pendientes`}
+                      >
+                        {pendingRequests}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

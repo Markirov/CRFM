@@ -5,7 +5,7 @@
 
 import { sheetsGet } from './firebase-service';
 
-export type PilotEstado = 'activo' | 'herido' | 'hospitalizado' | 'kia' | 'mia' | 'retirado';
+export type PilotEstado = 'activo' | 'herido' | 'hospitalizado' | 'kia' | 'mia' | 'retirado' | 'reserva';
 
 export interface RosterEntry {
   order:         number;       // orden en sheet (1, 2, 3...)
@@ -29,7 +29,7 @@ export interface RosterEntry {
   pilotajeMech:  number | null;
 }
 
-const ESTADOS_VALIDOS: PilotEstado[] = ['activo', 'herido', 'hospitalizado', 'kia', 'mia', 'retirado'];
+const ESTADOS_VALIDOS: PilotEstado[] = ['activo', 'herido', 'hospitalizado', 'kia', 'mia', 'retirado', 'reserva'];
 
 /** Lee skill TN (entero >=0). null si vacio/no numerico. */
 function parseSkill(v: unknown): number | null {

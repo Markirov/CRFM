@@ -20,8 +20,9 @@ import { MechRoller } from '@/components/recruitment/MechRoller';
 import { PhysicalRoller } from '@/components/recruitment/PhysicalRoller';
 import { IssuesList } from '@/components/recruitment/IssuesList';
 import { EDUCATION_BY_ID } from '@/lib/recruitment/catalogs';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { CampaignId } from '@/lib/recruitment/types';
+import { createRecruitmentRequest } from '@/lib/recruitment-requests-service';
 
 export function ReclutamientoPage() {
   const r = useRecruitment();
@@ -35,10 +36,23 @@ export function ReclutamientoPage() {
     return ids;
   }, [draft.background.educationId, draft.background.nobleSkillId]);
 
-  const handleGenerar = () => {
+  const [submitState, setSubmitState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+  const [submitError, setSubmitError] = useState<string>('');
+
+  const handleGenerar = async () => {
     if (hasErrors) return;
-    // TODO Fase 2: persist draft + redirect a ficha + Barracones.
-    alert('Borrador válido. (Persistencia + ficha → próxima iteración.)');
+    if (!confirm('Enviar solicitud al Admin? El personaje quedará pendiente hasta que el Admin elija qué PNJ sustituye.')) return;
+    setSubmitState('sending');
+    setSubmitError('');
+    try {
+      await createRecruitmentRequest(draft);
+      setSubmitState('done');
+      setTimeout(() => { r.reset(); setSubmitState('idle'); }, 2500);
+    } catch (err) {
+      console.error(err);
+      setSubmitError(err instanceof Error ? err.message : String(err));
+      setSubmitState('error');
+    }
   };
 
   return (
@@ -158,16 +172,25 @@ export function ReclutamientoPage() {
             )}
           </Section>
 
-          <div className="flex justify-end pt-2 border-t border-outline-variant/30">
+          <div className="flex justify-end items-center gap-2 pt-2 border-t border-outline-variant/30">
+            {submitState === 'done' && (
+              <span className="font-mono text-[11px] text-green-400">✓ Solicitud enviada. Admin notificado.</span>
+            )}
+            {submitState === 'error' && (
+              <span className="font-mono text-[11px] text-error">Error: {submitError || 'al enviar'}</span>
+            )}
             <button
               onClick={handleGenerar}
-              disabled={hasErrors}
+              disabled={hasErrors || submitState === 'sending' || submitState === 'done'}
               className="px-4 py-2 font-headline text-xs font-bold tracking-widest uppercase border-2 clip-chamfer flex items-center gap-2
                 bg-primary-container text-on-primary-container hover:bg-primary
                 disabled:bg-error/20 disabled:text-error disabled:border-error/40 disabled:cursor-not-allowed border-primary"
             >
               <FileCheck2 size={14} />
-              {hasErrors ? 'Corrige errores' : 'Generar ficha'}
+              {hasErrors ? 'Corrige errores'
+                : submitState === 'sending' ? 'Enviando...'
+                : submitState === 'done' ? 'Enviada ✓'
+                : 'Enviar solicitud'}
             </button>
           </div>
         </div>

@@ -29,6 +29,7 @@ export const NAV_SECTIONS: NavSection[] = [
         tabs: [
           { id: 'plantilla', label: 'Plantilla' },
           { id: 'reclutamiento', label: 'Reclutamiento' },
+          { id: 'solicitudes', label: 'Solicitudes' },
           { id: 'barracones', label: 'Barracones' },
           { id: 'logros', label: 'Logros' },
         ],
