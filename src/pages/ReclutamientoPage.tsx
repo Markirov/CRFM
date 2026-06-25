@@ -99,7 +99,8 @@ export function ReclutamientoPage() {
                   <option value="ELH">Eridani Light Horse (ELH · 1d16)</option>
                   <option value="IS">Esfera Interior (IS · 2d6 grupo)</option>
                   <option value="KKK">King Karl's Kürassiers (KKK · 2d6 por peso)</option>
-                  <option value="MERC">Mercenary/Periphery (MERC · 1d20)</option>
+                  <option value="MERC-LMH">Mercenary L/M/H (sin asalto · 1d20)</option>
+                  <option value="MERC">Mercenary/Periphery completo (1d20) — [refinar]</option>
                 </select>
               </label>
               <label className="flex flex-col gap-1">
